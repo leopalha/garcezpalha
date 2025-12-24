@@ -18,8 +18,8 @@ describe('LeadQualifier', () => {
       type: 'single-choice',
       priority: 'required',
       options: [
-        { value: 'urgent', label: 'Urgent', score: 10 },
-        { value: 'normal', label: 'Normal', score: 5 },
+        { value: 'urgent', label: 'Urgent', scoreModifier: 10 },
+        { value: 'normal', label: 'Normal', scoreModifier: 5 },
       ],
     },
     {
@@ -28,8 +28,8 @@ describe('LeadQualifier', () => {
       type: 'single-choice',
       priority: 'required',
       options: [
-        { value: 'yes', label: 'Yes', score: 10 },
-        { value: 'no', label: 'No', score: 0 },
+        { value: 'yes', label: 'Yes', scoreModifier: 10 },
+        { value: 'no', label: 'No', scoreModifier: 0 },
       ],
     },
     {
@@ -57,6 +57,7 @@ describe('LeadQualifier', () => {
 
   const mockConfig: ProductQualificationConfig = {
     productId: 'test-product',
+    agentRole: 'financial-protection',
     questions: mockQuestions,
     scoringRules: mockRules,
   }
@@ -257,6 +258,7 @@ describe('LeadQualifier', () => {
 
       const hotConfig: ProductQualificationConfig = {
         productId: 'test',
+        agentRole: 'financial-protection',
         questions: [{ id: 'q1', text: 'Q', type: 'text', priority: 'required' }],
         scoringRules: hotRules,
       }
@@ -284,6 +286,7 @@ describe('LeadQualifier', () => {
 
       const coldConfig: ProductQualificationConfig = {
         productId: 'test',
+        agentRole: 'financial-protection',
         questions: [{ id: 'q1', text: 'Q', type: 'text', priority: 'required' }],
         scoringRules: coldRules,
       }
