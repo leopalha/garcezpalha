@@ -14,7 +14,7 @@ import type {
   ProcessMovementWorkflowOutput,
 } from '../types'
 import { getCOOAgent } from '../../agents/executive/coo-agent'
-import { getQAAgent } from '../../agents/operations/qa-agent'
+import { createQAAgent } from '../../agents/operations/qa-agent'
 import { createAgentLogger } from '../../agents/core/agent-logger'
 
 // =============================================================================
@@ -127,7 +127,7 @@ export class ProcessMovementWorkflow {
 
       // Step 2: Analyze impact
       const analysis = await this.executeStep('analyze-impact', 'qa', async () => {
-        const qa = getQAAgent()
+        const qa = createQAAgent()
         return await this.analyzeMovement(data, qa)
       })
 
@@ -315,7 +315,7 @@ export class ProcessMovementWorkflow {
    */
   private async analyzeMovement(
     data: ProcessMovementTriggerData,
-    qa: ReturnType<typeof getQAAgent>
+    qa: ReturnType<typeof createQAAgent>
   ): Promise<string> {
     // In production, this would use the QA agent for deeper analysis
     const analysis = []

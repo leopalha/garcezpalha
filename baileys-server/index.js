@@ -89,11 +89,24 @@ async function connectToWhatsApp() {
   // =============================================================================
 
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
-    if (type !== 'notify') return
+    console.log('[DEBUG] messages.upsert triggered, type:', type, 'messages:', messages.length)
+
+    if (type !== 'notify') {
+      console.log('[DEBUG] Ignoring type:', type)
+      return
+    }
 
     const message = messages[0]
-    if (!message.message) return
-    if (message.key.fromMe) return
+    console.log('[DEBUG] Message object:', JSON.stringify(message, null, 2))
+
+    if (!message.message) {
+      console.log('[DEBUG] No message content')
+      return
+    }
+    if (message.key.fromMe) {
+      console.log('[DEBUG] Message from me, ignoring')
+      return
+    }
 
     console.log('[WhatsApp] Mensagem recebida:', message.key.remoteJid)
 
