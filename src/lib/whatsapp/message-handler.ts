@@ -34,7 +34,7 @@ class WhatsAppMessageHandler {
   /**
    * Process incoming WhatsApp message
    */
-  async processMessage(message: WhatsAppIncomingMessage): Promise<void> {
+  async processMessage(message: WhatsAppIncomingMessage): Promise<{ response?: string }> {
     const phoneNumber = message.from
 
     console.log(`[WhatsApp] Processing message from ${phoneNumber}`)
@@ -52,18 +52,21 @@ class WhatsAppMessageHandler {
         // Transcribe audio
         const transcription = await this.transcribeAudio(message.audio.id)
         if (!transcription) {
-          await this.sendMessage(phoneNumber, '❌ Não consegui processar o áudio. Por favor, envie sua mensagem por texto.')
-          return
+          const errorMsg = '❌ Não consegui processar o áudio. Por favor, envie sua mensagem por texto.'
+          await this.sendMessage(phoneNumber, errorMsg)
+          return { response: errorMsg }
         }
         messageContent = transcription
       } else if (message.type === 'interactive' && message.interactive?.button_reply) {
         messageContent = message.interactive.button_reply.title
       } else if (message.type === 'image' && message.image) {
-        await this.sendMessage(phoneNumber, '📷 Recebi sua imagem. Para melhor atendimento, descreva o que precisa por texto.')
-        return
+        const imageMsg = '📷 Recebi sua imagem. Para melhor atendimento, descreva o que precisa por texto.'
+        await this.sendMessage(phoneNumber, imageMsg)
+        return { response: imageMsg }
       } else {
-        await this.sendMessage(phoneNumber, 'Por favor, envie sua mensagem por texto ou áudio.')
-        return
+        const defaultMsg = 'Por favor, envie sua mensagem por texto ou áudio.'
+        await this.sendMessage(phoneNumber, defaultMsg)
+        return { response: defaultMsg }
       }
 
       // Add to conversation history
@@ -77,19 +80,19 @@ class WhatsAppMessageHandler {
       // Check for greeting/start
       if (this.isGreeting(messageContent) && !session.inQualification) {
         await this.sendWelcomeMessage(phoneNumber)
-        return
+        return { response: await this.getWelcomeMessage() }
       }
 
       // Check for help command
       if (this.isHelpCommand(messageContent)) {
         await this.sendHelpMessage(phoneNumber)
-        return
+        return { response: await this.getHelpMessage() }
       }
 
       // Check for contact command
       if (this.isContactCommand(messageContent)) {
         await this.sendContactInfo(phoneNumber)
-        return
+        return { response: await this.getContactMessage() }
       }
 
       // Process with qualification system
@@ -105,12 +108,13 @@ class WhatsAppMessageHandler {
         timestamp: new Date()
       })
 
+      return { response }
+
     } catch (error) {
       console.error('[WhatsApp] Error processing message:', error)
-      await this.sendMessage(
-        phoneNumber,
-        '❌ Desculpe, ocorreu um erro. Por favor, tente novamente ou ligue (21) 2220-0685.'
-      )
+      const errorMsg = '❌ Desculpe, ocorreu um erro. Por favor, tente novamente ou ligue (21) 2220-0685.'
+      await this.sendMessage(phoneNumber, errorMsg)
+      return { response: errorMsg }
     }
   }
 
@@ -248,7 +252,15 @@ class WhatsAppMessageHandler {
    * Send welcome message
    */
   private async sendWelcomeMessage(phoneNumber: string): Promise<void> {
-    const welcomeMessage = `Olá! 👋 Bem-vindo ao *Garcez Palha - Inteligência Jurídica*
+    const welcomeMessage = await this.getWelcomeMessage()
+    await this.sendMessage(phoneNumber, welcomeMessage, true)
+  }
+
+  /**
+   * Get welcome message text
+   */
+  private async getWelcomeMessage(): Promise<string> {
+    return `Olá! 👋 Bem-vindo ao *Garcez Palha - Inteligência Jurídica*
 
 364 anos de tradição, nobreza e excelência.
 
@@ -266,15 +278,21 @@ Digite sua dúvida ou problema que vou direcioná-lo para o especialista adequad
 _Comandos úteis:_
 • /ajuda - Menu de ajuda
 • /contato - Informações de contato`
-
-    await this.sendMessage(phoneNumber, welcomeMessage, true)
   }
 
   /**
    * Send help message
    */
   private async sendHelpMessage(phoneNumber: string): Promise<void> {
-    const helpMessage = `*📚 Central de Ajuda - Garcez Palha*
+    const helpMessage = await this.getHelpMessage()
+    await this.sendMessage(phoneNumber, helpMessage)
+  }
+
+  /**
+   * Get help message text
+   */
+  private async getHelpMessage(): Promise<string> {
+    return `*📚 Central de Ajuda - Garcez Palha*
 
 *Como funciona:*
 1️⃣ Descreva sua situação
@@ -291,15 +309,21 @@ Segunda a Sexta: 9h às 18h
 Sábados: 9h às 13h
 
 Para atendimento urgente: (21) 2220-0685`
-
-    await this.sendMessage(phoneNumber, helpMessage)
   }
 
   /**
    * Send contact information
    */
   private async sendContactInfo(phoneNumber: string): Promise<void> {
-    const contactMessage = `*📍 Garcez Palha - Inteligência Jurídica*
+    const contactMessage = await this.getContactMessage()
+    await this.sendMessage(phoneNumber, contactMessage)
+  }
+
+  /**
+   * Get contact message text
+   */
+  private async getContactMessage(): Promise<string> {
+    return `*📍 Garcez Palha - Inteligência Jurídica*
 
 📞 *Telefone:* (21) 2220-0685
 📧 *Email:* contato@garcezpalha.com
@@ -314,8 +338,6 @@ CEP: 20070-022
 *Horário:*
 Segunda a Sexta: 9h às 18h
 Sábados: 9h às 13h`
-
-    await this.sendMessage(phoneNumber, contactMessage)
   }
 
   /**

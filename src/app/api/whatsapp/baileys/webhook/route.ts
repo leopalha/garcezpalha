@@ -43,14 +43,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Processar com o sistema de qualificação
-    await whatsappMessageHandler.processMessage(incomingMessage)
+    const result = await whatsappMessageHandler.processMessage(incomingMessage)
 
-    // O handler vai enviar a resposta automaticamente via Cloud API
-    // Mas se quiser que o Baileys envie, retorne { reply: "mensagem" }
+    // Retornar resposta para o Baileys enviar
+    // O handler retorna a mensagem que deve ser enviada
+    const reply = result?.response || 'Mensagem recebida!'
 
     return NextResponse.json({
       success: true,
       processed: true,
+      reply: reply,
       timestamp: new Date().toISOString()
     })
   } catch (error) {
