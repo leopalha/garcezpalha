@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       from: phoneNumber,
       id: messageSid,
       timestamp: Date.now().toString(),
-      type: numMedia > 0 ? 'media' : 'text',
+      type: 'text' as const,
       text: { body },
     }
 

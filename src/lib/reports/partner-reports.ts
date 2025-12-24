@@ -13,6 +13,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { advancedMetrics, PartnerPerformance } from '@/lib/analytics/advanced-metrics'
+import { emailService } from '@/lib/email/email-service'
 
 interface PartnerReport {
   partnerId: string
@@ -252,38 +253,129 @@ class PartnerReportsService {
         year: 'numeric',
       })
 
-      // TODO: Implement email service (Resend or SendGrid)
-      console.log('[Email] Partner monthly report:', {
+      const formattedRevenue = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(report.performance.totalRevenue)
+
+      const formattedCommissionsPaid = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(report.performance.commissionsPaid)
+
+      const formattedCommissionsOwed = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(report.performance.commissionsOwed)
+
+      const badgesHtml = report.badges.length > 0
+        ? `<div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <h4 style="margin: 0 0 10px; color: #92400e;">🎖️ Conquistas do Mês</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #78350f;">
+              ${report.badges.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          </div>`
+        : ''
+
+      const tipsHtml = report.tips.length > 0
+        ? `<div style="background: #eff6ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <h4 style="margin: 0 0 10px; color: #1e40af;">💡 Dicas para Melhorar</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #1e3a8a;">
+              ${report.tips.map(t => `<li>${t}</li>`).join('')}
+            </ul>
+          </div>`
+        : ''
+
+      const sent = await emailService.sendCustomEmail({
         to: report.partnerEmail,
         subject: `📊 Relatório de Performance - ${monthYear}`,
-        body: `
-          Olá ${report.partnerName}!
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); padding: 30px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Relatório Mensal</h1>
+              <p style="color: #e2e8f0; margin: 10px 0 0;">${monthYear}</p>
+            </div>
 
-          Aqui está seu relatório de performance de ${monthYear}:
+            <div style="padding: 30px; background: #f9fafb;">
+              <p style="font-size: 16px; color: #374151;">Olá <strong>${report.partnerName}</strong>,</p>
+              <p>Aqui está seu relatório de performance como parceiro Garcez Palha:</p>
 
-          📈 RESULTADOS:
-          - Leads gerados: ${report.performance.leadsGenerated}
-          - Taxa de conversão: ${report.performance.conversionRate.toFixed(1)}%
-          - Receita gerada: R$ ${report.performance.totalRevenue.toFixed(2)}
-          - Comissões recebidas: R$ ${report.performance.commissionsPaid.toFixed(2)}
-          - Comissões pendentes: R$ ${report.performance.commissionsOwed.toFixed(2)}
+              <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border: 1px solid #e5e7eb;">
+                <h3 style="margin: 0 0 15px; color: #1f2937;">📈 Resultados do Mês</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">Leads Gerados</td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">${report.performance.leadsGenerated}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">Taxa de Conversão</td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">${report.performance.conversionRate.toFixed(1)}%</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">Receita Gerada</td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold; color: #059669;">${formattedRevenue}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">Comissões Pagas</td>
+                    <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: bold;">${formattedCommissionsPaid}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0;">Comissões Pendentes</td>
+                    <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #c9a227;">${formattedCommissionsOwed}</td>
+                  </tr>
+                </table>
+              </div>
 
-          🏅 RANKING:
-          Você está em #${report.ranking} de ${report.totalPartners} parceiros!
+              <div style="background: #ecfdf5; padding: 15px; border-radius: 8px; text-align: center; margin: 15px 0;">
+                <p style="margin: 0; font-size: 14px; color: #065f46;">🏅 Ranking de Parceiros</p>
+                <p style="margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #047857;">
+                  #${report.ranking} de ${report.totalPartners}
+                </p>
+              </div>
 
-          ${report.badges.length > 0 ? `\n🎖️ CONQUISTAS:\n${report.badges.join('\n')}` : ''}
+              ${badgesHtml}
+              ${tipsHtml}
 
-          💡 DICAS PARA MELHORAR:
-          ${report.tips.join('\n')}
+              <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
+                Continue com o ótimo trabalho! Qualquer dúvida, estamos à disposição.
+              </p>
+            </div>
 
-          Continue com o ótimo trabalho!
-
-          Atenciosamente,
-          Equipe Garcez Palha
+            <div style="background: #1a365d; color: white; padding: 15px; text-align: center; font-size: 12px;">
+              <p style="margin: 0;">Garcez Palha - Programa de Parcerias</p>
+              <p style="margin: 5px 0 0;">📞 (21) 99535-4010 | parcerias@garcezpalha.com</p>
+            </div>
+          </div>
         `,
+        text: `Relatório de Performance - ${monthYear}
+
+Olá ${report.partnerName}!
+
+Aqui está seu relatório de performance de ${monthYear}:
+
+📈 RESULTADOS:
+- Leads gerados: ${report.performance.leadsGenerated}
+- Taxa de conversão: ${report.performance.conversionRate.toFixed(1)}%
+- Receita gerada: ${formattedRevenue}
+- Comissões recebidas: ${formattedCommissionsPaid}
+- Comissões pendentes: ${formattedCommissionsOwed}
+
+🏅 RANKING:
+Você está em #${report.ranking} de ${report.totalPartners} parceiros!
+
+${report.badges.length > 0 ? `🎖️ CONQUISTAS:\n${report.badges.join('\n')}\n` : ''}
+${report.tips.length > 0 ? `💡 DICAS:\n${report.tips.join('\n')}\n` : ''}
+
+Continue com o ótimo trabalho!
+
+Garcez Palha - Programa de Parcerias
+(21) 99535-4010`,
+        tags: ['partner-report', 'monthly'],
+        metadata: { partnerId: report.partnerId },
       })
 
-      return true
+      console.log('[Partner Reports] Email sent to:', report.partnerEmail)
+      return sent
     } catch (error) {
       console.error('[Partner Reports] Error sending email:', error)
       return false
