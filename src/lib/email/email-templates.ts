@@ -275,6 +275,98 @@ class EmailTemplatesService {
   }
 
   /**
+   * Email Verification
+   */
+  emailVerification(data: { name: string; verificationUrl: string }): EmailTemplate {
+    return {
+      subject: `Confirme seu email - Garcez Palha`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Confirme seu Email</h1>
+          </div>
+
+          <div style="padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px;">
+            <p style="font-size: 16px; color: #374151;">Olá <strong>${data.name}</strong>,</p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              Obrigado por se cadastrar na Garcez Palha! Para ativar sua conta e ter acesso a todos os recursos, confirme seu email clicando no botão abaixo:
+            </p>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.verificationUrl}" style="background: #1a365d; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
+                Confirmar Email
+              </a>
+            </div>
+
+            <p style="font-size: 14px; color: #6b7280; text-align: center;">
+              Ou copie e cole este link no seu navegador:<br/>
+              <a href="${data.verificationUrl}" style="color: #2563eb; word-break: break-all;">${data.verificationUrl}</a>
+            </p>
+
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0; color: #92400e; font-size: 14px;">
+                <strong>⚠️ Atenção:</strong> Este link expira em 24 horas. Se você não solicitou este cadastro, ignore este email.
+              </p>
+            </div>
+          </div>
+
+          ${this.OAB_FOOTER}
+        </div>
+      `,
+      text: `Olá ${data.name},\n\nObrigado por se cadastrar na Garcez Palha!\n\nPara confirmar seu email, acesse:\n${data.verificationUrl}\n\nEste link expira em 24 horas.\n\nSe você não solicitou este cadastro, ignore este email.\n\nGarcez Palha\n(21) 99535-4010`,
+    }
+  }
+
+  /**
+   * Password Reset
+   */
+  passwordReset(data: { name: string; resetUrl: string }): EmailTemplate {
+    return {
+      subject: `Redefinir sua senha - Garcez Palha`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%); padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Redefinir Senha</h1>
+          </div>
+
+          <div style="padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px;">
+            <p style="font-size: 16px; color: #374151;">Olá <strong>${data.name}</strong>,</p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              Recebemos uma solicitação para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:
+            </p>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.resetUrl}" style="background: #991b1b; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;">
+                Redefinir Senha
+              </a>
+            </div>
+
+            <p style="font-size: 14px; color: #6b7280; text-align: center;">
+              Ou copie e cole este link no seu navegador:<br/>
+              <a href="${data.resetUrl}" style="color: #2563eb; word-break: break-all;">${data.resetUrl}</a>
+            </p>
+
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0; color: #92400e; font-size: 14px;">
+                <strong>⚠️ Atenção:</strong> Este link expira em 1 hora. Se você não solicitou a redefinição de senha, ignore este email - sua conta permanecerá segura.
+              </p>
+            </div>
+
+            <p style="font-size: 14px; color: #6b7280;">
+              Por segurança, nunca compartilhe este link com outras pessoas.
+            </p>
+          </div>
+
+          ${this.OAB_FOOTER}
+        </div>
+      `,
+      text: `Olá ${data.name},\n\nRecebemos uma solicitação para redefinir sua senha.\n\nAcesse o link para criar uma nova senha:\n${data.resetUrl}\n\nEste link expira em 1 hora.\n\nSe você não solicitou, ignore este email.\n\nGarcez Palha\n(21) 99535-4010`,
+    }
+  }
+
+  /**
    * Get default from address
    */
   getFromAddress(): { email: string; name: string } {

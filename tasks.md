@@ -39,33 +39,33 @@
 
 ### 0.2 TODOs Críticos no Código
 
-| # | Tarefa | Arquivo | Linha |
-|---|--------|---------|-------|
-| 0.2.1 | Implementar download de proposta | `leads-list.tsx` | 247 |
-| 0.2.2 | Implementar filtro de leads | `leads-filters.tsx` | 18 |
-| 0.2.3 | Get reviewer from session | `admin/documentos/page.tsx` | 157 |
-| 0.2.4 | Armazenar histórico de chat no DB | `api/chat/route.ts` | 74 |
-| 0.2.5 | Enviar email de verificação signup | `api/auth/signup/route.ts` | 73 |
-| 0.2.6 | Enviar email reset password | `api/auth/forgot-password/route.ts` | 55 |
+| # | Tarefa | Arquivo | Status |
+|---|--------|---------|--------|
+| 0.2.1 | Implementar download de proposta | `leads-list.tsx` | ⏳ |
+| 0.2.2 | Implementar filtro de leads | `leads-filters.tsx` | ⏳ |
+| 0.2.3 | Get reviewer from session | `admin/documentos/page.tsx` | ⏳ |
+| 0.2.4 | Armazenar histórico de chat no DB | `api/chat/route.ts` | ⏳ |
+| 0.2.5 | Enviar email de verificação signup | `api/auth/signup/route.ts` | ✅ |
+| 0.2.6 | Enviar email reset password | `api/auth/forgot-password/route.ts` | ✅ |
+| 0.2.7 | Criar endpoint verify-email | `api/auth/verify-email/route.ts` | ✅ |
+| 0.2.8 | Templates email verification/reset | `lib/email/email-templates.ts` | ✅ |
 
 ---
 
-## 🟡 SPRINT 1: PERGUNTAS DE QUALIFICAÇÃO FALTANTES
+## ✅ SPRINT 1: PERGUNTAS DE QUALIFICAÇÃO ✅
 
 > **Prioridade:** ALTA - Só existe para Financeiro
-> **Prazo:** 3-5 dias
+> **Completado:** 2024-12-24
 
 ### 1.1 Criar Perguntas por Categoria
 
-Atualmente só existe `financial-protection-questions.ts`. Faltam:
-
-| # | Arquivo a Criar | Produtos | Perguntas |
-|---|-----------------|----------|-----------|
-| 1.1.1 | `patrimonial-questions.ts` | Usucapião, Holding, Inventário, Regularização | ~15 perguntas |
-| 1.1.2 | `health-insurance-questions.ts` | Plano Saúde, TEA, Bariátrica | ~12 perguntas |
-| 1.1.3 | `social-security-questions.ts` | BPC LOAS, Aposentadoria, Auxílio-Doença | ~10 perguntas |
-| 1.1.4 | `criminal-questions.ts` | Defesa Criminal, Habeas Corpus | ~8 perguntas |
-| 1.1.5 | `expertise-questions.ts` | Grafotécnica, Avaliação Imóveis, Perícia Médica | ~10 perguntas |
+| # | Arquivo a Criar | Produtos | Status |
+|---|-----------------|----------|--------|
+| 1.1.1 | `patrimonial-questions.ts` | Usucapião, Holding, Inventário, Regularização | ✅ |
+| 1.1.2 | `health-insurance-questions.ts` | Plano Saúde, TEA, Bariátrica | ✅ |
+| 1.1.3 | `social-security-questions.ts` | BPC LOAS, Aposentadoria, Auxílio-Doença | ✅ |
+| 1.1.4 | `criminal-questions.ts` | Defesa Criminal, Habeas Corpus | ✅ |
+| 1.1.5 | `expertise-questions.ts` | Grafotécnica, Avaliação Imóveis, Perícia Médica | ✅ |
 
 ### 1.2 Estrutura de Cada Arquivo
 
@@ -86,54 +86,43 @@ export const [PRODUTO]_QUESTIONS: QualificationQuestion[] = [
 
 ### 1.3 Atualizar Question Engine
 
-| # | Tarefa | Arquivo |
-|---|--------|---------|
-| 1.3.1 | Importar novas perguntas no index | `qualification/index.ts` |
-| 1.3.2 | Atualizar getQuestionsForProduct | `question-engine.ts` |
-| 1.3.3 | Atualizar calculateScore para novos produtos | `score-calculator.ts` |
+| # | Tarefa | Arquivo | Status |
+|---|--------|---------|--------|
+| 1.3.1 | Importar novas perguntas no index | `qualification/index.ts` | ✅ |
+| 1.3.2 | Atualizar getQuestionsForProduct | `question-engine.ts` | ✅ |
+| 1.3.3 | Atualizar calculateScore para novos produtos | `score-calculator.ts` | ✅ |
 
 ---
 
-## 🟡 SPRINT 2: CRON JOBS FALTANTES
+## ✅ SPRINT 2: CRON JOBS ✅
 
 > **Prioridade:** ALTA - Automação não funciona sem isso
-> **Prazo:** 3-5 dias
+> **Completado:** 2024-12-24
 
-### 2.1 Cron Jobs Existentes (Verificar Funcionamento)
+### 2.1 Cron Jobs Existentes
 
 | # | Cron Job | Status | Schedule |
 |---|----------|--------|----------|
-| 2.1.1 | `/api/cron/monitor-emails` | ⚠️ Verificar | - |
-| 2.1.2 | `/api/cron/deadline-reminders` | ⚠️ Verificar | - |
-| 2.1.3 | `/api/cron/sync-calendar` | ⚠️ Verificar | - |
-| 2.1.4 | `/api/cron/appointment-automation` | ⚠️ Verificar | - |
-| 2.1.5 | `/api/cron/partner-reports` | ⚠️ Verificar | - |
-| 2.1.6 | `/api/cron/email-sequences` | ⚠️ Verificar | - |
+| 2.1.1 | `/api/cron/monitor-emails` | ✅ | */15 * * * * |
+| 2.1.2 | `/api/cron/deadline-reminders` | ✅ | 0 12 * * * |
+| 2.1.3 | `/api/cron/sync-calendar` | ✅ | 0 */6 * * * |
+| 2.1.4 | `/api/cron/appointment-automation` | ✅ | */30 * * * * |
+| 2.1.5 | `/api/cron/partner-reports` | ✅ | 0 9 * * 1 |
+| 2.1.6 | `/api/cron/email-sequences` | ✅ | */15 * * * * |
 
-### 2.2 Cron Jobs a Criar
+### 2.2 Cron Jobs Criados
 
-| # | Arquivo | Função | Schedule |
-|---|---------|--------|----------|
-| 2.2.1 | `/api/cron/cleanup-sessions/route.ts` | Limpar sessions expiradas | Diário 3h |
-| 2.2.2 | `/api/cron/send-follow-ups/route.ts` | Enviar follow-ups agendados | A cada 30min |
-| 2.2.3 | `/api/cron/payment-reminders/route.ts` | Lembrar pagamentos pendentes | Diário 9h/18h |
-| 2.2.4 | `/api/cron/escalate-hot-leads/route.ts` | Alertar leads hot sem contato | A cada hora |
-| 2.2.5 | `/api/cron/daily-report/route.ts` | Relatório diário via Telegram | Diário 8h |
+| # | Arquivo | Função | Status |
+|---|---------|--------|--------|
+| 2.2.1 | `/api/cron/cleanup-sessions/route.ts` | Limpar sessions expiradas | ✅ |
+| 2.2.2 | `/api/cron/send-follow-ups/route.ts` | Enviar follow-ups agendados | ✅ |
+| 2.2.3 | `/api/cron/payment-reminders/route.ts` | Lembrar pagamentos pendentes | ✅ |
+| 2.2.4 | `/api/cron/escalate-hot-leads/route.ts` | Alertar leads hot sem contato | ✅ |
+| 2.2.5 | `/api/cron/daily-report/route.ts` | Relatório diário via Telegram | ✅ |
 
-### 2.3 Configurar Vercel Cron
+### 2.3 Vercel Cron Configurado ✅
 
-```json
-// vercel.json
-{
-  "crons": [
-    { "path": "/api/cron/cleanup-sessions", "schedule": "0 3 * * *" },
-    { "path": "/api/cron/send-follow-ups", "schedule": "*/30 * * * *" },
-    { "path": "/api/cron/payment-reminders", "schedule": "0 9,18 * * *" },
-    { "path": "/api/cron/escalate-hot-leads", "schedule": "0 * * * *" },
-    { "path": "/api/cron/daily-report", "schedule": "0 8 * * *" }
-  ]
-}
-```
+`vercel.json` atualizado com 14 cron jobs configurados.
 
 ---
 
@@ -194,36 +183,32 @@ O arquivo `src/lib/sms/sms-service.ts` tem TODO:
 
 ---
 
-## 🟡 SPRINT 5: PÁGINAS DE PRODUTO INCOMPLETAS
+## ✅ SPRINT 5: PÁGINAS DE PRODUTO ✅
 
 > **Prioridade:** MÉDIA
-> **Prazo:** 3-5 dias
+> **Completado:** 2024-12-24
 
-### 5.1 Páginas com Conteúdo Mínimo (231B)
-
-Estas páginas existem mas têm conteúdo placeholder:
+### 5.1 Páginas de Categoria (Completas)
 
 | # | Página | Status |
 |---|--------|--------|
-| 5.1.1 | `/criminal` | 231B - placeholder |
-| 5.1.2 | `/patrimonial` | 231B - placeholder |
-| 5.1.3 | `/saude` | 231B - placeholder |
-| 5.1.4 | `/pericia` | 232B - placeholder |
-| 5.1.5 | `/equipe` | 231B - placeholder |
-| 5.1.6 | `/parcerias` | 231B - placeholder |
+| 5.1.1 | `/criminal` | ✅ Hero + Solutions Grid + CTA |
+| 5.1.2 | `/patrimonial` | ✅ Hero + Solutions Grid + CTA |
+| 5.1.3 | `/saude` | ✅ Hero + Solutions Grid + CTA |
+| 5.1.4 | `/pericia` | ✅ Hero + Solutions Grid + CTA |
+| 5.1.5 | `/equipe` | ✅ Perfil completo + Credenciais + Valores |
+| 5.1.6 | `/parcerias` | ✅ Programa completo + Comissões + FAQ |
 
-### 5.2 Páginas de Serviços Legadas
+### 5.2 Páginas de Serviços (Migradas)
 
-Migrar para o novo padrão G4:
-
-| # | Página Legacy | Migrar Para |
-|---|---------------|-------------|
-| 5.2.1 | `/servicos/avaliacao-imoveis` | `/patrimonial/avaliacao-imoveis` |
-| 5.2.2 | `/servicos/direito-criminal` | `/criminal/direito-criminal` |
-| 5.2.3 | `/servicos/direito-imobiliario` | `/patrimonial/direito-imobiliario` |
-| 5.2.4 | `/servicos/pericia-documentos` | `/pericia/pericia-documental` |
-| 5.2.5 | `/servicos/pericia-medica` | `/saude/pericia-medica` |
-| 5.2.6 | `/servicos/secretaria-remota` | `/automacao/secretaria-remota` |
+| # | Página | Rota | Status |
+|---|--------|------|--------|
+| 5.2.1 | Avaliação Imóveis | `/patrimonial/avaliacao-imoveis` | ✅ |
+| 5.2.2 | Direito Criminal | `/criminal/direito-criminal` | ✅ |
+| 5.2.3 | Direito Imobiliário | `/patrimonial/direito-imobiliario` | ✅ |
+| 5.2.4 | Perícia Documental | `/pericia/pericia-documental` | ✅ |
+| 5.2.5 | Perícia Médica | `/saude/pericia-medica` | ✅ |
+| 5.2.6 | Usucapião | `/patrimonial/usucapiao` | ✅ |
 
 ---
 
@@ -635,20 +620,23 @@ supabase/migrations/018_checkout_orders.sql
 | V7.5.3 | **[P2]** Criar prompts COO | `src/lib/ai/prompts/executive/coo-prompts.ts` | ✅ |
 | V7.5.4 | **[P2]** Atualizar index files | `src/lib/ai/agents/executive/index.ts`, `src/lib/ai/prompts/executive/index.ts` | ✅ |
 
-### FASE 8: Workflows e Automações (Semana 13-14)
+### FASE 8: Workflows e Automações (Semana 13-14) ✅
 
 > **Prioridade:** P1 - Conexão entre agentes
+> **Completado:** 2024-12-24
 
 | # | Tarefa | Arquivo | Status |
 |---|--------|---------|--------|
-| V8.1.1 | **[P1]** Workflow: Morning Briefing | `src/lib/ai/workflows/daily/morning-briefing.ts` | ⏳ |
-| V8.1.2 | **[P1]** Workflow: Content Schedule | `src/lib/ai/workflows/daily/content-schedule.ts` | ⏳ |
-| V8.1.3 | **[P1]** Workflow: Ads Optimization | `src/lib/ai/workflows/daily/ads-optimization.ts` | ⏳ |
-| V8.2.1 | **[P1]** Workflow: Weekly Performance | `src/lib/ai/workflows/weekly/performance-review.ts` | ⏳ |
-| V8.2.2 | **[P1]** Workflow: Content Planning | `src/lib/ai/workflows/weekly/content-planning.ts` | ⏳ |
-| V8.3.1 | **[P0]** Trigger: New Lead | `src/lib/ai/workflows/triggers/new-lead.ts` | ⏳ |
-| V8.3.2 | **[P0]** Trigger: Payment Received | `src/lib/ai/workflows/triggers/payment-received.ts` | ⏳ |
-| V8.3.3 | **[P1]** Trigger: Process Movement | `src/lib/ai/workflows/triggers/process-movement.ts` | ⏳ |
+| V8.1.1 | **[P1]** Workflow: Morning Briefing | `src/lib/ai/workflows/daily/morning-briefing.ts` | ✅ |
+| V8.1.2 | **[P1]** Workflow: Content Schedule | `src/lib/ai/workflows/daily/content-schedule.ts` | ✅ |
+| V8.1.3 | **[P1]** Workflow: Ads Optimization | `src/lib/ai/workflows/daily/ads-optimization.ts` | ✅ |
+| V8.2.1 | **[P1]** Workflow: Weekly Performance | `src/lib/ai/workflows/weekly/performance-review.ts` | ✅ |
+| V8.2.2 | **[P1]** Workflow: Content Planning | `src/lib/ai/workflows/weekly/content-planning.ts` | ✅ |
+| V8.3.1 | **[P0]** Trigger: New Lead | `src/lib/ai/workflows/triggers/new-lead.ts` | ✅ |
+| V8.3.2 | **[P0]** Trigger: Payment Received | `src/lib/ai/workflows/triggers/payment-received.ts` | ✅ |
+| V8.3.3 | **[P1]** Trigger: Process Movement | `src/lib/ai/workflows/triggers/process-movement.ts` | ✅ |
+| V8.4.1 | **[P1]** Workflow Types | `src/lib/ai/workflows/types.ts` | ✅ |
+| V8.4.2 | **[P1]** Workflow Index | `src/lib/ai/workflows/index.ts` | ✅ |
 
 ### FASE 9: Refinamento (Semana 15-16)
 
@@ -775,8 +763,9 @@ src/lib/ai/
 
 ---
 
-*tasks.md v3.2*
+*tasks.md v3.5*
 *Atualizado: 2024-12-24*
 *Sistema G4: ✅ 8/8 fases completas*
-*Sprint IA Vertical: 🚀 Fases 1-7 ✅ Completas*
-*Próximo: Fase 8 (Workflows e Automações)*
+*Sprint IA Vertical: 🚀 Fases 1-8 ✅ Completas*
+*Sprints Base: ✅ Sprint 1-2, 5 Completos*
+*Próximo: Sprint 0 (Crítico), Sprint 3 (SMS), Sprint 4 (Testes)*

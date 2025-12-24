@@ -14,7 +14,7 @@ import type {
   NewLeadWorkflowOutput,
 } from '../types'
 import { getCEOAgent } from '../../agents/executive/ceo-agent'
-import { getCOOAgent } from '../../agents/executive/coo-agent'
+import { getCOOAgent, type AgentWorkload } from '../../agents/executive/coo-agent'
 import { createAgentLogger } from '../../agents/core/agent-logger'
 
 // =============================================================================
@@ -102,13 +102,32 @@ export class NewLeadWorkflow {
       // Step 2: Determine priority and assignment
       const assignment = await this.executeStep('assign-lead', 'coo', async () => {
         const coo = getCOOAgent()
-        return await coo.balanceAgentWorkload({
-          newTask: {
-            type: 'lead',
-            priority: qualification.priority,
-            estimatedTime: 30,
+        // Provide agent list and task queue for workload balancing
+        const agents = [
+          {
+            agent: 'triagem',
+            status: 'available' as const,
+            currentTasks: 2,
+            maxCapacity: 10,
+            specialties: ['qualificação', 'atendimento inicial'],
           },
-        })
+          {
+            agent: 'admin',
+            status: 'available' as const,
+            currentTasks: 3,
+            maxCapacity: 15,
+            specialties: ['follow-up', 'agendamento', 'CRM'],
+          },
+        ]
+        const taskQueue = [
+          {
+            taskId: data.leadId,
+            type: 'lead_processing',
+            priority: qualification.priority,
+            requiredSkills: ['qualificação', 'atendimento inicial'],
+          },
+        ]
+        return await coo.balanceAgentWorkload(agents, taskQueue)
       })
 
       // Step 3: Generate initial response
@@ -334,7 +353,7 @@ export class NewLeadWorkflow {
   private updateCRM(
     data: NewLeadTriggerData,
     qualification: { score: number; tier: string },
-    assignment: Record<string, unknown>
+    assignment: AgentWorkload
   ): { updated: boolean; fields: string[] } {
     // In production, this would update Supabase or external CRM
     return {
@@ -349,10 +368,14 @@ export class NewLeadWorkflow {
   private formatOutput(
     data: NewLeadTriggerData,
     qualification: { score: number; tier: 'hot' | 'warm' | 'cold'; priority: 'low' | 'medium' | 'high' | 'critical' },
-    assignment: Record<string, unknown>,
+    assignment: AgentWorkload,
     followUp: { type: 'email' | 'whatsapp' | 'call'; scheduledFor: string; template: string },
     initialResponse: { message: string; channel: 'email' | 'whatsapp'; template: string }
   ): NewLeadWorkflowOutput {
+    // Get assigned agent from newAssignments
+    const newAssignment = assignment.newAssignments?.[0]
+    const assignedAgent = (newAssignment?.assignTo as 'triagem' | 'admin') || 'triagem'
+
     return {
       leadId: data.leadId,
       qualification: {
@@ -360,7 +383,7 @@ export class NewLeadWorkflow {
         tier: qualification.tier,
         priority: qualification.priority,
       },
-      assignedTo: (assignment.assignedAgent as 'triagem' | 'admin') || 'triagem',
+      assignedTo: assignedAgent,
       actions: [
         {
           action: 'Qualificação do lead',
