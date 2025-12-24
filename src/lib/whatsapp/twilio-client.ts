@@ -2,9 +2,9 @@ import twilio from 'twilio'
 import type {
   TwilioConfig,
   TwilioMessageResponse,
-  WhatsAppError,
   PhoneNumber
 } from './types'
+import { WhatsAppError } from './types'
 import { toWhatsAppFormat, formatPhoneNumber } from './types'
 
 /**

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +17,9 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
+import { NewClientDialog } from '@/components/admin/clients/new-client-dialog'
+import { EditClientDialog } from '@/components/admin/clients/edit-client-dialog'
+import { toast } from '@/components/ui/use-toast'
 
 type Client = {
   id: string
@@ -138,9 +142,12 @@ const statusLabels = {
 }
 
 export default function ClientesPage() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedClient, setSelectedClient] = useState<ClientWithProfile | null>(null)
   const [useMockData, setUseMockData] = useState(false)
+  const [newClientDialogOpen, setNewClientDialogOpen] = useState(false)
+  const [editClientDialogOpen, setEditClientDialogOpen] = useState(false)
 
   // Fetch clients from tRPC
   const {
@@ -200,7 +207,7 @@ export default function ClientesPage() {
           <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
-          <Button>
+          <Button onClick={() => setNewClientDialogOpen(true)}>
             <UserPlus className="h-4 w-4 mr-2" />
             Novo Cliente
           </Button>
@@ -393,11 +400,29 @@ export default function ClientesPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Button className="w-full">Ver Casos</Button>
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    className="w-full"
+                    onClick={() => router.push(`/admin/processos?client_id=${selectedClient.id}`)}
+                  >
+                    Ver Casos
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setEditClientDialogOpen(true)}
+                  >
                     Editar Cliente
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      toast({
+                        title: 'Em desenvolvimento',
+                        description: 'A funcionalidade de criar fatura estará disponível em breve.',
+                      })
+                    }}
+                  >
                     Nova Fatura
                   </Button>
                 </div>
@@ -410,6 +435,24 @@ export default function ClientesPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialogs */}
+      <NewClientDialog
+        open={newClientDialogOpen}
+        onOpenChange={setNewClientDialogOpen}
+        onSuccess={() => {
+          refetch()
+        }}
+      />
+
+      <EditClientDialog
+        open={editClientDialogOpen}
+        onOpenChange={setEditClientDialogOpen}
+        client={selectedClient}
+        onSuccess={() => {
+          refetch()
+        }}
+      />
     </div>
   )
 }

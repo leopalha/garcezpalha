@@ -35,8 +35,8 @@ const solutionCategories = [
     description: 'Desbloqueio de conta, golpes, negativacao',
     items: [
       { name: 'Desbloqueio de Conta', href: '/financeiro/desbloqueio-conta' },
-      { name: 'Golpe do PIX', href: '/checkout?service=golpe-pix' },
-      { name: 'Negativacao Indevida', href: '/checkout?service=negativacao-indevida' },
+      { name: 'Golpe do PIX', href: '/financeiro/golpe-pix' },
+      { name: 'Negativacao Indevida', href: '/financeiro/negativacao-indevida' },
       { name: 'Defesa em Execucao', href: '/checkout?service=defesa-execucao' },
     ],
   },

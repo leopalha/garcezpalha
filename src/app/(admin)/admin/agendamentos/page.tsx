@@ -16,6 +16,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
+import { NewAppointmentDialog } from '@/components/admin/appointments/new-appointment-dialog'
 
 type Appointment = {
   id: string
@@ -141,6 +142,7 @@ export default function AgendamentosPage() {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day')
   const [useMockData, setUseMockData] = useState(false)
+  const [showNewDialog, setShowNewDialog] = useState(false)
 
   // Fetch appointments from tRPC
   const selectedDateStr = selectedDate.toISOString().split('T')[0]
@@ -222,7 +224,7 @@ export default function AgendamentosPage() {
           <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
-          <Button>
+          <Button onClick={() => setShowNewDialog(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Novo Agendamento
           </Button>
@@ -436,6 +438,12 @@ export default function AgendamentosPage() {
           </CardContent>
         </Card>
       </div>
+
+      <NewAppointmentDialog
+        open={showNewDialog}
+        onOpenChange={setShowNewDialog}
+        onSuccess={() => refetch()}
+      />
     </div>
   )
 }
