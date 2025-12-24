@@ -287,6 +287,50 @@ class EmailService {
       metadata: params.metadata,
     })
   }
+
+  /**
+   * Send email verification
+   */
+  async sendVerificationEmail(params: {
+    to: string
+    name: string
+    verificationUrl: string
+    userId?: string
+  }): Promise<boolean> {
+    const template = emailTemplates.emailVerification({
+      name: params.name,
+      verificationUrl: params.verificationUrl,
+    })
+
+    return this.sendEmail({
+      to: params.to,
+      template,
+      tags: ['verification', 'auth'],
+      metadata: { userId: params.userId },
+    })
+  }
+
+  /**
+   * Send password reset email
+   */
+  async sendPasswordResetEmail(params: {
+    to: string
+    name: string
+    resetUrl: string
+    userId?: string
+  }): Promise<boolean> {
+    const template = emailTemplates.passwordReset({
+      name: params.name,
+      resetUrl: params.resetUrl,
+    })
+
+    return this.sendEmail({
+      to: params.to,
+      template,
+      tags: ['password-reset', 'auth'],
+      metadata: { userId: params.userId },
+    })
+  }
 }
 
 // Export singleton

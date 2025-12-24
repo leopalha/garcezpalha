@@ -106,6 +106,7 @@ export class ContentPlanningWorkflow {
             impressions: Math.floor(5000 + Math.random() * 10000),
             clicks: Math.floor(100 + Math.random() * 200),
             conversions: Math.floor(2 + Math.random() * 10),
+            revenue: Math.floor(500 + Math.random() * 1500),
           }))
         )
       })
@@ -113,17 +114,8 @@ export class ContentPlanningWorkflow {
       // Step 2: Get SEO recommendations
       const seoRecommendations = await this.executeStep('seo-recommendations', 'seo', async () => {
         const seo = createSEOAgent()
-        const topKeywords = await this.getTopKeywords()
-        // Use correct SEO method for keyword analysis
-        return await seo.analyzeKeywords(
-          topKeywords.map(kw => ({
-            keyword: kw,
-            volume: Math.floor(500 + Math.random() * 2000),
-            difficulty: Math.floor(30 + Math.random() * 40),
-            currentPosition: Math.floor(10 + Math.random() * 50),
-          })),
-          'direito'
-        )
+        // Use researchKeywords method with correct signature
+        return await seo.researchKeywords('direito imobiliário')
       })
 
       // Step 3: Coordinate content calendar with CMO
@@ -391,7 +383,7 @@ export class ContentPlanningWorkflow {
           channel: s.platform || 'instagram',
           time: s.suggestedTime?.split('T')[1]?.substring(0, 5) || '12:00',
           contentType: 'post',
-          topic: s.rationale || 'Post otimizado',
+          topic: s.reason || 'Post otimizado',
           brief: '',
           status: 'planned' as const,
         })
@@ -427,18 +419,19 @@ export class ContentPlanningWorkflow {
     channels: string[],
     performanceAnalysis: Awaited<ReturnType<ReturnType<typeof getCMOAgent>['analyzeChannelPerformance']>>
   ): ContentPlanningOutput['channelStrategy'] {
-    const channelMetrics = performanceAnalysis.channelPerformance || []
+    const channelMetrics = performanceAnalysis.byChannel || []
 
     return channels.map(channel => {
-      const metrics = channelMetrics.find(m => m.channel === channel) || {}
+      const channelData = channelMetrics.find((m: { channel: string }) => m.channel === channel)
+      const metrics = channelData?.metrics
 
       return {
         channel,
         postsPlanned: CHANNEL_POST_FREQUENCY[channel] || 5,
         focusAreas: this.getChannelFocusAreas(channel),
         targetMetrics: [
-          { metric: 'Engajamento', target: ((metrics.roi as number) || 5) * 1.1 },
-          { metric: 'Alcance', target: ((metrics.leads as number) || 1000) * 1.15 },
+          { metric: 'Engajamento', target: (metrics?.roas || 5) * 1.1 },
+          { metric: 'Alcance', target: (metrics?.leads || 1000) * 1.15 },
         ],
       }
     })

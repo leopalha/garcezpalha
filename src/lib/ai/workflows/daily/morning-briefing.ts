@@ -213,13 +213,16 @@ export class MorningBriefingWorkflow {
     operations: Record<string, unknown>,
     input: MorningBriefingInput
   ): Record<string, unknown> {
+    const revenueValue = ((financial.revenue as Record<string, unknown>)?.today as number) || 0
+    const conversionRate = ((marketing.conversion as Record<string, unknown>)?.rate as number) || 0
+
     return {
       summary: `Briefing executivo para ${input.date.toLocaleDateString('pt-BR')}. Sistema operando normalmente.`,
       metrics: [
         { category: 'leads', value: (marketing.leads as Record<string, unknown>)?.today || 0 },
-        { category: 'revenue', value: `R$ ${((financial.revenue as Record<string, unknown>)?.today || 0).toLocaleString('pt-BR')}` },
+        { category: 'revenue', value: `R$ ${revenueValue.toLocaleString('pt-BR')}` },
         { category: 'processes', value: (operations.processes as Record<string, unknown>)?.active || 0 },
-        { category: 'conversion', value: `${(((marketing.conversion as Record<string, unknown>)?.rate || 0) * 100).toFixed(0)}%` },
+        { category: 'conversion', value: `${(conversionRate * 100).toFixed(0)}%` },
       ],
       tasks: [
         { title: 'Revisar leads quentes', priority: 'high' },

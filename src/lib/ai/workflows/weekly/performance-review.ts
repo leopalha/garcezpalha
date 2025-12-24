@@ -12,10 +12,10 @@ import type {
   PerformanceReviewInput,
   PerformanceReviewOutput,
 } from '../types'
-import { getCEOAgent } from '../../agents/executive/ceo-agent'
-import { getCFOAgent } from '../../agents/executive/cfo-agent'
-import { getCMOAgent } from '../../agents/executive/cmo-agent'
-import { getCOOAgent } from '../../agents/executive/coo-agent'
+import { getCEOAgent, type DailyBriefing } from '../../agents/executive/ceo-agent'
+import { getCFOAgent, type WeeklyFinancialReport } from '../../agents/executive/cfo-agent'
+import { getCMOAgent, type ChannelPerformance } from '../../agents/executive/cmo-agent'
+import { getCOOAgent, type WeeklyOperationsReport } from '../../agents/executive/coo-agent'
 import { createAgentLogger } from '../../agents/core/agent-logger'
 
 // =============================================================================
@@ -166,24 +166,31 @@ export class PerformanceReviewWorkflow {
       // Step 4: CEO strategic review using daily briefing (which covers similar info)
       const strategicReview = await this.executeStep('strategic-review', 'ceo', async () => {
         const ceo = getCEOAgent()
-        // Use generateDailyBriefing as it provides executive overview
+        // Use generateDailyBriefing with correct BusinessMetrics signature
         return await ceo.generateDailyBriefing(
           {
-            mrr: 20000,
-            mrrChange: 5,
-            newLeads: 50,
-            leadsChange: 10,
+            dailyLeads: 50,
             conversionRate: 0.15,
-            monthlyRevenue: 45000,
-            revenueChange: 8,
+            averageTicket: 1500,
+            mrr: 20000,
+            cac: 200,
+            marketingSpend: 800,
+            contentPublished: 14,
+            adPerformance: {
+              impressions: 10000,
+              clicks: 200,
+              ctr: 0.02,
+              conversions: 10,
+              spend: 800,
+              roas: 3.2,
+            },
           },
+          [], // alerts
+          [], // pending decisions
           [
-            { agent: 'content', tasksCompleted: 20, successRate: 0.95, avgResponseTime: 2000, status: 'online' },
-            { agent: 'social', tasksCompleted: 15, successRate: 0.92, avgResponseTime: 1500, status: 'online' },
-            { agent: 'qa', tasksCompleted: 30, successRate: 0.98, avgResponseTime: 1000, status: 'online' },
-          ],
-          [
-            { severity: 'medium' as const, area: 'marketing', message: 'CPL acima da meta', action: 'Revisar campanhas' },
+            { agent: 'content', tasksCompleted: 20, successRate: 0.95 },
+            { agent: 'social', tasksCompleted: 15, successRate: 0.92 },
+            { agent: 'qa', tasksCompleted: 30, successRate: 0.98 },
           ]
         )
       })
@@ -288,17 +295,17 @@ export class PerformanceReviewWorkflow {
    * Generate consolidated output
    */
   private generateOutput(
-    marketingReport: Record<string, unknown>,
-    operationsReport: Record<string, unknown>,
-    financialReport: Record<string, unknown>,
-    strategicReview: Record<string, unknown>,
+    marketingReport: ChannelPerformance,
+    operationsReport: WeeklyOperationsReport,
+    financialReport: WeeklyFinancialReport,
+    strategicReview: DailyBriefing,
     input: PerformanceReviewInput
   ): PerformanceReviewOutput {
-    // Calculate department scores
+    // Calculate department scores - cast to Record for generic processing
     const departmentScores = this.calculateDepartmentScores({
-      marketing: marketingReport,
-      operations: operationsReport,
-      finance: financialReport,
+      marketing: marketingReport as unknown as Record<string, unknown>,
+      operations: operationsReport as unknown as Record<string, unknown>,
+      finance: financialReport as unknown as Record<string, unknown>,
     })
 
     // Calculate overall score
@@ -443,36 +450,35 @@ export class PerformanceReviewWorkflow {
   /**
    * Extract achievements from strategic review
    */
-  private extractAchievements(review: Record<string, unknown>): string[] {
-    const topPriorities = (review.topPriorities as Record<string, unknown>[]) || []
+  private extractAchievements(review: DailyBriefing): string[] {
+    const topPriorities = review.topPriorities || []
     return topPriorities
       .filter(p => p.status === 'on_track')
-      .map(p => p.initiative as string)
+      .map(p => p.initiative)
       .slice(0, 5)
   }
 
   /**
    * Extract improvements from strategic review
    */
-  private extractImprovements(review: Record<string, unknown>): string[] {
-    const alerts = (review.criticalAlerts as Record<string, unknown>[]) || []
-    return alerts.map(a => a.message as string).slice(0, 5)
+  private extractImprovements(review: DailyBriefing): string[] {
+    const alerts = review.criticalAlerts || []
+    return alerts.map(a => a.message).slice(0, 5)
   }
 
   /**
    * Calculate weekly trends
    */
   private calculateTrends(
-    marketing: Record<string, unknown>,
-    operations: Record<string, unknown>,
-    finance: Record<string, unknown>
+    marketing: ChannelPerformance,
+    operations: WeeklyOperationsReport,
+    finance: WeeklyFinancialReport
   ): PerformanceReviewOutput['weeklyTrends'] {
     const trends: PerformanceReviewOutput['weeklyTrends'] = []
 
-    // Marketing trends
-    const marketingMetrics = (marketing.metrics as Record<string, unknown>) || {}
-    if (marketingMetrics.leadsGenerated || marketingMetrics.leads) {
-      const leads = (marketingMetrics.leadsGenerated as number) || (marketingMetrics.leads as number) || 0
+    // Marketing trends from ChannelPerformance
+    const leads = marketing.summary?.totalLeads || 0
+    if (leads > 0) {
       trends.push({
         metric: 'Leads Gerados',
         thisWeek: leads,
@@ -482,10 +488,9 @@ export class PerformanceReviewWorkflow {
       })
     }
 
-    // Operations trends
-    const operationsMetrics = (operations.metrics as Record<string, unknown>) || {}
-    if (operationsMetrics.tasksCompleted || operationsMetrics.casesCompleted) {
-      const tasks = (operationsMetrics.tasksCompleted as number) || (operationsMetrics.casesCompleted as number) || 0
+    // Operations trends from WeeklyOperationsReport
+    const tasks = operations.volumeMetrics?.casesCompleted || 0
+    if (tasks > 0) {
       trends.push({
         metric: 'Tarefas Concluídas',
         thisWeek: tasks,
@@ -495,10 +500,9 @@ export class PerformanceReviewWorkflow {
       })
     }
 
-    // Finance trends
-    const financeMetrics = (finance.metrics as Record<string, unknown>) || (finance.revenue as Record<string, unknown>) || {}
-    if (financeMetrics.thisWeek || financeMetrics.revenue) {
-      const revenue = (financeMetrics.thisWeek as number) || (financeMetrics.revenue as number) || 0
+    // Finance trends from WeeklyFinancialReport
+    const revenue = finance.revenue?.thisWeek || 0
+    if (revenue > 0) {
       trends.push({
         metric: 'Receita',
         thisWeek: revenue,
@@ -515,12 +519,12 @@ export class PerformanceReviewWorkflow {
    * Generate priorities for next week
    */
   private generatePriorities(
-    review: Record<string, unknown>
+    review: DailyBriefing
   ): PerformanceReviewOutput['nextWeekPriorities'] {
-    const todaysFocus = (review.todaysFocus as Record<string, unknown>[]) || []
+    const todaysFocus = review.todaysFocus || []
 
     return todaysFocus.slice(0, 5).map(p => ({
-      priority: (p.objective as string) || 'Prioridade',
+      priority: p.objective || 'Prioridade',
       owner: (p.assignedTo as 'ceo' | 'cfo' | 'cmo' | 'coo') || 'ceo',
       deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     }))
