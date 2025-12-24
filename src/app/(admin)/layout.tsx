@@ -15,7 +15,8 @@ import {
   X,
   BarChart3,
   ClipboardCheck,
-  Scale
+  Scale,
+  Package
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -30,6 +31,7 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Leads', href: '/admin/leads', icon: Users },
   { name: 'Clientes', href: '/admin/clientes', icon: UserCheck },
+  { name: 'Produtos', href: '/admin/produtos', icon: Package },
   { name: 'Documentos', href: '/admin/documentos', icon: Scale },
   { name: 'Agendamentos', href: '/admin/agendamentos', icon: Calendar },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
@@ -170,13 +172,23 @@ export default function AdminLayout({
           <div className="flex-1">
             <h1 className="text-lg font-semibold">Painel Administrativo</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              {user?.name || user?.email || 'Admin'}
-            </span>
-            <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-              {user?.role === 'admin' ? 'Admin' : 'Advogado'}
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="hidden md:inline-block text-sm text-muted-foreground">
+                {user?.name || user?.email || 'Admin'}
+              </span>
+              <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                {user?.role === 'admin' ? 'Admin' : 'Advogado'}
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => signOut({ callbackUrl: '/' })}
+              title="Sair"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
           </div>
         </header>
 
