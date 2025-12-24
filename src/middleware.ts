@@ -60,13 +60,23 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl)
     }
 
-    // Check role-based access
+    // Check role-based access and redirect to appropriate dashboard
     if (pathname.startsWith('/admin') && token.role !== 'admin') {
-      return new NextResponse('Forbidden - Admin access required', { status: 403 })
+      // Redirect non-admin users to their appropriate dashboard
+      if (token.role === 'partner') {
+        return NextResponse.redirect(new URL('/portal-parceiro', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
     }
 
     if (pathname.startsWith('/portal-parceiro') && token.role !== 'partner' && token.role !== 'admin') {
-      return new NextResponse('Forbidden - Partner access required', { status: 403 })
+      // Redirect non-partner users to their appropriate dashboard
+      if (token.role === 'admin') {
+        return NextResponse.redirect(new URL('/admin', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
     }
   }
 
