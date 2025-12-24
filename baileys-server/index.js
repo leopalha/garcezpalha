@@ -123,46 +123,28 @@ async function connectToWhatsApp() {
       return
     }
 
-    // Enviar para o webhook do seu sistema
+    // TEMPORÁRIO: Resposta direta (webhook não está funcionando no Vercel)
+    const welcomeMessage = `Olá! 👋 Bem-vindo ao *Garcez Palha - Inteligência Jurídica*
+
+364 anos de tradição, nobreza e excelência.
+
+Como posso ajudá-lo hoje?
+
+📋 *Áreas de Atuação:*
+• Proteção Financeira (golpes PIX, conta bloqueada)
+• Direito Imobiliário
+• Perícias Técnicas
+• Saúde e Previdência
+• Defesa Criminal
+
+Digite sua dúvida ou problema que vou direcioná-lo para o especialista adequado.`
+
+    // Enviar resposta imediata
     try {
-      const webhookPayload = {
-        from,
-        message: messageText,
-        timestamp: message.messageTimestamp,
-        messageId: message.key.id,
-        type: 'text'
-      }
-
-      console.log('[DEBUG] Enviando para webhook:', JSON.stringify(webhookPayload))
-
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookPayload)
-      })
-
-      console.log('[Webhook] Resposta status:', response.status)
-
-      // Se o webhook retornar uma resposta, enviar de volta
-      if (response.ok) {
-        const data = await response.json()
-        console.log('[Webhook] Dados recebidos:', JSON.stringify(data))
-
-        if (data.reply) {
-          console.log('[DEBUG] Enviando resposta:', data.reply)
-          await sock.sendMessage(from, { text: data.reply })
-          console.log('[WhatsApp] Resposta enviada com sucesso!')
-        } else {
-          console.log('[DEBUG] Webhook não retornou campo "reply"')
-        }
-      } else {
-        console.log('[Webhook] Erro HTTP:', response.status, response.statusText)
-        const errorText = await response.text()
-        console.log('[Webhook] Erro body:', errorText)
-      }
-    } catch (error) {
-      console.error('[Webhook] Erro ao chamar webhook:', error.message)
-      console.error('[Webhook] Stack:', error.stack)
+      await sock.sendMessage(from, { text: welcomeMessage })
+      console.log('[WhatsApp] Resposta enviada com sucesso!')
+    } catch (sendError) {
+      console.error('[WhatsApp] Erro ao enviar mensagem:', sendError.message)
     }
   })
 }
