@@ -70,5 +70,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }))
 
-  return [...staticPages, ...servicePages]
+  // Financial protection pages
+  const financeiroPages = [
+    'desbloqueio-conta',
+    'golpe-pix',
+    'negativacao-indevida',
+  ].map((service) => ({
+    url: `${baseUrl}/financeiro/${service}`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }))
+
+  return [...staticPages, ...servicePages, ...financeiroPages]
 }

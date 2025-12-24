@@ -23,6 +23,8 @@ import { cn } from '@/lib/utils'
 import { useRequireRole } from '@/lib/auth/hooks'
 import { signOut } from 'next-auth/react'
 import { Loader2 } from 'lucide-react'
+import { Logo } from '@/components/shared/logo'
+import { Toaster } from '@/components/ui/toaster'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -79,9 +81,8 @@ export default function AdminLayout({
           />
           <div className="fixed inset-y-0 left-0 w-64 bg-card border-r">
             <div className="flex items-center justify-between p-4 border-b">
-              <Link href="/admin" className="font-display text-xl font-bold">
-                <span className="text-primary">Garcez</span>
-                <span className="text-secondary"> Palha</span>
+              <Link href="/admin">
+                <Logo variant="horizontal" />
               </Link>
               <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)}>
                 <X className="h-5 w-5" />
@@ -117,9 +118,8 @@ export default function AdminLayout({
       <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-64 lg:block">
         <div className="flex h-full flex-col bg-card border-r">
           <div className="flex items-center gap-2 p-6 border-b">
-            <Link href="/admin" className="font-display text-xl font-bold">
-              <span className="text-primary">Garcez</span>
-              <span className="text-secondary"> Palha</span>
+            <Link href="/admin">
+              <Logo variant="horizontal" />
             </Link>
           </div>
           <nav className="flex-1 p-4 space-y-2">
@@ -183,6 +183,9 @@ export default function AdminLayout({
         {/* Page content */}
         <main className="p-4 lg:p-6">{children}</main>
       </div>
+
+      {/* Toast notifications */}
+      <Toaster />
     </div>
   )
 }
