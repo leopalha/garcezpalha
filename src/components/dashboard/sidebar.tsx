@@ -12,10 +12,8 @@ import {
   CreditCard,
   Settings,
   LogOut,
-  Scale,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import { Logo } from '@/components/shared/logo'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -34,31 +32,28 @@ export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
 
   return (
-    <div className={cn('flex h-full flex-col bg-card border-r', className)}>
+    <div className={cn('flex h-full flex-col bg-card', className)}>
       {/* Logo */}
-      <div className="flex h-16 items-center border-b px-6 bg-background">
-        <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <Scale className="h-6 w-6 text-primary" />
-          <div className="flex flex-col">
-            <span className="text-lg font-bold text-foreground">Garcez Palha</span>
-            <span className="text-xs text-muted-foreground">Inteligência Jurídica</span>
-          </div>
+      <div className="flex items-center gap-2 p-6 border-b">
+        <Link href="/dashboard">
+          <Logo variant="horizontal" />
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-3 py-4">
+      <nav className="flex-1 p-4 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+          const isActive = pathname === item.href ||
+            (item.href !== '/dashboard' && pathname?.startsWith(item.href))
           return (
             <Link
               key={item.name}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                 isActive
                   ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -68,18 +63,15 @@ export function Sidebar({ className }: SidebarProps) {
         })}
       </nav>
 
-      <Separator />
-
-      {/* User section */}
-      <div className="p-4">
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2"
+      {/* Logout button */}
+      <div className="p-4 border-t space-y-2">
+        <button
           onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full"
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-5 w-5" />
           Sair
-        </Button>
+        </button>
       </div>
     </div>
   )

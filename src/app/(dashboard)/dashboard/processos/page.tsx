@@ -1,4 +1,3 @@
-import { Header } from '@/components/dashboard/header'
 import { ProcessCard } from '@/components/dashboard/process-card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -32,13 +31,7 @@ export default async function ProcessosPage() {
   }))
 
   return (
-    <>
-      <Header 
-        title="Meus Processos" 
-        description="Acompanhe todos os seus processos jurídicos"
-      />
-
-      <div className="space-y-6 p-6">
+    <div className="space-y-6">
         {/* Filters */}
         <div className="flex flex-col gap-4 md:flex-row">
           <div className="relative flex-1">
@@ -82,7 +75,6 @@ export default async function ProcessosPage() {
             </p>
           </div>
         )}
-      </div>
-    </>
+    </div>
   )
 }
