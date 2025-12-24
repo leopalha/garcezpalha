@@ -1,0 +1,96 @@
+{
+  "product": {
+    "id": "exemplo-produto",
+    "name": "Nome do Produto",
+    "slug": "exemplo-produto",
+    "category": "financeiro",
+    "description": "Descrição curta e objetiva do produto/serviço",
+    "hero_title": "Título chamativo para a página de vendas",
+    "hero_subtitle": "Subtítulo explicativo e persuasivo",
+    "hero_problem": "Qual problema este produto resolve?",
+    "base_price": 100000,
+    "features": [
+      "Característica 1",
+      "Característica 2",
+      "Característica 3",
+      "Característica 4"
+    ],
+    "benefits": [
+      "Benefício 1",
+      "Benefício 2",
+      "Benefício 3"
+    ],
+    "documents_required": [
+      "Documento 1",
+      "Documento 2",
+      "Documento 3"
+    ],
+    "faq_items": [
+      {
+        "question": "Pergunta frequente 1?",
+        "answer": "Resposta detalhada para a pergunta 1."
+      },
+      {
+        "question": "Pergunta frequente 2?",
+        "answer": "Resposta detalhada para a pergunta 2."
+      }
+    ],
+    "estimated_delivery": "5 dias úteis",
+    "is_active": true,
+    "is_featured": false
+  },
+  "packages": [
+    {
+      "name": "Pacote Básico",
+      "description": "Descrição do pacote básico",
+      "price": 50000,
+      "features": [
+        "Feature 1",
+        "Feature 2",
+        "Feature 3"
+      ],
+      "is_recommended": false,
+      "order_index": 0
+    },
+    {
+      "name": "Pacote Completo",
+      "description": "Descrição do pacote completo (recomendado)",
+      "price": 100000,
+      "features": [
+        "Tudo do pacote básico",
+        "Feature 4",
+        "Feature 5",
+        "Feature 6"
+      ],
+      "is_recommended": true,
+      "order_index": 1
+    },
+    {
+      "name": "Pacote Premium",
+      "description": "Descrição do pacote premium",
+      "price": 150000,
+      "features": [
+        "Tudo do pacote completo",
+        "Feature 7",
+        "Feature 8",
+        "Bônus exclusivo"
+      ],
+      "is_recommended": false,
+      "order_index": 2
+    }
+  ],
+  "notes": {
+    "prices": "Preços são em centavos (100000 = R$ 1.000,00)",
+    "categories": [
+      "financeiro - Proteção Financeira",
+      "patrimonial - Proteção Patrimonial",
+      "saude - Proteção de Saúde",
+      "pericia - Perícia e Documentos",
+      "criminal - Defesa Criminal",
+      "automacao - Automação Jurídica"
+    ],
+    "is_featured": "Define se aparece na página inicial em destaque",
+    "is_recommended": "Define qual pacote tem o badge 'Recomendado'",
+    "order_index": "Define a ordem de exibição dos pacotes (0, 1, 2...)"
+  }
+}

@@ -184,10 +184,6 @@ export function Navbar() {
           <Button variant="outline" asChild>
             <Link href="/login">Area do Cliente</Link>
           </Button>
-
-          <Button asChild>
-            <Link href="/contato">Fale Conosco</Link>
-          </Button>
         </div>
 
         {/* Mobile menu button and theme switcher */}
@@ -269,11 +265,6 @@ export function Navbar() {
             <Button variant="outline" className="w-full" asChild>
               <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                 Area do Cliente
-              </Link>
-            </Button>
-            <Button className="w-full" asChild>
-              <Link href="/contato" onClick={() => setMobileMenuOpen(false)}>
-                Fale Conosco
               </Link>
             </Button>
           </div>
