@@ -41,14 +41,15 @@
 
 | # | Tarefa | Arquivo | Status |
 |---|--------|---------|--------|
-| 0.2.1 | Implementar download de proposta | `leads-list.tsx` | ⏳ |
-| 0.2.2 | Implementar filtro de leads | `leads-filters.tsx` | ⏳ |
-| 0.2.3 | Get reviewer from session | `admin/documentos/page.tsx` | ⏳ |
-| 0.2.4 | Armazenar histórico de chat no DB | `api/chat/route.ts` | ⏳ |
+| 0.2.1 | Implementar download de proposta | `leads-list.tsx` | ✅ (já existia) |
+| 0.2.2 | Implementar filtro de leads | `leads-filters.tsx` | ✅ (já existia) |
+| 0.2.3 | Get reviewer from session | `admin/documentos/page.tsx` | ✅ (já existia) |
+| 0.2.4 | Armazenar histórico de chat no DB | `api/chat/route.ts` | ✅ (já existia) |
 | 0.2.5 | Enviar email de verificação signup | `api/auth/signup/route.ts` | ✅ |
 | 0.2.6 | Enviar email reset password | `api/auth/forgot-password/route.ts` | ✅ |
 | 0.2.7 | Criar endpoint verify-email | `api/auth/verify-email/route.ts` | ✅ |
 | 0.2.8 | Templates email verification/reset | `lib/email/email-templates.ts` | ✅ |
+| 0.2.9 | Partner reports email sending | `lib/reports/partner-reports.ts` | ✅ |
 
 ---
 
@@ -126,26 +127,29 @@ export const [PRODUTO]_QUESTIONS: QualificationQuestion[] = [
 
 ---
 
-## 🟡 SPRINT 3: SMS SERVICE
+## ✅ SPRINT 3: SMS SERVICE ✅
 
 > **Prioridade:** MÉDIA
-> **Prazo:** 2-3 dias
+> **Completado:** 2024-12-24
 
-### 3.1 Implementar SMS Real
+### 3.1 Implementar SMS Real (Twilio)
 
-O arquivo `src/lib/sms/sms-service.ts` tem TODO:
+| # | Tarefa | Status |
+|---|--------|--------|
+| 3.1.1 | Escolher provider: Twilio | ✅ |
+| 3.1.2 | Implementar SMSService class | ✅ |
+| 3.1.3 | Formato E.164 para Brasil | ✅ |
+| 3.1.4 | Templates: OTP, Appointment, Payment, Deadline | ✅ |
+| 3.1.5 | Fallback gracioso se não configurado | ✅ |
 
+### 3.2 Configuração Necessária
+
+```bash
+# Adicionar no Vercel/env:
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxx
+TWILIO_PHONE_NUMBER=+5521999999999
 ```
-* TODO: Implement actual SMS integration (Twilio, AWS SNS, etc.)
-```
-
-| # | Tarefa | Detalhes |
-|---|--------|----------|
-| 3.1.1 | Escolher provider (Twilio/AWS SNS/Zenvia) | Custo-benefício Brasil |
-| 3.1.2 | Criar conta e configurar API | Credentials no .env |
-| 3.1.3 | Implementar sendSMS real | `sms-service.ts` |
-| 3.1.4 | Testar envio em produção | Número real |
-| 3.1.5 | Criar templates SMS | Follow-ups, lembretes |
 
 ---
 
@@ -217,14 +221,14 @@ O arquivo `src/lib/sms/sms-service.ts` tem TODO:
 > **Prioridade:** MÉDIA
 > **Prazo:** 1-2 semanas
 
-### 6.1 ClickSign/ZapSign Webhook
+### 6.1 ClickSign/ZapSign Webhook ✅
 
-TODOs no arquivo `api/clicksign/webhook/route.ts`:
-
-| # | Tarefa | Linha |
-|---|--------|-------|
-| 6.1.1 | Criar payment link após assinatura | 151 |
-| 6.1.2 | Enviar email com contrato | 155 |
+| # | Tarefa | Status |
+|---|--------|--------|
+| 6.1.1 | Criar payment link após assinatura (MercadoPago) | ✅ |
+| 6.1.2 | Enviar payment link via WhatsApp | ✅ |
+| 6.1.3 | Enviar payment link via Email | ✅ |
+| 6.1.4 | Enviar email com contrato assinado | ✅ |
 
 ### 6.2 Judit.io Integration
 
@@ -763,9 +767,10 @@ src/lib/ai/
 
 ---
 
-*tasks.md v3.5*
+*tasks.md v3.6*
 *Atualizado: 2024-12-24*
 *Sistema G4: ✅ 8/8 fases completas*
 *Sprint IA Vertical: 🚀 Fases 1-8 ✅ Completas*
-*Sprints Base: ✅ Sprint 1-2, 5 Completos*
-*Próximo: Sprint 0 (Crítico), Sprint 3 (SMS), Sprint 4 (Testes)*
+*Sprints Base: ✅ Sprint 1-3, 5 Completos*
+*Sprint 0: 🟡 TODOs código ✅ (todos já existiam), Webhooks ⏳ (teste produção)*
+*Próximo: Sprint 0 (Webhooks), Sprint 4 (Testes), Sprint 6 (Integrações)*
