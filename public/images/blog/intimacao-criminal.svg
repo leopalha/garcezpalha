@@ -1,0 +1,97 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_criminal)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="130" cy="520" r="95" fill="#DC143C" opacity="0.1"/>
+  <circle cx="1070" cy="110" r="88" fill="#4682B4" opacity="0.1"/>
+
+  <!-- Gavel (justice symbol) -->
+  <g transform="translate(150, 180)">
+    <!-- Gavel head -->
+    <rect x="0" y="40" width="120" height="50" fill="#DC143C" rx="8" opacity="0.95"/>
+
+    <!-- Gavel handle -->
+    <rect x="110" y="55" width="150" height="20" fill="#DC143C" rx="5" opacity="0.95"/>
+
+    <!-- Sound block -->
+    <circle cx="100" cy="160" r="60" fill="#4682B4" opacity="0.15"/>
+    <rect x="30" y="160" width="140" height="25" fill="#4682B4" rx="5" opacity="0.9"/>
+  </g>
+
+  <!-- Legal document/Summons -->
+  <g transform="translate(650, 140)">
+    <rect x="0" y="0" width="320" height="240" fill="white" stroke="#DC143C" stroke-width="5" rx="10" opacity="0.95"/>
+
+    <!-- Official stamp/seal -->
+    <circle cx="260" cy="60" r="40" stroke="#DC143C" stroke-width="4" fill="none" opacity="0.7"/>
+    <circle cx="260" cy="60" r="30" stroke="#DC143C" stroke-width="2" fill="none" opacity="0.7"/>
+
+    <!-- Document text lines -->
+    <line x1="30" y1="50" x2="200" y2="50" stroke="#4682B4" stroke-width="4" opacity="0.4"/>
+    <line x1="30" y1="80" x2="180" y2="80" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="110" x2="190" y2="110" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="140" x2="170" y2="140" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="170" x2="185" y2="170" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="200" x2="160" y2="200" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+  </g>
+
+  <!-- Shield with checkmark (defense/protection) -->
+  <g transform="translate(200, 400)">
+    <path d="M 100 0 L 200 40 L 200 120 Q 200 160 100 190 Q 0 160 0 120 L 0 40 Z"
+          fill="#4682B4" opacity="0.9"/>
+    <path d="M 100 30 L 170 60 L 170 120 Q 170 145 100 165 Q 30 145 30 120 L 30 60 Z"
+          fill="white" opacity="0.3"/>
+
+    <!-- Checkmark -->
+    <path d="M 60 100 L 85 125 L 140 70"
+          stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- Scales of justice -->
+  <g transform="translate(750, 420)">
+    <!-- Base -->
+    <rect x="95" y="170" width="60" height="15" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Column -->
+    <rect x="120" y="60" width="10" height="110" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Horizontal bar -->
+    <rect x="40" y="55" width="160" height="10" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Left scale -->
+    <line x1="65" y1="60" x2="65" y2="110" stroke="#4682B4" stroke-width="3"/>
+    <ellipse cx="65" cy="115" rx="30" ry="12" fill="#DC143C" opacity="0.7"/>
+
+    <!-- Right scale -->
+    <line x1="175" y1="60" x2="175" y2="110" stroke="#4682B4" stroke-width="3"/>
+    <ellipse cx="175" cy="115" rx="30" ry="12" fill="#DC143C" opacity="0.7"/>
+  </g>
+
+  <!-- Lawyer/Attorney figure (abstract) -->
+  <g transform="translate(500, 420)">
+    <!-- Head -->
+    <circle cx="40" cy="30" r="25" fill="#DC143C" opacity="0.8"/>
+
+    <!-- Body (suit) -->
+    <rect x="15" y="55" width="50" height="70" fill="#4682B4" opacity="0.8" rx="5"/>
+
+    <!-- Tie -->
+    <polygon points="40,55 35,55 32,90 40,100 48,90 45,55" fill="#DC143C" opacity="0.9"/>
+
+    <!-- Briefcase -->
+    <rect x="10" y="130" width="60" height="40" fill="#DC143C" opacity="0.7" rx="3"/>
+    <rect x="35" y="125" width="10" height="10" fill="#DC143C" opacity="0.9"/>
+  </g>
+
+  <!-- Decorative lines -->
+  <line x1="50" y1="80" x2="120" y2="80" stroke="#DC143C" stroke-width="3" opacity="0.3"/>
+  <line x1="1050" y1="550" x2="1150" y2="550" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_criminal" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E0E0E0"/>
+    </linearGradient>
+  </defs>
+</svg>

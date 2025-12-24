@@ -1,0 +1,239 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_divorcio)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="170" cy="130" r="90" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1030" cy="500" r="110" fill="#DC143C" opacity="0.1"/>
+  <circle cx="930" cy="170" r="75" fill="#4682B4" opacity="0.08"/>
+
+  <!-- Couple figures separating -->
+  <g transform="translate(150, 220)">
+    <!-- Person 1 (moving left) -->
+    <g transform="translate(0, 0)">
+      <!-- Head -->
+      <circle cx="30" cy="30" r="22" fill="#4682B4"/>
+
+      <!-- Body -->
+      <rect x="8" y="52" width="44" height="60" rx="5" fill="#4682B4"/>
+
+      <!-- Arms -->
+      <rect x="-10" y="60" width="20" height="50" rx="5" fill="#4682B4" transform="rotate(-15 0 60)"/>
+      <rect x="52" y="60" width="20" height="50" rx="5" fill="#4682B4" transform="rotate(15 62 60)"/>
+
+      <!-- Legs -->
+      <rect x="15" y="112" width="15" height="60" rx="5" fill="#4682B4"/>
+      <rect x="30" y="112" width="15" height="60" rx="5" fill="#4682B4"/>
+    </g>
+
+    <!-- Person 2 (moving right) -->
+    <g transform="translate(120, 0)">
+      <!-- Head -->
+      <circle cx="30" cy="30" r="22" fill="#DC143C"/>
+
+      <!-- Body -->
+      <rect x="8" y="52" width="44" height="60" rx="5" fill="#DC143C"/>
+
+      <!-- Arms -->
+      <rect x="-10" y="60" width="20" height="50" rx="5" fill="#DC143C" transform="rotate(-15 0 60)"/>
+      <rect x="52" y="60" width="20" height="50" rx="5" fill="#DC143C" transform="rotate(15 62 60)"/>
+
+      <!-- Legs -->
+      <rect x="15" y="112" width="15" height="60" rx="5" fill="#DC143C"/>
+      <rect x="30" y="112" width="15" height="60" rx="5" fill="#DC143C"/>
+    </g>
+
+    <!-- Broken heart between them -->
+    <g transform="translate(75, 50)">
+      <!-- Left half of heart -->
+      <path d="M -10 0 C -10 -15, -25 -15, -25 -5 C -25 10, -10 20, 0 30 L 0 0 Z"
+            fill="#DC143C" opacity="0.6"/>
+
+      <!-- Right half of heart -->
+      <path d="M 10 0 C 10 -15, 25 -15, 25 -5 C 25 10, 10 20, 0 30 L 0 0 Z"
+            fill="#DC143C" opacity="0.6"/>
+
+      <!-- Crack/break line -->
+      <line x1="0" y1="-10" x2="-3" y2="30" stroke="white" stroke-width="3"/>
+      <line x1="0" y1="-10" x2="3" y2="30" stroke="white" stroke-width="3"/>
+    </g>
+  </g>
+
+  <!-- Legal document / Petition -->
+  <g transform="translate(400, 160)">
+    <!-- Document -->
+    <rect x="0" y="0" width="200" height="280" rx="8" fill="white" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Header -->
+    <rect x="0" y="0" width="200" height="45" rx="8" fill="#4682B4" opacity="0.15"/>
+    <text x="100" y="30" font-family="Arial" font-size="16" font-weight="bold" fill="#4682B4" text-anchor="middle">DIVÓRCIO</text>
+
+    <!-- Content sections -->
+    <line x1="20" y1="65" x2="180" y2="65" stroke="#4682B4" stroke-width="2" opacity="0.4"/>
+    <line x1="20" y1="85" x2="180" y2="85" stroke="#4682B4" stroke-width="2" opacity="0.4"/>
+    <line x1="20" y1="105" x2="150" y2="105" stroke="#4682B4" stroke-width="2" opacity="0.4"/>
+
+    <line x1="20" y1="130" x2="180" y2="130" stroke="#DC143C" stroke-width="2" opacity="0.4"/>
+    <line x1="20" y1="150" x2="180" y2="150" stroke="#DC143C" stroke-width="2" opacity="0.4"/>
+    <line x1="20" y1="170" x2="160" y2="170" stroke="#DC143C" stroke-width="2" opacity="0.4"/>
+
+    <!-- Checkboxes -->
+    <rect x="20" y="195" width="18" height="18" rx="3" stroke="#4682B4" stroke-width="2" fill="none"/>
+    <path d="M 23 204 L 28 209 L 35 199" stroke="#4682B4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="45" y="209" font-family="Arial" font-size="12" fill="#4682B4">Consensual</text>
+
+    <rect x="20" y="220" width="18" height="18" rx="3" stroke="#DC143C" stroke-width="2" fill="none"/>
+    <text x="45" y="234" font-family="Arial" font-size="12" fill="#DC143C">Litigioso</text>
+
+    <!-- Signature lines -->
+    <line x1="20" y1="255" x2="85" y2="255" stroke="#4682B4" stroke-width="1.5"/>
+    <line x1="115" y1="255" x2="180" y2="255" stroke="#DC143C" stroke-width="1.5"/>
+  </g>
+
+  <!-- House division -->
+  <g transform="translate(650, 180)">
+    <!-- House -->
+    <rect x="0" y="40" width="140" height="110" rx="4" fill="white" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Roof -->
+    <path d="M -10 40 L 70 0 L 150 40 Z" fill="#4682B4" opacity="0.3" stroke="#4682B4" stroke-width="2"/>
+
+    <!-- Door -->
+    <rect x="55" y="95" width="30" height="55" rx="2" fill="#4682B4" opacity="0.3"/>
+
+    <!-- Windows -->
+    <rect x="15" y="60" width="30" height="25" rx="2" fill="#4682B4" opacity="0.2" stroke="#4682B4" stroke-width="1.5"/>
+    <rect x="95" y="60" width="30" height="25" rx="2" fill="#4682B4" opacity="0.2" stroke="#4682B4" stroke-width="1.5"/>
+
+    <!-- Division line through house -->
+    <line x1="70" y1="-10" x2="70" y2="160" stroke="#DC143C" stroke-width="3" stroke-dasharray="8,5"/>
+
+    <!-- 50% labels -->
+    <text x="30" y="125" font-family="Arial" font-size="18" font-weight="bold" fill="#4682B4" text-anchor="middle">50%</text>
+    <text x="110" y="125" font-family="Arial" font-size="18" font-weight="bold" fill="#DC143C" text-anchor="middle">50%</text>
+  </g>
+
+  <!-- Children/family -->
+  <g transform="translate(650, 350)">
+    <!-- Shield representing protection -->
+    <path d="M 70 10 L 120 25 L 120 75 Q 120 105, 70 120 Q 20 105, 20 75 L 20 25 Z"
+          fill="#4682B4" opacity="0.15" stroke="#4682B4" stroke-width="2.5"/>
+
+    <!-- Child figure inside shield -->
+    <circle cx="70" cy="55" r="15" fill="#4682B4"/>
+    <rect x="55" y="70" width="30" height="35" rx="3" fill="#4682B4"/>
+    <rect x="50" y="75" width="15" height="28" rx="3" fill="#4682B4"/>
+    <rect x="75" y="75" width="15" height="28" rx="3" fill="#4682B4"/>
+  </g>
+
+  <!-- Money/financial division -->
+  <g transform="translate(850, 180)">
+    <!-- Stack of money -->
+    <rect x="0" y="0" width="120" height="60" rx="5" fill="#4682B4" stroke="#4682B4" stroke-width="2"/>
+    <rect x="3" y="3" width="114" height="54" rx="5" fill="white" opacity="0.3"/>
+    <text x="60" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">R$</text>
+
+    <!-- Second bill -->
+    <rect x="-5" y="-5" width="120" height="60" rx="5" fill="#DC143C" opacity="0.7" stroke="#DC143C" stroke-width="2"/>
+
+    <!-- Division arrows -->
+    <path d="M 10 80 L 10 100 L 0 95 M 10 100 L 20 95"
+          stroke="#4682B4" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 110 80 L 110 100 L 100 95 M 110 100 L 120 95"
+          stroke="#DC143C" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Cartório/Registry office -->
+  <g transform="translate(850, 350)">
+    <!-- Building -->
+    <rect x="0" y="40" width="130" height="90" rx="4" fill="white" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Columns -->
+    <rect x="15" y="50" width="12" height="60" fill="#4682B4" opacity="0.3"/>
+    <rect x="55" y="50" width="12" height="60" fill="#4682B4" opacity="0.3"/>
+    <rect x="95" y="50" width="12" height="60" fill="#4682B4" opacity="0.3"/>
+
+    <!-- Roof/pediment -->
+    <path d="M -5 40 L 65 15 L 135 40 Z" fill="#4682B4" opacity="0.4"/>
+
+    <!-- Door -->
+    <rect x="48" y="80" width="26" height="50" rx="2" fill="#4682B4" opacity="0.5"/>
+
+    <!-- Stamp/seal -->
+    <circle cx="110" cy="70" r="12" stroke="#DC143C" stroke-width="2" fill="none"/>
+    <path d="M 106 70 L 110 74 L 118 64" stroke="#DC143C" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Timeline/speed indicator -->
+  <g transform="translate(150, 470)">
+    <!-- Timeline bar -->
+    <rect x="0" y="0" width="300" height="12" rx="6" fill="#4682B4" opacity="0.2"/>
+    <rect x="0" y="0" width="200" height="12" rx="6" fill="#4682B4" opacity="0.6"/>
+
+    <!-- Time markers -->
+    <circle cx="0" cy="6" r="8" fill="#4682B4"/>
+    <circle cx="150" cy="6" r="8" fill="#4682B4"/>
+    <circle cx="300" cy="6" r="8" fill="#4682B4" opacity="0.3"/>
+
+    <!-- Labels -->
+    <text x="0" y="35" font-family="Arial" font-size="12" fill="#4682B4" text-anchor="middle">Início</text>
+    <text x="150" y="35" font-family="Arial" font-size="12" fill="#4682B4" text-anchor="middle">30-60 dias</text>
+    <text x="300" y="35" font-family="Arial" font-size="12" fill="#4682B4" text-anchor="middle" opacity="0.5">Fim</text>
+  </g>
+
+  <!-- Checklist of documents -->
+  <g transform="translate(500, 470)">
+    <!-- Clipboard -->
+    <rect x="0" y="15" width="140" height="110" rx="6" fill="white" stroke="#4682B4" stroke-width="2.5"/>
+    <rect x="50" y="0" width="40" height="20" rx="6" fill="#4682B4"/>
+
+    <!-- Checklist items -->
+    <circle cx="15" cy="35" r="5" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <path d="M 13 35 L 15 37 L 19 32" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <line x1="25" y1="35" x2="125" y2="35" stroke="#4682B4" stroke-width="1.5" opacity="0.4"/>
+
+    <circle cx="15" cy="55" r="5" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <path d="M 13 55 L 15 57 L 19 52" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <line x1="25" y1="55" x2="125" y2="55" stroke="#4682B4" stroke-width="1.5" opacity="0.4"/>
+
+    <circle cx="15" cy="75" r="5" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <path d="M 13 75 L 15 77 L 19 72" stroke="#4682B4" stroke-width="1.5" fill="none"/>
+    <line x1="25" y1="75" x2="125" y2="75" stroke="#4682B4" stroke-width="1.5" opacity="0.4"/>
+
+    <circle cx="15" cy="95" r="5" stroke="#DC143C" stroke-width="1.5" fill="none"/>
+    <line x1="25" y1="95" x2="100" y2="95" stroke="#DC143C" stroke-width="1.5" opacity="0.4"/>
+
+    <text x="70" y="115" font-family="Arial" font-size="10" fill="#4682B4" text-anchor="middle">Documentos</text>
+  </g>
+
+  <!-- Balance/Agreement scales -->
+  <g transform="translate(400, 470)">
+    <!-- Balance beam -->
+    <line x1="-35" y1="40" x2="35" y2="40" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Center post -->
+    <line x1="0" y1="40" x2="0" y2="10" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Left pan (balanced) -->
+    <path d="M -35 40 L -43 50 L -27 50 Z" fill="#4682B4"/>
+    <line x1="-35" y1="40" x2="-35" y2="50" stroke="#4682B4" stroke-width="2"/>
+
+    <!-- Right pan (balanced) -->
+    <path d="M 35 40 L 27 50 L 43 50 Z" fill="#4682B4"/>
+    <line x1="35" y1="40" x2="35" y2="50" stroke="#4682B4" stroke-width="2"/>
+
+    <!-- Top circle -->
+    <circle cx="0" cy="10" r="5" fill="#4682B4"/>
+
+    <!-- Checkmark (agreement) -->
+    <path d="M -10 75 L -3 82 L 10 65" stroke="#4682B4" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <defs>
+    <linearGradient id="paint0_linear_divorcio" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="0.5" stop-color="#EFEFEF"/>
+      <stop offset="1" stop-color="#E7E7E7"/>
+    </linearGradient>
+  </defs>
+</svg>

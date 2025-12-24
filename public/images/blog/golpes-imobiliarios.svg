@@ -1,0 +1,59 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="url(#paint0_linear_golpes)"/>
+  <circle cx="160" cy="130" r="90" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1040" cy="500" r="115" fill="#DC143C" opacity="0.1"/>
+
+  <!-- Scammer figure -->
+  <g transform="translate(200, 250)">
+    <circle cx="30" cy="25" r="20" fill="#DC143C" opacity="0.7"/>
+    <rect x="10" y="45" width="40" height="60" rx="5" fill="#DC143C" opacity="0.7"/>
+    <!-- Money bag -->
+    <circle cx="70" cy="70" r="18" fill="#DC143C" opacity="0.5"/>
+    <text x="70" y="77" font-family="Arial" font-size="16" fill="white" text-anchor="middle">$</text>
+  </g>
+
+  <!-- Fake house/property -->
+  <g transform="translate(400, 200)">
+    <rect x="0" y="60" width="150" height="120" rx="6" fill="#DC143C" opacity="0.3" stroke="#DC143C" stroke-width="3" stroke-dasharray="10,5"/>
+    <path d="M -10 60 L 75 20 L 160 60" fill="#DC143C" opacity="0.2"/>
+    <text x="75" y="130" font-family="Arial" font-size="48" fill="#DC143C" text-anchor="middle">✗</text>
+  </g>
+
+  <!-- Victim -->
+  <g transform="translate(650, 260)">
+    <circle cx="30" cy="20" r="18" fill="#4682B4" opacity="0.6"/>
+    <rect x="12" y="38" width="36" height="50" rx="5" fill="#4682B4" opacity="0.6"/>
+    <!-- Question marks -->
+    <text x="70" y="30" font-family="Arial" font-size="32" fill="#DC143C">?</text>
+  </g>
+
+  <!-- Warning signs -->
+  <g transform="translate(850, 150)">
+    <path d="M 50 10 L 90 80 L 10 80 Z" fill="#DC143C" opacity="0.7" stroke="#DC143C" stroke-width="2"/>
+    <text x="50" y="65" font-family="Arial" font-size="36" font-weight="bold" fill="white" text-anchor="middle">!</text>
+  </g>
+
+  <!-- Red flags -->
+  <g transform="translate(180, 450)">
+    <rect x="50" y="0" width="3" height="100" fill="#DC143C"/>
+    <path d="M 10 10 L 50 10 L 50 50 L 30 40 L 10 50 Z" fill="#DC143C" opacity="0.8"/>
+  </g>
+
+  <g transform="translate(350, 470)">
+    <rect x="50" y="0" width="3" height="80" fill="#DC143C"/>
+    <path d="M 10 10 L 50 10 L 50 45 L 30 37 L 10 45 Z" fill="#DC143C" opacity="0.8"/>
+  </g>
+
+  <!-- Shield (protection) -->
+  <g transform="translate(950, 400)">
+    <path d="M 40 10 L 70 25 L 70 60 C 70 75, 55 85, 40 90 C 25 85, 10 75, 10 60 L 10 25 Z" fill="#4682B4" opacity="0.5" stroke="#4682B4" stroke-width="3"/>
+    <path d="M 25 45 L 35 55 L 55 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <defs>
+    <linearGradient id="paint0_linear_golpes" x1="0" y1="0" x2="1200" y2="630">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E7E7E7"/>
+    </linearGradient>
+  </defs>
+</svg>

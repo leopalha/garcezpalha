@@ -1,0 +1,108 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_trabalho)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="110" cy="510" r="88" fill="#DC143C" opacity="0.1"/>
+  <circle cx="1090" cy="120" r="95" fill="#4682B4" opacity="0.1"/>
+
+  <!-- Clock (work hours) -->
+  <g transform="translate(150, 150)">
+    <!-- Clock face -->
+    <circle cx="120" cy="120" r="110" fill="white" stroke="#4682B4" stroke-width="8" opacity="0.95"/>
+    <circle cx="120" cy="120" r="100" fill="none" stroke="#4682B4" stroke-width="2" opacity="0.3"/>
+
+    <!-- Hour markers -->
+    <circle cx="120" cy="25" r="5" fill="#4682B4"/>
+    <circle cx="215" cy="120" r="5" fill="#4682B4"/>
+    <circle cx="120" cy="215" r="5" fill="#4682B4"/>
+    <circle cx="25" cy="120" r="5" fill="#4682B4"/>
+
+    <!-- Clock hands -->
+    <line x1="120" y1="120" x2="120" y2="60" stroke="#DC143C" stroke-width="6" stroke-linecap="round"/>
+    <line x1="120" y1="120" x2="170" y2="120" stroke="#4682B4" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Center dot -->
+    <circle cx="120" cy="120" r="8" fill="#DC143C"/>
+  </g>
+
+  <!-- Calendar week (6x1 vs 5x2) -->
+  <g transform="translate(650, 140)">
+    <!-- Week grid header -->
+    <rect x="0" y="0" width="350" height="40" fill="#DC143C" rx="8 8 0 0" opacity="0.9"/>
+
+    <!-- Days grid (7 days) -->
+    <rect x="0" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="50" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="100" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="150" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="200" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="250" y="40" width="50" height="60" fill="#4682B4" opacity="0.8"/>
+    <rect x="300" y="40" width="50" height="60" fill="white" stroke="#4682B4" stroke-width="2" opacity="0.9"/>
+
+    <!-- New schedule (5x2) -->
+    <rect x="0" y="120" width="50" height="60" fill="#4682B4" opacity="0.7"/>
+    <rect x="50" y="120" width="50" height="60" fill="#4682B4" opacity="0.7"/>
+    <rect x="100" y="120" width="50" height="60" fill="#4682B4" opacity="0.7"/>
+    <rect x="150" y="120" width="50" height="60" fill="#4682B4" opacity="0.7"/>
+    <rect x="200" y="120" width="50" height="60" fill="#4682B4" opacity="0.7"/>
+    <rect x="250" y="120" width="50" height="60" fill="white" stroke="#4682B4" stroke-width="2" opacity="0.9"/>
+    <rect x="300" y="120" width="50" height="60" fill="white" stroke="#4682B4" stroke-width="2" opacity="0.9"/>
+
+    <!-- Arrow showing change -->
+    <path d="M 175 110 L 175 115 M 165 105 L 175 115 L 185 105" stroke="#DC143C" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Home office / Computer -->
+  <g transform="translate(200, 400)">
+    <!-- Laptop screen -->
+    <rect x="0" y="0" width="200" height="130" fill="#4682B4" rx="8" opacity="0.9"/>
+    <rect x="10" y="10" width="180" height="100" fill="white" opacity="0.3"/>
+
+    <!-- Laptop base/keyboard -->
+    <path d="M -20 130 L 220 130 L 200 150 L 0 150 Z" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Screen content (video call) -->
+    <rect x="30" y="30" width="60" height="60" fill="white" stroke="#DC143C" stroke-width="2" opacity="0.6"/>
+    <rect x="110" y="30" width="60" height="60" fill="white" stroke="#DC143C" stroke-width="2" opacity="0.6"/>
+  </g>
+
+  <!-- Document/Contract (labor law) -->
+  <g transform="translate(700, 380)">
+    <rect x="0" y="0" width="280" height="200" fill="white" stroke="#DC143C" stroke-width="5" rx="10" opacity="0.95"/>
+
+    <!-- Document lines -->
+    <line x1="30" y1="40" x2="250" y2="40" stroke="#4682B4" stroke-width="4" opacity="0.4"/>
+    <line x1="30" y1="70" x2="230" y2="70" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="100" x2="240" y2="100" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="130" x2="220" y2="130" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="160" x2="235" y2="160" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+
+    <!-- Signature line -->
+    <line x1="30" y1="180" x2="140" y2="180" stroke="#DC143C" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+
+  <!-- Person working (abstract) -->
+  <g transform="translate(500, 420)">
+    <!-- Head -->
+    <circle cx="40" cy="30" r="25" fill="#DC143C" opacity="0.8"/>
+
+    <!-- Body -->
+    <rect x="20" y="55" width="40" height="60" fill="#4682B4" opacity="0.8" rx="5"/>
+
+    <!-- Arms (working at computer) -->
+    <rect x="8" y="65" width="15" height="40" fill="#4682B4" opacity="0.7" rx="3"/>
+    <rect x="57" y="65" width="15" height="40" fill="#4682B4" opacity="0.7" rx="3"/>
+  </g>
+
+  <!-- Decorative lines -->
+  <line x1="50" y1="70" x2="120" y2="70" stroke="#DC143C" stroke-width="3" opacity="0.3"/>
+  <line x1="1050" y1="560" x2="1150" y2="560" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_trabalho" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E0E0E0"/>
+    </linearGradient>
+  </defs>
+</svg>

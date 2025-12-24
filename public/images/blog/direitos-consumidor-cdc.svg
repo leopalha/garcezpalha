@@ -1,0 +1,79 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_cdc)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="120" cy="120" r="90" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1080" cy="510" r="100" fill="#DC143C" opacity="0.1"/>
+
+  <!-- Shield (protection symbol) -->
+  <g transform="translate(150, 180)">
+    <path d="M 150 0 L 300 60 L 300 180 Q 300 240 150 280 Q 0 240 0 180 L 0 60 Z"
+          fill="#DC143C" opacity="0.9"/>
+    <path d="M 150 40 L 260 85 L 260 180 Q 260 220 150 250 Q 40 220 40 180 L 40 85 Z"
+          fill="white" opacity="0.3"/>
+
+    <!-- Check mark inside shield -->
+    <path d="M 100 150 L 130 180 L 200 110"
+          stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- Balance/Scales (justice) -->
+  <g transform="translate(650, 200)">
+    <!-- Base -->
+    <rect x="110" y="320" width="80" height="20" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Column -->
+    <rect x="145" y="120" width="10" height="200" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Horizontal bar -->
+    <rect x="50" y="115" width="200" height="10" fill="#4682B4" opacity="0.9"/>
+
+    <!-- Left scale -->
+    <line x1="80" y1="120" x2="80" y2="180" stroke="#4682B4" stroke-width="3"/>
+    <ellipse cx="80" cy="185" rx="40" ry="15" fill="#DC143C" opacity="0.7"/>
+
+    <!-- Right scale -->
+    <line x1="220" y1="120" x2="220" y2="180" stroke="#4682B4" stroke-width="3"/>
+    <ellipse cx="220" cy="185" rx="40" ry="15" fill="#DC143C" opacity="0.7"/>
+  </g>
+
+  <!-- Document/Contract -->
+  <g transform="translate(200, 420)">
+    <rect x="0" y="0" width="280" height="180" fill="white" stroke="#4682B4" stroke-width="4" rx="8" opacity="0.95"/>
+
+    <!-- Document lines -->
+    <line x1="30" y1="40" x2="250" y2="40" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="70" x2="220" y2="70" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="100" x2="240" y2="100" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+    <line x1="30" y1="130" x2="200" y2="130" stroke="#4682B4" stroke-width="3" opacity="0.4"/>
+  </g>
+
+  <!-- Shopping cart/consumer symbol -->
+  <g transform="translate(750, 420)">
+    <!-- Cart body -->
+    <rect x="20" y="60" width="120" height="80" fill="none" stroke="#DC143C" stroke-width="6" rx="5"/>
+
+    <!-- Cart handle -->
+    <path d="M 20 60 L 0 0 L 40 0" stroke="#DC143C" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+    <!-- Wheels -->
+    <circle cx="45" cy="155" r="15" fill="#DC143C" opacity="0.9"/>
+    <circle cx="115" cy="155" r="15" fill="#DC143C" opacity="0.9"/>
+
+    <!-- Cart items (boxes inside) -->
+    <rect x="40" y="75" width="35" height="35" fill="#4682B4" opacity="0.6"/>
+    <rect x="85" y="75" width="35" height="35" fill="#4682B4" opacity="0.6"/>
+  </g>
+
+  <!-- Decorative accent lines -->
+  <line x1="900" y1="100" x2="1100" y2="100" stroke="#DC143C" stroke-width="3" opacity="0.3"/>
+  <line x1="100" y1="550" x2="300" y2="550" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_cdc" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E8E8E8"/>
+    </linearGradient>
+  </defs>
+</svg>

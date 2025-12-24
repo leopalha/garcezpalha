@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp QR Code - Garcez Palha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status.connecting {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.connected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.disconnected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .qr-container {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #qrCode {
+            max-width: 300px;
+            max-height: 300px;
+            border: 4px solid #10b981;
+            border-radius: 12px;
+            background: white;
+            padding: 10px;
+        }
+
+        .loading {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            color: #666;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #6b7280;
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 10px 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            border-radius: 8px;
+        }
+
+        .instructions h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .instructions ol {
+            color: #1e3a8a;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 WhatsApp QR Code</h1>
+        <p class="subtitle">Garcez Palha - Configuração WhatsApp</p>
+
+        <span id="status" class="status disconnected">⚪ Desconectado</span>
+
+        <div class="qr-container">
+            <div id="qrCodeContainer">
+                <div class="loading"></div>
+                <p class="message">Carregando...</p>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error" style="display: none;"></div>
+
+        <div>
+            <button id="generateBtn" onclick="generateQRCode()">🔄 Gerar QR Code</button>
+            <button id="restartBtn" class="secondary" onclick="restartInstance()">♻️ Reiniciar Instância</button>
+        </div>
+
+        <p class="timestamp" id="timestamp"></p>
+
+        <div class="instructions">
+            <h3>📱 Como Conectar:</h3>
+            <ol>
+                <li>Clique em "Gerar QR Code"</li>
+                <li>Abra o WhatsApp no celular</li>
+                <li>Vá em Menu > Dispositivos Conectados</li>
+                <li>Toque em "Conectar Dispositivo"</li>
+                <li>Escaneie o QR Code acima</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://unique-delight-production-affb.up.railway.app';
+        const API_KEY = 'garcezpalha-evolution-api-key-2025';
+        const INSTANCE_NAME = 'garcezpalha-session';
+
+        let pollingInterval = null;
+
+        async function checkStatus() {
+            try {
+                const response = await fetch(`${API_URL}/instance/connectionState/${INSTANCE_NAME}`, {
+                    headers: {
+                        'apikey': API_KEY
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const state = data.instance?.state || 'unknown';
+                    updateStatus(state);
+
+                    if (state === 'open') {
+                        stopPolling();
+                        showSuccess();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        function updateStatus(state) {
+            const statusEl = document.getElementById('status');
+
+            switch(state) {
+                case 'open':
+                    statusEl.className = 'status connected';
+                    statusEl.textContent = '✅ Conectado';
+                    break;
+                case 'connecting':
+                    statusEl.className = 'status connecting';
+                    statusEl.textContent = '🔄 Conectando';
+                    break;
+                case 'close':
+                    statusEl.className = 'status disconnected';
+                    statusEl.textContent = '⚪ Desconectado';
+                    break;
+                default:
+                    statusEl.className = 'status disconnected';
+                    statusEl.textContent = '❓ Desconhecido';
+            }
+        }
+
+        async function fetchQRCode() {
+            try {
+                const response = await fetch(`${API_URL}/instance/connect/${INSTANCE_NAME}`, {
+                    headers: {
+                        'apikey': API_KEY
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.base64) {
+                        const base64 = data.base64.startsWith('data:') ? data.base64 : `data:image/png;base64,${data.base64}`;
+                        showQRCode(base64);
+                        return true;
+                    } else if (data.code) {
+                        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(data.code)}`;
+                        showQRCode(qrUrl);
+                        return true;
+                    } else if (data.pairingCode) {
+                        showError(`Código de pareamento: ${data.pairingCode}`);
+                        return false;
+                    }
+                }
+
+                return false;
+            } catch (error) {
+                console.error('Error fetching QR code:', error);
+                return false;
+            }
+        }
+
+        function showQRCode(src) {
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = `
+                <img id="qrCode" src="${src}" alt="QR Code WhatsApp">
+                <p class="message">✨ Escaneie o QR Code com seu WhatsApp</p>
+            `;
+            updateTimestamp();
+            hideError();
+        }
+
+        function showSuccess() {
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = `
+                <div style="font-size: 60px; margin: 20px 0;">✅</div>
+                <h2 style="color: #10b981; margin-bottom: 10px;">Conectado!</h2>
+                <p class="message">WhatsApp conectado com sucesso</p>
+            `;
+        }
+
+        function showLoading() {
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = `
+                <div class="loading"></div>
+                <p class="message">Gerando QR Code...</p>
+            `;
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent =
+                `Última atualização: ${now.toLocaleTimeString('pt-BR')}`;
+        }
+
+        function startPolling() {
+            stopPolling();
+            pollingInterval = setInterval(async () => {
+                await fetchQRCode();
+                await checkStatus();
+            }, 3000);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        async function generateQRCode() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Gerando...';
+
+            hideError();
+            showLoading();
+
+            try {
+                // Check current status
+                await checkStatus();
+
+                // Try to get QR code
+                const success = await fetchQRCode();
+
+                if (success) {
+                    // Start polling for updates
+                    startPolling();
+                } else {
+                    // Wait and try again
+                    setTimeout(async () => {
+                        await fetchQRCode();
+                        startPolling();
+                    }, 2000);
+                }
+
+            } catch (error) {
+                showError('Erro ao gerar QR Code. Tente reiniciar a instância.');
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔄 Gerar QR Code';
+            }
+        }
+
+        async function restartInstance() {
+            const btn = document.getElementById('restartBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Reiniciando...';
+
+            stopPolling();
+            hideError();
+            showLoading();
+
+            try {
+                // Delete instance
+                await fetch(`${API_URL}/instance/delete/${INSTANCE_NAME}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': API_KEY
+                    }
+                });
+
+                // Wait
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Recreate
+                const response = await fetch(`${API_URL}/instance/create`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        instanceName: INSTANCE_NAME,
+                        qrcode: true,
+                        integration: 'WHATSAPP-BAILEYS'
+                    })
+                });
+
+                if (response.ok) {
+                    showError('✅ Instância reiniciada! Clique em "Gerar QR Code"');
+                    await checkStatus();
+                } else {
+                    const error = await response.json();
+                    showError('Erro ao reiniciar: ' + JSON.stringify(error));
+                }
+
+            } catch (error) {
+                showError('Erro ao reiniciar instância: ' + error.message);
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '♻️ Reiniciar Instância';
+            }
+        }
+
+        // Check status on load
+        checkStatus();
+        setInterval(checkStatus, 10000);
+    </script>
+</body>
+</html>

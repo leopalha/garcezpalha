@@ -1,0 +1,6 @@
+nul
+node_modules/
+.next/
+.env.local
+.n8n/
+.claude/settings.local.json

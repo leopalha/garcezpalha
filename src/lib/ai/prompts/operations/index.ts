@@ -1,0 +1,37 @@
+/**
+ * Operations Prompts Module
+ * Exports all operations-related prompts
+ */
+
+export {
+  QA_AGENT_SYSTEM_PROMPT,
+  CONTENT_REVIEW_PROMPT,
+  OAB_COMPLIANCE_PROMPT,
+  LEGAL_ACCURACY_PROMPT,
+  GRAMMAR_CHECK_PROMPT,
+  BRAND_VOICE_PROMPT,
+  SOCIAL_MEDIA_REVIEW_PROMPT,
+  BLOG_ARTICLE_REVIEW_PROMPT,
+  FINAL_APPROVAL_PROMPT,
+  BATCH_REVIEW_PROMPT,
+  getSeverityFromScore,
+  getApprovalStatus,
+  requiresOABReview,
+} from './qa-prompts'
+
+export {
+  ADMIN_AGENT_SYSTEM_PROMPT,
+  LEAD_TRIAGE_PROMPT,
+  LEAD_FOLLOW_UP_PROMPT,
+  TASK_CREATION_PROMPT,
+  TASK_PRIORITIZATION_PROMPT,
+  SCHEDULING_PROMPT,
+  CALENDAR_ANALYSIS_PROMPT,
+  DAILY_REPORT_PROMPT,
+  WEEKLY_REPORT_PROMPT,
+  NOTIFICATION_GENERATION_PROMPT,
+  getPriorityWeight,
+  isBusinessHours,
+  getNextBusinessDay,
+  formatDuration,
+} from './admin-prompts'

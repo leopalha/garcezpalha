@@ -1,0 +1,53 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="url(#paint0_linear_despejo)"/>
+  <circle cx="160" cy="130" r="90" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1040" cy="500" r="115" fill="#DC143C" opacity="0.1"/>
+
+  <!-- House -->
+  <g transform="translate(450, 150)">
+    <rect x="0" y="60" width="150" height="120" rx="6" fill="#4682B4" stroke="#4682B4" stroke-width="3"/>
+    <path d="M -10 60 L 75 20 L 160 60" fill="#DC143C" opacity="0.7"/>
+    <rect x="55" y="120" width="40" height="60" fill="white" opacity="0.5"/>
+  </g>
+
+  <!-- Eviction notice -->
+  <g transform="translate(350, 350)">
+    <rect x="0" y="0" width="200" height="160" rx="6" fill="white" stroke="#DC143C" stroke-width="3"/>
+    <rect x="0" y="0" width="200" height="35" rx="6" fill="#DC143C" opacity="0.15"/>
+    <text x="100" y="24" font-family="Arial" font-size="14" font-weight="bold" fill="#DC143C" text-anchor="middle">DESPEJO</text>
+    <line x1="20" y1="55" x2="180" y2="55" stroke="#4682B4" stroke-width="1.5" opacity="0.3"/>
+    <line x1="20" y1="75" x2="180" y2="75" stroke="#4682B4" stroke-width="1.5" opacity="0.3"/>
+    <line x1="20" y1="95" x2="180" y2="95" stroke="#4682B4" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- Judge gavel -->
+  <g transform="translate(650, 380)">
+    <rect x="0" y="30" width="60" height="12" rx="3" fill="#4682B4"/>
+    <rect x="27" y="10" width="6" height="30" fill="#4682B4"/>
+    <rect x="10" y="50" width="40" height="8" rx="2" fill="#DC143C" opacity="0.5"/>
+  </g>
+
+  <!-- Calendar (deadline) -->
+  <g transform="translate(800, 360)">
+    <rect x="0" y="0" width="100" height="80" rx="4" fill="white" stroke="#DC143C" stroke-width="2"/>
+    <rect x="0" y="0" width="100" height="20" rx="4" fill="#DC143C" opacity="0.3"/>
+    <text x="50" y="55" font-family="Arial" font-size="20" font-weight="bold" fill="#DC143C" text-anchor="middle">15</text>
+    <text x="50" y="73" font-family="Arial" font-size="10" fill="#4682B4" text-anchor="middle">DIAS</text>
+  </g>
+
+  <!-- Balance (justice) -->
+  <g transform="translate(200, 400)">
+    <line x1="10" y1="40" x2="90" y2="40" stroke="#4682B4" stroke-width="3"/>
+    <line x1="50" y1="40" x2="50" y2="10" stroke="#4682B4" stroke-width="3"/>
+    <path d="M 10 40 L 0 55 L 20 55 Z" fill="#4682B4"/>
+    <path d="M 90 40 L 80 55 L 100 55 Z" fill="#4682B4"/>
+    <circle cx="50" cy="10" r="5" fill="#4682B4"/>
+  </g>
+
+  <defs>
+    <linearGradient id="paint0_linear_despejo" x1="0" y1="0" x2="1200" y2="630">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E7E7E7"/>
+    </linearGradient>
+  </defs>
+</svg>

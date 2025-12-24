@@ -1,0 +1,88 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_inventario)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="80" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="90" fill="#DC143C" opacity="0.1"/>
+
+  <!-- Legal document/scroll -->
+  <g transform="translate(150, 180)">
+    <rect x="0" y="0" width="350" height="280" fill="white" stroke="#4682B4" stroke-width="4" rx="8" opacity="0.95"/>
+
+    <!-- Document lines representing text -->
+    <line x1="30" y1="50" x2="320" y2="50" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+    <line x1="30" y1="90" x2="280" y2="90" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+    <line x1="30" y1="130" x2="300" y2="130" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+    <line x1="30" y1="170" x2="260" y2="170" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+    <line x1="30" y1="210" x2="310" y2="210" stroke="#4682B4" stroke-width="3" opacity="0.3"/>
+
+    <!-- Signature line -->
+    <line x1="30" y1="250" x2="150" y2="250" stroke="#DC143C" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+
+  <!-- Family tree / inheritance flow -->
+  <g transform="translate(650, 100)">
+    <!-- Top person (deceased) -->
+    <circle cx="150" cy="50" r="35" fill="#DC143C" opacity="0.9"/>
+    <circle cx="150" cy="50" r="25" fill="white" opacity="0.3"/>
+
+    <!-- Lines connecting to heirs -->
+    <line x1="150" y1="85" x2="150" y2="140" stroke="#4682B4" stroke-width="4"/>
+    <line x1="150" y1="140" x2="50" y2="200" stroke="#4682B4" stroke-width="3"/>
+    <line x1="150" y1="140" x2="150" y2="200" stroke="#4682B4" stroke-width="3"/>
+    <line x1="150" y1="140" x2="250" y2="200" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Three heirs -->
+    <circle cx="50" cy="220" r="30" fill="#4682B4" opacity="0.9"/>
+    <circle cx="50" cy="220" r="20" fill="white" opacity="0.3"/>
+
+    <circle cx="150" cy="220" r="30" fill="#4682B4" opacity="0.9"/>
+    <circle cx="150" cy="220" r="20" fill="white" opacity="0.3"/>
+
+    <circle cx="250" cy="220" r="30" fill="#4682B4" opacity="0.9"/>
+    <circle cx="250" cy="220" r="20" fill="white" opacity="0.3"/>
+  </g>
+
+  <!-- Gavel (legal process) -->
+  <g transform="translate(700, 400)">
+    <!-- Gavel head -->
+    <rect x="0" y="0" width="100" height="40" fill="#DC143C" rx="5" opacity="0.95"/>
+
+    <!-- Gavel handle -->
+    <rect x="90" y="12" width="120" height="16" fill="#DC143C" rx="3" opacity="0.95"/>
+
+    <!-- Sound block -->
+    <circle cx="-50" cy="80" r="50" fill="#4682B4" opacity="0.2"/>
+    <rect x="-100" y="80" width="100" height="20" fill="#4682B4" rx="3" opacity="0.9"/>
+  </g>
+
+  <!-- Division symbol / pie chart representing estate division -->
+  <g transform="translate(250, 450)">
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#DC143C" stroke-width="6" opacity="0.9"/>
+
+    <!-- Pie slices -->
+    <path d="M 0 0 L 0 -80 A 80 80 0 0 1 69.28 -40 Z" fill="#DC143C" opacity="0.3"/>
+    <path d="M 0 0 L 69.28 -40 A 80 80 0 0 1 69.28 40 Z" fill="#4682B4" opacity="0.3"/>
+    <path d="M 0 0 L 69.28 40 A 80 80 0 0 1 0 80 Z" fill="#DC143C" opacity="0.2"/>
+    <path d="M 0 0 L 0 80 A 80 80 0 0 1 -80 0 Z" fill="#4682B4" opacity="0.2"/>
+    <path d="M 0 0 L -80 0 A 80 80 0 0 1 0 -80 Z" fill="#DC143C" opacity="0.25"/>
+
+    <!-- Dividing lines -->
+    <line x1="0" y1="0" x2="0" y2="-80" stroke="#DC143C" stroke-width="3"/>
+    <line x1="0" y1="0" x2="69.28" y2="-40" stroke="#DC143C" stroke-width="3"/>
+    <line x1="0" y1="0" x2="69.28" y2="40" stroke="#DC143C" stroke-width="3"/>
+    <line x1="0" y1="0" x2="0" y2="80" stroke="#DC143C" stroke-width="3"/>
+    <line x1="0" y1="0" x2="-80" y2="0" stroke="#DC143C" stroke-width="3"/>
+  </g>
+
+  <!-- Decorative accent line -->
+  <line x1="900" y1="50" x2="1150" y2="50" stroke="#DC143C" stroke-width="3" opacity="0.3"/>
+
+  <defs>
+    <linearGradient id="paint0_linear_inventario" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="1" stop-color="#E8E8E8"/>
+    </linearGradient>
+  </defs>
+</svg>

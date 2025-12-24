@@ -1,0 +1,123 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="1200" height="630" fill="url(#paint0_linear_grafotecnica)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="150" cy="150" r="100" fill="#4682B4" opacity="0.1"/>
+  <circle cx="1050" cy="480" r="120" fill="#DC143C" opacity="0.1"/>
+  <circle cx="900" cy="150" r="80" fill="#4682B4" opacity="0.08"/>
+
+  <!-- Document with signature -->
+  <g transform="translate(200, 150)">
+    <!-- Document background -->
+    <rect x="0" y="0" width="280" height="350" rx="8" fill="white" stroke="#4682B4" stroke-width="3"/>
+
+    <!-- Document lines -->
+    <line x1="30" y1="40" x2="250" y2="40" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="30" y1="70" x2="250" y2="70" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="30" y1="100" x2="250" y2="100" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="30" y1="130" x2="250" y2="130" stroke="#E0E0E0" stroke-width="2"/>
+
+    <!-- Signature line (authentic) -->
+    <path d="M 50 230 Q 80 220, 110 230 T 170 220 Q 190 225, 210 230"
+          stroke="#4682B4" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- Checkmark (authentic) -->
+    <circle cx="240" cy="230" r="18" fill="#4682B4" opacity="0.2"/>
+    <path d="M 233 230 L 238 235 L 247 223" stroke="#4682B4" stroke-width="3"
+          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Document with false signature -->
+  <g transform="translate(200, 150)">
+    <rect x="320" y="0" width="280" height="350" rx="8" fill="white" stroke="#DC143C" stroke-width="3"/>
+
+    <!-- Document lines -->
+    <line x1="350" y1="40" x2="570" y2="40" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="350" y1="70" x2="570" y2="70" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="350" y1="100" x2="570" y2="100" stroke="#E0E0E0" stroke-width="2"/>
+    <line x1="350" y1="130" x2="570" y2="130" stroke="#E0E0E0" stroke-width="2"/>
+
+    <!-- Signature line (false - shaky) -->
+    <path d="M 370 230 Q 395 225, 415 232 Q 435 228, 455 235 Q 475 230, 495 233 Q 515 228, 530 232"
+          stroke="#DC143C" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- X mark (false) -->
+    <circle cx="560" cy="230" r="18" fill="#DC143C" opacity="0.2"/>
+    <path d="M 553 223 L 567 237 M 567 223 L 553 237" stroke="#DC143C" stroke-width="3"
+          stroke-linecap="round"/>
+  </g>
+
+  <!-- Magnifying glass examining signature -->
+  <g transform="translate(700, 250)">
+    <!-- Handle -->
+    <line x1="80" y1="80" x2="130" y2="130" stroke="#4682B4" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- Glass circle -->
+    <circle cx="50" cy="50" r="45" fill="white" fill-opacity="0.3" stroke="#4682B4" stroke-width="5"/>
+
+    <!-- Magnified signature details (showing pressure points) -->
+    <path d="M 30 45 Q 40 40, 50 45 T 70 43"
+          stroke="#DC143C" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Pressure point indicators (dots) -->
+    <circle cx="35" cy="45" r="2" fill="#DC143C"/>
+    <circle cx="50" cy="45" r="2" fill="#DC143C"/>
+    <circle cx="65" cy="43" r="2" fill="#DC143C"/>
+  </g>
+
+  <!-- Microscope/analysis equipment -->
+  <g transform="translate(850, 350)">
+    <!-- Base -->
+    <rect x="0" y="80" width="100" height="10" rx="2" fill="#4682B4"/>
+
+    <!-- Arm -->
+    <rect x="45" y="20" width="10" height="70" rx="2" fill="#4682B4"/>
+
+    <!-- Eyepiece -->
+    <circle cx="50" cy="15" r="12" fill="#4682B4"/>
+    <circle cx="50" cy="15" r="6" fill="white" opacity="0.5"/>
+
+    <!-- Stage -->
+    <rect x="20" y="60" width="60" height="8" rx="2" fill="#DC143C"/>
+
+    <!-- Sample slide -->
+    <rect x="30" y="55" width="40" height="3" rx="1" fill="#4682B4" opacity="0.6"/>
+  </g>
+
+  <!-- Report/laudo document -->
+  <g transform="translate(150, 450)">
+    <!-- Report paper -->
+    <rect x="0" y="0" width="200" height="120" rx="6" fill="white" stroke="#4682B4" stroke-width="2"/>
+
+    <!-- Report header -->
+    <rect x="0" y="0" width="200" height="30" rx="6" fill="#4682B4" opacity="0.1"/>
+
+    <!-- Report lines -->
+    <line x1="20" y1="50" x2="180" y2="50" stroke="#4682B4" stroke-width="2" opacity="0.3"/>
+    <line x1="20" y1="70" x2="180" y2="70" stroke="#4682B4" stroke-width="2" opacity="0.3"/>
+    <line x1="20" y1="90" x2="180" y2="90" stroke="#4682B4" stroke-width="2" opacity="0.3"/>
+
+    <!-- Stamp/seal -->
+    <circle cx="170" cy="100" r="15" stroke="#DC143C" stroke-width="2" fill="none"/>
+    <path d="M 165 100 L 170 105 L 180 93" stroke="#DC143C" stroke-width="2"
+          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Comparison arrows -->
+  <g transform="translate(500, 320)">
+    <!-- Arrow pointing to differences -->
+    <path d="M 0 0 L 40 0 L 35 -5 M 40 0 L 35 5"
+          stroke="#DC143C" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 80 0 L 120 0 L 115 -5 M 120 0 L 115 5"
+          stroke="#DC143C" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <defs>
+    <linearGradient id="paint0_linear_grafotecnica" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8F8F8"/>
+      <stop offset="0.5" stop-color="#F0F0F0"/>
+      <stop offset="1" stop-color="#E8E8E8"/>
+    </linearGradient>
+  </defs>
+</svg>
