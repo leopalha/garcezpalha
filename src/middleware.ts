@@ -7,7 +7,6 @@ const PROTECTED_ROUTES = [
   '/dashboard',
   '/admin',
   '/portal-parceiro',
-  '/api/trpc',
 ]
 
 // Define public routes that don't require authentication

@@ -1,4 +1,3 @@
-import { Header } from '@/components/dashboard/header'
 import { StatsCard } from '@/components/dashboard/stats-card'
 import { ProcessCard } from '@/components/dashboard/process-card'
 import { FileText, Calendar, Upload, CreditCard, AlertCircle } from 'lucide-react'
@@ -66,15 +65,9 @@ export default async function DashboardPage() {
   })
 
   return (
-    <>
-      <Header 
-        title="Bem-vindo ao seu Dashboard" 
-        description="Acompanhe seus processos, documentos e prazos em tempo real"
-      />
-
-      <div className="space-y-6 p-6">
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatsCard
             title="Processos Ativos"
             value={stats.processes}
@@ -99,9 +92,9 @@ export default async function DashboardPage() {
             description="Aguardando pagamento"
             icon={CreditCard}
           />
-        </div>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
           {/* Recent Processes */}
           <Card>
             <CardHeader>
@@ -161,10 +154,10 @@ export default async function DashboardPage() {
               </Button>
             </CardContent>
           </Card>
-        </div>
+      </div>
 
-        {/* Quick Actions */}
-        <Card>
+      {/* Quick Actions */}
+      <Card>
           <CardHeader>
             <CardTitle>Ações Rápidas</CardTitle>
           </CardHeader>
@@ -190,8 +183,7 @@ export default async function DashboardPage() {
               </Button>
             </div>
           </CardContent>
-        </Card>
-      </div>
-    </>
+      </Card>
+    </div>
   )
 }
