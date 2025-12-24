@@ -7,6 +7,7 @@ import { analyticsRouter } from './analytics'
 import { referralsRouter } from './referrals'
 import { invoicesRouter } from './invoices'
 import { productsRouter } from './products'
+import { usersRouter } from './users'
 
 export const appRouter = router({
   leads: leadsRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   referrals: referralsRouter,
   invoices: invoicesRouter,
   products: productsRouter,
+  users: usersRouter,
 })
 
 export type AppRouter = typeof appRouter

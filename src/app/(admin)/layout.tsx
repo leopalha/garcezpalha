@@ -16,7 +16,8 @@ import {
   BarChart3,
   ClipboardCheck,
   Scale,
-  Package
+  Package,
+  Shield
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -32,6 +33,7 @@ const navigation = [
   { name: 'Leads', href: '/admin/leads', icon: Users },
   { name: 'Clientes', href: '/admin/clientes', icon: UserCheck },
   { name: 'Produtos', href: '/admin/produtos', icon: Package },
+  { name: 'Usuários', href: '/admin/usuarios', icon: Shield },
   { name: 'Documentos', href: '/admin/documentos', icon: Scale },
   { name: 'Agendamentos', href: '/admin/agendamentos', icon: Calendar },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },

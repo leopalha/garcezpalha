@@ -1,0 +1,8 @@
+export { AgitationSection } from './agitation-section'
+export { SolutionSection } from './solution-section'
+export { CredentialsSection } from './credentials-section'
+export { GuaranteeSection } from './guarantee-section'
+export { TestimonialsSection } from './testimonials-section'
+export { UrgencyBanner, FloatingUrgency } from './urgency-banner'
+export { WhatsAppFloat } from './whatsapp-float'
+export { SEOHead } from './seo-head'
