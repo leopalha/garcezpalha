@@ -128,19 +128,24 @@ async function connectToWhatsApp() {
       const qualifyUrl = 'https://garcezpalha.com/api/chat/qualify'
       const phoneNumber = from.replace('@s.whatsapp.net', '')
 
-      console.log('[DEBUG] Chamando API de qualificação:', qualifyUrl)
+      const payload = {
+        sessionId: phoneNumber,
+        message: messageText,
+        source: 'whatsapp',
+        clientInfo: {
+          phone: phoneNumber
+        }
+      }
+
+      console.log('[DEBUG] SessionID:', phoneNumber)
+      console.log('[DEBUG] Mensagem:', messageText)
+      console.log('[DEBUG] Chamando API:', qualifyUrl)
+      console.log('[DEBUG] Payload completo:', JSON.stringify(payload))
 
       const response = await fetch(qualifyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: phoneNumber,
-          message: messageText,
-          source: 'whatsapp',
-          clientInfo: {
-            phone: phoneNumber
-          }
-        })
+        body: JSON.stringify(payload)
       })
 
       console.log('[API] Resposta status:', response.status)
