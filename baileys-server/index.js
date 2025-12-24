@@ -123,28 +123,56 @@ async function connectToWhatsApp() {
       return
     }
 
-    // TEMPORÁRIO: Resposta direta (webhook não está funcionando no Vercel)
-    const welcomeMessage = `Olá! 👋 Bem-vindo ao *Garcez Palha - Inteligência Jurídica*
-
-364 anos de tradição, nobreza e excelência.
-
-Como posso ajudá-lo hoje?
-
-📋 *Áreas de Atuação:*
-• Proteção Financeira (golpes PIX, conta bloqueada)
-• Direito Imobiliário
-• Perícias Técnicas
-• Saúde e Previdência
-• Defesa Criminal
-
-Digite sua dúvida ou problema que vou direcioná-lo para o especialista adequado.`
-
-    // Enviar resposta imediata
+    // Chamar API de qualificação
     try {
-      await sock.sendMessage(from, { text: welcomeMessage })
-      console.log('[WhatsApp] Resposta enviada com sucesso!')
-    } catch (sendError) {
-      console.error('[WhatsApp] Erro ao enviar mensagem:', sendError.message)
+      const qualifyUrl = 'https://garcezpalha.com/api/chat/qualify'
+      const phoneNumber = from.replace('@s.whatsapp.net', '')
+
+      console.log('[DEBUG] Chamando API de qualificação:', qualifyUrl)
+
+      const response = await fetch(qualifyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: phoneNumber,
+          message: messageText,
+          source: 'whatsapp',
+          clientInfo: {
+            phone: phoneNumber
+          }
+        })
+      })
+
+      console.log('[API] Resposta status:', response.status)
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('[API] Dados recebidos:', JSON.stringify(data))
+
+        const replyText = data.response || data.message || 'Desculpe, não entendi. Pode repetir?'
+
+        console.log('[DEBUG] Enviando resposta:', replyText)
+        await sock.sendMessage(from, { text: replyText })
+        console.log('[WhatsApp] Resposta enviada com sucesso!')
+      } else {
+        const errorText = await response.text()
+        console.log('[API] Erro HTTP:', response.status, errorText)
+
+        // Fallback: mensagem de boas-vindas
+        const welcomeMessage = `Olá! 👋 Bem-vindo ao *Garcez Palha*\n\nComo posso ajudá-lo hoje?`
+        await sock.sendMessage(from, { text: welcomeMessage })
+      }
+    } catch (error) {
+      console.error('[API] Erro ao processar:', error.message)
+      console.error('[API] Stack:', error.stack)
+
+      // Fallback em caso de erro
+      try {
+        const errorMessage = 'Desculpe, ocorreu um erro. Por favor, tente novamente ou ligue (21) 2220-0685.'
+        await sock.sendMessage(from, { text: errorMessage })
+      } catch (sendError) {
+        console.error('[WhatsApp] Erro ao enviar fallback:', sendError.message)
+      }
     }
   })
 }
