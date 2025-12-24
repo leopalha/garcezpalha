@@ -70,7 +70,7 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    if (pathname.startsWith('/portal-parceiro') && token.role !== 'partner' && token.role !== 'admin') {
+    if (pathname.startsWith('/portal-parceiro') && token.role !== 'partner') {
       // Redirect non-partner users to their appropriate dashboard
       if (token.role === 'admin') {
         return NextResponse.redirect(new URL('/admin', request.url))
