@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
@@ -35,10 +36,13 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <div className={cn('flex h-full flex-col bg-card border-r', className)}>
       {/* Logo */}
-      <div className="flex h-16 items-center border-b px-6">
-        <Link href="/dashboard" className="flex items-center gap-2">
+      <div className="flex h-16 items-center border-b px-6 bg-background">
+        <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <Scale className="h-6 w-6 text-primary" />
-          <span className="text-lg font-semibold">Garcez Palha</span>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-foreground">Garcez Palha</span>
+            <span className="text-xs text-muted-foreground">Inteligência Jurídica</span>
+          </div>
         </Link>
       </div>
 
@@ -68,7 +72,11 @@ export function Sidebar({ className }: SidebarProps) {
 
       {/* User section */}
       <div className="p-4">
-        <Button variant="outline" className="w-full justify-start gap-2">
+        <Button
+          variant="outline"
+          className="w-full justify-start gap-2"
+          onClick={() => signOut({ callbackUrl: '/login' })}
+        >
           <LogOut className="h-4 w-4" />
           Sair
         </Button>
