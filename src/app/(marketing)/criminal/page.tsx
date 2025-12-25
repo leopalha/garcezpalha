@@ -6,16 +6,16 @@ import { Scale, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Defesa Criminal | Garcez Palha Advogados',
+  title: 'Direito Criminal | Garcez Palha Advogados',
   description:
-    'Defesa criminal especializada. Processos criminais, habeas corpus, recursos, direito aeronautico e penal. 364 anos de tradicao.',
+    'Defesa criminal especializada. Processos criminais, habeas corpus, recursos, direito penal. 364 anos de tradicao.',
   keywords: [
+    'direito criminal',
     'defesa criminal',
     'advogado criminal',
     'habeas corpus',
     'processo criminal',
     'direito penal',
-    'direito aeronautico',
   ],
 }
 
@@ -32,7 +32,7 @@ export default function CriminalPage() {
               <Scale className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold">
-              Defesa Criminal
+              Direito Criminal
             </h1>
             <p className="text-xl text-muted-foreground">
               Defesa tecnica especializada em processos criminais. Proteja sua liberdade
