@@ -3,15 +3,16 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
-import { Service, formatCurrency } from '@/types/checkout'
+import { Service, formatCurrency, getSolutionPrice, getSolutionFullName, getSolutionVariant } from '@/types/checkout'
 import { Building2, Clock, Shield } from 'lucide-react'
 
 interface OrderSummaryProps {
   service: Service | null
+  variantId?: string | null
   discount?: number
 }
 
-export function OrderSummary({ service, discount = 0 }: OrderSummaryProps) {
+export function OrderSummary({ service, variantId, discount = 0 }: OrderSummaryProps) {
   if (!service) {
     return (
       <Card>
@@ -28,7 +29,12 @@ export function OrderSummary({ service, discount = 0 }: OrderSummaryProps) {
     )
   }
 
-  const subtotal = service.price
+  // Calcular preço correto (variante ou base)
+  const productPrice = getSolutionPrice(service.id, variantId || undefined)
+  const fullName = getSolutionFullName(service.id, variantId || undefined)
+  const variant = variantId ? getSolutionVariant(service.id, variantId) : null
+
+  const subtotal = productPrice
   const discountAmount = Math.floor(subtotal * (discount / 100))
   const total = subtotal - discountAmount
 
@@ -44,8 +50,10 @@ export function OrderSummary({ service, discount = 0 }: OrderSummaryProps) {
         <div className="space-y-2">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <h4 className="font-semibold text-navy-900">{service.name}</h4>
-              <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
+              <h4 className="font-semibold text-navy-900">{fullName}</h4>
+              <p className="text-sm text-muted-foreground mt-1">
+                {variant ? variant.description : service.description}
+              </p>
             </div>
             <Badge variant="secondary" className="flex-shrink-0">
               {service.category}
@@ -53,10 +61,25 @@ export function OrderSummary({ service, discount = 0 }: OrderSummaryProps) {
           </div>
 
           {/* Estimated Delivery */}
-          {service.estimatedDelivery && (
+          {(variant?.estimatedDelivery || service.estimatedDelivery) && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="w-4 h-4" />
-              <span>Prazo: {service.estimatedDelivery}</span>
+              <span>Prazo: {variant?.estimatedDelivery || service.estimatedDelivery}</span>
+            </div>
+          )}
+
+          {/* Features */}
+          {variant?.features && variant.features.length > 0 && (
+            <div className="mt-3 space-y-1">
+              <p className="text-xs font-medium text-navy-900">Inclui:</p>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                {variant.features.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-green-600 mt-0.5">✓</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>

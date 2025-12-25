@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Check, Shield, Clock, Award, ArrowRight,
-  TrendingUp, Users, Star, Zap, FileText, Plane, Building2
+  TrendingUp, Users, Star, Zap, FileText, Plane, Building2, Scale
 } from 'lucide-react'
 import {
   AgitationSection,

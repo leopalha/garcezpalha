@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ServiceSelector } from '@/components/checkout/service-selector'
 import { OrderSummary } from '@/components/checkout/order-summary'
-import { Service, getServiceById, CheckoutFormData } from '@/types/checkout'
+import { Service, getServiceById, CheckoutFormData, formatCurrency, getSolutionPrice, getSolutionFullName } from '@/types/checkout'
 import { ArrowLeft, ArrowRight, CreditCard, QrCode, Loader2 } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 
@@ -19,15 +19,22 @@ export default function CheckoutPage() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
-  // Get service from URL if provided
-  const serviceIdFromUrl = searchParams?.get('service')
+  // Get product from URL if provided (novo padrão ?product=)
   const productIdFromUrl = searchParams?.get('product')
+  const variantIdFromUrl = searchParams?.get('variant')
+  const serviceIdFromUrl = searchParams?.get('service') // Manter compatibilidade
+
+  // Buscar produto correto (prioriza ?product= sobre ?service=)
+  const productId = productIdFromUrl || serviceIdFromUrl
   const [selectedService, setSelectedService] = useState<Service | null>(
-    serviceIdFromUrl ? getServiceById(serviceIdFromUrl) || null : null
+    productId ? getServiceById(productId) || null : null
   )
 
+  // Estado para variante selecionada
+  const [selectedVariant, setSelectedVariant] = useState<string | null>(variantIdFromUrl || null)
+
   // Se veio de um produto VSL, pula a etapa de seleção
-  const initialStep = (serviceIdFromUrl || productIdFromUrl) ? 'details' : 'service'
+  const initialStep = productId ? 'details' : 'service'
   const [step, setStep] = useState<'service' | 'details' | 'payment'>(initialStep)
   const [formData, setFormData] = useState<CheckoutFormData>({
     name: '',
@@ -129,6 +136,16 @@ export default function CheckoutPage() {
         return
       }
 
+      // Validate variant selection if service has variants
+      if (selectedService?.hasVariants && !selectedVariant) {
+        toast({
+          title: 'Selecione uma modalidade',
+          description: 'Este serviço requer a seleção de uma modalidade específica.',
+          variant: 'destructive',
+        })
+        return
+      }
+
       setStep('payment')
     }
   }
@@ -148,6 +165,10 @@ export default function CheckoutPage() {
 
     setIsProcessing(true)
 
+    // Calcular preço correto baseado em variante (se houver)
+    const finalPrice = getSolutionPrice(selectedService.id, selectedVariant || undefined)
+    const fullServiceName = getSolutionFullName(selectedService.id, selectedVariant || undefined)
+
     try {
       if (formData.paymentMethod === 'credit_card') {
         // Stripe Checkout
@@ -155,9 +176,11 @@ export default function CheckoutPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            serviceId: selectedService.id,
-            serviceName: selectedService.name,
-            amount: selectedService.price / 100, // Convert from centavos to reais
+            productId: selectedService.id,
+            variantId: selectedVariant || null,
+            serviceId: selectedService.id, // Manter compatibilidade
+            serviceName: fullServiceName,
+            amount: finalPrice / 100, // Convert from centavos to reais
             customerName: formData.name,
             customerEmail: formData.email,
             customerPhone: formData.phone,
@@ -182,9 +205,11 @@ export default function CheckoutPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            serviceId: selectedService.id,
-            serviceName: selectedService.name,
-            amount: selectedService.price / 100, // Convert from centavos to reais
+            productId: selectedService.id,
+            variantId: selectedVariant || null,
+            serviceId: selectedService.id, // Manter compatibilidade
+            serviceName: fullServiceName,
+            amount: finalPrice / 100, // Convert from centavos to reais
             customerName: formData.name,
             customerEmail: formData.email,
             customerPhone: formData.phone,
@@ -334,6 +359,59 @@ export default function CheckoutPage() {
                     />
                   </div>
 
+                  {/* Variant Selector */}
+                  {selectedService?.hasVariants && selectedService.variants && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-base">Selecione a Modalidade *</Label>
+                        {!selectedVariant && (
+                          <span className="text-xs text-red-600">Seleção obrigatória</span>
+                        )}
+                      </div>
+                      <RadioGroup
+                        value={selectedVariant || ''}
+                        onValueChange={(value) => setSelectedVariant(value)}
+                      >
+                        {selectedService.variants.map((variant) => (
+                          <Card
+                            key={variant.id}
+                            className={`cursor-pointer transition-all ${
+                              selectedVariant === variant.id
+                                ? 'border-gold-500 border-2 bg-gold-50/30'
+                                : 'hover:border-gray-300 hover:bg-muted/30'
+                            }`}
+                            onClick={() => setSelectedVariant(variant.id)}
+                          >
+                            <CardHeader className="flex flex-row items-start space-y-0 space-x-3 p-4">
+                              <RadioGroupItem value={variant.id} id={variant.id} className="mt-1" />
+                              <div className="flex-1 space-y-1">
+                                <Label
+                                  htmlFor={variant.id}
+                                  className="font-semibold cursor-pointer text-navy-900"
+                                >
+                                  {variant.name}
+                                </Label>
+                                <p className="text-sm text-muted-foreground">
+                                  {variant.description}
+                                </p>
+                                <div className="flex items-center justify-between pt-2">
+                                  <span className="text-lg font-bold text-gold-600">
+                                    {formatCurrency(variant.price)}
+                                  </span>
+                                  {variant.estimatedDelivery && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {variant.estimatedDelivery}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </CardHeader>
+                          </Card>
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label>Urgência</Label>
                     <RadioGroup
@@ -438,7 +516,7 @@ export default function CheckoutPage() {
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
-            <OrderSummary service={selectedService} />
+            <OrderSummary service={selectedService} variantId={selectedVariant} />
           </div>
         </div>
       </div>

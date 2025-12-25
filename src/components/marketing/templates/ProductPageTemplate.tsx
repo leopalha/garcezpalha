@@ -28,17 +28,19 @@ import {
 } from 'lucide-react'
 import { Solution, SolutionCategory, formatCurrency } from '@/types/checkout'
 import { generateProductPageSchemas } from '@/lib/seo/schema-generator'
-import { ChatAssistant } from '@/components/chat/ChatAssistant'
+import { EnhancedChatAssistant } from '@/components/chat/EnhancedChatAssistant'
 import { WhatsAppFloat } from '@/components/vsl/whatsapp-float'
 
 // Mapeamento de icones por categoria
 const categoryIcons: Record<SolutionCategory, typeof Shield> = {
-  financeiro: Banknote,
-  patrimonial: Home,
+  bancario: Banknote,
+  imobiliario: Home,
   saude: Heart,
   pericia: FileCheck,
   criminal: Scale,
   automacao: Users,
+  aeronautico: Shield,
+  previdenciario: Shield,
 }
 
 interface ProductPackage {
@@ -548,8 +550,8 @@ export function ProductPageTemplate({
         </section>
       )}
 
-      {/* Chat Widgets - Assistente IA + WhatsApp */}
-      <ChatAssistant
+      {/* Chat Widgets - Assistente IA AVANÇADO + WhatsApp */}
+      <EnhancedChatAssistant
         productId={solution.id}
         productName={solution.name}
         autoOpen={true}

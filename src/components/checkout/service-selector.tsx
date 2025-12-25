@@ -53,7 +53,7 @@ export function ServiceSelector({ selectedServiceId, onSelectService }: ServiceS
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-lg">{service.name}</CardTitle>
-                  <Badge variant={service.category === 'financeiro' || service.category === 'patrimonial' ? 'default' : 'secondary'}>
+                  <Badge variant={service.category === 'bancario' || service.category === 'imobiliario' ? 'default' : 'secondary'}>
                     {service.category}
                   </Badge>
                 </div>
