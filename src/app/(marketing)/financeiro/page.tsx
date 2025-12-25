@@ -16,10 +16,10 @@ import {
 } from 'lucide-react'
 import { SOLUTIONS, formatCurrency } from '@/types/checkout'
 
-const financeiroSolutions = SOLUTIONS.filter((s) => s.category === 'financeiro')
+const financeiroSolutions = SOLUTIONS.filter((s) => s.category === 'bancario')
 
 const categoryInfo = {
-  title: 'Protecao Financeira',
+  title: 'Direito Bancario',
   description:
     'Solucoes juridicas especializadas para proteger suas financas, recuperar valores e defender seus direitos em questoes bancarias e de credito.',
   icon: Banknote,

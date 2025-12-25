@@ -28,6 +28,8 @@ import {
 } from 'lucide-react'
 import { Solution, SolutionCategory, formatCurrency } from '@/types/checkout'
 import { generateProductPageSchemas } from '@/lib/seo/schema-generator'
+import { ChatAssistant } from '@/components/chat/ChatAssistant'
+import { WhatsAppFloat } from '@/components/vsl/whatsapp-float'
 
 // Mapeamento de icones por categoria
 const categoryIcons: Record<SolutionCategory, typeof Shield> = {
@@ -545,6 +547,21 @@ export function ProductPageTemplate({
           </div>
         </section>
       )}
+
+      {/* Chat Widgets - Assistente IA + WhatsApp */}
+      <ChatAssistant
+        productId={solution.id}
+        productName={solution.name}
+        autoOpen={true}
+        openDelay={3000}
+      />
+
+      <WhatsAppFloat
+        phoneNumber="5521995354010"
+        message={`Olá! Estou interessado em ${solution.name}. Pode me ajudar?`}
+        position="bottom-right"
+        showTooltip={false}
+      />
     </div>
   )
 }

@@ -6,22 +6,22 @@ import { Home, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Protecao Patrimonial | Garcez Palha Advogados',
+  title: 'Direito Imobiliario | Garcez Palha Advogados',
   description:
-    'Solucoes juridicas para protecao do seu patrimonio: imoveis, usucapiao, inventario, holding familiar e mais.',
+    'Solucoes juridicas em direito imobiliario: compra e venda, usucapiao, inventario, holding familiar, regularizacao e mais.',
   keywords: [
-    'protecao patrimonial',
     'direito imobiliario',
     'usucapiao',
     'holding familiar',
     'inventario',
     'regularizacao de imoveis',
     'avaliacao de imoveis',
+    'compra e venda',
   ],
 }
 
 export default function PatrimonialPage() {
-  const patrimonialSolutions = SOLUTIONS.filter((s) => s.category === 'patrimonial')
+  const patrimonialSolutions = SOLUTIONS.filter((s) => s.category === 'imobiliario')
 
   return (
     <div className="min-h-screen">
@@ -33,10 +33,10 @@ export default function PatrimonialPage() {
               <Home className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold">
-              Protecao Patrimonial
+              Direito Imobiliario
             </h1>
             <p className="text-xl text-muted-foreground">
-              Proteja seu patrimonio com seguranca juridica. Regularizacao de imoveis,
+              Solucoes completas em direito imobiliario. Compra, venda, regularizacao,
               planejamento sucessorio, holding familiar e muito mais.
             </p>
           </div>

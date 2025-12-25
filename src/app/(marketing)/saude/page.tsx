@@ -6,10 +6,11 @@ import { Heart, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Protecao de Saude | Garcez Palha Advogados',
+  title: 'Direito da Saude | Garcez Palha Advogados',
   description:
-    'Solucoes juridicas para garantir seu direito a saude: planos de saude, cirurgias, tratamentos, INSS, BPC/LOAS e pericias medicas.',
+    'Solucoes juridicas em direito da saude: planos de saude, cirurgias, tratamentos, INSS, BPC/LOAS e pericias medicas.',
   keywords: [
+    'direito da saude',
     'direito a saude',
     'plano de saude negou',
     'cirurgia bariatrica',
@@ -33,10 +34,10 @@ export default function SaudePage() {
               <Heart className="w-8 h-8 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold">
-              Protecao de Saude
+              Direito da Saude
             </h1>
             <p className="text-xl text-muted-foreground">
-              Seu direito a saude protegido. Planos que negam cobertura, cirurgias,
+              Solucoes especializadas em direito da saude. Planos que negam cobertura, cirurgias,
               tratamentos, beneficios do INSS e pericias medicas.
             </p>
           </div>

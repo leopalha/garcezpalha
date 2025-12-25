@@ -8,10 +8,10 @@ import {
   Bot, Clock, ArrowRight, Sparkles
 } from 'lucide-react'
 
-// Todas as soluções organizadas por categoria
+// Todas as soluções organizadas por área do Direito
 const allSolutions = [
   {
-    category: 'Proteção Financeira',
+    category: 'Direito Bancário',
     icon: Banknote,
     color: 'from-blue-500 to-indigo-500',
     href: '/financeiro',
@@ -44,13 +44,13 @@ const allSolutions = [
     ]
   },
   {
-    category: 'Proteção Patrimonial',
+    category: 'Direito Imobiliário',
     icon: Home,
     color: 'from-emerald-500 to-teal-500',
     href: '/patrimonial',
     products: [
       {
-        name: 'Direito Imobiliário',
+        name: 'Consultoria Imobiliária',
         href: '/patrimonial/direito-imobiliario',
         price: 'Consulta R$ 500',
         description: 'Compra, venda, regularização de imóveis'
@@ -76,7 +76,7 @@ const allSolutions = [
     ]
   },
   {
-    category: 'Proteção de Saúde',
+    category: 'Direito da Saúde',
     icon: Heart,
     color: 'from-rose-500 to-pink-500',
     href: '/saude',
@@ -134,16 +134,17 @@ const allSolutions = [
     ]
   },
   {
-    category: 'Defesa Criminal',
+    category: 'Direito Criminal',
     icon: Scale,
     color: 'from-violet-500 to-purple-500',
     href: '/criminal',
     products: [
       {
-        name: 'Direito Criminal',
+        name: 'Defesa Criminal',
         href: '/criminal/direito-criminal',
         price: 'A partir de R$ 5.000',
-        description: 'Defesa técnica 24 horas'
+        description: 'Defesa técnica 24 horas',
+        featured: true
       },
     ]
   },
@@ -154,10 +155,10 @@ const allSolutions = [
     href: '/aeronautico',
     products: [
       {
-        name: 'Direito Aeronáutico',
+        name: 'Consultoria Aeronáutica',
         href: '/aeronautico/direito-aeronautico',
-        price: 'R$ 2.000 + êxito',
-        description: 'Problemas com companhias aéreas'
+        price: 'Consulta sob demanda',
+        description: 'Consultoria e compliance para empresas de aviação'
       },
     ]
   },
@@ -176,7 +177,7 @@ const allSolutions = [
     ]
   },
   {
-    category: 'Previdenciário',
+    category: 'Direito Previdenciário',
     icon: Clock,
     color: 'from-cyan-500 to-teal-500',
     href: '/previdenciario',
