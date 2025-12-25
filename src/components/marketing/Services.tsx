@@ -92,28 +92,29 @@ export function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="h-full"
               >
-                <Card className="h-full hover:shadow-lg transition-shadow group">
-                  <CardHeader>
-                    <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-7 h-7 text-primary" />
-                    </div>
-                    <CardTitle className="font-heading text-xl">
-                      {service.title}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="ghost" className="gap-2 p-0 group-hover:text-primary transition-colors" asChild>
-                      <Link href={service.href}>
+                <Link href={service.href} className="block h-full">
+                  <Card className="h-full hover:shadow-xl hover:border-primary/50 transition-all duration-300 group cursor-pointer">
+                    <CardHeader>
+                      <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                        <Icon className="w-7 h-7 text-primary" />
+                      </div>
+                      <CardTitle className="font-heading text-xl group-hover:text-primary transition-colors">
+                        {service.title}
+                      </CardTitle>
+                      <CardDescription className="text-base">
+                        {service.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
                         Saiba mais
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             )
           })}

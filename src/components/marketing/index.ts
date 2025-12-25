@@ -11,6 +11,7 @@ export { Testimonials } from './Testimonials'
 export { FAQ } from './FAQ'
 export { FinalCTA } from './FinalCTA'
 export { WhatsAppFloat } from './WhatsAppFloat'
+export { ContactHub } from './ContactHub'
 
 // Templates
 export { ProductPageTemplate } from './templates/ProductPageTemplate'
