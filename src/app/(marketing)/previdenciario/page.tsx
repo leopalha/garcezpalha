@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import { SOLUTIONS, formatCurrency } from '@/types/checkout'
 
-const financeiroSolutions = SOLUTIONS.filter((s) => s.category === 'financeiro')
+const previdenciarioSolutions = SOLUTIONS.filter((s) => s.category === 'previdenciario')
 
 const categoryInfo = {
   title: 'Protecao Financeira',
@@ -64,7 +64,7 @@ export default function FinanceiroPage() {
                 <categoryInfo.icon className="w-8 h-8 text-primary" />
               </div>
               <Badge variant="outline" className="text-base py-1 px-3">
-                {financeiroSolutions.length} solucoes
+                {previdenciarioSolutions.length} solucoes
               </Badge>
             </motion.div>
 
@@ -93,7 +93,7 @@ export default function FinanceiroPage() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {financeiroSolutions.map((solution, index) => {
+            {previdenciarioSolutions.map((solution, index) => {
               const Icon = icons[solution.id] || Shield
               return (
                 <motion.div
