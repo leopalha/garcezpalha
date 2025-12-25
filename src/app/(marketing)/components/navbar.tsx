@@ -37,7 +37,7 @@ const solutionCategories = [
       { name: 'Desbloqueio de Conta', href: '/financeiro/desbloqueio-conta' },
       { name: 'Golpe do PIX', href: '/financeiro/golpe-pix' },
       { name: 'Negativacao Indevida', href: '/financeiro/negativacao-indevida' },
-      { name: 'Defesa em Execucao', href: '/checkout?service=defesa-execucao' },
+      { name: 'Defesa em Execucao', href: '/financeiro/defesa-execucao' },
     ],
   },
   {
@@ -46,22 +46,22 @@ const solutionCategories = [
     icon: Home,
     description: 'Imoveis, usucapiao, inventario, holding',
     items: [
-      { name: 'Direito Imobiliario', href: '/checkout?service=direito-imobiliario' },
-      { name: 'Usucapiao', href: '/checkout?service=usucapiao' },
-      { name: 'Holding Familiar', href: '/checkout?service=holding-familiar' },
-      { name: 'Inventario', href: '/checkout?service=inventario' },
+      { name: 'Direito Imobiliario', href: '/patrimonial/direito-imobiliario' },
+      { name: 'Usucapiao', href: '/patrimonial/usucapiao' },
+      { name: 'Holding Familiar', href: '/patrimonial/holding-familiar' },
+      { name: 'Inventario', href: '/patrimonial/inventario' },
     ],
   },
   {
     name: 'Protecao de Saude',
     href: '/saude',
     icon: Heart,
-    description: 'Planos de saude, INSS, pericias',
+    description: 'Planos de saude, tratamentos, beneficios',
     items: [
-      { name: 'Plano de Saude Negou', href: '/checkout?service=plano-saude' },
-      { name: 'Cirurgia Bariatrica', href: '/checkout?service=cirurgia-bariatrica' },
-      { name: 'Tratamento TEA', href: '/checkout?service=tratamento-tea' },
-      { name: 'BPC / LOAS', href: '/checkout?service=bpc-loas' },
+      { name: 'Plano de Saude Negou', href: '/saude/plano-saude-negou' },
+      { name: 'Cirurgia Bariatrica', href: '/saude/cirurgia-bariatrica' },
+      { name: 'Tratamento TEA', href: '/saude/tea' },
+      { name: 'BPC / LOAS', href: '/saude/bpc-loas' },
     ],
   },
   {
@@ -70,9 +70,9 @@ const solutionCategories = [
     icon: FileCheck,
     description: 'Laudos, grafotecnia, analise documental',
     items: [
-      { name: 'Pericia Documental', href: '/checkout?service=pericia-documental' },
-      { name: 'Grafotecnia', href: '/checkout?service=grafotecnia' },
-      { name: 'Laudo Tecnico', href: '/checkout?service=laudo-tecnico' },
+      { name: 'Pericia Documental', href: '/pericia/pericia-documental' },
+      { name: 'Grafotecnia', href: '/pericia/grafotecnia' },
+      { name: 'Laudo Tecnico', href: '/pericia/laudo-tecnico' },
     ],
   },
   {
@@ -81,18 +81,34 @@ const solutionCategories = [
     icon: Scale,
     description: 'Processos criminais, habeas corpus',
     items: [
-      { name: 'Direito Criminal', href: '/checkout?service=direito-criminal' },
-      { name: 'Direito Aeronautico', href: '/checkout?service=direito-aeronautico' },
+      { name: 'Direito Criminal', href: '/criminal/direito-criminal' },
+    ],
+  },
+  {
+    name: 'Direito Aeronautico',
+    href: '/aeronautico',
+    icon: Scale,
+    description: 'Problemas com companhias aereas',
+    items: [
+      { name: 'Direito Aeronautico', href: '/aeronautico/direito-aeronautico' },
     ],
   },
   {
     name: 'Automacao Juridica',
     href: '/automacao',
     icon: Users,
-    description: 'Secretaria remota, aposentadoria',
+    description: 'Secretaria remota com IA',
     items: [
-      { name: 'Secretaria Remota', href: '/checkout?service=secretaria-remota' },
-      { name: 'Aposentadoria', href: '/checkout?service=aposentadoria' },
+      { name: 'Secretaria Remota', href: '/automacao/secretaria-remota' },
+    ],
+  },
+  {
+    name: 'Previdenciario',
+    href: '/previdenciario',
+    icon: Users,
+    description: 'Aposentadoria e beneficios INSS',
+    items: [
+      { name: 'Aposentadoria', href: '/previdenciario/aposentadoria' },
     ],
   },
 ]
@@ -126,6 +142,20 @@ export function Navbar() {
                 <NavigationMenuTrigger>Solucoes</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="w-[800px] p-4">
+                    {/* Link to all solutions */}
+                    <Link
+                      href="/solucoes"
+                      className="block mb-4 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors border border-primary/20"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-primary">Ver Todas as Soluções</div>
+                          <div className="text-sm text-muted-foreground">19 produtos em 8 categorias</div>
+                        </div>
+                        <ChevronDown className="w-5 h-5 text-primary rotate-[-90deg]" />
+                      </div>
+                    </Link>
+
                     <div className="grid grid-cols-3 gap-4">
                       {solutionCategories.map((category) => {
                         const Icon = category.icon
