@@ -21,11 +21,14 @@ export default function CheckoutPage() {
 
   // Get service from URL if provided
   const serviceIdFromUrl = searchParams?.get('service')
+  const productIdFromUrl = searchParams?.get('product')
   const [selectedService, setSelectedService] = useState<Service | null>(
     serviceIdFromUrl ? getServiceById(serviceIdFromUrl) || null : null
   )
 
-  const [step, setStep] = useState<'service' | 'details' | 'payment'>('service')
+  // Se veio de um produto VSL, pula a etapa de seleção
+  const initialStep = (serviceIdFromUrl || productIdFromUrl) ? 'details' : 'service'
+  const [step, setStep] = useState<'service' | 'details' | 'payment'>(initialStep)
   const [formData, setFormData] = useState<CheckoutFormData>({
     name: '',
     email: '',
