@@ -100,10 +100,24 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="%2327272A"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="700" font-family="system-ui">GP</text></svg>',
-        type: 'image/svg+xml',
+        url: '/icon.png',
+        type: 'image/png',
+        sizes: '32x32',
       },
     ],
+    apple: [
+      {
+        url: '/apple-icon.png',
+        type: 'image/png',
+        sizes: '180x180',
+      },
+    ],
+    shortcut: '/favicon.ico',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'Garcez Palha',
+    statusBarStyle: 'black-translucent',
   },
 }
 
