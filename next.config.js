@@ -42,7 +42,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(self "https://js.stripe.com")',
+            value: 'camera=(self), microphone=(self), geolocation=(), interest-cohort=(), payment=(self "https://js.stripe.com")',
           },
           {
             key: 'Content-Security-Policy',
@@ -52,7 +52,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://api.stripe.com https://api.openai.com https://*.supabase.co wss://*.supabase.co",
+              "connect-src 'self' https://api.stripe.com https://api.openai.com wss://api.openai.com https://*.supabase.co wss://*.supabase.co https://api.d-id.com wss://api.d-id.com",
               "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
