@@ -15,8 +15,7 @@ type VoiceMode = 'audio' | 'avatar'
 function parseMarkdown(text: string): React.ReactNode {
   if (!text) return text
 
-  const parts: React.ReactNode[] = []
-  let remaining = text
+  let parts: React.ReactNode[] = [text]
   let key = 0
 
   // Regex patterns for markdown
@@ -30,7 +29,7 @@ function parseMarkdown(text: string): React.ReactNode {
   for (const { regex, component } of patterns) {
     const newParts: React.ReactNode[] = []
 
-    for (const part of (typeof remaining === 'string' ? [remaining] : parts)) {
+    for (const part of parts) {
       if (typeof part !== 'string') {
         newParts.push(part)
         continue
@@ -58,9 +57,7 @@ function parseMarkdown(text: string): React.ReactNode {
       }
     }
 
-    parts.length = 0
-    parts.push(...newParts)
-    remaining = parts
+    parts = newParts
   }
 
   return <>{parts}</>
