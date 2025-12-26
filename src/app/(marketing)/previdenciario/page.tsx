@@ -164,7 +164,7 @@ export default function FinanceiroPage() {
             </p>
             <Button size="lg" asChild>
               <Link
-                href="https://wa.me/5521995054553?text=Ola!%20Preciso%20de%20ajuda%20com%20uma%20questao%20financeira."
+                href="https://wa.me/5521995354010?text=Ola!%20Preciso%20de%20ajuda%20com%20uma%20questao%20financeira."
                 target="_blank"
                 rel="noopener noreferrer"
               >

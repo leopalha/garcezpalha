@@ -30,7 +30,7 @@ const steps = [
 ]
 
 export function HowItWorks() {
-  const whatsappNumber = '5521995054553'
+  const whatsappNumber = '5521995354010'
   const whatsappMessage = encodeURIComponent('Ola! Preciso de ajuda juridica.')
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
 
