@@ -1,6 +1,6 @@
 import { Navbar } from './components/navbar'
 import { Footer } from './components/footer'
-import { ChatbotWidget } from '@/components/shared/chatbot-widget'
+import { ChatAssistant } from '@/components/chat/ChatAssistant'
 import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/shared/json-ld'
 
 export default function MarketingLayout({
@@ -15,7 +15,12 @@ export default function MarketingLayout({
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
-      <ChatbotWidget />
+      <ChatAssistant
+        productId="geral"
+        productName="Serviços Jurídicos"
+        autoOpen={false}
+        openDelay={5000}
+      />
     </div>
   )
 }
