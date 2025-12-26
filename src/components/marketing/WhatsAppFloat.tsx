@@ -10,7 +10,7 @@ export function WhatsAppFloat() {
   const [showTooltip, setShowTooltip] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
 
-  const whatsappNumber = '5521995054553'
+  const whatsappNumber = '5521995354010'
   const whatsappMessage = encodeURIComponent('Olá! Preciso de ajuda jurídica.')
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
 
