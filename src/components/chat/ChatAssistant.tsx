@@ -15,8 +15,10 @@ import {
   Bot,
   User,
   Volume2,
+  Video,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { RealtimeVoiceAssistant } from './RealtimeVoiceAssistant'
 
 interface Message {
   id: string
@@ -44,6 +46,7 @@ export function ChatAssistant({
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
+  const [isVoiceMode, setIsVoiceMode] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -209,14 +212,25 @@ export function ChatAssistant({
                 <p className="text-xs opacity-90">{productName}</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:bg-white/20"
-            >
-              <X className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsVoiceMode(true)}
+                className="text-white hover:bg-white/20"
+                title="Conversa por voz"
+              >
+                <Video className="h-5 w-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="text-white hover:bg-white/20"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
 
           {/* Messages */}
@@ -346,6 +360,15 @@ export function ChatAssistant({
             </p>
           </div>
         </Card>
+
+        {/* Voice Assistant Modal */}
+        {isVoiceMode && (
+          <RealtimeVoiceAssistant
+            productId={productId}
+            productName={productName}
+            onClose={() => setIsVoiceMode(false)}
+          />
+        )}
       </motion.div>
     </AnimatePresence>
   )
