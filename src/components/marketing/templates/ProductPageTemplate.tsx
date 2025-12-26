@@ -28,7 +28,7 @@ import {
 } from 'lucide-react'
 import { Solution, SolutionCategory, formatCurrency } from '@/types/checkout'
 import { generateProductPageSchemas } from '@/lib/seo/schema-generator'
-import { EnhancedChatAssistant } from '@/components/chat/EnhancedChatAssistant'
+import { ChatAssistant } from '@/components/chat/ChatAssistant'
 import { WhatsAppFloat } from '@/components/vsl/whatsapp-float'
 
 // Mapeamento de icones por categoria
@@ -550,8 +550,8 @@ export function ProductPageTemplate({
         </section>
       )}
 
-      {/* Chat Widgets - Assistente IA AVANÇADO + WhatsApp */}
-      <EnhancedChatAssistant
+      {/* Chat Widgets - Assistente IA + WhatsApp */}
+      <ChatAssistant
         productId={solution.id}
         productName={solution.name}
         autoOpen={true}
