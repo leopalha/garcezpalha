@@ -23,7 +23,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { VideoAssistant } from './VideoAssistant'
+import { RealtimeVoiceAssistant } from './RealtimeVoiceAssistant'
 
 interface Message {
   id: string
@@ -500,12 +500,14 @@ Como prefere começar?`,
         </motion.div>
       </AnimatePresence>
 
-      {/* Video Mode */}
-      <VideoAssistant
-        isOpen={isVideoMode}
-        onClose={() => setIsVideoMode(false)}
-        productName={productName}
-      />
+      {/* Voice Mode with OpenAI Realtime API */}
+      {isVideoMode && (
+        <RealtimeVoiceAssistant
+          productId={productId}
+          productName={productName}
+          onClose={() => setIsVideoMode(false)}
+        />
+      )}
     </>
   )
 }
