@@ -1,6 +1,12 @@
 # 🎙️ CHAT WIDGET SPECIFICATION
 ## Garcez Palha - Chat Completo com Áudio
-**Versão**: 1.0 | **Data**: 27/12/2025 | **Status**: DRAFT
+**Versão**: 1.0 | **Data**: 27/12/2025 | **Status**: ⚠️ ROADMAP - NÃO IMPLEMENTADO
+
+---
+
+> **⚠️ IMPORTANTE:** Este documento descreve um widget de chat avançado planejado para o futuro.
+> **Status atual:** Site usa links diretos para WhatsApp em todas as páginas.
+> **Roadmap:** Chat widget com áudio será implementado em Q3 2026.
 
 ---
 
