@@ -1,6 +1,12 @@
 # 🧠 AGENT BEHAVIOR SPECIFICATION
 ## Garcez Palha - Especificação Completa de Comportamento dos Agentes
-**Versão**: 1.0 | **Data**: 27/12/2025 | **Status**: DRAFT
+**Versão**: 1.0 | **Data**: 27/12/2025 | **Status**: ⚠️ ROADMAP - NÃO IMPLEMENTADO
+
+---
+
+> **⚠️ IMPORTANTE:** Este documento descreve uma arquitetura futura planejada para o sistema de agentes.
+> **Status atual:** Implementado sistema simplificado de agentes de qualificação (22 nichos).
+> **Roadmap:** Este spec completo será implementado em Q2 2026.
 
 ---
 

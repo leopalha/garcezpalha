@@ -1056,6 +1056,70 @@ ORÇAMENTO TOTAL: R$ 5.000/mês (R$ 165/dia)
 META: 100-150 leads, 20-30 conversões, CAC R$ 170-250
 ```
 
+### 6.3 Fase 3: Escala Completa (Mês 7-12) - TODOS 22 NICHOS
+
+```
+ORÇAMENTO TOTAL: R$ 10.000/mês (R$ 333/dia)
+
+DISTRIBUIÇÃO POR CATEGORIA:
+
+├── BANCÁRIO (4 nichos): R$ 150/dia (45%)
+│   ├── Seguro Prestamista: R$ 40/dia (demanda 20k/mês)
+│   ├── Fraude Consignado: R$ 45/dia (demanda 25k/mês)
+│   ├── Revisão Contrato: R$ 35/dia (demanda 15k/mês)
+│   └── Portabilidade Crédito: R$ 30/dia (demanda 8k/mês)
+│
+├── TELECOM (3 nichos): R$ 50/dia (15%)
+│   ├── Cobrança Telefonia: R$ 25/dia (demanda 30k/mês)
+│   ├── Multa Fidelidade: R$ 15/dia (demanda 12k/mês)
+│   └── Portabilidade Número: R$ 10/dia (demanda 13k/mês)
+│
+├── CONSUMIDOR/DIGITAL (5 nichos): R$ 45/dia (13,5%)
+│   ├── Assinaturas Digitais: R$ 15/dia (demanda 20k/mês)
+│   ├── Distrato Imobiliário: R$ 15/dia (demanda 15k/mês, alto ticket)
+│   ├── Overbooking/Voo: R$ 10/dia (demanda 25k/mês)
+│   ├── Produto Vício: R$ 3/dia (demanda 30k/mês)
+│   └── Atraso Entrega: R$ 2/dia (demanda 15k/mês)
+│
+├── PREVIDENCIÁRIO (3 nichos): R$ 40/dia (12%)
+│   ├── Revisão Aposentadoria: R$ 20/dia (demanda 40k/mês)
+│   ├── Benefício Negado: R$ 15/dia (demanda 30k/mês)
+│   └── Auxílio-Acidente: R$ 5/dia (demanda 15k/mês)
+│
+├── SERVIDOR (2 nichos): R$ 25/dia (7,5%)
+│   ├── Incorporação Gratificação: R$ 15/dia (demanda 8k/mês)
+│   └── Diferenças Salariais: R$ 10/dia (demanda 10k/mês)
+│
+├── EDUCACIONAL (1 nicho): R$ 10/dia (3%)
+│   └── FIES Renegociação: R$ 10/dia (demanda 15k/mês)
+│
+├── ENERGIA + CONDOMINIAL (2 nichos): R$ 8/dia (2,4%)
+│   ├── Cobrança Energia: R$ 5/dia (demanda 10k/mês)
+│   └── Cobrança Condominial: R$ 3/dia (demanda 8k/mês)
+│
+└── MARCA: R$ 5/dia (1,5%)
+
+META FASE 3:
+├── Leads/mês: 250-400
+├── Conversões/mês: 50-80
+├── CAC Médio: R$ 125-200
+├── Ticket Médio: R$ 1.742
+├── Receita/mês: R$ 87k - R$ 139k
+└── ROI Target: 4-7x
+```
+
+### 6.4 Resumo por Fase
+
+| Fase | Orçamento | Nichos Ativos | Leads | Conversões | Receita/mês |
+|------|-----------|---------------|-------|------------|-------------|
+| Fase 1 (Mês 1-2) | R$ 3.000 | 4 nichos | 60-100 | 10-15 | R$ 17k-26k |
+| Fase 2 (Mês 3-6) | R$ 5.000 | 10 nichos | 100-150 | 20-30 | R$ 35k-52k |
+| **Fase 3 (Mês 7-12)** | **R$ 10.000** | **22 nichos** | **250-400** | **50-80** | **R$ 87k-139k** |
+
+**Investimento Total Ano 1:** R$ 88.000 (média R$ 7.333/mês)
+**Receita Estimada Ano 1:** R$ 650.000 - R$ 950.000
+**ROI Ano 1:** 7-11x
+
 ---
 
 ## 7. MÉTRICAS E KPIs
@@ -1123,6 +1187,7 @@ PROIBIDO:
 ---
 
 *Documento: 05-GOOGLE-ADS-CAMPANHAS.md*
-*Versão: 2.0*
-*Última atualização: 27/12/2025 - TODOS 22 NICHOS DOCUMENTADOS*
-*Campanhas adicionadas: 10 Telecom | 11 Consumidor | 12 Energia/Condominial | 13 Servidor Atualizado*
+*Versão: 2.1*
+*Última atualização: 27/12/2025 - TODOS 22 NICHOS + ORÇAMENTO COMPLETO*
+*Campanhas: 10 Telecom | 11 Consumidor | 12 Energia/Condominial | 13 Servidor*
+*Budget Fase 3 adicionado: R$ 10k/mês com todos 22 nichos + ROI 7-11x*
