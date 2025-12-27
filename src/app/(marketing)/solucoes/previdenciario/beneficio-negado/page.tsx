@@ -316,7 +316,7 @@ export default function BeneficioNegadoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="previdenciario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-red-600 to-orange-600 text-white">

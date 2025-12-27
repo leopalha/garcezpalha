@@ -312,7 +312,7 @@ export default function PortabilidadeCreditoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="bancario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-white">

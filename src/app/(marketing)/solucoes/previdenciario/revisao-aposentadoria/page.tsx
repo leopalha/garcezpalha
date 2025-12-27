@@ -320,7 +320,7 @@ export default function RevisaoAposentadoriaPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="previdenciario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">

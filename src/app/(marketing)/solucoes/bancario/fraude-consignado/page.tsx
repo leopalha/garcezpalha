@@ -329,7 +329,7 @@ export default function FraudeConsignadoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="bancario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-red-600 to-orange-600 text-white">

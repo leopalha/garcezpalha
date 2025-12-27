@@ -18,7 +18,7 @@ import {
   SEOHead,
 } from '@/components/vsl'
 
-export default function SeguroPrestami staPage() {
+export default function SeguroPrestamistaPage() {
   const router = useRouter()
 
   const handleCTA = () => {
@@ -350,7 +350,7 @@ export default function SeguroPrestami staPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="bancario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-red-600 to-orange-600 text-white">

@@ -316,7 +316,7 @@ export default function RevisaoContratoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="bancario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
