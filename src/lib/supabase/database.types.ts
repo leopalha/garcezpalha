@@ -747,17 +747,25 @@ export type Database = {
           assigned_admin_id: string | null
           assigned_to: string | null
           channel: string
+          classification: Json | null
+          client: Json | null
           client_id: string | null
+          conversation_id: string | null
           created_at: string
+          email: string | null
           external_id: string | null
           id: string
           last_message_at: string | null
           lead_id: string | null
           metadata: Json | null
           needs_attention: boolean | null
+          phone_number: string | null
+          proposal: Json | null
+          qualification: Json | null
           qualification_score: number | null
           resolved_at: string | null
           started_at: string | null
+          state_status: Json | null
           status: string
           taken_over_at: string | null
           updated_at: string
@@ -767,17 +775,25 @@ export type Database = {
           assigned_admin_id?: string | null
           assigned_to?: string | null
           channel: string
+          classification?: Json | null
+          client?: Json | null
           client_id?: string | null
+          conversation_id?: string | null
           created_at?: string
+          email?: string | null
           external_id?: string | null
           id?: string
           last_message_at?: string | null
           lead_id?: string | null
           metadata?: Json | null
           needs_attention?: boolean | null
+          phone_number?: string | null
+          proposal?: Json | null
+          qualification?: Json | null
           qualification_score?: number | null
           resolved_at?: string | null
           started_at?: string | null
+          state_status?: Json | null
           status?: string
           taken_over_at?: string | null
           updated_at?: string
@@ -787,17 +803,25 @@ export type Database = {
           assigned_admin_id?: string | null
           assigned_to?: string | null
           channel?: string
+          classification?: Json | null
+          client?: Json | null
           client_id?: string | null
+          conversation_id?: string | null
           created_at?: string
+          email?: string | null
           external_id?: string | null
           id?: string
           last_message_at?: string | null
           lead_id?: string | null
           metadata?: Json | null
           needs_attention?: boolean | null
+          phone_number?: string | null
+          proposal?: Json | null
+          qualification?: Json | null
           qualification_score?: number | null
           resolved_at?: string | null
           started_at?: string | null
+          state_status?: Json | null
           status?: string
           taken_over_at?: string | null
           updated_at?: string
