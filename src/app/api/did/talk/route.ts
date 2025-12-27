@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { session_id, script } = body
+    const { session_id, stream_id, script } = body
 
     const response = await fetch(`https://api.d-id.com/talks/streams/${session_id}`, {
       method: 'POST',
@@ -11,7 +11,10 @@ export async function POST(request: NextRequest) {
         'Authorization': `Basic ${process.env.DID_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ script }),
+      body: JSON.stringify({
+        stream_id,
+        script
+      }),
     })
 
     if (!response.ok) {
