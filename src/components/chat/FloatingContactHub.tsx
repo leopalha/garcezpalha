@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MessageCircle, Phone, Bot, X } from 'lucide-react'
+import { MessageCircle, Bot, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChatAssistant } from './ChatAssistant'
 
@@ -10,15 +10,10 @@ export function FloatingContactHub() {
   const [showChat, setShowChat] = useState(false)
 
   const whatsappNumber = '5521995354010'
-  const phoneNumber = '+5521995354010'
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent('Olá! Gostaria de saber mais sobre os serviços jurídicos.')
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank')
-  }
-
-  const handlePhone = () => {
-    window.location.href = `tel:${phoneNumber}`
   }
 
   const handleChat = () => {
@@ -33,7 +28,8 @@ export function FloatingContactHub() {
         <ChatAssistant
           productId="geral"
           productName="Serviços Jurídicos"
-          autoOpen={false}
+          autoOpen={true}
+          openDelay={0}
           onClose={() => setShowChat(false)}
         />
       )}
@@ -96,24 +92,6 @@ export function FloatingContactHub() {
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
                       Fale com nossa equipe
-                    </p>
-                  </div>
-                </button>
-
-                {/* Telefone */}
-                <button
-                  onClick={handlePhone}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group"
-                >
-                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/40 rounded-full flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/60 transition-colors">
-                    <Phone className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-medium text-gray-900 dark:text-white text-sm">
-                      Telefone
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Horário comercial
                     </p>
                   </div>
                 </button>
