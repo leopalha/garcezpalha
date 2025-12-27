@@ -174,7 +174,7 @@ P.A.S (Dor):
 │  ✓ Perito Judicial (CONPEJ/RJ)                                 │
 │  ✓ Corretor de Imóveis (CRECI/RJ)                              │
 │  ✓ 100+ casos de desbloqueio resolvidos                        │
-│  ✓ Membro de família com 360 anos de tradição jurídica        │
+│  ✓ Membro de família com 364 anos de tradição jurídica        │
 │                                                                 │
 │  [Selos: OAB | CONPEJ | CRECI]                                 │
 │                                                                 │
@@ -276,7 +276,7 @@ P.A.S (Dor):
 │                                                                 │
 │  GARCEZ PALHA ADVOGADOS                                        │
 │  OAB/RJ 219.390 | CNPJ XX.XXX.XXX/0001-XX                     │
-│  360 anos de tradição jurídica                                 │
+│  364 anos de tradição jurídica                                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -374,7 +374,7 @@ ao dinheiro delas.
 Além de advogado, sou:
 ✓ Perito Judicial (CONPEJ/RJ)
 ✓ Corretor de Imóveis (CRECI/RJ)
-✓ Membro de família com 360 anos de tradição jurídica
+✓ Membro de família com 364 anos de tradição jurídica
 
 Sei exatamente o que fazer para resolver seu caso.
 ```
@@ -1104,7 +1104,7 @@ recuperar o acesso ao dinheiro delas.
 Além de advogado, sou perito judicial e 
 corretor de imóveis. 
 
-Minha família tem 360 anos de tradição 
+Minha família tem 364 anos de tradição 
 jurídica, desde 1661.
 
 Quando você contrata a gente, não está 
@@ -1365,7 +1365,7 @@ fechar hoje."
 ```
 "OAB/RJ 219.390"
 
-"360 anos de tradição jurídica"
+"364 anos de tradição jurídica"
 
 "Especialista com 10+ anos de experiência"
 ```

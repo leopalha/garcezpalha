@@ -35,6 +35,15 @@ Este arquivo lista toda a documentacao disponivel do projeto.
 
 ---
 
+## DOCUMENTOS DE NEGOCIO
+
+| Arquivo | Descricao | Status |
+|---------|-----------|--------|
+| `../business/DADOS_MESTRES.md` | **FONTE UNICA DE VERDADE** - Todos os dados oficiais da empresa | CRITICO |
+| `09-PRECIFICACAO-DINAMICA.md` | Precificacao detalhada por produto | Ativo |
+
+---
+
 ## DOCUMENTOS LEGADOS (Manter para Historico)
 
 | Arquivo | Status | Nota |

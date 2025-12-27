@@ -61,7 +61,7 @@ garcezpalha.com/
 │                                                                      │
 │     "Resolvemos seu problema jurídico em 72h."                      │
 │                                                                      │
-│     Tecnologia de ponta + 360 anos de tradição                      │
+│     Tecnologia de ponta + 364 anos de tradição                      │
 │                                                                      │
 │     [RESOLVER MEU PROBLEMA AGORA]                                   │
 │                                                                      │
@@ -105,7 +105,7 @@ garcezpalha.com/
 │   │ 🤖         │  │ 📜         │  │ ✅         │                │
 │   │ TECNOLOGIA │  │ TRADIÇÃO   │  │ RESULTADO  │                │
 │   │            │  │            │  │            │                │
-│   │ IA que     │  │ 360 anos   │  │ 72h para   │                │
+│   │ IA que     │  │ 364 anos   │  │ 72h para   │                │
 │   │ trabalha   │  │ de família │  │ primeira   │                │
 │   │ 24/7       │  │ jurídica   │  │ ação       │                │
 │   └─────────────┘  └─────────────┘  └─────────────┘                │
@@ -122,7 +122,7 @@ garcezpalha.com/
 │   OAB/RJ 219.390 | CONPEJ/RJ | CRECI/RJ                            │
 │                                                                      │
 │   "Família Garcez Palha: de governadores coloniais                  │
-│    a advogados do futuro. 360 anos de serviço."                     │
+│    a advogados do futuro. 364 anos de serviço."                     │
 │                                                                      │
 └─────────────────────────────────────────────────────────────────────┘
 
@@ -194,7 +194,7 @@ garcezpalha.com/
   <h1>Resolvemos seu problema jurídico em 72h.</h1>
   <p class="subtitle">
     A primeira plataforma de inteligência jurídica do Brasil.
-    Tecnologia de ponta + 360 anos de tradição.
+    Tecnologia de ponta + 364 anos de tradição.
   </p>
   
   <button class="cta-primary">RESOLVER MEU PROBLEMA AGORA</button>
@@ -315,7 +315,7 @@ garcezpalha.com/
     <div class="feature">
       <span class="icon">📜</span>
       <h3>Tradição</h3>
-      <p>360 anos de história jurídica. De governadores 
+      <p>364 anos de história jurídica. De governadores 
          coloniais a advogados do futuro.</p>
     </div>
     
@@ -349,7 +349,7 @@ garcezpalha.com/
     <p class="historia">
       A família Garcez Palha serve o Brasil desde 1661.
       Governadores de Goa e Macau. Viscondes e Barões do Império.
-      360 anos depois, continuamos servindo — agora, a você.
+      364 anos depois, continuamos servindo — agora, a você.
     </p>
   </div>
 </section>
@@ -687,7 +687,7 @@ FAQ:
   <!-- Open Graph -->
   <meta property="og:title" content="Garcez Palha | Inteligência Jurídica">
   <meta property="og:description" content="Resolvemos seu problema 
-    jurídico em 72h. Tecnologia + 360 anos de tradição.">
+    jurídico em 72h. Tecnologia + 364 anos de tradição.">
   <meta property="og:image" content="/og-image.jpg">
   
   <!-- Schema.org -->
