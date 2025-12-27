@@ -12,22 +12,23 @@ export async function GET(request: NextRequest) {
 
     const supabase = getSupabaseAdmin()
 
-    // Fetch user's documents
-    const { data: documents, error } = await supabase
-      .from('client_documents')
-      .select('*')
-      .eq('user_id', token.id)
-      .order('created_at', { ascending: false })
+    // TODO: Create client_documents table in Supabase
+    // Temporarily return empty array until table is created
+    // const { data: documents, error } = await supabase
+    //   .from('client_documents')
+    //   .select('*')
+    //   .eq('user_id', token.id)
+    //   .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'Erro ao buscar documentos' },
-        { status: 500 }
-      )
-    }
+    // if (error) {
+    //   console.error('Database error:', error)
+    //   return NextResponse.json(
+    //     { error: 'Erro ao buscar documentos' },
+    //     { status: 500 }
+    //   )
+    // }
 
-    return NextResponse.json({ documents })
+    return NextResponse.json({ documents: [] })
   } catch (error) {
     console.error('Documents fetch error:', error)
     return NextResponse.json(
@@ -54,39 +55,40 @@ export async function DELETE(request: NextRequest) {
 
     const supabase = getSupabaseAdmin()
 
-    // Get document to verify ownership and get storage path
-    const { data: document, error: fetchError } = await supabase
-      .from('client_documents')
-      .select('*')
-      .eq('id', documentId)
-      .eq('user_id', token.id)
-      .single()
+    // TODO: Create client_documents table in Supabase
+    // Temporarily return not found until table is created
+    // const { data: document, error: fetchError } = await supabase
+    //   .from('client_documents')
+    //   .select('*')
+    //   .eq('id', documentId)
+    //   .eq('user_id', token.id)
+    //   .single()
 
-    if (fetchError || !document) {
-      return NextResponse.json({ error: 'Documento não encontrado' }, { status: 404 })
-    }
+    // if (fetchError || !document) {
+    //   return NextResponse.json({ error: 'Documento não encontrado' }, { status: 404 })
+    // }
 
-    // Delete from storage
-    const doc = document as { storage_path?: string }
-    if (doc.storage_path) {
-      await supabase.storage.from('client-documents').remove([doc.storage_path])
-    }
+    // // Delete from storage
+    // const doc = document as { storage_path?: string }
+    // if (doc.storage_path) {
+    //   await supabase.storage.from('client-documents').remove([doc.storage_path])
+    // }
 
-    // Delete from database
-    const { error: deleteError } = await supabase
-      .from('client_documents')
-      .delete()
-      .eq('id', documentId)
+    // // Delete from database
+    // const { error: deleteError } = await supabase
+    //   .from('client_documents')
+    //   .delete()
+    //   .eq('id', documentId)
 
-    if (deleteError) {
-      console.error('Delete error:', deleteError)
-      return NextResponse.json(
-        { error: 'Erro ao excluir documento' },
-        { status: 500 }
-      )
-    }
+    // if (deleteError) {
+    //   console.error('Delete error:', deleteError)
+    //   return NextResponse.json(
+    //     { error: 'Erro ao excluir documento' },
+    //     { status: 500 }
+    //   )
+    // }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ error: 'Funcionalidade temporariamente indisponível' }, { status: 503 })
   } catch (error) {
     console.error('Document delete error:', error)
     return NextResponse.json(
