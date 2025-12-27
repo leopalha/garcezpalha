@@ -22,95 +22,154 @@ import {
   Scale,
   Users,
   ChevronDown,
+  Phone,
+  Zap,
+  Lightbulb,
+  ShoppingCart,
+  Plane,
+  Briefcase,
+  GraduationCap,
+  Building,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { NEW_PRODUCTS } from '@/lib/products/catalog'
+import type { LucideIcon } from 'lucide-react'
 
-const solutionCategories = [
-  {
-    name: 'Protecao Financeira',
-    href: '/financeiro',
+// Mapeamento de categorias para ícones e metadados
+const categoryMetadata: Record<string, { name: string; icon: LucideIcon; description: string; href: string }> = {
+  bancario: {
+    name: 'Bancário',
     icon: Banknote,
-    description: 'Desbloqueio de conta, golpes, negativacao',
-    items: [
-      { name: 'Desbloqueio de Conta', href: '/financeiro/desbloqueio-conta' },
-      { name: 'Golpe do PIX', href: '/financeiro/golpe-pix' },
-      { name: 'Negativacao Indevida', href: '/financeiro/negativacao-indevida' },
-      { name: 'Defesa em Execucao', href: '/financeiro/defesa-execucao' },
-    ],
+    description: 'Seguros, fraudes, revisões bancárias',
+    href: '/solucoes#bancario',
   },
-  {
-    name: 'Protecao Patrimonial',
-    href: '/patrimonial',
+  telecom: {
+    name: 'Telecomunicações',
+    icon: Phone,
+    description: 'Operadoras, cobranças, portabilidade',
+    href: '/solucoes#telecom',
+  },
+  energia: {
+    name: 'Energia',
+    icon: Zap,
+    description: 'Contas de luz, cobranças indevidas',
+    href: '/solucoes#energia',
+  },
+  consumidor: {
+    name: 'Consumidor',
+    icon: ShoppingCart,
+    description: 'Produtos, entregas, vícios',
+    href: '/solucoes#consumidor',
+  },
+  digital: {
+    name: 'Digital',
+    icon: Lightbulb,
+    description: 'Assinaturas, apps, streamings',
+    href: '/solucoes#digital',
+  },
+  aereo: {
+    name: 'Aéreo',
+    icon: Plane,
+    description: 'Voos, overbooking, bagagens',
+    href: '/solucoes#aereo',
+  },
+  previdenciario: {
+    name: 'Previdenciário',
+    icon: Users,
+    description: 'INSS, aposentadoria, benefícios',
+    href: '/solucoes#previdenciario',
+  },
+  trabalhista: {
+    name: 'Trabalhista',
+    icon: Briefcase,
+    description: 'Rescisão, horas extras, verbas',
+    href: '/solucoes#trabalhista',
+  },
+  servidor: {
+    name: 'Servidor Público',
+    icon: Scale,
+    description: 'Gratificações, reajustes, diferenças',
+    href: '/solucoes#servidor',
+  },
+  educacional: {
+    name: 'Educacional',
+    icon: GraduationCap,
+    description: 'FIES, renegociações, contratos',
+    href: '/solucoes#educacional',
+  },
+  condominial: {
+    name: 'Condominial',
+    icon: Building,
+    description: 'Cobranças, multas, rateios',
+    href: '/solucoes#condominial',
+  },
+  // Categorias legadas (mantidas para compatibilidade)
+  financeiro: {
+    name: 'Proteção Financeira',
+    icon: Banknote,
+    description: 'Desbloqueio de conta, golpes, negativação',
+    href: '/financeiro',
+  },
+  patrimonial: {
+    name: 'Proteção Patrimonial',
     icon: Home,
-    description: 'Imoveis, usucapiao, inventario, holding',
-    items: [
-      { name: 'Direito Imobiliario', href: '/patrimonial/direito-imobiliario' },
-      { name: 'Usucapiao', href: '/patrimonial/usucapiao' },
-      { name: 'Holding Familiar', href: '/patrimonial/holding-familiar' },
-      { name: 'Inventario', href: '/patrimonial/inventario' },
-    ],
+    description: 'Imóveis, usucapião, inventário, holding',
+    href: '/patrimonial',
   },
-  {
-    name: 'Protecao de Saude',
-    href: '/saude',
+  saude: {
+    name: 'Proteção de Saúde',
     icon: Heart,
-    description: 'Planos de saude, tratamentos, beneficios',
-    items: [
-      { name: 'Plano de Saude Negou', href: '/saude/plano-saude-negou' },
-      { name: 'Cirurgia Bariatrica', href: '/saude/cirurgia-bariatrica' },
-      { name: 'Tratamento TEA', href: '/saude/tea' },
-      { name: 'BPC / LOAS', href: '/saude/bpc-loas' },
-    ],
+    description: 'Planos de saúde, tratamentos, benefícios',
+    href: '/saude',
   },
-  {
-    name: 'Pericia e Documentos',
-    href: '/pericia',
+  pericia: {
+    name: 'Perícia e Documentos',
     icon: FileCheck,
-    description: 'Laudos, grafotecnia, analise documental',
-    items: [
-      { name: 'Pericia Documental', href: '/pericia/pericia-documental' },
-      { name: 'Grafotecnia', href: '/pericia/grafotecnia' },
-      { name: 'Laudo Tecnico', href: '/pericia/laudo-tecnico' },
-    ],
+    description: 'Laudos, grafotecnia, análise documental',
+    href: '/pericia',
   },
-  {
+  criminal: {
     name: 'Defesa Criminal',
-    href: '/criminal',
     icon: Scale,
     description: 'Processos criminais, habeas corpus',
-    items: [
-      { name: 'Direito Criminal', href: '/criminal/direito-criminal' },
-    ],
+    href: '/criminal',
   },
-  {
-    name: 'Direito Aeronautico',
+  aeronautico: {
+    name: 'Direito Aeronáutico',
+    icon: Plane,
+    description: 'Problemas com companhias aéreas',
     href: '/aeronautico',
-    icon: Scale,
-    description: 'Problemas com companhias aereas',
-    items: [
-      { name: 'Direito Aeronautico', href: '/aeronautico/direito-aeronautico' },
-    ],
   },
-  {
-    name: 'Automacao Juridica',
-    href: '/automacao',
-    icon: Users,
+  automacao: {
+    name: 'Automação Jurídica',
+    icon: Lightbulb,
     description: 'Secretaria remota com IA',
-    items: [
-      { name: 'Secretaria Remota', href: '/automacao/secretaria-remota' },
-    ],
+    href: '/automacao',
   },
-  {
-    name: 'Previdenciario',
-    href: '/previdenciario',
-    icon: Users,
-    description: 'Aposentadoria e beneficios INSS',
-    items: [
-      { name: 'Aposentadoria', href: '/previdenciario/aposentadoria' },
-    ],
-  },
+}
+
+// Produtos legados (hardcoded) para manter rotas antigas funcionando
+const legacyProducts = [
+  { name: 'Desbloqueio de Conta', href: '/financeiro/desbloqueio-conta', category: 'financeiro' },
+  { name: 'Golpe do PIX', href: '/financeiro/golpe-pix', category: 'financeiro' },
+  { name: 'Negativação Indevida', href: '/financeiro/negativacao-indevida', category: 'financeiro' },
+  { name: 'Defesa em Execução', href: '/financeiro/defesa-execucao', category: 'financeiro' },
+  { name: 'Direito Imobiliário', href: '/patrimonial/direito-imobiliario', category: 'patrimonial' },
+  { name: 'Usucapião', href: '/patrimonial/usucapiao', category: 'patrimonial' },
+  { name: 'Holding Familiar', href: '/patrimonial/holding-familiar', category: 'patrimonial' },
+  { name: 'Inventário', href: '/patrimonial/inventario', category: 'patrimonial' },
+  { name: 'Plano de Saúde Negou', href: '/saude/plano-saude-negou', category: 'saude' },
+  { name: 'Cirurgia Bariátrica', href: '/saude/cirurgia-bariatrica', category: 'saude' },
+  { name: 'Tratamento TEA', href: '/saude/tea', category: 'saude' },
+  { name: 'BPC / LOAS', href: '/saude/bpc-loas', category: 'saude' },
+  { name: 'Perícia Documental', href: '/pericia/pericia-documental', category: 'pericia' },
+  { name: 'Grafotecnia', href: '/pericia/grafotecnia', category: 'pericia' },
+  { name: 'Laudo Técnico', href: '/pericia/laudo-tecnico', category: 'pericia' },
+  { name: 'Direito Criminal', href: '/criminal/direito-criminal', category: 'criminal' },
+  { name: 'Direito Aeronáutico', href: '/aeronautico/direito-aeronautico', category: 'aeronautico' },
+  { name: 'Secretaria Remota', href: '/automacao/secretaria-remota', category: 'automacao' },
 ]
 
 const navigation = [
@@ -124,6 +183,63 @@ const navigation = [
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false)
+
+  // Gerar categorias dinamicamente a partir do catalog.ts
+  const solutionCategories = useMemo(() => {
+    // Agrupar produtos novos por categoria
+    const newProductsByCategory = NEW_PRODUCTS.reduce((acc, product) => {
+      if (!acc[product.category]) {
+        acc[product.category] = []
+      }
+      acc[product.category].push({
+        name: product.name,
+        href: `/solucoes/${product.category}/${product.slug}`,
+      })
+      return acc
+    }, {} as Record<string, Array<{ name: string; href: string }>>)
+
+    // Agrupar produtos legados por categoria
+    const legacyByCategory = legacyProducts.reduce((acc, product) => {
+      if (!acc[product.category]) {
+        acc[product.category] = []
+      }
+      acc[product.category].push({
+        name: product.name,
+        href: product.href,
+      })
+      return acc
+    }, {} as Record<string, Array<{ name: string; href: string }>>)
+
+    // Combinar todas as categorias (novas + legadas)
+    const allCategories = new Set([
+      ...Object.keys(newProductsByCategory),
+      ...Object.keys(legacyByCategory),
+    ])
+
+    // Montar array final de categorias com produtos
+    return Array.from(allCategories)
+      .map(category => {
+        const meta = categoryMetadata[category]
+        if (!meta) return null
+
+        return {
+          name: meta.name,
+          href: meta.href,
+          icon: meta.icon,
+          description: meta.description,
+          items: [
+            ...(newProductsByCategory[category] || []),
+            ...(legacyByCategory[category] || []),
+          ],
+        }
+      })
+      .filter((cat): cat is NonNullable<typeof cat> => cat !== null)
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [])
+
+  // Contar total de produtos
+  const totalProducts = solutionCategories.reduce((sum, cat) => sum + cat.items.length, 0)
+  const totalCategories = solutionCategories.length
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -150,7 +266,7 @@ export function Navbar() {
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="font-bold text-primary">Ver Todas as Soluções</div>
-                          <div className="text-sm text-muted-foreground">19 produtos em 8 categorias</div>
+                          <div className="text-sm text-muted-foreground">{totalProducts} produtos em {totalCategories} categorias</div>
                         </div>
                         <ChevronDown className="w-5 h-5 text-primary rotate-[-90deg]" />
                       </div>
