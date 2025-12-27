@@ -668,7 +668,367 @@ ANÚNCIO 2: Saia do Serasa
 
 ---
 
-## 10. ORÇAMENTO E DISTRIBUIÇÃO
+## 10. CAMPANHA: TELECOM
+
+### 10.1 Grupo: Cobrança Indevida Telefonia/Internet
+
+```
+PALAVRAS-CHAVE (Alta Intenção)
+├── [Exata] cobrança indevida telefonia
+├── [Exata] operadora cobrando errado
+├── [Exata] cancelei continua cobrando
+├── [Exata] serviço não solicitado operadora
+├── [Exata] internet cobrança errada
+├── [Exata] advogado telecom
+├── [Frase] "cobrança indevida telefonia"
+├── [Frase] "operadora cobrando"
+└── [Frase] "restituição operadora"
+
+NEGATIVAS: -grátis, -como reclamar, -anatel apenas, -procon grátis
+
+ANÚNCIO 1: Serviço Não Solicitado
+┌─────────────────────────────────────────────────────────────────────┐
+│ Operadora Cobrando Serviço Que Não Pediu? | Restituição Dobro       │
+│ garcezpalha.com/cobranca-telefonia                                  │
+│─────────────────────────────────────────────────────────────────────│
+│ Serviço Não Solicitado É Ilegal (CDC Art. 39). Restituição em Dobro.│
+│ Cancelamento Imediato + Devolução Total + Danos Morais.             │
+│ 90% Taxa Sucesso. R$ 4.2M Recuperados. Análise Grátis.              │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Cancelou e Continua Cobrando
+┌─────────────────────────────────────────────────────────────────────┐
+│ Cancelou Mas Operadora Continua Cobrando? | Pare Agora              │
+│ garcezpalha.com/cobranca-telefonia                                  │
+│─────────────────────────────────────────────────────────────────────│
+│ Cancelamento Não Processado? Cobrança Após Cancelar É Ilegal.       │
+│ Reclamação Anatel + Ação JEC + Restituição em Dobro.                │
+│ Advogado Especialista. R$ 1.500 Fixo. Fale no WhatsApp.             │
+└─────────────────────────────────────────────────────────────────────┘
+
+EXTENSÕES
+├── Sitelinks: "Análise Grátis" | "Como Funciona" | "WhatsApp"
+├── Frase de Destaque: "90% taxa de sucesso" | "Restituição em dobro"
+└── Chamada: (21) 99535-4010
+```
+
+### 10.2 Grupo: Multa de Fidelidade Abusiva
+
+```
+PALAVRAS-CHAVE
+├── [Exata] multa fidelidade abusiva
+├── [Exata] cancelar internet sem multa
+├── [Exata] operadora cobra multa
+├── [Exata] internet ruim cancelar
+├── [Exata] anatel resolução 632
+├── [Exata] não pagar multa fidelidade
+├── [Frase] "multa fidelidade"
+└── [Frase] "cancelar sem multa"
+
+NEGATIVAS: -como pagar, -parcelar, -pagar barato
+
+ANÚNCIO 1: Anatel 632/2014
+┌─────────────────────────────────────────────────────────────────────┐
+│ Internet Ruim? | Cancele Sem Pagar Multa de Fidelidade               │
+│ garcezpalha.com/multa-fidelidade                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Anatel 632/2014: Se Serviço Ruim, Não Paga Multa. Lei É Clara.      │
+│ Quedas Frequentes, Lentidão? Você Pode Cancelar Sem Multa.          │
+│ 85% Taxa Sucesso. Notificação + Ação. Fale Agora.                   │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Multa Ilegal
+┌─────────────────────────────────────────────────────────────────────┐
+│ Multa de Fidelidade Abusiva | Não Pague                             │
+│ garcezpalha.com/multa-fidelidade                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Operadora Cobrando Multa Mas Serviço É Péssimo? Não Precisa Pagar.  │
+│ Advogado Cancela Contrato Sem Multa. R$ 1.500 Fixo (3x R$ 500).     │
+│ R$ 2.8M Economizados Para Clientes. WhatsApp Agora.                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 10.3 Grupo: Portabilidade de Número Negada
+
+```
+PALAVRAS-CHAVE
+├── [Exata] portabilidade número negada
+├── [Exata] operadora não deixa portabilidade
+├── [Exata] portabilidade demora
+├── [Exata] mudar operadora
+├── [Exata] forçar portabilidade número
+├── [Frase] "portabilidade negada"
+└── [Frase] "3 dias portabilidade"
+
+NEGATIVAS: -como fazer sozinho, -passo a passo grátis
+
+ANÚNCIO 1: 3 Dias Por Lei
+┌─────────────────────────────────────────────────────────────────────┐
+│ Operadora Demora Portabilidade? | Lei Garante 3 Dias                │
+│ garcezpalha.com/portabilidade-numero                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Portabilidade em 3 Dias É Direito (Anatel). Operadora Enrola? Ilegal│
+│ Notificação + Reclamação Anatel + Multa Para Operadora.             │
+│ 95% Resolvem em 5 Dias. R$ 1.200 Fixo. Fale Agora.                  │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Forçamos a Liberação
+┌─────────────────────────────────────────────────────────────────────┐
+│ Portabilidade Negada | Forçamos Operadora a Liberar                 │
+│ garcezpalha.com/portabilidade-numero                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Quer Mudar de Operadora Mas Não Deixam? Advogado Resolve Rápido.    │
+│ Maioria Resolve Sem Processo. Operadora Libera Com Medo de Multa.   │
+│ Especialista em Telecom. R$ 3.6M Economizados. WhatsApp.            │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 11. CAMPANHA: CONSUMIDOR/DIGITAL
+
+### 11.1 Grupo: Assinaturas Digitais
+
+```
+PALAVRAS-CHAVE
+├── [Exata] cancelar netflix não funciona
+├── [Exata] spotify cobrando cancelado
+├── [Exata] amazon prime dificulta cancelamento
+├── [Exata] assinatura não cancela
+├── [Exata] cdc direito arrependimento
+├── [Frase] "cancelar assinatura"
+└── [Frase] "continua cobrando"
+
+NEGATIVAS: -como cancelar tutorial, -cancelar sozinho
+
+ANÚNCIO 1: CDC Art. 49
+┌─────────────────────────────────────────────────────────────────────┐
+│ Cancelou Assinatura Mas Continua Cobrando? | Restituição            │
+│ garcezpalha.com/assinaturas-digitais                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Netflix, Spotify, Prime: Dificultam Cancelamento? É Ilegal (CDC 49).│
+│ Cancelamento Forçado + Restituição em Dobro + Danos Morais.         │
+│ 80% Taxa Sucesso. R$ 1.2M Recuperados. Análise Grátis.              │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.2 Grupo: Produto com Vício
+
+```
+PALAVRAS-CHAVE
+├── [Exata] produto com defeito loja não troca
+├── [Exata] cdc artigo 18
+├── [Exata] vício produto
+├── [Exata] garantia produto defeito
+├── [Frase] "produto defeito"
+└── [Frase] "loja não troca"
+
+ANÚNCIO 1: 30 Dias CDC
+┌─────────────────────────────────────────────────────────────────────┐
+│ Produto Com Defeito e Loja Não Troca? | CDC Art. 18                 │
+│ garcezpalha.com/produto-vicio                                       │
+│─────────────────────────────────────────────────────────────────────│
+│ 30 Dias Para Consertar. Não Consertou? Troca, Devolução ou Desconto.│
+│ Ação JEC + Danos Morais Se Loja Enrola. R$ 1.200 Fixo.              │
+│ Advogado Direito Consumidor. 75% Taxa Sucesso. Fale Agora.          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.3 Grupo: Atraso na Entrega
+
+```
+PALAVRAS-CHAVE
+├── [Exata] produto não chegou
+├── [Exata] atraso entrega produto
+├── [Exata] mercado livre atraso
+├── [Exata] cdc artigo 35
+├── [Frase] "produto atrasado"
+└── [Frase] "cancelar compra"
+
+ANÚNCIO 1: CDC Art. 35
+┌─────────────────────────────────────────────────────────────────────┐
+│ Comprou e Produto Não Chegou? | Devolução + Indenização             │
+│ garcezpalha.com/atraso-entrega                                      │
+│─────────────────────────────────────────────────────────────────────│
+│ Atraso na Entrega? CDC Art. 35: Pode Cancelar + Devolução Total.    │
+│ Mercado Livre, Shopee, Loja Virtual: Todos Respondem.               │
+│ Ação Rápida JEC. R$ 1.200 Fixo. R$ 890k Recuperados.                │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.4 Grupo: Overbooking/Voo
+
+```
+PALAVRAS-CHAVE
+├── [Exata] voo cancelado indenização
+├── [Exata] overbooking indenização
+├── [Exata] bagagem extraviada valor
+├── [Exata] anac resolução 400
+├── [Frase] "voo cancelado"
+└── [Frase] "direitos passageiro"
+
+ANÚNCIO 1: ANAC 400
+┌─────────────────────────────────────────────────────────────────────┐
+│ Voo Cancelado, Overbooking, Bagagem Perdida | Até R$ 10.000         │
+│ garcezpalha.com/overbooking-voo                                     │
+│─────────────────────────────────────────────────────────────────────│
+│ ANAC 400 Garante Indenização. Não Aceite Voucher. Receba Dinheiro.  │
+│ Atraso >4h, Overbooking, Bagagem: Todos Têm Direito a Compensação.  │
+│ 50 Anos Aviação na Família. R$ 6.8M Recuperados. Fale Agora.        │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 11.5 Grupo: Distrato Imobiliário
+
+```
+PALAVRAS-CHAVE
+├── [Exata] distrato imobiliário
+├── [Exata] desistir compra imóvel
+├── [Exata] devolução valores imóvel
+├── [Exata] lei 13786
+├── [Exata] construtora não devolve
+├── [Frase] "cancelar compra apartamento"
+└── [Frase] "recuperar dinheiro imóvel"
+
+NEGATIVAS: -como fazer sozinho, -modelo distrato
+
+ANÚNCIO 1: Lei 13.786/2018
+┌─────────────────────────────────────────────────────────────────────┐
+│ Quer Desistir do Imóvel? | Lei Garante Devolução 75-100%            │
+│ garcezpalha.com/distrato-imobiliario                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Lei 13.786/2018: Construtora DEVE Devolver 75-100% (Não 50%).       │
+│ Recuperação Judicial, Atraso Obra? Devolução 100% Possível.         │
+│ R$ 48M Recuperados. Advogado + Perito. R$ 3.000 + 20% Êxito.        │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Alto Valor
+┌─────────────────────────────────────────────────────────────────────┐
+│ Distrato Imobiliário | Recupere Mais Que Construtora Oferece        │
+│ garcezpalha.com/distrato-imobiliario                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Construtora Oferece 50%? Conseguimos 75-100% Judicial.              │
+│ Valores Altos (R$ 50k-500k+). Diferença Compensa Processo.          │
+│ Tripla Credencial: OAB + CONPEJ + CRECI. Fale Agora.                │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 12. CAMPANHA: ENERGIA + CONDOMINIAL
+
+### 12.1 Grupo: Cobrança Indevida Energia
+
+```
+PALAVRAS-CHAVE
+├── [Exata] conta luz muito alta
+├── [Exata] consumo estimado energia
+├── [Exata] troca medidor cobrança
+├── [Exata] débito prescrito energia
+├── [Exata] corte luz indevido
+├── [Frase] "conta luz alta"
+└── [Frase] "restituição energia"
+
+NEGATIVAS: -grátis, -economizar energia, -como reduzir consumo
+
+ANÚNCIO 1: Consumo Estimado
+┌─────────────────────────────────────────────────────────────────────┐
+│ Conta de Luz Muito Alta? | Consumo Estimado É Exceção               │
+│ garcezpalha.com/cobranca-energia                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Medidor Deve Ser Lido Mensalmente. Meses de Estimativa? Ilegal.     │
+│ Troca Medidor Com Retroativo Limitado a 90 Dias.                    │
+│ Restituição em Dobro + Danos Morais. R$ 1.500 Fixo. Análise Grátis. │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Débito Prescrito
+┌─────────────────────────────────────────────────────────────────────┐
+│ Cobrança de Energia Antiga (>5 Anos)? | Está Prescrita              │
+│ garcezpalha.com/cobranca-energia                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Dívidas >5 Anos NÃO Podem Ser Cobradas. Prescrição Quinquenal.      │
+│ Corte Sem Aviso Prévio (15 Dias)? Religação Urgente + Indenização.  │
+│ Advogado Direito Consumidor. 70% Taxa Sucesso. Fale Agora.          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 12.2 Grupo: Cobrança Condominial Abusiva
+
+```
+PALAVRAS-CHAVE
+├── [Exata] cobrança condominial abusiva
+├── [Exata] multa condomínio acima 2%
+├── [Exata] rateio sem assembleia
+├── [Exata] taxa mudança ilegal
+├── [Exata] lei 4591/64
+├── [Frase] "multa condomínio"
+└── [Frase] "contestar cobrança"
+
+NEGATIVAS: -como pagar, -parcelamento, -negociar
+
+ANÚNCIO 1: Lei 4.591/64
+┌─────────────────────────────────────────────────────────────────────┐
+│ Multa de Condomínio Acima de 2%? | É Ilegal                         │
+│ garcezpalha.com/cobranca-condominial                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Lei 4.591/64: Multa Máxima 2%. Acima Disso? Anulação + Restituição. │
+│ Rateio Sem Assembleia, Taxa Ilegal: Contestamos Tudo.               │
+│ Advogado Direito Condominial. R$ 1.500 Fixo. Análise Grátis.        │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Transparência
+┌─────────────────────────────────────────────────────────────────────┐
+│ Cobrança Condominial Sem Explicação? | Você Tem Direitos            │
+│ garcezpalha.com/cobranca-condominial                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Condômino Tem Direito a Ver Planilhas, Atas, Documentos.            │
+│ Cobrança Abusiva? Notificação + Ação Anulatória + Indenização.      │
+│ Suspensão da Cobrança em Liminar. Fale no WhatsApp.                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 13. CAMPANHA: SERVIDOR (ATUALIZAÇÃO)
+
+### 13.1 Grupo: Diferenças Salariais Servidor (ADICIONAL)
+
+```
+PALAVRAS-CHAVE
+├── [Exata] diferenças salariais servidor
+├── [Exata] reajuste não pago servidor
+├── [Exata] progressão atrasada
+├── [Exata] retroativo salário servidor
+├── [Exata] recálculo salário servidor
+├── [Frase] "diferenças vencimento"
+└── [Frase] "servidor reajuste"
+
+NEGATIVAS: -concurso, -como calcular sozinho, -grátis
+
+ANÚNCIO 1: Reajuste Não Pago
+┌─────────────────────────────────────────────────────────────────────┐
+│ Reajuste Aprovado Mas Não Pago? | Servidor Tem Direito              │
+│ garcezpalha.com/diferencas-salariais                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Progressão Atrasou? Reenquadramento Não Aplicado? Diferenças Desde  │
+│ a Data Devida + Correção IPCA-E + Juros + 13º/Férias.               │
+│ 85% Taxa Sucesso. R$ 18M Recuperados. Cálculo Grátis.               │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Alto Retroativo
+┌─────────────────────────────────────────────────────────────────────┐
+│ Diferenças Salariais Servidor | Retroativo R$ 15k-80k                │
+│ garcezpalha.com/diferencas-salariais                                │
+│─────────────────────────────────────────────────────────────────────│
+│ Aumento Não Pago Há Anos? Valores Retroativos Altos + Vitalício.    │
+│ Mandado Segurança ou Ordinária. 5 Anos Para Trás.                   │
+│ Advogado Direito Administrativo. R$ 2.000 + 20% Retroativo.         │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 14. ORÇAMENTO E DISTRIBUIÇÃO (ATUALIZADO)
 
 ### 6.1 Fase 1: Validação (Mês 1-2)
 
@@ -763,5 +1123,6 @@ PROIBIDO:
 ---
 
 *Documento: 05-GOOGLE-ADS-CAMPANHAS.md*
-*Versão: 1.0*
-*Última atualização: Dezembro/2024*
+*Versão: 2.0*
+*Última atualização: 27/12/2025 - TODOS 22 NICHOS DOCUMENTADOS*
+*Campanhas adicionadas: 10 Telecom | 11 Consumidor | 12 Energia/Condominial | 13 Servidor Atualizado*

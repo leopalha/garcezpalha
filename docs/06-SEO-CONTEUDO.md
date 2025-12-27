@@ -909,7 +909,246 @@ COMPLIANCE
 
 ---
 
-### 11.5 Checklist de Verificação SEO
+### 11.6 Telecomunicações
+
+#### Cobrança Indevida Telefonia/Internet
+
+**URL:** /solucoes/telecom/cobranca-telefonia
+**Title:** Cobrança Indevida Telefonia/Internet | Restituição em Dobro | Garcez Palha
+**Description:** Operadora cobrando serviço não contratado? Valor abusivo? Cancelou e continua cobrando? CDC garante restituição em dobro + danos morais. Advogado especialista.
+**Keywords:**
+- cobrança indevida telefonia
+- internet cobrança errada
+- cancelei e continua cobrando
+- serviço não solicitado operadora
+- advogado direito consumidor telecom
+- anatel reclamação
+- restituição operadora
+- operadora cobrança abusiva
+
+**Product:** Cobrança Indevida Telefonia/Internet
+**Price:** R$ 1.500
+**Category:** telecom
+
+---
+
+#### Multa de Fidelidade Abusiva
+
+**URL:** /solucoes/telecom/multa-fidelidade
+**Title:** Multa de Fidelidade Abusiva - Cancele Sem Pagar | Garcez Palha
+**Description:** Quer cancelar mas operadora cobra multa abusiva? Internet ruim, quedas frequentes? Anatel 632/2014 permite cancelar sem multa. Advogado especialista em telecom.
+**Keywords:**
+- multa fidelidade abusiva
+- cancelar internet sem multa
+- operadora cobra multa
+- internet ruim cancelar
+- anatel resolução 632
+- não pagar multa fidelidade
+- advogado telecomunicações
+- cancelamento sem multa
+
+**Product:** Multa de Fidelidade Abusiva
+**Price:** R$ 1.500
+**Category:** telecom
+
+---
+
+#### Portabilidade de Número Negada
+
+**URL:** /solucoes/telecom/portabilidade-numero
+**Title:** Portabilidade de Número Negada | Operadora Tem 3 Dias | Garcez Palha
+**Description:** Operadora não deixa fazer portabilidade? Demora, enrola, cria obstáculos? Lei garante portabilidade em 3 dias. Advogado força operadora a liberar.
+**Keywords:**
+- portabilidade número negada
+- operadora não deixa portabilidade
+- portabilidade demora
+- mudar operadora
+- anatel portabilidade
+- advogado portabilidade
+- forçar portabilidade número
+- 3 dias portabilidade
+
+**Product:** Portabilidade de Número
+**Price:** R$ 1.200
+**Category:** telecom
+
+---
+
+### 11.7 Consumidor/Digital
+
+#### Assinaturas Digitais (Cancelamento Negado)
+
+**URL:** /solucoes/consumidor/assinaturas-digitais
+**Title:** Cancelou Assinatura e Continua Cobrando? | Restituição | Garcez Palha
+**Description:** Netflix, Spotify, Amazon Prime não cancelam? Dificultam cancelamento? CDC Art. 49 protege. Cancele + restituição em dobro + danos morais.
+**Keywords:**
+- cancelar netflix
+- assinatura não cancela
+- spotify cobrando depois cancelamento
+- amazon prime dificulta cancelamento
+- cdc direito arrependimento
+- advogado consumidor digital
+- restituição assinatura
+- cancelamento dificulta
+
+**Product:** Assinaturas Digitais - Cancelamento
+**Price:** R$ 1.500
+**Category:** consumidor
+
+---
+
+#### Produto com Vício (Defeito)
+
+**URL:** /solucoes/consumidor/produto-vicio
+**Title:** Produto com Defeito e Loja Não Resolve? | CDC Art. 18 | Garcez Palha
+**Description:** Produto com defeito? Loja não troca, não conserta, não devolve dinheiro? CDC Art. 18 te protege. Troca + Devolução + Danos morais em 30 dias.
+**Keywords:**
+- produto com defeito
+- loja não troca produto
+- cdc artigo 18
+- vício produto
+- garantia produto defeito
+- devolução dinheiro produto
+- advogado direito consumidor
+- produto com problema
+
+**Product:** Produto com Vício (Defeito)
+**Price:** R$ 1.200
+**Category:** consumidor
+
+---
+
+#### Atraso na Entrega
+
+**URL:** /solucoes/consumidor/atraso-entrega
+**Title:** Atraso na Entrega - Devolução + Indenização | Garcez Palha
+**Description:** Comprou e produto não chegou no prazo? CDC Art. 35 dá direito a cancelar compra + devolução total + danos morais. Advogado especialista em e-commerce.
+**Keywords:**
+- atraso entrega produto
+- produto não chegou
+- mercado livre atraso
+- shopee atraso entrega
+- cdc artigo 35
+- cancelar compra atraso
+- devolução dinheiro
+- advogado consumidor online
+
+**Product:** Atraso na Entrega
+**Price:** R$ 1.200
+**Category:** consumidor
+
+---
+
+#### Overbooking/Voo Cancelado
+
+**URL:** /solucoes/consumidor/overbooking-voo
+**Title:** Voo Cancelado, Overbooking, Bagagem Perdida | Indenização | Garcez Palha
+**Description:** Voo cancelado? Te tiraram do voo (overbooking)? Bagagem extraviada? ANAC 400 garante indenização R$ 1.000-10.000. Não aceite voucher.
+**Keywords:**
+- voo cancelado indenização
+- overbooking indenização
+- bagagem extraviada valor
+- atraso voo mais 4 horas
+- anac resolução 400
+- direitos passageiro
+- advogado direito aeronáutico
+- compensação voo
+
+**Product:** Overbooking/Voo Cancelado
+**Price:** R$ 1.500
+**Category:** aereo
+
+---
+
+#### Distrato Imobiliário (Devolução Valores)
+
+**URL:** /solucoes/consumidor/distrato-imobiliario
+**Title:** Distrato Imobiliário - Recupere 75-100% do Valor Pago | Garcez Palha
+**Description:** Comprou imóvel e quer desistir? Lei 13.786/2018 garante devolução de 75-100% dos valores pagos. Construtora só devolve 50%? Advogado recupera mais.
+**Keywords:**
+- distrato imobiliário
+- desistir compra imóvel
+- devolução valores imóvel
+- lei 13786
+- construtora não devolve
+- cancelar compra apartamento
+- advogado imobiliário
+- recuperar dinheiro imóvel
+
+**Product:** Distrato Imobiliário
+**Price:** R$ 3.000 + 20% êxito
+**Category:** imobiliario
+
+---
+
+### 11.8 Energia e Condominial
+
+#### Cobrança Indevida Energia Elétrica
+
+**URL:** /solucoes/energia/cobranca-energia
+**Title:** Conta de Luz Alta Demais? Consumo Estimado? | Garcez Palha
+**Description:** Conta de luz muito alta? Consumo estimado por meses? Trocaram medidor e cobraram retroativo? CDC garante restituição em dobro. Advogado especialista.
+**Keywords:**
+- conta luz muito alta
+- consumo estimado energia
+- troca medidor cobrança retroativa
+- débito prescrito energia
+- corte luz indevido
+- advogado consumidor energia
+- tusd tust cobrança
+- restituição conta luz
+
+**Product:** Cobrança Indevida Energia
+**Price:** R$ 1.500
+**Category:** energia
+
+---
+
+#### Cobrança Condominial Abusiva
+
+**URL:** /solucoes/condominial/cobranca-condominial
+**Title:** Cobrança Condominial Abusiva - Multa Indevida | Garcez Palha
+**Description:** Condomínio cobrando multa acima de 2%? Rateio sem aprovação em assembleia? Taxa ilegal? Lei 4.591/64 protege condôminos. Advogado especialista.
+**Keywords:**
+- cobrança condominial abusiva
+- multa condomínio acima 2%
+- rateio sem assembleia
+- taxa mudança ilegal
+- lei 4591/64
+- advogado direito condominial
+- contestar cobrança condomínio
+- multa condomínio indevida
+
+**Product:** Cobrança Condominial Abusiva
+**Price:** R$ 1.500
+**Category:** condominial
+
+---
+
+### 11.9 Servidor Público (Adicional)
+
+#### Diferenças Salariais Servidor
+
+**URL:** /solucoes/servidor/diferencas-salariais
+**Title:** Diferenças Salariais Servidor Público | Reajuste Não Pago | Garcez Palha
+**Description:** Reajuste não foi pago? Progressão atrasou? Servidor público tem direito a diferenças salariais retroativas + correção. Advogado especialista direito administrativo.
+**Keywords:**
+- diferenças salariais servidor
+- reajuste não pago servidor
+- progressão atrasada
+- servidor público direitos
+- retroativo salário servidor
+- advogado administrativo
+- recálculo salário servidor
+- diferenças vencimento
+
+**Product:** Diferenças Salariais Servidor
+**Price:** R$ 2.000 + 20% êxito
+**Category:** servidor
+
+---
+
+### 11.10 Checklist de Verificação SEO
 
 Para cada página implementada:
 
@@ -950,5 +1189,6 @@ Para cada página implementada:
 ---
 
 *Documento: 06-SEO-CONTEUDO.md*
-*Versão: 1.1*
-*Última atualização: Dezembro/2025 - FASE 6 implementada*
+*Versão: 2.0*
+*Última atualização: 27/12/2025 - TODOS 22 NICHOS DOCUMENTADOS*
+*Seções adicionadas: 11.6 Telecom | 11.7 Consumidor | 11.8 Energia/Condominial | 11.9 Servidor*
