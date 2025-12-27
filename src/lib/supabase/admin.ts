@@ -4,9 +4,10 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
+import { Database } from './database.types'
 
 // Create a single instance
-let adminClient: ReturnType<typeof createClient> | null = null
+let adminClient: ReturnType<typeof createClient<Database>> | null = null
 
 export function getSupabaseAdmin() {
   if (adminClient) return adminClient
@@ -18,7 +19,7 @@ export function getSupabaseAdmin() {
     throw new Error('Missing Supabase environment variables')
   }
 
-  adminClient = createClient(supabaseUrl, supabaseServiceKey, {
+  adminClient = createClient<Database>(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
