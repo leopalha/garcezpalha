@@ -320,7 +320,355 @@ ANÚNCIO 1
 
 ---
 
-## 6. ORÇAMENTO E DISTRIBUIÇÃO
+## 6. CAMPANHA: BANCÁRIO (NOVOS NICHOS)
+
+### 6.1 Grupo: Seguro Prestamista
+
+```
+PALAVRAS-CHAVE (Alta Intenção)
+├── [Exata] seguro prestamista obrigatório
+├── [Exata] cancelar seguro prestamista
+├── [Exata] venda casada banco advogado
+├── [Exata] seguro empréstimo obrigatório
+├── [Exata] recuperar seguro prestamista
+├── [Exata] ação seguro prestamista
+├── [Frase] "seguro prestamista"
+├── [Frase] "venda casada banco"
+└── [Frase] "cancelar seguro empréstimo"
+
+NEGATIVAS: -grátis, -modelo, -curso, -como contratar, -simulação
+
+ANÚNCIO 1: Venda Casada Ilegal
+┌─────────────────────────────────────────────────────────────────────┐
+│ Banco Te Obrigou a Contratar Seguro? | É Ilegal                     │
+│ garcezpalha.com/seguro-prestamista                                  │
+│─────────────────────────────────────────────────────────────────────│
+│ Venda Casada É Crime (CDC Art. 39). Cancele + Recupere 100%.        │
+│ Indenização Por Danos Morais. Sem Riscos.                           │
+│ 95% Taxa de Sucesso. R$ 5.2M Recuperados. Fale Agora.               │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Recuperação Total
+┌─────────────────────────────────────────────────────────────────────┐
+│ Seguro Prestamista | Cancele e Recupere TUDO                        │
+│ garcezpalha.com/seguro-prestamista                                  │
+│─────────────────────────────────────────────────────────────────────│
+│ Banco Disse Que Era Obrigatório? MENTIRA. Cancele Seguro Agora.     │
+│ Recuperação de Todas Parcelas Pagas + Indenização.                  │
+│ Análise Gratuita. Advogado Especialista. WhatsApp (21) 99535-4010.  │
+└─────────────────────────────────────────────────────────────────────┘
+
+EXTENSÕES
+├── Sitelinks: "Análise Grátis" | "Como Funciona" | "Fale no WhatsApp"
+├── Frase de Destaque: "95% taxa de sucesso" | "Sem riscos"
+└── Chamada: (21) 99535-4010
+```
+
+### 6.2 Grupo: Revisão Contrato Bancário
+
+```
+PALAVRAS-CHAVE
+├── [Exata] revisão contrato bancário
+├── [Exata] juros abusivos empréstimo
+├── [Exata] TAC TEC ilegal
+├── [Exata] reduzir parcela empréstimo
+├── [Exata] advogado bancário
+├── [Exata] revisão empréstimo
+├── [Frase] "juros abusivos"
+├── [Frase] "revisão contrato"
+└── [Frase] "reduzir empréstimo"
+
+NEGATIVAS: -grátis, -simulador, -calculadora grátis, -como fazer sozinho
+
+ANÚNCIO 1: Taxas Abusivas
+┌─────────────────────────────────────────────────────────────────────┐
+│ Empréstimo Com Taxas Abusivas? | Reduza Até 50%                     │
+│ garcezpalha.com/revisao-contrato                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ TAC e TEC São Ilegais Desde 2008. Juros Acima BACEN = Abusivos.     │
+│ Recálculo + Restituição em Dobro + Redução do Saldo.                │
+│ 75% Taxa de Sucesso. R$ 8.3M Economizados. Análise Grátis.          │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Calculadora Jurídica
+┌─────────────────────────────────────────────────────────────────────┐
+│ Revisão Contrato Bancário | Calculadora Jurídica Grátis             │
+│ garcezpalha.com/revisao-contrato                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Descubra Se Seu Contrato Tem Cobranças Ilegais.                     │
+│ Comparamos Com Taxa Média do Banco Central. Ação Revisional.        │
+│ Advogado Especialista. R$ 2.000 + 25% Economizado. Fale Agora.      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 6.3 Grupo: Portabilidade Negada
+
+```
+PALAVRAS-CHAVE
+├── [Exata] portabilidade crédito negada
+├── [Exata] banco não deixa portabilidade
+├── [Exata] advogado bancário portabilidade
+├── [Exata] forçar portabilidade
+├── [Exata] resolução bacen 4292
+├── [Frase] "portabilidade negada"
+└── [Frase] "banco não deixa portabilidade"
+
+NEGATIVAS: -como fazer, -grátis, -simulação, -consórcio
+
+ANÚNCIO 1: Direito Garantido
+┌─────────────────────────────────────────────────────────────────────┐
+│ Banco Não Deixa Fazer Portabilidade? | É Ilegal                     │
+│ garcezpalha.com/portabilidade-credito                               │
+│─────────────────────────────────────────────────────────────────────│
+│ Portabilidade É Seu Direito (Resolução BACEN 4.292/2013).           │
+│ Notificação + Reclamação BACEN + Ação Judicial Se Necessário.       │
+│ 90% Taxa de Sucesso. 80% Resolvem em 15 Dias. Fale Agora.           │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Resolução Rápida
+┌─────────────────────────────────────────────────────────────────────┐
+│ Portabilidade Negada | Forçamos o Banco a Liberar                   │
+│ garcezpalha.com/portabilidade-credito                               │
+│─────────────────────────────────────────────────────────────────────│
+│ Banco Criando Obstáculos? Não Pode. Lei É Clara.                    │
+│ Maioria Resolve Sem Processo. R$ 1.500 Fixo (3x R$ 500).            │
+│ Advogado Especialista. R$ 3.2M Economizados. WhatsApp Agora.        │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 6.4 Grupo: Fraude Consignado
+
+```
+PALAVRAS-CHAVE
+├── [Exata] fraude empréstimo consignado
+├── [Exata] empréstimo que não fiz
+├── [Exata] desconto inss não reconheço
+├── [Exata] golpe consignado advogado
+├── [Exata] cancelar empréstimo fraudulento
+├── [Exata] fraude consignado aposentado
+├── [Frase] "fraude consignado"
+└── [Frase] "empréstimo no meu nome"
+
+NEGATIVAS: -denunciar, -boletim de ocorrência, -como dar golpe
+
+ANÚNCIO 1: Emergência
+┌─────────────────────────────────────────────────────────────────────┐
+│ Empréstimo Fraudulento? | Pare Descontos em 5 Dias                  │
+│ garcezpalha.com/fraude-consignado                                   │
+│─────────────────────────────────────────────────────────────────────│
+│ Fizeram Empréstimo no Seu Nome? É Crime. Banco Responde (STJ 479).  │
+│ Liminar Urgente + Cancelamento + Devolução Total + Indenização.     │
+│ Atendimento em 2 Horas. 80% Taxa de Sucesso. Fale URGENTE.          │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Aposentados
+┌─────────────────────────────────────────────────────────────────────┐
+│ Fraude em Consignado | Especialista em Aposentados                  │
+│ garcezpalha.com/fraude-consignado                                   │
+│─────────────────────────────────────────────────────────────────────│
+│ Desconto no Benefício de Empréstimo Que Não Pediu? Você É Vítima.   │
+│ Facilitamos Pagamento: Entrada R$ 500. R$ 8.7M Recuperados.         │
+│ Advogado Especialista. Atendimento Humanizado. WhatsApp.            │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 7. CAMPANHA: PREVIDENCIÁRIO (NOVOS NICHOS)
+
+### 7.1 Grupo: Revisão Aposentadoria
+
+```
+PALAVRAS-CHAVE (Alta Intenção)
+├── [Exata] revisão aposentadoria
+├── [Exata] aumentar aposentadoria
+├── [Exata] recalculo inss
+├── [Exata] tempo rural não reconhecido
+├── [Exata] atividade especial aposentadoria
+├── [Exata] rmi errada inss
+├── [Exata] advogado previdenciário
+├── [Frase] "revisão aposentadoria"
+├── [Frase] "aumentar benefício"
+└── [Frase] "recalculo inss"
+
+NEGATIVAS: -grátis, -calculadora online, -como fazer sozinho, -simular
+
+ANÚNCIO 1: INSS Calculou Errado
+┌─────────────────────────────────────────────────────────────────────┐
+│ Aposentadoria Baixa? | INSS Calcula Errado em 70% dos Casos         │
+│ garcezpalha.com/revisao-aposentadoria                               │
+│─────────────────────────────────────────────────────────────────────│
+│ Tempo Rural, Especial, Insalubridade Ignorados? Revise e Aumente.   │
+│ Calculadora Jurídica + Recálculo RMI + Aumento Até 80%.             │
+│ 85% Taxa Sucesso. R$ 18M Recuperados. Análise Grátis.               │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Aumento Vitalício
+┌─────────────────────────────────────────────────────────────────────┐
+│ Revisão de Aposentadoria | Aumente Para Sempre                      │
+│ garcezpalha.com/revisao-aposentadoria                               │
+│─────────────────────────────────────────────────────────────────────│
+│ Você Tem 10 Anos Desde Concessão Para Revisar. Não Perca Prazo.     │
+│ Aumento Médio +R$ 680/Mês Vitalício + Atrasados.                    │
+│ Advogado Especialista. R$ 3.000 + 25% Aumento. Fale Agora.          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 7.2 Grupo: Benefício Negado
+
+```
+PALAVRAS-CHAVE
+├── [Exata] benefício inss negado
+├── [Exata] inss negou aposentadoria
+├── [Exata] recurso inss
+├── [Exata] perícia médica negada
+├── [Exata] auxílio-doença negado
+├── [Exata] bpc negado advogado
+├── [Frase] "inss negou"
+└── [Frase] "recurso inss"
+
+NEGATIVAS: -como recorrer sozinho, -grátis, -modelo recurso
+
+ANÚNCIO 1: 30 Dias Para Recorrer
+┌─────────────────────────────────────────────────────────────────────┐
+│ INSS Negou Seu Benefício? | URGENTE: 30 Dias Para Recorrer          │
+│ garcezpalha.com/beneficio-negado                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Perícia Injusta? Documentos "Insuficientes"? Revertemos 80%.        │
+│ Recurso + Ação Judicial Simultânea + Nova Perícia + Tutela.         │
+│ Parcelado 5x. R$ 23M Liberados. Atendimento Urgente.                │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Nova Perícia
+┌─────────────────────────────────────────────────────────────────────┐
+│ Benefício Negado | Nova Perícia Judicial Imparcial                  │
+│ garcezpalha.com/beneficio-negado                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Perito do INSS Negou em 5 Minutos? Conseguimos Perícia de 30-60min. │
+│ Você Leva TODOS Exames. 80% Taxa de Reversão.                       │
+│ Advogado Especialista INSS. Facilitamos Pagamento. Fale Agora.      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 7.3 Grupo: Auxílio-Acidente
+
+```
+PALAVRAS-CHAVE
+├── [Exata] auxílio-acidente
+├── [Exata] sequela acidente trabalho
+├── [Exata] indenização acidente trabalho
+├── [Exata] auxílio-acidente negado
+├── [Exata] redução capacidade laboral
+├── [Frase] "auxílio-acidente"
+└── [Frase] "sequela permanente"
+
+NEGATIVAS: -simulador, -grátis, -quanto tempo demora, -regras
+
+ANÚNCIO 1: Benefício Vitalício
+┌─────────────────────────────────────────────────────────────────────┐
+│ Sequela de Acidente? | Auxílio-Acidente Vitalício                   │
+│ garcezpalha.com/auxilio-acidente                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ 50% do Salário Para SEMPRE + Acumula Com Trabalho.                  │
+│ Sequela Permanente Dá Direito. Prova + Nexo Causal + Perícia.       │
+│ 75% Taxa Sucesso. R$ 6.8M Concedidos. Análise Grátis.               │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Acumula com Salário
+┌─────────────────────────────────────────────────────────────────────┐
+│ Auxílio-Acidente | Receba 50% + Continue Trabalhando                │
+│ garcezpalha.com/auxilio-acidente                                    │
+│─────────────────────────────────────────────────────────────────────│
+│ Diferente de Auxílio-Doença. Esse ACUMULA Com Seu Salário.          │
+│ R$ 2.000 + 20% Retroativo. Benefício Vitalício.                     │
+│ Advogado Previdenciário. Fale no WhatsApp.                          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 8. CAMPANHA: SERVIDOR PÚBLICO
+
+### 8.1 Grupo: Incorporação Gratificação
+
+```
+PALAVRAS-CHAVE
+├── [Exata] incorporação gratificação
+├── [Exata] quinquênio função gratificada
+├── [Exata] servidor público direitos
+├── [Exata] função gratificada 5 anos
+├── [Exata] incorporar gratificação salário
+├── [Exata] advogado servidor público
+├── [Frase] "incorporação gratificação"
+└── [Frase] "quinquênio servidor"
+
+NEGATIVAS: -concurso, -como funciona, -grátis, -modelo ação
+
+ANÚNCIO 1: Quinquênio
+┌─────────────────────────────────────────────────────────────────────┐
+│ Função Gratificada Há 5 Anos? | Incorpore Definitivamente           │
+│ garcezpalha.com/incorporacao-gratificacao                           │
+│─────────────────────────────────────────────────────────────────────│
+│ Quinquênio Garante Incorporação ao Salário (Lei 8.112/90).          │
+│ Aumento Permanente + Reflexos em Aposentadoria.                     │
+│ 90% Taxa Sucesso. R$ 12M Incorporados. Cálculo Grátis.              │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Aumento Definitivo
+┌─────────────────────────────────────────────────────────────────────┐
+│ Incorporação de FG | Aumento Definitivo no Salário                  │
+│ garcezpalha.com/incorporacao-gratificacao                           │
+│─────────────────────────────────────────────────────────────────────│
+│ Exerceu FG, FC ou CD Por 5 Anos? Tem Direito a Incorporar.          │
+│ Mesmo Se Saiu da Função. Jurisprudência STJ.                        │
+│ Advogado Direito Administrativo. R$ 3.500 + 20% Retroativo.         │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 9. CAMPANHA: EDUCACIONAL
+
+### 9.1 Grupo: FIES Renegociação
+
+```
+PALAVRAS-CHAVE
+├── [Exata] fies renegociação
+├── [Exata] dívida fies alta
+├── [Exata] reduzir dívida fies
+├── [Exata] fies juros abusivos
+├── [Exata] advogado fies
+├── [Exata] parcelar fies
+├── [Exata] negativado fies
+├── [Frase] "fies renegociação"
+└── [Frase] "dívida fies impagável"
+
+NEGATIVAS: -grátis, -simulador, -como renegociar sozinho, -contratar fies
+
+ANÚNCIO 1: Desconto 2025
+┌─────────────────────────────────────────────────────────────────────┐
+│ Dívida FIES Impagável? | Renegociação 2025 Com 99% Desconto         │
+│ garcezpalha.com/fies-renegociacao                                   │
+│─────────────────────────────────────────────────────────────────────│
+│ Programa Especial do Governo: Desconto Até 99% Para Dívidas Antigas.│
+│ Dívida R$ 200k Vira R$ 2-5k. Parcelamento 150 Meses.                │
+│ Advogado Especialista. R$ 2.500 Fixo. Prazo Até 08/2025.            │
+└─────────────────────────────────────────────────────────────────────┘
+
+ANÚNCIO 2: Saia do Serasa
+┌─────────────────────────────────────────────────────────────────────┐
+│ FIES Negativado? | Renegocie e Limpe Seu Nome                       │
+│ garcezpalha.com/fies-renegociacao                                   │
+│─────────────────────────────────────────────────────────────────────│
+│ Desconto 60-99% + Parcelas Que Cabem no Orçamento + Nome Limpo.     │
+│ R$ 85M Renegociados. 2.100+ Alunos Atendidos.                       │
+│ Cálculo Gratuito. Aproveitamos Condições Especiais 2025.            │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 10. ORÇAMENTO E DISTRIBUIÇÃO
 
 ### 6.1 Fase 1: Validação (Mês 1-2)
 
