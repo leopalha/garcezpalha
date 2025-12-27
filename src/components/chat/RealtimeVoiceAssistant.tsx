@@ -113,9 +113,9 @@ export function RealtimeVoiceAssistant({
   }, [realtime, avatar])
 
   // Stop conversation
-  const stopConversation = useCallback(async (convertedToCheckout = false) => {
+  const stopConversation = useCallback(async () => {
     try {
-      await realtime.disconnect(convertedToCheckout)
+      await realtime.disconnect()
 
       if (mode === 'avatar') {
         await avatar.disconnect()
