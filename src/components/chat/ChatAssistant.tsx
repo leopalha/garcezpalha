@@ -59,6 +59,8 @@ export function ChatAssistant({
   const [isRecording, setIsRecording] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const [transcriptionError, setTranscriptionError] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -100,13 +102,60 @@ Como prefere começar?`,
   const handleSend = async () => {
     if (!input.trim() && selectedFiles.length === 0) return
 
+    let finalMessage = input
+    let audioFileToSend: File | null = null
+
+    // Se há arquivo de áudio, transcrever primeiro
+    const audioFile = selectedFiles.find(f => f.type.startsWith('audio/'))
+    if (audioFile) {
+      setIsTranscribing(true)
+      setTranscriptionError(null)
+
+      try {
+        const formData = new FormData()
+        formData.append('audio', audioFile)
+
+        console.log('[ChatAssistant] Transcribing audio:', audioFile.name)
+
+        const transcribeRes = await fetch('/api/chat/transcribe', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!transcribeRes.ok) {
+          const error = await transcribeRes.json()
+          throw new Error(error.error || 'Transcription failed')
+        }
+
+        const { text } = await transcribeRes.json()
+        console.log('[ChatAssistant] Transcription:', text)
+
+        finalMessage = input ? `${input}\n\n[Áudio transcrito]: ${text}` : text
+        audioFileToSend = audioFile
+
+      } catch (error: any) {
+        console.error('[ChatAssistant] Transcription error:', error)
+        setTranscriptionError(error.message)
+        setIsTranscribing(false)
+        return
+      } finally {
+        setIsTranscribing(false)
+      }
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: input || '📎 Arquivos anexados',
+      content: finalMessage || '📎 Arquivos anexados',
       timestamp: new Date(),
       attachments: selectedFiles.map((file) => ({
-        type: file.type.startsWith('image/') ? 'image' : 'document',
+        type: file.type.startsWith('image/')
+          ? 'image'
+          : file.type.startsWith('audio/')
+          ? 'audio'
+          : file.type.startsWith('video/')
+          ? 'video'
+          : 'document',
         url: URL.createObjectURL(file),
         name: file.name,
       })),
@@ -118,13 +167,12 @@ Como prefere começar?`,
     setIsLoading(true)
 
     try {
-      // TODO: Enviar para API com arquivos
       const response = await fetch('/api/chat/assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productId,
-          message: input,
+          message: finalMessage,
           history: messages.map((m) => ({
             role: m.role,
             content: m.content,
@@ -375,6 +423,31 @@ Como prefere começar?`,
 
               <div ref={messagesEndRef} />
             </div>
+
+            {/* Transcription Feedback */}
+            {isTranscribing && (
+              <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border-t flex items-center gap-2">
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" />
+                  <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:150ms]" />
+                  <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:300ms]" />
+                </div>
+                <span className="text-sm text-blue-600 dark:text-blue-400">Transcrevendo áudio...</span>
+              </div>
+            )}
+
+            {transcriptionError && (
+              <div className="px-4 py-2 bg-red-50 dark:bg-red-900/20 border-t flex items-center gap-2">
+                <X className="h-4 w-4 text-red-600" />
+                <span className="text-sm text-red-600 dark:text-red-400">{transcriptionError}</span>
+                <button
+                  onClick={() => setTranscriptionError(null)}
+                  className="ml-auto text-red-600 hover:text-red-700"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
 
             {/* Selected Files Preview */}
             {selectedFiles.length > 0 && (
