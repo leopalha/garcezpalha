@@ -139,6 +139,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const orderId = session.metadata?.orderId
   const leadId = session.metadata?.leadId
   const serviceId = session.metadata?.serviceId
+  const conversationId = session.metadata?.conversation_id
 
   // Update checkout_orders table
   if (orderId) {
@@ -167,6 +168,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .update({
         status: 'converted',
         converted_at: new Date().toISOString(),
+        payment_status: 'paid',
+        payment_provider: 'stripe',
+        payment_id: session.payment_intent as string,
       })
       .eq('id', leadId)
 
@@ -174,6 +178,52 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.error('Error updating lead:', error)
     } else {
       console.log(`Lead ${leadId} marked as converted`)
+    }
+  }
+
+  // Update conversation state to 'paid' → 'contract_pending'
+  if (conversationId) {
+    const { error: convError } = await supabaseAdmin
+      .from('conversations')
+      .update({
+        status: {
+          state: 'paid',
+          updated_at: new Date().toISOString(),
+        },
+        proposal: {
+          payment_status: 'paid',
+          payment_provider: 'stripe',
+          payment_id: session.payment_intent as string,
+          paid_at: new Date().toISOString(),
+          paid_amount: session.amount_total,
+        },
+      })
+      .eq('conversation_id', conversationId)
+
+    if (convError) {
+      console.error('[Stripe] Error updating conversation:', convError)
+    } else {
+      console.log(`[Stripe] Conversation ${conversationId} moved to paid state`)
+
+      // Transition to contract_pending after 1 second
+      setTimeout(async () => {
+        const { error: transitionError } = await supabaseAdmin
+          .from('conversations')
+          .update({
+            status: {
+              state: 'contract_pending',
+              updated_at: new Date().toISOString(),
+            },
+          })
+          .eq('conversation_id', conversationId)
+
+        if (transitionError) {
+          console.error('[Stripe] Error transitioning to contract_pending:', transitionError)
+        } else {
+          console.log(`[Stripe] Conversation ${conversationId} moved to contract_pending`)
+          // TODO: Trigger ClickSign contract generation here
+        }
+      }, 1000)
     }
   }
 

@@ -253,6 +253,7 @@ async function handleApprovedPayment(
   const metadata = payment.metadata as Record<string, string> | undefined
   const orderId = metadata?.orderId
   const leadId = metadata?.leadId
+  const conversationId = metadata?.conversation_id
 
   // Processar fluxo financeiro completo
   try {
@@ -289,6 +290,9 @@ async function handleApprovedPayment(
       .update({
         status: 'converted',
         converted_at: new Date().toISOString(),
+        payment_status: 'paid',
+        payment_provider: 'mercadopago',
+        payment_id: payment.id as string,
       })
       .eq('id', leadId)
 
@@ -296,6 +300,52 @@ async function handleApprovedPayment(
       console.error('Error updating lead:', error)
     } else {
       console.log(`Lead ${leadId} marked as converted`)
+    }
+  }
+
+  // Update conversation state to 'paid' → 'contract_pending'
+  if (conversationId) {
+    const { error: convError } = await supabaseAdmin
+      .from('conversations')
+      .update({
+        status: {
+          state: 'paid',
+          updated_at: new Date().toISOString(),
+        },
+        proposal: {
+          payment_status: 'paid',
+          payment_provider: 'mercadopago',
+          payment_id: payment.id as string,
+          paid_at: new Date().toISOString(),
+          paid_amount: payment.transaction_amount,
+        },
+      })
+      .eq('conversation_id', conversationId)
+
+    if (convError) {
+      console.error('[MercadoPago] Error updating conversation:', convError)
+    } else {
+      console.log(`[MercadoPago] Conversation ${conversationId} moved to paid state`)
+
+      // Transition to contract_pending after 1 second
+      setTimeout(async () => {
+        const { error: transitionError } = await supabaseAdmin
+          .from('conversations')
+          .update({
+            status: {
+              state: 'contract_pending',
+              updated_at: new Date().toISOString(),
+            },
+          })
+          .eq('conversation_id', conversationId)
+
+        if (transitionError) {
+          console.error('[MercadoPago] Error transitioning to contract_pending:', transitionError)
+        } else {
+          console.log(`[MercadoPago] Conversation ${conversationId} moved to contract_pending`)
+          // TODO: Trigger ClickSign contract generation here
+        }
+      }, 1000)
     }
   }
 

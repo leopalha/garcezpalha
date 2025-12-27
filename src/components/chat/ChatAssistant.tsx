@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { RealtimeVoiceAssistant } from './RealtimeVoiceAssistant'
+import { VoicePlayer } from './VoicePlayer'
 
 interface Message {
   id: string
@@ -213,7 +214,7 @@ Como prefere começar?`,
     }
   }
 
-  // Gravação de áudio
+  // Gravação de áudio com transcrição em tempo real
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -223,13 +224,42 @@ Como prefere começar?`,
       const chunks: Blob[] = []
       mediaRecorder.ondataavailable = (e) => chunks.push(e.data)
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' })
-        const file = new File([blob], `audio-${Date.now()}.webm`, {
-          type: 'audio/webm',
-        })
-        setSelectedFiles((prev) => [...prev, file])
         stream.getTracks().forEach((track) => track.stop())
+
+        // Transcrever automaticamente SEM salvar o arquivo
+        setIsTranscribing(true)
+        setTranscriptionError(null)
+
+        try {
+          const formData = new FormData()
+          formData.append('audio', blob, 'recording.webm')
+
+          console.log('[ChatAssistant] Transcrevendo áudio gravado...')
+
+          const transcribeRes = await fetch('/api/chat/transcribe', {
+            method: 'POST',
+            body: formData,
+          })
+
+          if (!transcribeRes.ok) {
+            const error = await transcribeRes.json()
+            throw new Error(error.error || 'Falha na transcrição')
+          }
+
+          const { text } = await transcribeRes.json()
+          console.log('[ChatAssistant] Transcrição:', text)
+
+          // Inserir texto transcrito no input
+          setInput(text)
+
+        } catch (error: any) {
+          console.error('[ChatAssistant] Erro na transcrição:', error)
+          setTranscriptionError(error.message || 'Erro ao transcrever áudio')
+        } finally {
+          setIsTranscribing(false)
+        }
       }
 
       mediaRecorder.start()
@@ -240,7 +270,8 @@ Como prefere começar?`,
         setRecordingTime((prev) => prev + 1)
       }, 1000)
     } catch (error) {
-      console.error('Erro ao gravar:', error)
+      console.error('Erro ao acessar microfone:', error)
+      setTranscriptionError('Permissão de microfone negada ou não disponível')
     }
   }
 
@@ -384,13 +415,6 @@ Como prefere começar?`,
                         </div>
                       )}
 
-                      {message.audioUrl && (
-                        <button className="mt-2 flex items-center gap-2 text-xs opacity-75 hover:opacity-100">
-                          <Volume2 className="h-3 w-3" />
-                          Ouvir resposta
-                        </button>
-                      )}
-
                       <p className={cn(
                         'text-[10px] mt-1',
                         message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
@@ -401,6 +425,17 @@ Como prefere começar?`,
                         })}
                       </p>
                     </div>
+
+                    {/* Voice Player para resposta do assistente */}
+                    {message.role === 'assistant' && message.content && (
+                      <VoicePlayer
+                        text={message.content}
+                        voice="shimmer"
+                        speed={1.0}
+                        autoPlay={false}
+                        className="mt-2"
+                      />
+                    )}
                   </div>
 
                   {message.role === 'user' && (
