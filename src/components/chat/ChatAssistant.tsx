@@ -43,6 +43,7 @@ interface ChatAssistantProps {
   productName: string
   autoOpen?: boolean
   openDelay?: number
+  onClose?: () => void
 }
 
 export function ChatAssistant({
@@ -50,6 +51,7 @@ export function ChatAssistant({
   productName,
   autoOpen = true,
   openDelay = 3000,
+  onClose,
 }: ChatAssistantProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isVideoMode, setIsVideoMode] = useState(false)
@@ -327,7 +329,10 @@ Como prefere começar?`,
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false)
+                    onClose?.()
+                  }}
                   className="text-white hover:bg-white/20"
                 >
                   <X className="h-5 w-5" />
