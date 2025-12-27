@@ -320,7 +320,7 @@ export default function FiesRenegociacaoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="educacional" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-indigo-600 to-blue-600 text-white">

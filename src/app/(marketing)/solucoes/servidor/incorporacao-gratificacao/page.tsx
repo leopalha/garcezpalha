@@ -319,7 +319,7 @@ export default function IncorporacaoGratificacaoPage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="servidor" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">

@@ -319,7 +319,7 @@ export default function AuxilioAcidentePage() {
 
       <CredentialsSection />
       <GuaranteeSection />
-      <TestimonialsSection category="previdenciario" />
+      <TestimonialsSection />
 
       {/* Final CTA */}
       <section className="py-16 bg-gradient-to-r from-purple-600 to-pink-600 text-white">
