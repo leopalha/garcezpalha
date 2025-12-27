@@ -206,7 +206,7 @@ export function VoicePlayer({
         size="sm"
         onClick={changeSpeed}
         title="Mudar velocidade"
-        className="h-7 px-2 text-xs font-semibold text-primary hover:bg-primary/10 rounded-full"
+        className="h-7 px-2 text-xs font-bold text-primary hover:bg-primary/30 hover:text-primary-foreground rounded-full transition-all duration-200 border border-primary/20 hover:border-primary/50"
       >
         {speed}x
       </Button>

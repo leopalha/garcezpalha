@@ -237,6 +237,13 @@ Como prefere começar?`,
           formData.append('audio', blob, 'recording.webm')
 
           console.log('[ChatAssistant] Transcrevendo áudio gravado...')
+          console.log('[ChatAssistant] Tamanho do áudio:', blob.size, 'bytes')
+          console.log('[ChatAssistant] Tipo do áudio:', blob.type)
+
+          // Verificar se blob não está vazio
+          if (blob.size === 0) {
+            throw new Error('Áudio gravado está vazio. Tente falar mais alto ou verificar o microfone.')
+          }
 
           const transcribeRes = await fetch('/api/chat/transcribe', {
             method: 'POST',
@@ -249,7 +256,13 @@ Como prefere começar?`,
           }
 
           const { text } = await transcribeRes.json()
-          console.log('[ChatAssistant] Transcrição:', text)
+          console.log('[ChatAssistant] Transcrição recebida:', text)
+          console.log('[ChatAssistant] Tamanho da transcrição:', text?.length || 0, 'caracteres')
+
+          // Verificar se transcrição não está vazia
+          if (!text || text.trim().length === 0) {
+            throw new Error('Nenhum áudio detectado. Fale mais alto ou mais próximo do microfone.')
+          }
 
           // Inserir texto transcrito no input
           setInput(text)
@@ -348,6 +361,19 @@ Como prefere começar?`,
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    if (confirm('Limpar todas as mensagens?')) {
+                      setMessages([])
+                    }
+                  }}
+                  className="text-white hover:bg-white/20"
+                  title="Limpar chat"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"
