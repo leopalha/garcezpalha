@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
+import { processStripePaymentWebhook } from '@/lib/workflows/financeiro-flow'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -76,6 +77,8 @@ export async function POST(request: NextRequest) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent
         await handlePaymentSucceeded(paymentIntent)
+        // Processar fluxo financeiro completo
+        await processStripePaymentWebhook(paymentIntent)
         break
       }
 

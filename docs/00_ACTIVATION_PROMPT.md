@@ -683,6 +683,206 @@ Para um agente que está iniciando trabalho neste projeto:
 
 ---
 
+## 16. PROTOCOLOS MANUS v6.0 (Multi-Agent Network for Unified Systems)
+
+Este projeto utiliza o **MANUS v6.0**, um sistema de orquestração de documentação e desenvolvimento multi-agent.
+
+### 16.1 Agent Loop (6 Fases)
+
+O MANUS opera em um loop contínuo de 6 fases:
+
+```
+1. ANALYZE (Análise)
+   └── Ler documentação e código
+   └── Identificar gaps e inconsistências
+   └── Mapear arquitetura atual
+
+2. PLAN (Planejamento)
+   └── Criar matriz de problemas (P0/P1/P2)
+   └── Estimar esforço de correção
+   └── Priorizar por impacto
+
+3. EXECUTE (Execução)
+   └── Lançar agents especializados em paralelo
+   └── Cada agent trabalha em fase específica
+   └── Agents podem spawnar sub-agents
+
+4. OBSERVE (Observação)
+   └── Monitorar progresso dos agents
+   └── Validar outputs parciais
+   └── Identificar bloqueadores
+
+5. ITERATE (Iteração)
+   └── Ajustar plano baseado em descobertas
+   └── Re-lançar agents para correções
+   └── Refinar documentação
+
+6. DELIVER (Entrega)
+   └── Consolidar resultados
+   └── Validar score final
+   └── Entregar documentação completa
+```
+
+### 16.2 Sistema de Scoring (0-100)
+
+```
+SCORE 0-100: Alinhamento Documentação ↔ Código
+
+├── 90-100: EXCELENTE (Production-ready)
+├── 80-89:  BOM (Pequenos ajustes)
+├── 70-79:  MÉDIO (Requer melhorias)
+├── 60-69:  FRACO (Refatoração necessária)
+└── 0-59:   CRÍTICO (Refazer documentação)
+
+COMPOSIÇÃO DO SCORE:
+├── Completude (30 pts): Docs cobrem 100% do código?
+├── Precisão (25 pts): Docs refletem implementação real?
+├── Consistência (20 pts): Sem contradições entre docs?
+├── Atualização (15 pts): Docs estão atualizados?
+└── Usabilidade (10 pts): Fácil de entender e usar?
+```
+
+### 16.3 Priorização de Gaps
+
+```
+P0 (CRÍTICA): Bloqueadores de produção
+├── Documentação menciona features não implementadas
+├── Código implementa features não documentadas (críticas)
+├── Inconsistências arquiteturais fundamentais
+└── Informações incorretas de compliance/segurança
+
+P1 (ALTA): Impacto significativo
+├── Features implementadas mas não documentadas
+├── Documentação desatualizada em partes importantes
+├── Gaps de informação em fluxos principais
+└── Exemplos incorretos ou desatualizados
+
+P2 (MÉDIA): Melhorias incrementais
+├── Documentação incompleta em features secundárias
+├── Falta de exemplos adicionais
+├── Diagramas ausentes ou desatualizados
+└── Detalhes técnicos superficiais
+```
+
+### 16.4 Protocolos de Validação
+
+```
+PRÉ-AUDITORIA:
+[ ] Ler business/DADOS_MESTRES.md (Single Source of Truth)
+[ ] Ler business/OAB_COMPLIANCE_GUIDE.md (Regras jurídicas)
+[ ] Ler todos os arquivos em docs/
+[ ] Ler estrutura de src/ completa
+
+DURANTE AUDITORIA:
+[ ] Criar MATRIZ_ALINHAMENTO_DOCS_CODIGO.md
+[ ] Identificar todos os gaps (P0/P1/P2)
+[ ] Calcular score de alinhamento (0-100)
+[ ] Criar ROADMAP_100_PERCENT.md
+
+PÓS-AUDITORIA:
+[ ] Lançar agents para correção de gaps
+[ ] Validar outputs de cada agent
+[ ] Re-calcular score final
+[ ] Consolidar RELATORIO_ALINHAMENTO_FINAL.md
+```
+
+### 16.5 Estrutura .manus/
+
+```
+.manus/
+├── README.md                          # Índice mestre MANUS
+├── AUDITORIA_FINAL_MANUS.md          # Relatório de auditoria
+├── MATRIZ_ALINHAMENTO_DOCS_CODIGO.md # Gaps identificados
+├── PROGRESSO_MANUS_26DEC.md          # Progresso atual
+├── ROADMAP_100_PERCENT.md            # Plano para 100/100
+├── RELATORIO_ALINHAMENTO_FINAL.md    # Relatório final
+└── bootstrap/
+    └── META_MANUS_INSTALLER.md       # Sistema de auto-instalação
+```
+
+### 16.6 Single Source of Truth (SSOT)
+
+O arquivo `business/DADOS_MESTRES.md` é a **fonte única de verdade** para:
+
+- Informações da empresa (nome, endereço, CNPJ, etc.)
+- Catálogo de produtos (30 produtos com preços)
+- Stack tecnológica (versões, custos)
+- Métricas e KPIs (MRR, conversão, etc.)
+- Agentes de IA (6 agents especializados)
+- Integrações externas (APIs, webhooks)
+
+**REGRA**: Qualquer alteração nestes dados deve ser feita PRIMEIRO em DADOS_MESTRES.md, depois propagada para outros documentos.
+
+### 16.7 Compliance OAB (Crítico)
+
+**NUNCA** documentar ou implementar:
+
+- ❌ Promessas de prazo de RESOLUÇÃO judicial
+- ❌ Garantias de resultado em processos
+- ❌ Promessas de "sucesso garantido"
+- ❌ Violações do Código de Ética da OAB
+
+**SEMPRE** incluir:
+
+- ✅ Disclaimer OAB em respostas de IA
+- ✅ Informações de registro (OAB/RJ 219.390)
+- ✅ Recomendação de consulta presencial para casos complexos
+- ✅ Base legal quando aplicável
+
+Consulte `business/OAB_COMPLIANCE_GUIDE.md` para lista completa de frases proibidas/permitidas.
+
+### 16.8 Workflow de Documentação
+
+```
+NOVA FEATURE IMPLEMENTADA:
+1. Atualizar DADOS_MESTRES.md (se aplicável)
+2. Atualizar docs/03_PRD.md (requisitos)
+3. Atualizar docs/17-STACK-TECNOLOGICA.md (arquitetura)
+4. Atualizar docs específicos da feature
+5. Executar auditoria MANUS para validar
+
+NOVA DOCUMENTAÇÃO:
+1. Verificar se já existe doc similar
+2. Seguir template apropriado (.manus/templates/)
+3. Referenciar DADOS_MESTRES.md quando possível
+4. Adicionar ao índice em docs/00-INDICE-GERAL.md
+5. Linkar de/para outros documentos relevantes
+```
+
+### 16.9 Score Atual do Projeto
+
+```
+SCORE HISTÓRICO:
+├── Inicial (01/12/2024): 78/100
+├── Após MANUS v1-5:       85/100
+└── Atual (26/12/2024):    95/100
+
+GAPS RESOLVIDOS:
+├── GAP-001 (tRPC):     ✅ RESOLVIDO (falso positivo)
+├── GAP-002 (PWA):      ✅ DOCUMENTADO
+└── GAP-003 (WhatsApp): ✅ DOCUMENTADO
+
+PRÓXIMA META: 100/100 (Excelência Absoluta)
+```
+
+### 16.10 Comandos MANUS
+
+```bash
+# Executar auditoria completa (via Claude Code)
+# Inicie nova conversa com: "Execute auditoria MANUS v6.0"
+
+# Verificar score atual
+# Leia: .manus/RELATORIO_ALINHAMENTO_FINAL.md
+
+# Verificar gaps pendentes
+# Leia: .manus/MATRIZ_ALINHAMENTO_DOCS_CODIGO.md
+
+# Ver roadmap para 100/100
+# Leia: .manus/ROADMAP_100_PERCENT.md
+```
+
+---
+
 *Documento: 00_ACTIVATION_PROMPT.md*
-*Versão: 3.0*
-*Última atualização: Dezembro/2024*
+*Versão: 4.0 (com Protocolos MANUS v6.0)*
+*Última atualização: 26 de Dezembro de 2024*

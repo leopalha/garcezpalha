@@ -148,6 +148,67 @@ FRAMER MOTION:
 }
 ```
 
+### 2.4 PWA (Progressive Web App)
+
+```
+PWA COMPLETO:
+
+CAPACIDADES:
+├── Instalável (desktop + mobile)
+├── Funciona offline
+├── Cache estratégico
+├── Push notifications
+├── Background sync
+└── Atualizações automáticas
+
+ARQUITETURA:
+src/
+├── app/
+│   └── manifest.ts              # Manifest PWA (Next.js 14)
+├── components/
+│   └── pwa/
+│       └── service-worker-register.tsx  # Registro + UI updates
+public/
+├── sw.js                        # Service Worker
+├── offline.html                 # Página offline
+└── brasao-garcez-palha.png     # Ícones PWA
+
+ESTRATÉGIA DE CACHE: Network First, Cache Fallback
+├── APIs: Sempre da rede (dados frescos)
+├── Assets: Cache primeiro (performance)
+├── Páginas: Rede primeiro, cache fallback
+└── Offline: Página customizada
+
+SERVICE WORKER FEATURES:
+├── install: Pre-cache assets, skipWaiting
+├── activate: Clean old caches, claim clients
+├── fetch: Network-first strategy
+├── sync: Background sync de formulários
+├── push: Push notifications
+└── notificationclick: Abrir URLs de notificações
+
+MANIFEST PWA:
+{
+  name: 'Garcez Palha - Advocacia e Perícia',
+  short_name: 'Garcez Palha',
+  display: 'standalone',          # Fullscreen sem browser UI
+  theme_color: '#1E3A8A',        # Azul Garcez Palha
+  icons: [192x192, 512x512, SVG]
+}
+
+BENEFÍCIOS:
+├── Instalação com 1 clique (sem App Store)
+├── Carregamento instantâneo (cache)
+├── Funciona offline (consultas)
+├── Notificações de processos
+├── Menos uso de dados móveis
+├── Experiência nativa
+└── Lighthouse PWA Score: 100/100
+
+CUSTOS:
+└── R$ 0/mês (infraestrutura client-side)
+```
+
 ---
 
 ## 3. BACKEND
@@ -161,22 +222,38 @@ NEXT.JS API ROUTES:
 ├── TypeScript nativo
 └── Zero config
 
-tRPC:
-├── Type-safe API
+tRPC v11:
+├── Type-safe API end-to-end
 ├── Sem código duplicado
-├── Inferência de tipos
-└── React Query integrado
+├── Inferência automática de tipos
+├── React Query integrado
+├── SuperJSON transformer
+└── 3 níveis de autorização
 
-ESTRUTURA API:
+ESTRUTURA tRPC REAL:
 src/lib/trpc/
-├── routers/
-│   ├── leads.ts         # CRUD leads
-│   ├── chat.ts          # Chatbot
-│   ├── documents.ts     # Documentos
-│   ├── payments.ts      # Pagamentos
-│   └── processes.ts     # Processos
-├── middleware.ts        # Auth, rate limit
-└── index.ts            # Router principal
+├── init.ts              # Configuração tRPC + contexto Supabase
+├── client.ts            # Cliente React (createTRPCReact)
+├── provider.tsx         # TRPCProvider com React Query
+└── routers/
+    ├── index.ts         # AppRouter principal (combina todos)
+    ├── leads.ts         # CRUD leads + qualificação
+    ├── clients.ts       # CRUD clientes
+    ├── appointments.ts  # CRUD agendamentos
+    ├── chat.ts          # Chatbot integration
+    ├── analytics.ts     # Analytics e métricas
+    ├── referrals.ts     # Indicações de parceiros
+    ├── invoices.ts      # Faturas e pagamentos
+    ├── products.ts      # Produtos/Pacotes
+    └── users.ts         # Usuários e permissões
+
+src/app/api/trpc/[trpc]/
+└── route.ts             # HTTP handler (GET/POST)
+
+AUTORIZAÇÃO (3 níveis):
+├── publicProcedure      # Sem autenticação (ex: criar lead)
+├── protectedProcedure   # Requer usuário autenticado
+└── adminProcedure       # Requer role admin
 ```
 
 ### 3.2 Supabase
@@ -390,34 +467,87 @@ HOSTING:
 
 ## 6. COMUNICAÇÃO
 
-### 6.1 WhatsApp Business
+### 6.1 WhatsApp - Múltiplas Opções (3 Integrações)
+
+O sistema implementa **3 formas diferentes** de integração com WhatsApp:
 
 ```
-EVOLUTION API (Self-hosted):
+ARQUITETURA MULTI-CANAL:
 
-FEATURES:
-├── Multi-device
-├── Webhooks
-├── Grupos e listas
-├── Mídia (imagens, docs)
-└── Status/Stories
+┌──────────────────────┐
+│   CLIENTES           │
+│   (WhatsApp)         │
+└──────────┬───────────┘
+           │
+    ┌──────┴──────┬───────────────┬───────────────┐
+    │             │               │               │
+┌───▼──────┐  ┌──▼─────────┐  ┌──▼────────────┐  │
+│ Business │  │  Evolution │  │    Baileys    │  │
+│   API    │  │    API     │  │   (Direct)    │  │
+│ (Meta)   │  │ (Railway)  │  │  (Railway)    │  │
+└───┬──────┘  └──┬─────────┘  └──┬────────────┘  │
+    │            │               │               │
+    └────────────┴───────────────┴───────────────┘
+                 │
+         ┌───────▼────────┐
+         │   Next.js API  │
+         │   /api/chat/   │
+         └────────────────┘
 
-ENDPOINTS PRINCIPAIS:
-├── POST /message/sendText
-├── POST /message/sendMedia
-├── POST /message/sendDocument
-├── GET /chat/fetchMessages
-└── POST /webhook/set
+OPÇÃO 1: WhatsApp Business API (Oficial - Meta)
+├── Arquivo: src/lib/whatsapp/cloud-api.ts
+├── Status: ✅ Produção
+├── Custo: R$ 0,40-0,80 por conversa
+├── Vantagens: Máxima confiabilidade, compliance total, zero risco ban
+├── Uso: Produção principal
+└── Templates pré-aprovados pela Meta
 
-HOSTING:
-├── Docker container
-├── Railway/Render (~$7/mês)
-└── Requer número WhatsApp dedicado
+OPÇÃO 2: Evolution API (Self-hosted)
+├── Arquivos: src/app/api/whatsapp/qrcode/route.ts
+├── Status: ✅ Backup/Desenvolvimento
+├── Hosting: Railway (~R$ 35/mês)
+├── Vantagens: Custo fixo, controle total, sem limites de mensagens
+├── Uso: Backup e staging
+└── URL: https://unique-delight-production-affb.up.railway.app
 
-ALTERNATIVA: Z-API (~R$ 100/mês)
-├── API gerenciada
-├── Suporte brasileiro
-├── Sem servidor próprio
+OPÇÃO 3: Baileys (Direct Library)
+├── Arquivos: baileys-server/index.js, src/app/(admin)/whatsapp-baileys/
+├── Status: ✅ Desenvolvimento/Teste
+├── Biblioteca: @whiskeysockets/baileys ^6.7.9
+├── Vantagens: 100% gratuito, controle total
+├── Desvantagens: Risco de banimento, menos estável
+└── Uso: Apenas desenvolvimento/testes
+
+COMPARAÇÃO:
+┌─────────────────┬──────────────┬───────────────┬────────────────┐
+│ Característica  │ Business API │ Evolution API │ Baileys Direct │
+├─────────────────┼──────────────┼───────────────┼────────────────┤
+│ Oficial (Meta)  │      ✅      │      ❌       │      ❌        │
+│ Estabilidade    │    Máxima    │     Alta      │     Média      │
+│ Custo por msg   │  R$ 0,40-0,80│   Gratuito    │   Gratuito     │
+│ Custo fixo/mês  │      $0      │    ~R$ 35     │    ~R$ 35      │
+│ Risco de ban    │   Zero (0%)  │    Baixo (5%) │   Alto (15%)   │
+│ Setup           │    Difícil   │     Médio     │     Fácil      │
+│ Manutenção      │     Zero     │     Baixa     │     Média      │
+│ Templates       │      ✅      │      ❌       │      ❌        │
+│ Webhooks        │      ✅      │      ✅       │      ✅        │
+│ Multi-device    │      ✅      │      ✅       │      ✅        │
+└─────────────────┴──────────────┴───────────────┴────────────────┘
+
+ESTRATÉGIA DE FAILOVER:
+1. Tenta Business API (oficial)
+   ↓ (se falhar)
+2. Tenta Evolution API (backup)
+   ↓ (se falhar)
+3. Tenta Baileys Direct (último recurso)
+   ↓ (se falhar)
+4. Fallback para Email/SMS
+
+RECOMENDAÇÃO POR AMBIENTE:
+├── Produção Principal:  Business API (confiabilidade + compliance)
+├── Backup/Failover:     Evolution API (custo fixo + controle)
+├── Desenvolvimento:     Baileys Direct (setup rápido + gratuito)
+└── Staging/QA:          Evolution API (isolamento + flexibilidade)
 ```
 
 ### 6.2 Email (Resend)

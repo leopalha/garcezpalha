@@ -186,7 +186,7 @@ ANÚNCIO 2
 │─────────────────────────────────────────────────────────────────────│
 │ Usucapião é a Solução. Documento Definitivo Para Vender ou Financiar│
 │ Processo em Cartório. OAB + CONPEJ + CRECI: Especialista Completo.  │
-│ 360 Anos de Tradição. Confiança Para Seu Patrimônio.                │
+│ 364 Anos de Tradição. Confiança Para Seu Patrimônio.                │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -208,7 +208,7 @@ ANÚNCIO 1
 │─────────────────────────────────────────────────────────────────────│
 │ Planejamento Sucessório Completo. Evite Briga Entre Herdeiros.      │
 │ Economia de Até 15% em Impostos de Herança.                         │
-│ Família Garcez Palha: 360 Anos Protegendo Patrimônios.              │
+│ Família Garcez Palha: 364 Anos Protegendo Patrimônios.              │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 

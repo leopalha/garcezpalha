@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
+import { processMercadoPagoPaymentWebhook } from '@/lib/workflows/financeiro-flow'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -252,6 +253,13 @@ async function handleApprovedPayment(
   const metadata = payment.metadata as Record<string, string> | undefined
   const orderId = metadata?.orderId
   const leadId = metadata?.leadId
+
+  // Processar fluxo financeiro completo
+  try {
+    await processMercadoPagoPaymentWebhook(payment)
+  } catch (error) {
+    console.error('Error processing financeiro flow:', error)
+  }
 
   // Update checkout order status
   if (orderId) {

@@ -13,7 +13,7 @@
 ### 1.2 Subtítulo
 ```
 "A primeira plataforma de inteligência jurídica do Brasil.
-Tecnologia de ponta + 360 anos de tradição."
+Tecnologia de ponta + 364 anos de tradição."
 ```
 
 ### 1.3 Declaração de Posicionamento
@@ -22,7 +22,7 @@ Para brasileiros com problemas jurídicos urgentes,
 Garcez Palha é a plataforma de inteligência jurídica
 que resolve qualquer questão legal em até 72 horas
 porque combina inteligência artificial avançada
-com 360 anos de tradição jurídica familiar.
+com 364 anos de tradição jurídica familiar.
 ```
 
 ---
@@ -63,7 +63,7 @@ A máquina trabalha.
 O advogado assina.
 
 Por trás da tecnologia,
-360 anos de tradição jurídica.
+364 anos de tradição jurídica.
 
 Desde 1661, a família Garcez Palha serve o Brasil.
 Governadores. Viscondes. Barões. Magistrados.
@@ -89,7 +89,7 @@ que usa IA para analisar, estrategiar e resolver.
 
 Você conta o problema. A máquina trabalha. O advogado assina.
 
-360 anos de tradição. Velocidade do futuro.
+364 anos de tradição. Velocidade do futuro.
 
 Garcez Palha. Inteligência Jurídica.
 ```
@@ -104,7 +104,7 @@ Garcez Palha. Inteligência Jurídica.
 ┌─────────────────┬─────────────────┬─────────────────┐
 │   TECNOLOGIA    │    TRADIÇÃO     │   RESULTADO     │
 ├─────────────────┼─────────────────┼─────────────────┤
-│ IA Avançada     │ 360 anos        │ 72 horas        │
+│ IA Avançada     │ 364 anos        │ 72 horas        │
 │ Automação       │ Linhagem nobre  │ Transparência   │
 │ Velocidade      │ Credenciais     │ Garantia        │
 │ Precisão        │ Autoridade      │ Satisfação      │
@@ -155,7 +155,7 @@ Garcez Palha. Inteligência Jurídica.
 | Startup Jurídica | Garcez Palha |
 |------------------|--------------|
 | Fundadores de tecnologia | Fundador advogado + perito + corretor |
-| Sem tradição | 360 anos de linhagem documentada |
+| Sem tradição | 364 anos de linhagem documentada |
 | Terceiriza advogados | Advogado próprio responsável |
 | Foco em volume | Foco em resultado |
 | Marca nova | Marca com história |
@@ -167,7 +167,7 @@ Garcez Palha. Inteligência Jurídica.
 
 1. Inteligência artificial que resolve em 72h
 2. Advogado com tripla credencial (OAB + Perito + Corretor)
-3. 360 anos de tradição familiar documentada
+3. 364 anos de tradição familiar documentada
 
 Você não contrata um advogado.
 Você contrata um sistema com 5 séculos de história."
@@ -333,7 +333,7 @@ Serviram no Exército Imperial.
 Construíram patrimônio no Rio de Janeiro.
 Mantiveram a tradição de servir.
 
-HOJE, 360 ANOS DEPOIS,
+HOJE, 364 ANOS DEPOIS,
 
 Leonardo Garcez Palha continua a tradição.
 Não mais com espadas, mas com algoritmos.
@@ -451,7 +451,7 @@ Ticket: R$ 3.000-5.000
 
 4. AUTORIDADE
    → Tripla credencial profissional
-   → 360 anos de tradição familiar
+   → 364 anos de tradição familiar
    → Tecnologia de ponta validada
 ```
 

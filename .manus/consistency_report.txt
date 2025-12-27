@@ -1,0 +1,10 @@
+🔍 MANUS v6.0 - Consistency Validation
+=======================================
+
+Test 1: Anos de Tradição...
+  ✅ Anos de tradição consistentes (364 anos)
+
+Test 2: CNPJ...
+  ⚠️  CNPJ ainda pendente de confirmação
+     docs/00_EMPRESA.md:167:- CNPJ: [A confirmar]
+     docs/VSL_PAGINAS_VENDA_GARCEZPALHA.md:278:│  OAB/RJ 219.390 | CNPJ XX.XXX.XXX/0001-XX                     │

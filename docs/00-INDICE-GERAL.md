@@ -11,7 +11,7 @@
 ║                                                                  ║
 ║     "Resolvemos seu problema jurídico em 72h. Qualquer um."     ║
 ║                                                                  ║
-║     Tecnologia de Ponta + 360 Anos de Tradição                  ║
+║     Tecnologia de Ponta + 364 Anos de Tradição                  ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
@@ -130,7 +130,7 @@
 │  CRECI/RJ            │ Corretagem Imobiliária          │
 ├────────────────────────────────────────────────────────┤
 │  LINHAGEM                                              │
-│  360 anos documentados (1661-2025)                     │
+│  364 anos documentados (1661-2025)                     │
 │  Governadores, Viscondes, Barões                       │
 │  Portugal → Goa → Macau → Brasil                       │
 ├────────────────────────────────────────────────────────┤

@@ -192,7 +192,7 @@ DEZEMBRO
 # [Problema]? [Solução em X Horas/Dias]
 
 [Você está passando por PROBLEMA? Sabe aquela sensação de EMOÇÃO?
-Nós resolvemos isso em PRAZO. Com tecnologia e 360 anos de tradição.]
+Nós resolvemos isso em PRAZO. Com tecnologia e 364 anos de tradição.]
 
 [BOTÃO: RESOLVER MEU PROBLEMA]
 

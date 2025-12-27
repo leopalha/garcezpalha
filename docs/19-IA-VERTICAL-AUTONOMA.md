@@ -1077,7 +1077,7 @@ export class ContentAgent extends BaseAgent {
 
   private getBrandVoice(): string {
     return `
-      O escritório Garcez Palha combina 360 anos de tradição
+      O escritório Garcez Palha combina 364 anos de tradição
       com tecnologia de ponta. Use tom profissional mas acessível.
       Evite jargões jurídicos. Sempre inclua call-to-action.
       Respeite normas OAB de publicidade advocatícia.

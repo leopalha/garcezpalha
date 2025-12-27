@@ -8,6 +8,7 @@ import { TRPCProvider } from '@/lib/trpc/provider'
 import { AuthProvider } from '@/lib/auth/provider'
 import { ReferralTracker } from '@/components/referral-tracker'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
+import { BetaBanner } from '@/components/beta-banner'
 import { Suspense } from 'react'
 import './globals.css'
 
@@ -133,6 +134,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <TRPCProvider>
+              <BetaBanner />
             <ThemeProvider>
               <Suspense fallback={null}>
                 <AnalyticsProvider>
