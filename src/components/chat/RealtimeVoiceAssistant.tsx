@@ -79,6 +79,7 @@ export function RealtimeVoiceAssistant({
   const [showModeSelector, setShowModeSelector] = useState(true)
 
   const videoRef = useRef<HTMLVideoElement>(null)
+  const lastSpokenMessageIdRef = useRef<string | null>(null)
 
   // Hooks
   const realtime = useRealtimeAPI(productId)
@@ -90,6 +91,9 @@ export function RealtimeVoiceAssistant({
       setMode(selectedMode)
       setShowModeSelector(false)
       setIsActive(true)
+
+      // Reset last spoken message tracking
+      lastSpokenMessageIdRef.current = null
 
       // Connect to Realtime API
       await realtime.connect()
@@ -124,18 +128,31 @@ export function RealtimeVoiceAssistant({
     }
   }, [realtime, avatar, mode])
 
-  // Sync audio to avatar (when IA speaks)
+  // Sync Realtime API responses to D-ID Avatar
   useEffect(() => {
-    if (mode === 'avatar' && realtime.isSpeaking && avatar.isConnected) {
-      // Get last audio chunk from realtime and send to avatar
-      // Note: This requires modification to useRealtimeAPI to expose audio chunks
-      // For now, we'll use D-ID's built-in TTS
-      const lastMessage = realtime.messages[realtime.messages.length - 1]
-      if (lastMessage?.role === 'assistant') {
-        avatar.speakText(lastMessage.content)
-      }
+    // Only sync when in avatar mode and avatar is connected
+    if (mode !== 'avatar' || !avatar.isConnected) {
+      return
     }
-  }, [mode, realtime.isSpeaking, realtime.messages, avatar])
+
+    // Get the last assistant message
+    const lastMessage = realtime.messages[realtime.messages.length - 1]
+
+    // Only process new assistant messages (not user messages)
+    if (
+      lastMessage?.role === 'assistant' &&
+      lastMessage.content &&
+      lastMessage.id !== lastSpokenMessageIdRef.current
+    ) {
+      console.log('[RealtimeVoiceAssistant] Syncing to avatar:', lastMessage.content.substring(0, 50))
+
+      // Send text to D-ID avatar for lip-synced speech
+      avatar.speakText(lastMessage.content)
+
+      // Track this message to avoid duplicate calls
+      lastSpokenMessageIdRef.current = lastMessage.id
+    }
+  }, [mode, realtime.messages, avatar.isConnected, avatar])
 
   // Cleanup on unmount
   useEffect(() => {
