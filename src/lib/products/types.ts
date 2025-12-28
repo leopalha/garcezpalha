@@ -20,10 +20,33 @@ export type ProductCategory =
   | 'pericia'
   | 'criminal'
   | 'geral'
+  // Legacy categories
+  | 'financeiro'
+  | 'patrimonial'
+  | 'aeronautico'
+  | 'automacao'
 
 export interface ProductPrice {
   basic: number // Valor base
   complete?: number // Valor completo (se houver)
+}
+
+/**
+ * Pacote/Plano de um produto
+ * Cada produto pode ter múltiplos pacotes (básico, completo, premium, etc)
+ */
+export interface ProductPackage {
+  id: string // ID único do pacote (ex: 'criminal-defesa-flagrante')
+  name: string // Nome do pacote (ex: 'Flagrante')
+  description: string // Descrição curta
+  price: number // Preço fixo
+  priceLabel?: string // Label customizado (ex: 'A partir de', 'R$ 5.000+')
+  features: string[] // Lista de features incluídas
+  highlighted?: boolean // Se é o pacote recomendado
+  icon?: string // Nome do ícone Lucide (ex: 'Shield', 'Phone')
+  timeline?: string // Prazo específico deste pacote
+  successFee?: number // Taxa de êxito específica
+  ctaText?: string // Texto do botão customizado
 }
 
 export interface Product {
@@ -32,7 +55,7 @@ export interface Product {
   slug: string // URL-friendly slug
   category: ProductCategory
   description: string
-  price: ProductPrice
+  price: ProductPrice // Preço padrão (usado se não houver packages)
   successFee?: number // Taxa de êxito (0-1, ex: 0.30 = 30%)
   timeline: string // Prazo estimado
   documents: string[] // Documentos necessários
@@ -43,6 +66,7 @@ export interface Product {
   features?: string[] // Características/benefícios
   crossSell?: string[] // IDs de produtos relacionados
   isActive: boolean
+  packages?: ProductPackage[] // NOVO: Pacotes/Planos disponíveis
 }
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
@@ -62,4 +86,9 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   pericia: 'Perícia',
   criminal: 'Criminal',
   geral: 'Geral',
+  // Legacy categories
+  financeiro: 'Financeiro',
+  patrimonial: 'Patrimonial',
+  aeronautico: 'Aeronáutico',
+  automacao: 'Automação',
 }

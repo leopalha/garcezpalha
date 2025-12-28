@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Check, Shield, Clock, Award, ArrowRight, AlertTriangle,
-  TrendingUp, Users, Star, Zap, FileText, Phone
+  TrendingUp, Users, Star, Zap, FileText, Phone, Scale,
+  Calculator, ArrowRightLeft, AlertOctagon, DollarSign,
+  Home, Play, Plane, RefreshCw, Truck, User, GraduationCap,
+  Building2, Lock, RotateCcw, X, type LucideIcon
 } from 'lucide-react'
 import {
   AgitationSection,
@@ -18,7 +21,6 @@ import {
   SEOHead,
 } from '@/components/vsl'
 import type { Product } from '@/lib/products/types'
-import type { LucideIcon } from 'lucide-react'
 
 interface ProductVSLProps {
   product: Product
@@ -26,14 +28,6 @@ interface ProductVSLProps {
   heroIcon?: LucideIcon
   agitationPoints: string[]
   solutionSteps: string[]
-  packages?: {
-    name: string
-    description: string
-    price: string
-    features: string[]
-    highlighted?: boolean
-    icon?: LucideIcon
-  }[]
   stats?: {
     years?: number
     cases?: number
@@ -49,13 +43,25 @@ interface ProductVSLProps {
   }
 }
 
+// Icon mapping from string names to actual icon components
+const ICON_MAP: Record<string, LucideIcon> = {
+  Shield, Phone, Scale, Calculator, ArrowRightLeft, AlertOctagon,
+  TrendingUp, TrendingDown: TrendingUp, DollarSign, Home, Play, Plane,
+  RefreshCw, Truck, User, GraduationCap, Building2, Lock, RotateCcw,
+  X, Zap, AlertCircle: AlertTriangle, Clock,
+}
+
+function getIconComponent(iconName?: string): LucideIcon {
+  if (!iconName) return Shield
+  return ICON_MAP[iconName] || Shield
+}
+
 export function ProductVSL({
   product,
   heroColor = 'blue',
   heroIcon: HeroIcon = Shield,
   agitationPoints,
   solutionSteps,
-  packages,
   stats = { years: 10, cases: 300, successRate: 85, clients: 250 },
   urgencyMessage,
   guaranteeTitle = 'Garantia de Atendimento',
@@ -68,12 +74,12 @@ export function ProductVSL({
     router.push(`/checkout?product=${product.id}`)
   }
 
-  // Default packages se não fornecidos
-  const defaultPackages = packages || [
+  // Use packages from product catalog or fall back to default
+  const rawPackages = product.packages || [
     {
       name: 'Pacote Básico',
       description: 'Atendimento completo',
-      price: product.price.basic ? `R$ ${product.price.basic.toLocaleString('pt-BR')}` : 'Consulte',
+      price: product.price.basic || 0,
       features: product.features || [
         'Análise do caso',
         'Peticionamento',
@@ -81,9 +87,19 @@ export function ProductVSL({
         'Suporte jurídico',
       ],
       highlighted: true,
-      icon: Shield,
+      icon: 'Shield',
     },
   ]
+
+  // Convert catalog packages to display format (icon names stay as strings)
+  const defaultPackages = rawPackages.map((pkg: any) => ({
+    name: pkg.name,
+    description: pkg.description,
+    price: typeof pkg.price === 'number' ? `R$ ${pkg.price.toLocaleString('pt-BR')}` : (pkg.priceLabel || String(pkg.price)),
+    features: pkg.features,
+    highlighted: pkg.highlighted,
+    iconName: typeof pkg.icon === 'string' ? pkg.icon : 'Shield',
+  }))
 
   return (
     <div className="min-h-screen">
@@ -195,7 +211,7 @@ export function ProductVSL({
               </div>
               <div>
                 <TrendingUp className="h-10 w-10 mx-auto mb-2 text-purple-600" />
-                <div className="text-2xl font-bold">{Math.floor(stats.cases * 0.7)}+</div>
+                <div className="text-2xl font-bold">{Math.floor((stats.cases || 300) * 0.7)}+</div>
                 <div className="text-sm text-muted-foreground">Vitórias</div>
               </div>
               <div>
@@ -231,7 +247,7 @@ export function ProductVSL({
 
             <div className={`grid grid-cols-1 ${defaultPackages.length > 1 ? 'md:grid-cols-' + Math.min(defaultPackages.length, 3) : ''} gap-8`}>
               {defaultPackages.map((pkg, idx) => {
-                const PackageIcon = pkg.icon || Shield
+                const PackageIcon = getIconComponent(pkg.iconName)
                 return (
                   <Card key={idx} className={pkg.highlighted ? `border-${heroColor}-600 border-2 shadow-lg relative` : ''}>
                     {pkg.highlighted && (
@@ -246,7 +262,7 @@ export function ProductVSL({
                       <h3 className="text-2xl font-bold mb-2">{pkg.name}</h3>
                       <p className="text-muted-foreground mb-4">{pkg.description}</p>
                       <ul className="space-y-2 mb-6">
-                        {pkg.features.map((feature, i) => (
+                        {pkg.features.map((feature: string, i: number) => (
                           <li key={i} className="flex items-start gap-2">
                             <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                             <span className="text-sm">{feature}</span>
