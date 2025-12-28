@@ -217,7 +217,6 @@ export function useRealtimeAPI(productId: string) {
           autoGainControl: true,
           sampleRate: 24000,
           channelCount: 1, // Mono para melhor processamento
-          latency: 0, // Menor latência possível
         }
       })
       mediaStreamRef.current = stream
