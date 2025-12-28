@@ -327,8 +327,20 @@ async function handleApprovedPayment(
     } else {
       console.log(`[MercadoPago] Conversation ${conversationId} moved to paid state`)
 
-      // Transition to contract_pending after 1 second
+      // Transition to contract_pending and trigger ClickSign after 1 second
       setTimeout(async () => {
+        // First, get the full conversation data
+        const { data: conversation, error: fetchError } = await supabaseAdmin
+          .from('conversations')
+          .select('*')
+          .eq('conversation_id', conversationId)
+          .single()
+
+        if (fetchError || !conversation) {
+          console.error('[MercadoPago] Error fetching conversation:', fetchError)
+          return
+        }
+
         const { error: transitionError } = await supabaseAdmin
           .from('conversations')
           .update({
@@ -343,7 +355,39 @@ async function handleApprovedPayment(
           console.error('[MercadoPago] Error transitioning to contract_pending:', transitionError)
         } else {
           console.log(`[MercadoPago] Conversation ${conversationId} moved to contract_pending`)
-          // TODO: Trigger ClickSign contract generation here
+
+          // Trigger ClickSign contract generation
+          try {
+            const { generateContractForConversation } = await import('@/lib/integrations/clicksign')
+
+            const result = await generateContractForConversation({
+              conversationId,
+              clientName: conversation.client?.name || 'Cliente',
+              clientEmail: conversation.client?.email || conversation.email || '',
+              clientPhone: conversation.client?.phone || conversation.phone_number,
+              clientCPF: conversation.client?.cpf,
+              productName: conversation.classification?.product || 'Serviço Jurídico',
+              amount: (payment.transaction_amount as number) * 100, // Convert to cents
+              paymentProvider: 'mercadopago',
+            })
+
+            // Update conversation with ClickSign document key
+            await supabaseAdmin
+              .from('conversations')
+              .update({
+                proposal: {
+                  ...conversation.proposal,
+                  clicksign_document_key: result.documentKey,
+                  clicksign_sign_url: result.signUrl,
+                },
+              })
+              .eq('conversation_id', conversationId)
+
+            console.log(`[ClickSign] Contract generated for conversation ${conversationId}`)
+          } catch (clicksignError) {
+            console.error('[ClickSign] Error generating contract:', clicksignError)
+            // Don't fail the webhook, just log the error
+          }
         }
       }, 1000)
     }
