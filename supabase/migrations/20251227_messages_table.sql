@@ -35,29 +35,37 @@ END $$;
 -- Enable Row Level Security
 ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 
--- Create policies for RLS
-CREATE POLICY "Admin and lawyers can view all messages"
-  ON public.messages
-  FOR SELECT
-  USING (
-    auth.uid() IN (
-      SELECT id FROM public.profiles WHERE role IN ('admin', 'lawyer')
-    )
-  );
+-- Create policies for RLS (only if profiles table exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'profiles') THEN
+    -- Admin and lawyers can view all messages
+    EXECUTE 'CREATE POLICY "Admin and lawyers can view all messages"
+      ON public.messages
+      FOR SELECT
+      USING (
+        auth.uid() IN (
+          SELECT id FROM public.profiles WHERE role IN (''admin'', ''lawyer'')
+        )
+      )';
 
+    -- Admin and lawyers can update messages
+    EXECUTE 'CREATE POLICY "Admin and lawyers can update messages"
+      ON public.messages
+      FOR UPDATE
+      USING (
+        auth.uid() IN (
+          SELECT id FROM public.profiles WHERE role IN (''admin'', ''lawyer'')
+        )
+      )';
+  END IF;
+END $$;
+
+-- System can insert messages (always allow inserts for service role)
 CREATE POLICY "System can insert messages"
   ON public.messages
   FOR INSERT
   WITH CHECK (true);
-
-CREATE POLICY "Admin and lawyers can update messages"
-  ON public.messages
-  FOR UPDATE
-  USING (
-    auth.uid() IN (
-      SELECT id FROM public.profiles WHERE role IN ('admin', 'lawyer')
-    )
-  );
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION public.update_messages_updated_at()
@@ -78,15 +86,20 @@ CREATE TRIGGER update_messages_updated_at_trigger
 GRANT SELECT, INSERT, UPDATE ON public.messages TO authenticated;
 GRANT SELECT, INSERT, UPDATE ON public.messages TO service_role;
 
--- Create view for recent messages (optional, for analytics)
-CREATE OR REPLACE VIEW public.recent_messages AS
-SELECT
-  m.*,
-  c.channel,
-  c.client
-FROM public.messages m
-LEFT JOIN public.conversations c ON m.conversation_id = c.conversation_id
-WHERE m.created_at > NOW() - INTERVAL '7 days'
-ORDER BY m.created_at DESC;
+-- Create view for recent messages (optional, for analytics, only if conversations table exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'conversations') THEN
+    EXECUTE 'CREATE OR REPLACE VIEW public.recent_messages AS
+      SELECT
+        m.*,
+        c.channel,
+        c.client
+      FROM public.messages m
+      LEFT JOIN public.conversations c ON m.conversation_id = c.conversation_id
+      WHERE m.created_at > NOW() - INTERVAL ''7 days''
+      ORDER BY m.created_at DESC';
 
-GRANT SELECT ON public.recent_messages TO authenticated;
+    EXECUTE 'GRANT SELECT ON public.recent_messages TO authenticated';
+  END IF;
+END $$;
