@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS public.conversations (
 
 **Migration:** `supabase/migrations/20251227_messages_table.sql`
 
+**⚠️ IMPORTANTE:** A migration pode rodar independentemente, mas para obter todas as funcionalidades (RLS policies e views), recomenda-se criar a tabela `profiles` primeiro.
+
 ```bash
 # Run migration
 psql $DATABASE_URL < supabase/migrations/20251227_messages_table.sql
@@ -55,6 +57,8 @@ psql $DATABASE_URL < supabase/migrations/20251227_messages_table.sql
 1. Dashboard → SQL Editor
 2. Copiar conteúdo de `supabase/migrations/20251227_messages_table.sql`
 3. Execute
+
+**Nota:** Se a tabela `profiles` não existir, as RLS policies serão criadas posteriormente. A migration é resiliente e não falhará.
 
 **Estrutura:**
 ```sql
@@ -356,6 +360,16 @@ CREATE TRIGGER update_leads_updated_at
 
 ## 🚀 CHECKLIST DE SETUP
 
+### Ordem Recomendada de Execução
+
+**⚠️ IMPORTANTE:** Siga esta ordem para evitar erros de dependências:
+
+1. **Criar tabela `profiles`** (seção 1.3) - Base para autenticação e RLS
+2. **Executar migration `messages`** (seção 1.2) - Cria tabela de mensagens com policies
+3. **Verificar tabelas `conversations` e `leads`** - Devem existir (já criadas)
+4. **Habilitar Realtime** (seção 4) - Para updates em tempo real
+5. **Criar triggers** (seção 6) - Auto-update de timestamps
+
 ### Primeira Instalação
 
 - [ ] 1. Criar projeto no Supabase
@@ -365,13 +379,13 @@ CREATE TRIGGER update_leads_updated_at
   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
   SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
   ```
-- [ ] 3. Executar migration `20251227_messages_table.sql`
-- [ ] 4. Criar tabela `profiles` (se não existir)
+- [ ] 3. **Criar tabela `profiles` PRIMEIRO** (seção 1.3)
+- [ ] 4. **Executar migration `20251227_messages_table.sql`** (seção 1.2)
 - [ ] 5. Habilitar RLS em todas as tabelas
-- [ ] 6. Criar policies de acesso
+- [ ] 6. Verificar policies criadas automaticamente pela migration
 - [ ] 7. Habilitar Realtime para `conversations`, `messages`, `leads`
 - [ ] 8. (Opcional) Criar bucket `documents` para uploads
-- [ ] 9. Criar triggers de `updated_at`
+- [ ] 9. Criar triggers de `updated_at` para `profiles` e outras tabelas
 - [ ] 10. Testar autenticação e RLS
 
 ### Verificação Rápida
