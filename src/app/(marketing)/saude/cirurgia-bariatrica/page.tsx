@@ -1,343 +1,48 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import {
-  Check, Shield, Clock, Award, ArrowRight, AlertTriangle,
-  TrendingUp, Users, Star, Zap, FileText, Heart, Scale
-} from 'lucide-react'
-import {
-  AgitationSection,
-  SolutionSection,
-  CredentialsSection,
-  GuaranteeSection,
-  TestimonialsSection,
-  UrgencyBanner,
-  WhatsAppFloat,
-  SEOHead,
-} from '@/components/vsl'
+import { notFound } from 'next/navigation'
+import { ProductVSL } from '@/components/vsl'
+import { getProductBySlug } from '@/lib/products/catalog'
 
 export default function CirurgiaBariatricaPage() {
-  const router = useRouter()
+  const product = getProductBySlug('cirurgia-bariatrica')
 
-  const handleCTA = () => {
-    router.push('/checkout?product=cirurgia-bariatrica')
+  if (!product) {
+    notFound()
   }
 
   return (
-    <div className="min-h-screen">
-      <SEOHead
-        title="Cirurgia Bariátrica - Obrigue Seu Plano a Cobrir"
-        description="Seu plano negou cirurgia bariátrica? Obrigue-o a cobrir. Obesidade é doença e o plano é obrigado a pagar. Especialistas em direito à saúde."
-        keywords={['cirurgia bariátrica', 'plano de saúde', 'obesidade', 'direito à saúde', 'advogado plano de saúde']}
-        productName="Cirurgia Bariátrica"
-        price={350000}
-        category="saude"
-        canonicalUrl="https://garcezpalha.com.br/cirurgia-bariatrica"
-      />
-
-      <UrgencyBanner
-        countdown={true}
-        countdownMinutes={60}
-        message="💊 ANÁLISE GRATUITA - Descubra se seu plano é obrigado a cobrir a cirurgia"
-        discount="ANÁLISE GRÁTIS"
-        onCTA={handleCTA}
-        ctaText="Solicitar Análise"
-      />
-
-      <WhatsAppFloat
-        phoneNumber="5511999999999"
-        message="Olá! Meu plano negou cirurgia bariátrica e preciso de ajuda."
-        position="bottom-right"
-        showTooltip={true}
-      />
-
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/20 dark:to-pink-950/20 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-full mb-6">
-              <Heart className="h-5 w-5" />
-              <span className="font-semibold">Direito à Saúde</span>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Plano Negou Bariátrica?<br />
-              <span className="text-rose-600">Obrigue-o a Cobrir</span>
-            </h1>
-
-            <p className="text-xl text-muted-foreground mb-8">
-              Obesidade é doença. Seu plano é OBRIGADO a cobrir cirurgia bariátrica.<br />
-              Conseguimos autorização rápida ou ganho judicial com atrasados.
-            </p>
-
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 mb-8 border-l-4 border-rose-600">
-              <div className="flex items-start gap-3 text-left">
-                <Heart className="h-6 w-6 text-rose-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold mb-2">Você Sabia?</h3>
-                  <p className="text-muted-foreground">
-                    A ANS obriga os planos a cobrirem cirurgia bariátrica quando há indicação médica.
-                    Negar cobertura é ilegal e você tem direito a indenização por danos morais.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white dark:bg-gray-900 px-4 py-3 rounded-lg border border-rose-200">
-                <div className="text-3xl font-bold text-rose-600">R$ 3.500</div>
-                <div className="text-sm">Preço fixo</div>
-              </div>
-              <div className="bg-white dark:bg-gray-900 px-4 py-3 rounded-lg border border-rose-200">
-                <div className="text-3xl font-bold text-rose-600">8+</div>
-                <div className="text-sm">Anos Experiência</div>
-              </div>
-              <div className="bg-white dark:bg-gray-900 px-4 py-3 rounded-lg border border-rose-200">
-                <div className="text-3xl font-bold text-rose-600">300+</div>
-                <div className="text-sm">Cirurgias Autorizadas</div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="text-xl px-10 py-8 font-bold shadow-xl bg-rose-600 hover:bg-rose-700"
-                onClick={handleCTA}
-              >
-                <Heart className="h-6 w-6 mr-2" />
-                OBRIGAR PLANO A COBRIR
-                <ArrowRight className="h-6 w-6 ml-2" />
-              </Button>
-            </div>
-
-            <p className="mt-4 text-sm text-muted-foreground">
-              ⚡ Análise gratuita • Parcelamento disponível • Liminar urgente
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats & Social Proof */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div>
-                <Heart className="h-10 w-10 mx-auto mb-2 text-rose-600" />
-                <div className="text-2xl font-bold">300+</div>
-                <div className="text-sm text-muted-foreground">Cirurgias Autorizadas</div>
-              </div>
-              <div>
-                <Users className="h-10 w-10 mx-auto mb-2 text-green-600" />
-                <div className="text-2xl font-bold">400+</div>
-                <div className="text-sm text-muted-foreground">Clientes Atendidos</div>
-              </div>
-              <div>
-                <Clock className="h-10 w-10 mx-auto mb-2 text-pink-600" />
-                <div className="text-2xl font-bold">15 dias</div>
-                <div className="text-sm text-muted-foreground">Média p/ Liminar</div>
-              </div>
-              <div>
-                <Award className="h-10 w-10 mx-auto mb-2 text-orange-600" />
-                <div className="text-2xl font-bold">94%</div>
-                <div className="text-sm text-muted-foreground">Taxa de Sucesso</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <AgitationSection
-        problem="Obesidade mata. Cada dia sem a cirurgia é um dia a mais de risco de diabetes, hipertensão, AVC e infarto. O plano lucra com sua doença enquanto você sofre."
-        agitationPoints={[
-          'Obesidade aumenta risco de morte por diabetes, AVC e infarto',
-          'Cada mês de espera piora sua qualidade de vida e saúde',
-          'Plano lucra negando tratamento que você paga mensalmente',
-          'Sem a cirurgia, você continuará gastando com remédios e consultas',
-        ]}
-      />
-
-      <SolutionSection
-        title="Como Obrigamos Seu Plano a Cobrir a Bariátrica"
-        subtitle="Processo rápido com liminar urgente ou acordo direto"
-        solutionSteps={[
-          'Análise GRATUITA do caso - Verificamos se você tem direito',
-          'Reunimos documentação médica - Laudos, exames e relatórios',
-          'Tentativa de acordo - Notificamos o plano extrajudicialmente',
-          'Ação judicial com pedido de liminar - Em 15 dias você opera',
-          'Acompanhamento até a cirurgia - Garantimos que tudo saia perfeito',
-          'Pedido de danos morais - Você ainda pode receber indenização',
-        ]}
-        onCTA={handleCTA}
-      />
-
-      {/* Services Section */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-4">Nossos Serviços</h2>
-            <p className="text-center text-muted-foreground mb-12">
-              Obtenha autorização para cirurgia bariátrica rapidamente
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Análise */}
-              <Card>
-                <CardContent className="pt-6">
-                  <FileText className="h-12 w-12 text-rose-600 mb-4" />
-                  <h3 className="text-2xl font-bold mb-2">Análise</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Verificação gratuita do seu caso
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Análise gratuita do caso</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Revisão dos documentos médicos</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Orientação estratégica</span>
-                    </li>
-                  </ul>
-                  <div className="text-2xl font-bold text-rose-600 mb-2">GRÁTIS</div>
-                  <Button variant="outline" className="w-full" onClick={handleCTA}>
-                    Solicitar Análise
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Completo */}
-              <Card className="border-rose-600 border-2 shadow-lg relative">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold">
-                    ⭐ MAIS PROCURADO
-                  </span>
-                </div>
-                <CardContent className="pt-6">
-                  <Heart className="h-12 w-12 text-green-600 mb-4" />
-                  <h3 className="text-2xl font-bold mb-2">Completo</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Ação judicial com liminar urgente
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Tentativa de acordo</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Ação judicial com liminar</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Acompanhamento completo</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Pedido de danos morais</span>
-                    </li>
-                  </ul>
-                  <div className="text-3xl font-bold text-rose-600 mb-4">R$ 3.500</div>
-                  <Button className="w-full text-lg bg-rose-600 hover:bg-rose-700" onClick={handleCTA}>
-                    <Zap className="h-5 w-5 mr-2" />
-                    Contratar Agora
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Urgente */}
-              <Card>
-                <CardContent className="pt-6">
-                  <Zap className="h-12 w-12 text-pink-600 mb-4" />
-                  <h3 className="text-2xl font-bold mb-2">Urgente</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Liminar em até 15 dias
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Processo prioritário</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Liminar em 15 dias</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Acompanhamento 24h</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm">Resultado garantido</span>
-                    </li>
-                  </ul>
-                  <div className="text-3xl font-bold text-rose-600 mb-4">R$ 4.500</div>
-                  <Button variant="outline" className="w-full" onClick={handleCTA}>
-                    Saber Mais
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="mt-8 p-4 bg-rose-50 dark:bg-rose-900/20 rounded-lg border-l-4 border-rose-500">
-              <p className="text-sm">
-                💡 <strong>Prazos:</strong> Acordo extrajudicial: 15-30 dias • Liminar judicial: 15-30 dias • Sentença final: 6-12 meses
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <CredentialsSection
-        lawyerName="Equipe Garcez Palha"
-        experience="8+ anos em Direito à Saúde"
-        specialization="Especialistas em Planos de Saúde e Cirurgia Bariátrica"
-        stats={{
-          years: 8,
-          cases: 300,
-          successRate: 94,
-          clients: 400,
-        }}
-      />
-
-      <TestimonialsSection />
-
-      <GuaranteeSection
-        guaranteeTitle="Análise Gratuita do Seu Caso"
-        guaranteeDescription="Analisamos gratuitamente seu caso e documentos médicos. Só contrata se tivermos certeza de vitória."
-        guaranteePeriod="gratuito"
-      />
-
-      {/* Final CTA */}
-      <section className="py-16 bg-gradient-to-r from-rose-600 to-pink-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Obrigue Seu Plano a Cobrir Agora
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Você paga pelo plano. Você tem direito à cirurgia. Não deixe o plano negar seu tratamento.
-            <strong className="block mt-2">Análise Gratuita • Liminar Urgente • Resultado Garantido</strong>
-          </p>
-          <Button
-            size="lg"
-            className="bg-white text-rose-900 hover:bg-gray-100 text-xl px-12 py-8 font-bold shadow-2xl"
-            onClick={handleCTA}
-          >
-            <Heart className="h-6 w-6 mr-2" />
-            OBRIGAR PLANO A COBRIR
-            <ArrowRight className="h-6 w-6 ml-2" />
-          </Button>
-          <p className="mt-4 text-sm">
-            Mais de 300 cirurgias autorizadas com sucesso
-          </p>
-        </div>
-      </section>
-    </div>
+    <ProductVSL
+      product={product}
+      heroColor="green"
+      heroIcon="Heart"
+      agitationPoints={[
+        'Plano de saúde nega cirurgia bariátrica mesmo com indicação médica clara',
+        'Obesidade mórbida compromete sua saúde e qualidade de vida diariamente',
+        'Espera na fila do SUS pode levar anos enquanto sua saúde se deteriora',
+        'Custo particular da cirurgia (R$ 30-80 mil) é inacessível para maioria',
+        'Cada dia sem tratamento aumenta riscos de diabetes, hipertensão e morte',
+        'Tentativas de negociação com plano falham sem pressão jurídica'
+      ]}
+      solutionSteps={[
+        'Análise GRATUITA do caso - Verificamos se seu plano é obrigado a cobrir',
+        'Reunião de documentação médica - Organizamos laudos e exames necessários',
+        'Notificação extrajudicial - Pressão formal para autorização imediata',
+        'Liminar de urgência - Cirurgia autorizada judicialmente em 7-15 dias',
+        'Indenização por danos morais - Compensação pela negativa abusiva',
+        'Acompanhamento pós-cirúrgico - Garantia de cobertura completa'
+      ]}
+      urgencyMessage="CIRURGIA NEGADA? Conseguimos autorização judicial em 7-15 dias"
+      guaranteeTitle="Autorização Garantida ou Dinheiro de Volta"
+      guaranteeDescription="Se não conseguirmos a autorização judicial da cirurgia, devolvemos 100% dos honorários pagos."
+      stats={{
+        years: 10,
+        cases: 420,
+        successRate: 95,
+        clients: 380,
+      }}
+      customAlert={{
+        title: "Plano é Obrigado a Cobrir?",
+        description: "Sim! Se você tem indicação médica (IMC acima de 40 ou acima de 35 com comorbidades) e já tentou tratamento clínico, o plano é obrigado a cobrir a cirurgia bariátrica."
+      }}
+    />
   )
 }

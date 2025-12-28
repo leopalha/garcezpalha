@@ -8,7 +8,6 @@ import {
   Testimonials,
   FAQ,
   FinalCTA,
-  WhatsAppFloat,
 } from '@/components/marketing'
 import { Timeline } from './components/timeline'
 
@@ -61,9 +60,6 @@ export default function HomePage() {
 
       <FAQ />
       <FinalCTA />
-
-      {/* WhatsApp Float Button */}
-      <WhatsAppFloat />
     </>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { ProductVSL } from '@/components/vsl/ProductVSL'
-import { SEOHead, UrgencyBanner, WhatsAppFloat } from '@/components/vsl'
+import { SEOHead, UrgencyBanner } from '@/components/vsl'
 import { PRODUTO_VAZAMENTO_DADOS_LGPD } from '@/lib/products/catalog'
 
 export default function VazamentoDadosLGPDPage() {

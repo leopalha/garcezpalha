@@ -55,7 +55,7 @@ export const PRODUTO_SEGURO_PRESTAMISTA: Product = {
         'Restituição em DOBRO',
         'Acompanhamento até sentença',
       ],
-      highlighted: true,
+      highlighted: false,
       icon: 'Shield',
     },
     {
@@ -70,7 +70,23 @@ export const PRODUTO_SEGURO_PRESTAMISTA: Product = {
         'Execução da sentença',
         'Máxima indenização',
       ],
+      highlighted: true,
       icon: 'TrendingUp',
+    },
+    {
+      id: 'seguro-prestamista-premium',
+      name: 'Premium',
+      description: 'Revisão total do contrato',
+      price: 2500,
+      features: [
+        'Tudo do plano completo',
+        'Revisão total do contrato bancário',
+        'Análise de juros abusivos',
+        'Máxima restituição possível',
+        'Acompanhamento VIP',
+      ],
+      highlighted: false,
+      icon: 'Crown',
     },
   ],
 }
@@ -119,7 +135,7 @@ export const PRODUTO_REVISAO_CONTRATO_BANCARIO: Product = {
         'Restituição em dobro',
         'Redução do saldo devedor',
       ],
-      highlighted: true,
+      highlighted: false,
       icon: 'Calculator',
     },
     {
@@ -134,7 +150,23 @@ export const PRODUTO_REVISAO_CONTRATO_BANCARIO: Product = {
         'Recálculo completo de parcelas',
         'Recursos e execução',
       ],
+      highlighted: true,
       icon: 'TrendingDown',
+    },
+    {
+      id: 'revisao-contrato-total',
+      name: 'Total',
+      description: 'Revisão completa + danos morais',
+      price: 3000,
+      features: [
+        'Tudo do plano completo',
+        'Pedido de danos morais',
+        'Defesa contra negativação',
+        'Consultoria financeira',
+        'Máxima proteção jurídica',
+      ],
+      highlighted: false,
+      icon: 'Award',
     },
   ],
 }
@@ -2205,6 +2237,87 @@ export const PRODUTO_LAUDO_TECNICO: Product = {
   ],
 }
 
+export const PRODUTO_DIREITO_CRIMINAL: Product = {
+  id: 'direito-criminal',
+  name: 'Direito Criminal',
+  slug: 'direito-criminal',
+  category: 'criminal',
+  description: 'Defesa criminal especializada 24h. Crimes econômicos, difamação, estelionato, furto, drogas. Atendimento urgente.',
+  price: { basic: 5000, complete: 15000 },
+  successFee: 0,
+  timeline: 'Variável',
+  documents: ['RG/CPF', 'Documentos do caso', 'Boletim de ocorrência', 'Processo (se houver)'],
+  keywords: [
+    'advogado criminal',
+    'defesa criminal',
+    'crimes econômicos',
+    'processo criminal',
+    'advogado criminalista',
+    'defesa técnica criminal',
+    'crimes financeiros',
+  ],
+  priority: 5,
+  automation: 25,
+  demandPerMonth: 20000,
+  features: [
+    'Atendimento 24 horas para casos urgentes',
+    'Defesa em flagrante delito',
+    'Atuação em inquéritos policiais',
+    'Defesa em processos criminais',
+    'Recursos em todas instâncias',
+    'Habeas Corpus',
+  ],
+  crossSell: ['habeas-corpus', 'defesa-flagrante', 'inquerito-policial'],
+  isActive: true,
+  packages: [
+    {
+      id: 'direito-criminal-flagrante',
+      name: 'Flagrante',
+      description: 'Atendimento imediato em prisão',
+      price: 5000,
+      features: [
+        'Atendimento 24h na delegacia',
+        'Orientação em depoimento',
+        'Habeas corpus preventivo',
+        'Pedido de liberdade provisória',
+        'Defesa técnica imediata',
+      ],
+      highlighted: false,
+      icon: 'Phone',
+    },
+    {
+      id: 'direito-criminal-completo',
+      name: 'Defesa Completa',
+      description: 'Acompanhamento em todo o processo',
+      price: 15000,
+      features: [
+        'Defesa no inquérito policial',
+        'Atuação no processo criminal',
+        'Recursos em todas instâncias',
+        'Audiências e sustentações',
+        'Estratégia defensiva completa',
+      ],
+      highlighted: true,
+      icon: 'Shield',
+    },
+    {
+      id: 'direito-criminal-hc',
+      name: 'Habeas Corpus',
+      description: 'Liberdade provisória e relaxamento',
+      price: 8000,
+      features: [
+        'Análise de legalidade da prisão',
+        'Elaboração de HC urgente',
+        'Peticionamento imediato',
+        'Sustentação oral',
+        'Urgência 24-48h',
+      ],
+      highlighted: false,
+      icon: 'Scale',
+    },
+  ],
+}
+
 export const PRODUTO_HABEAS_CORPUS: Product = {
   id: 'habeas-corpus',
   name: 'Habeas Corpus',
@@ -3339,7 +3452,8 @@ export const ALL_PRODUCTS: Product[] = [
   PRODUTO_PERFIL_HACKEADO,
   PRODUTO_PROBLEMAS_MARKETPLACE,
 
-  // 6 NOVOS CRIMINAIS + HC RESTAURADO
+  // 7 CRIMINAIS (+ Direito Criminal genérico)
+  PRODUTO_DIREITO_CRIMINAL,
   PRODUTO_HABEAS_CORPUS,
   PRODUTO_DEFESA_FLAGRANTE,
   PRODUTO_INQUERITO_POLICIAL,

@@ -1,55 +1,48 @@
-'use client'
-
-import { ProductVSL } from '@/components/vsl/ProductVSL'
-import { SEOHead, UrgencyBanner, WhatsAppFloat } from '@/components/vsl'
-import { PRODUTO_LEI_MARIA_PENHA } from '@/lib/products/catalog'
+import { notFound } from 'next/navigation'
+import { ProductVSL } from '@/components/vsl'
+import { getProductBySlug } from '@/lib/products/catalog'
 
 export default function LeiMariaPenhaPage() {
-  return (
-    <div className="min-h-screen">
-      <SEOHead
-        title={PRODUTO_LEI_MARIA_PENHA.name}
-        description={PRODUTO_LEI_MARIA_PENHA.description}
-        keywords={PRODUTO_LEI_MARIA_PENHA.keywords}
-        productName={PRODUTO_LEI_MARIA_PENHA.name}
-        price={PRODUTO_LEI_MARIA_PENHA.price.basic || 0}
-        category={PRODUTO_LEI_MARIA_PENHA.category}
-      />
+  const product = getProductBySlug('lei-maria-penha-defesa')
 
-      <ProductVSL
-        product={PRODUTO_LEI_MARIA_PENHA}
-        heroColor="purple"
-        heroIcon="Shield"
-        agitationPoints={[
-          'Medidas protetivas restringem sua liberdade e contato com filhos',
-          'Descumprimento de medida protetiva resulta em prisão imediata',
-          'Processo criminal por violência doméstica gera antecedentes graves',
-          'Lei Maria da Penha é rigorosa e dificulta defesa sem assistência técnica',
-          'Condenação pode resultar em até 3 anos de prisão e perda de direitos',
-          'Acusações falsas ou exageradas destroem reputação e vida profissional'
-        ]}
-        solutionSteps={[
-          'Análise técnica da medida protetiva - verificação de legalidade',
-          'Defesa escrita fundamentada - contestação de acusações',
-          'Pedido de revogação ou flexibilização - quando cabível juridicamente',
-          'Orientação sobre restrições - evitar descumprimento e prisão',
-          'Defesa no processo criminal - estratégia técnica completa',
-          'Produção de provas de defesa - testemunhas e documentos'
-        ]}
-        stats={{
-          years: 11,
-          cases: 290,
-          successRate: 73,
-          clients: 260
-        }}
-        urgencyMessage="Medida protetiva ou acusação de violência doméstica? Defesa técnica especializada"
-        guaranteeTitle="Defesa Especializada"
-        guaranteeDescription="Atuação técnica em casos de Lei Maria da Penha, com foco na defesa dos seus direitos e nas possibilidades de revogação ou flexibilização de medidas."
-        customAlert={{
-          title: "Recebeu notificação de medida protetiva?",
-          description: "Medidas protetivas impõem restrições sérias. Descumprir pode resultar em prisão. É fundamental ter orientação jurídica para entender as restrições e exercer sua defesa."
-        }}
-      />
-    </div>
+  if (!product) {
+    notFound()
+  }
+
+  return (
+    <ProductVSL
+      product={product}
+      heroColor="violet"
+      heroIcon="Shield"
+      agitationPoints={[
+        'Acusação falsa de violência doméstica pode destruir sua vida e reputação',
+        'Medidas protetivas impedem contato com filhos e acesso à própria casa',
+        'Prisão preventiva pode ocorrer com base apenas em declarações sem provas',
+        'Condenação criminal gera antecedentes e perda de direitos civis',
+        'Sem defesa adequada, você pode ser condenado injustamente',
+        'Processo criminal afeta emprego, família e vida social irreversivelmente'
+      ]}
+      solutionSteps={[
+        'Análise URGENTE do caso - Verificamos acusações e estratégia defensiva',
+        'Habeas Corpus se preso - Liberdade provisória com argumentação técnica',
+        'Contestação de medidas protetivas - Buscamos flexibilização ou revogação',
+        'Defesa criminal completa - Atuamos por absolvição ou desclassificação',
+        'Produção de provas favoráveis - Testemunhas, perícias e documentos',
+        'Recursos em todas instâncias - Lutamos até reversão da condenação'
+      ]}
+      urgencyMessage="ACUSADO INJUSTAMENTE? Defesa técnica especializada 24h"
+      guaranteeTitle="Atendimento 24 Horas"
+      guaranteeDescription="Plantão criminal 24/7 para casos urgentes de prisão ou medidas protetivas. Defesa completa do início ao fim."
+      stats={{
+        years: 15,
+        cases: 280,
+        successRate: 75,
+        clients: 250,
+      }}
+      customAlert={{
+        title: "ATENÇÃO: Medidas Urgentes",
+        description: "Medidas protetivas podem ser concedidas em 24h e prisão preventiva pode ocorrer a qualquer momento. Defesa técnica imediata é crucial para proteger seus direitos."
+      }}
+    />
   )
 }

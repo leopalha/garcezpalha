@@ -14,7 +14,6 @@ import {
   GuaranteeSection,
   TestimonialsSection,
   UrgencyBanner,
-  WhatsAppFloat,
   SEOHead,
 } from '@/components/vsl'
 
@@ -45,12 +44,6 @@ export default function DireitoAeronauticoPage() {
         ctaText="Solicitar Consultoria"
       />
 
-      <WhatsAppFloat
-        phoneNumber="5511999999999"
-        message="Olá! Preciso de consultoria jurídica em direito aeronáutico para minha empresa."
-        position="bottom-right"
-        showTooltip={true}
-      />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/20 dark:to-blue-950/20 py-20">

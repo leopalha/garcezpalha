@@ -1,55 +1,48 @@
-'use client'
-
-import { ProductVSL } from '@/components/vsl/ProductVSL'
-import { SEOHead, UrgencyBanner, WhatsAppFloat } from '@/components/vsl'
-import { PRODUTO_INQUERITO_POLICIAL } from '@/lib/products/catalog'
+import { notFound } from 'next/navigation'
+import { ProductVSL } from '@/components/vsl'
+import { getProductBySlug } from '@/lib/products/catalog'
 
 export default function InqueritoPolicialPage() {
-  return (
-    <div className="min-h-screen">
-      <SEOHead
-        title={PRODUTO_INQUERITO_POLICIAL.name}
-        description={PRODUTO_INQUERITO_POLICIAL.description}
-        keywords={PRODUTO_INQUERITO_POLICIAL.keywords}
-        productName={PRODUTO_INQUERITO_POLICIAL.name}
-        price={PRODUTO_INQUERITO_POLICIAL.price.basic || 0}
-        category={PRODUTO_INQUERITO_POLICIAL.category}
-      />
+  const product = getProductBySlug('inquerito-policial')
 
-      <ProductVSL
-        product={PRODUTO_INQUERITO_POLICIAL}
-        heroColor="violet"
-        heroIcon="Search"
-        agitationPoints={[
-          'Inquérito policial sem defesa técnica resulta em indiciamento injusto',
-          'Depoimentos sem orientação podem criar provas contra você',
-          'Falta de acompanhamento impede a produção de provas de defesa',
-          'Delegado pode formar convicção equivocada sem manifestação técnica',
-          'Denúncia do MP é quase certa sem defesa prévia na investigação',
-          'Arquivamento do inquérito só ocorre com estratégia defensiva adequada'
-        ]}
-        solutionSteps={[
-          'Acompanhamento técnico em depoimentos - orientação sobre direitos',
-          'Análise completa do inquérito policial - identificação de falhas',
-          'Juntada de documentos e provas de defesa - contraprovas efetivas',
-          'Pedido de diligências investigativas - esclarecimento dos fatos',
-          'Parecer técnico ao delegado e ao MP - fundamentação jurídica',
-          'Pedido de arquivamento do inquérito - evitar denúncia criminal'
-        ]}
-        stats={{
-          years: 12,
-          cases: 420,
-          successRate: 71,
-          clients: 380
-        }}
-        urgencyMessage="Sendo investigado? Defesa técnica desde o início evita denúncia"
-        guaranteeTitle="Defesa Estratégica"
-        guaranteeDescription="Atuação completa na fase de investigação para evitar denúncia ou reduzir acusação. Estratégia defensiva desde o primeiro momento."
-        customAlert={{
-          title: "Foi notificado para depor na delegacia?",
-          description: "O inquérito policial é a fase mais importante para evitar processo criminal. Com defesa técnica adequada, é possível conseguir o arquivamento do caso."
-        }}
-      />
-    </div>
+  if (!product) {
+    notFound()
+  }
+
+  return (
+    <ProductVSL
+      product={product}
+      heroColor="violet"
+      heroIcon="Shield"
+      agitationPoints={[
+        'Ser investigado sem advogado pode resultar em acusações infundadas e denúncia criminal',
+        'Depoimentos sem orientação técnica podem incriminar você injustamente',
+        'Perda de prazos no inquérito compromete toda a defesa futura',
+        'Indiciamento sem defesa adequada marca seus antecedentes permanentemente',
+        'Delegado pode pedir prisão preventiva sem que você saiba se defender',
+        'Falta de acompanhamento permite que provas contra você sejam fabricadas'
+      ]}
+      solutionSteps={[
+        'Análise URGENTE do inquérito - Verificamos acusações e estratégia defensiva',
+        'Acompanhamento em depoimentos - Orientação técnica para evitar auto-incriminação',
+        'Requerimentos estratégicos - Juntada de provas favoráveis e testemunhas',
+        'Pedido de diligências - Requisitamos investigações que o ajudem',
+        'Manifestação final - Argumentamos pelo arquivamento do inquérito',
+        'Habeas Corpus preventivo - Se houver risco de prisão injusta'
+      ]}
+      urgencyMessage="INVESTIGADO? Defesa técnica completa desde o início do inquérito"
+      guaranteeTitle="Acompanhamento Completo"
+      guaranteeDescription="Defesa técnica em todas as fases do inquérito policial, desde a notificação até o arquivamento ou oferecimento da denúncia."
+      stats={{
+        years: 15,
+        cases: 450,
+        successRate: 78,
+        clients: 380,
+      }}
+      customAlert={{
+        title: "Sendo Investigado?",
+        description: "Mesmo que você seja inocente, o inquérito policial pode resultar em denúncia criminal se você não tiver defesa adequada. Não espere ser preso para contratar advogado."
+      }}
+    />
   )
 }

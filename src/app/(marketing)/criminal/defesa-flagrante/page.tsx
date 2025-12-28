@@ -1,55 +1,48 @@
-'use client'
-
-import { ProductVSL } from '@/components/vsl/ProductVSL'
-import { SEOHead, UrgencyBanner, WhatsAppFloat } from '@/components/vsl'
-import { PRODUTO_DEFESA_FLAGRANTE } from '@/lib/products/catalog'
+import { notFound } from 'next/navigation'
+import { ProductVSL } from '@/components/vsl'
+import { getProductBySlug } from '@/lib/products/catalog'
 
 export default function DefesaFlagrantePage() {
-  return (
-    <div className="min-h-screen">
-      <SEOHead
-        title={PRODUTO_DEFESA_FLAGRANTE.name}
-        description={PRODUTO_DEFESA_FLAGRANTE.description}
-        keywords={PRODUTO_DEFESA_FLAGRANTE.keywords}
-        productName={PRODUTO_DEFESA_FLAGRANTE.name}
-        price={PRODUTO_DEFESA_FLAGRANTE.price.basic || 0}
-        category={PRODUTO_DEFESA_FLAGRANTE.category}
-      />
+  const product = getProductBySlug('defesa-flagrante')
 
-      <ProductVSL
-        product={PRODUTO_DEFESA_FLAGRANTE}
-        heroColor="red"
-        heroIcon="AlertCircle"
-        agitationPoints={[
-          'As primeiras 24h após a prisão são CRUCIAIS para sua defesa',
-          'Sem advogado, você pode dizer algo que será usado contra você',
-          'Auto de prisão em flagrante com vícios pode manter você preso',
-          'Delegados podem converter flagrante em prisão preventiva sem defesa',
-          'Direito ao silêncio e não autoincriminação são frequentemente violados',
-          'Liberdade provisória negada por falta de assistência técnica imediata'
-        ]}
-        solutionSteps={[
-          'Atendimento 24H NA DELEGACIA - advogado criminalista vai até você',
-          'Orientação técnica no depoimento - exercício do direito ao silêncio',
-          'Análise do auto de prisão em flagrante - identificação de ilegalidades',
-          'Pedido imediato de liberdade provisória - audiência de custódia',
-          'Habeas corpus preventivo se necessário - protocolo urgente',
-          'Acompanhamento completo até a liberação ou julgamento'
-        ]}
-        stats={{
-          years: 15,
-          cases: 280,
-          successRate: 78,
-          clients: 250
-        }}
-        urgencyMessage="ATENDIMENTO 24 HORAS - Advogado criminalista na delegacia AGORA"
-        guaranteeTitle="Atendimento Imediato 24h"
-        guaranteeDescription="Plantão criminal 24 horas. Advogado criminalista atende na delegacia em qualquer horário para garantir sua defesa técnica."
-        customAlert={{
-          title: "PRESO EM FLAGRANTE? NÃO FALE NADA SEM ADVOGADO!",
-          description: "Você tem direito ao silêncio e à assistência de advogado. Tudo que disser pode ser usado contra você. Entre em contato IMEDIATAMENTE!"
-        }}
-      />
-    </div>
+  if (!product) {
+    notFound()
+  }
+
+  return (
+    <ProductVSL
+      product={product}
+      heroColor="violet"
+      heroIcon="Shield"
+      agitationPoints={[
+        'Prisão em flagrante pode resultar em meses de prisão preventiva sem necessidade',
+        'Primeiras horas são cruciais para evitar prisão preventiva e perda de direitos',
+        'Sem advogado, você pode ser induzido a confessar crimes que não cometeu',
+        'Depoimento sem orientação técnica pode prejudicar toda sua defesa futura',
+        'Liberdade provisória pode ser negada por falta de argumentação adequada',
+        'Cada dia preso afeta sua vida pessoal, profissional e familiar irreversivelmente'
+      ]}
+      solutionSteps={[
+        'Atendimento URGENTE 24h - Advogado na delegacia em até 2h após o chamado',
+        'Orientação no flagrante - Protegemos seus direitos durante depoimento',
+        'Habeas Corpus preventivo - Evitamos prisão preventiva desnecessária',
+        'Liberdade provisória - Argumentação técnica para soltura imediata',
+        'Análise de ilegalidades - Identificamos vícios na prisão para relaxamento',
+        'Acompanhamento completo - Defesa desde a delegacia até sentença final'
+      ]}
+      urgencyMessage="ATENDIMENTO 24 HORAS - Plantão criminal para prisões em flagrante"
+      guaranteeTitle="Atendimento 24 Horas"
+      guaranteeDescription="Plantão criminal 24/7 para atendimento imediato em delegacia. Advogado disponível em até 2h após chamado."
+      stats={{
+        years: 15,
+        cases: 400,
+        successRate: 85,
+        clients: 350,
+      }}
+      customAlert={{
+        title: "ATENÇÃO: Cada hora conta!",
+        description: "Nas primeiras horas após a prisão em flagrante, podemos evitar a conversão em prisão preventiva. Quanto mais rápido agirmos, maiores as chances de liberdade provisória."
+      }}
+    />
   )
 }

@@ -14,7 +14,6 @@ import {
   GuaranteeSection,
   TestimonialsSection,
   UrgencyBanner,
-  WhatsAppFloat,
   SEOHead,
 } from '@/components/vsl'
 
@@ -46,12 +45,6 @@ export default function InventarioPage() {
         ctaText="Solicitar Consultoria"
       />
 
-      <WhatsAppFloat
-        phoneNumber="5511999999999"
-        message="Olá! Preciso fazer inventário e gostaria de uma consultoria."
-        position="bottom-right"
-        showTooltip={true}
-      />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 py-20">

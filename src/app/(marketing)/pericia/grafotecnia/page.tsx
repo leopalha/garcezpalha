@@ -14,7 +14,6 @@ import {
   GuaranteeSection,
   TestimonialsSection,
   UrgencyBanner,
-  WhatsAppFloat,
   SEOHead,
 } from '@/components/vsl'
 
@@ -46,12 +45,6 @@ export default function GrafotecniaPage() {
         ctaText="Solicitar Análise"
       />
 
-      <WhatsAppFloat
-        phoneNumber="5511999999999"
-        message="Olá! Preciso de perícia grafotécnica para verificar autenticidade de assinatura."
-        position="bottom-right"
-        showTooltip={true}
-      />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 py-20">
