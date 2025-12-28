@@ -21,7 +21,7 @@ export async function GET() {
       const response = await fetch('https://api.d-id.com/credits', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Basic ${apiKey}`,
           'Content-Type': 'application/json',
         },
       })

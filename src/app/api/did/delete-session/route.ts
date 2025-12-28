@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`https://api.d-id.com/talks/streams/${session_id}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Basic ${apiKey}`,
       },
     })
 
