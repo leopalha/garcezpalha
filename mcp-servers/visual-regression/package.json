@@ -1,0 +1,26 @@
+{
+  "name": "@garcezpalha/mcp-visual-regression",
+  "version": "1.0.0",
+  "description": "MCP Server for visual regression testing using Playwright",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@playwright/test": "^1.41.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
+    "typescript": "^5.7.2"
+  }
+}
