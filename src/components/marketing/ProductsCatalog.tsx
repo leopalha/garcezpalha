@@ -29,7 +29,7 @@ import {
 // Catalogo Unificado - Todos os produtos apontam para checkout
 const products = [
   {
-    category: 'Direito Bancario',
+    category: 'Direito Bancário',
     icon: Banknote,
     description: 'Recupere seu dinheiro e proteja suas financas',
     items: [
@@ -40,7 +40,7 @@ const products = [
     ],
   },
   {
-    category: 'Direito Imobiliario',
+    category: 'Direito Imobiliário',
     icon: Home,
     description: 'Regularize e proteja seu patrimonio',
     items: [

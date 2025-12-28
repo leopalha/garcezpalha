@@ -4,27 +4,28 @@
  */
 
 export type ProductCategory =
-  | 'bancario'
-  | 'telecom'
-  | 'energia'
-  | 'consumidor'
-  | 'digital'
-  | 'aereo'
-  | 'previdenciario'
-  | 'trabalhista'
-  | 'servidor'
-  | 'educacional'
-  | 'condominial'
-  | 'saude'
-  | 'imobiliario'
-  | 'pericia'
-  | 'criminal'
+  | 'bancario' // Direito Bancário
+  | 'consumidor' // Direito do Consumidor (inclui telecom, energia, digital, aéreo)
+  | 'previdenciario' // Direito Previdenciário
+  | 'trabalhista' // Direito Trabalhista
+  | 'administrativo' // Direito Administrativo (inclui servidor público, FIES)
+  | 'saude' // Direito da Saúde
+  | 'imobiliario' // Direito Imobiliário (inclui condominial)
+  | 'pericia' // Perícia e Documentos
+  | 'criminal' // Direito Criminal
+  | 'aeronautico' // Direito Aeronáutico
+  | 'automacao' // Automação Jurídica
   | 'geral'
-  // Legacy categories
-  | 'financeiro'
-  | 'patrimonial'
-  | 'aeronautico'
-  | 'automacao'
+  // Legacy categories (para compatibilidade)
+  | 'financeiro' // → bancario
+  | 'patrimonial' // → imobiliario
+  | 'telecom' // → consumidor
+  | 'energia' // → consumidor
+  | 'digital' // → consumidor
+  | 'aereo' // → consumidor
+  | 'servidor' // → administrativo
+  | 'educacional' // → administrativo
+  | 'condominial' // → imobiliario
 
 export interface ProductPrice {
   basic: number // Valor base
@@ -70,25 +71,27 @@ export interface Product {
 }
 
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  bancario: 'Bancário/Financeiro',
-  telecom: 'Telecomunicações',
-  energia: 'Energia Elétrica',
-  consumidor: 'Consumidor',
-  digital: 'Digital',
-  aereo: 'Aéreo',
-  previdenciario: 'Previdenciário',
-  trabalhista: 'Trabalhista',
-  servidor: 'Servidor Público',
-  educacional: 'Educacional',
-  condominial: 'Condominial',
-  saude: 'Saúde',
-  imobiliario: 'Imobiliário',
-  pericia: 'Perícia',
-  criminal: 'Criminal',
+  // Categorias principais
+  bancario: 'Direito Bancário',
+  consumidor: 'Direito do Consumidor',
+  previdenciario: 'Direito Previdenciário',
+  trabalhista: 'Direito Trabalhista',
+  administrativo: 'Direito Administrativo',
+  saude: 'Direito da Saúde',
+  imobiliario: 'Direito Imobiliário',
+  pericia: 'Perícia e Documentos',
+  criminal: 'Direito Criminal',
+  aeronautico: 'Direito Aeronáutico',
+  automacao: 'Automação Jurídica',
   geral: 'Geral',
-  // Legacy categories
-  financeiro: 'Financeiro',
-  patrimonial: 'Patrimonial',
-  aeronautico: 'Aeronáutico',
-  automacao: 'Automação',
+  // Legacy categories (mapeamento para compatibilidade)
+  financeiro: 'Direito Bancário',
+  patrimonial: 'Direito Imobiliário',
+  telecom: 'Direito do Consumidor',
+  energia: 'Direito do Consumidor',
+  digital: 'Direito do Consumidor',
+  aereo: 'Direito do Consumidor',
+  servidor: 'Direito Administrativo',
+  educacional: 'Direito Administrativo',
+  condominial: 'Direito Imobiliário',
 }

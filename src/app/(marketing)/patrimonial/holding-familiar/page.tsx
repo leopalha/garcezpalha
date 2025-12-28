@@ -28,7 +28,7 @@ export default function HoldingFamiliarPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Holding Familiar - Proteção Patrimonial"
+        title="Holding Familiar - Direito Imobiliário"
         description="Proteja seu patrimônio familiar com holding. Planejamento sucessório, redução de impostos e blindagem patrimonial. Especialistas em holdings familiares."
         keywords={['holding familiar', 'proteção patrimonial', 'planejamento sucessório', 'blindagem patrimonial', 'advogado sucessão']}
         productName="Holding Familiar"
@@ -59,7 +59,7 @@ export default function HoldingFamiliarPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-full mb-6">
               <Building2 className="h-5 w-5" />
-              <span className="font-semibold">Proteção Patrimonial</span>
+              <span className="font-semibold">Direito Imobiliário</span>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold mb-6">

@@ -58,7 +58,7 @@ export default function DireitoCriminalPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded-full mb-6">
               <Shield className="h-5 w-5" />
-              <span className="font-semibold">Defesa Criminal Especializada</span>
+              <span className="font-semibold">Direito Criminal</span>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold mb-6">

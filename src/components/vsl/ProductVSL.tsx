@@ -17,7 +17,6 @@ import {
   GuaranteeSection,
   TestimonialsSection,
   UrgencyBanner,
-  WhatsAppFloat,
   SEOHead,
 } from '@/components/vsl'
 import type { Product } from '@/lib/products/types'
@@ -123,13 +122,6 @@ export function ProductVSL({
           ctaText="Falar com Advogado Agora"
         />
       )}
-
-      <WhatsAppFloat
-        phoneNumber="5511999999999"
-        message={`Olá! Preciso de ajuda com: ${product.name}`}
-        position="bottom-right"
-        showTooltip={true}
-      />
 
       {/* Hero Section */}
       <section className={`bg-gradient-to-br from-${heroColor}-50 to-${heroColor}-100 dark:from-${heroColor}-950/20 dark:to-${heroColor}-900/20 py-20`}>

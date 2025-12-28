@@ -19,7 +19,7 @@ import { SOLUTIONS, formatCurrency } from '@/types/checkout'
 const financeiroSolutions = SOLUTIONS.filter((s) => s.category === 'bancario')
 
 const categoryInfo = {
-  title: 'Direito Bancario',
+  title: 'Direito Bancário',
   description:
     'Solucoes juridicas especializadas para proteger suas financas, recuperar valores e defender seus direitos em questoes bancarias e de credito.',
   icon: Banknote,
@@ -50,7 +50,7 @@ export default function FinanceiroPage() {
               Inicio
             </Link>
             <ChevronRight className="w-4 h-4" />
-            <span className="text-foreground">Protecao Financeira</span>
+            <span className="text-foreground">Direito Bancário</span>
           </motion.div>
 
           <div className="max-w-4xl">
