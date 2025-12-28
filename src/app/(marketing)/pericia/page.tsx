@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { SOLUTIONS } from '@/types/checkout'
+import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileCheck, ArrowRight } from 'lucide-react'
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 }
 
 export default function PericiaPage() {
-  const periciaSolutions = SOLUTIONS.filter((s) => s.category === 'pericia')
+  const periciaSolutions = getAllSolutions().filter((s) => s.category === 'pericia')
 
   return (
     <div className="min-h-screen">

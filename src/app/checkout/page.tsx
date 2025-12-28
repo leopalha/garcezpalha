@@ -10,7 +10,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ServiceSelector } from '@/components/checkout/service-selector'
 import { OrderSummary } from '@/components/checkout/order-summary'
-import { Service, getServiceById, CheckoutFormData, formatCurrency, getSolutionPrice, getSolutionFullName } from '@/types/checkout'
+import { Service, CheckoutFormData } from '@/types/checkout'
+import { getSolutionById, formatCurrency, getSolutionPrice, getSolutionFullName } from '@/lib/products/checkout-adapter'
 import { ArrowLeft, ArrowRight, CreditCard, QrCode, Loader2 } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 
@@ -27,7 +28,7 @@ export default function CheckoutPage() {
   // Buscar produto correto (prioriza ?product= sobre ?service=)
   const productId = productIdFromUrl || serviceIdFromUrl
   const [selectedService, setSelectedService] = useState<Service | null>(
-    productId ? getServiceById(productId) || null : null
+    productId ? getSolutionById(productId) : null
   )
 
   // Estado para variante selecionada

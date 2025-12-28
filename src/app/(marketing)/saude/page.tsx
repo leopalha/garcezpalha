@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { SOLUTIONS } from '@/types/checkout'
+import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Heart, ArrowRight } from 'lucide-react'
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 }
 
 export default function SaudePage() {
-  const saudeSolutions = SOLUTIONS.filter((s) => s.category === 'saude')
+  const saudeSolutions = getAllSolutions().filter((s) => s.category === 'saude')
 
   return (
     <div className="min-h-screen">

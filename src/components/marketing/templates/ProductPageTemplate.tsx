@@ -29,7 +29,7 @@ import {
 import { Solution, SolutionCategory, formatCurrency } from '@/types/checkout'
 import { generateProductPageSchemas } from '@/lib/seo/schema-generator'
 import { ChatAssistant } from '@/components/chat/ChatAssistant'
-import { WhatsAppFloat } from '@/components/vsl/whatsapp-float'
+import { WhatsAppFloat } from '@/components/marketing/WhatsAppFloat'
 
 // Mapeamento de icones por categoria
 const categoryIcons: Record<SolutionCategory, typeof Shield> = {

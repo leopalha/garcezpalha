@@ -14,9 +14,9 @@ import {
   Banknote,
   ChevronRight,
 } from 'lucide-react'
-import { SOLUTIONS, formatCurrency } from '@/types/checkout'
+import { getAllSolutions, formatCurrency } from '@/lib/products/checkout-adapter'
 
-const previdenciarioSolutions = SOLUTIONS.filter((s) => s.category === 'previdenciario')
+const previdenciarioSolutions = getAllSolutions().filter((s) => s.category === 'previdenciario')
 
 const categoryInfo = {
   title: 'Protecao Financeira',

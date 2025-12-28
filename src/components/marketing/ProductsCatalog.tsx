@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useMemo } from 'react'
 import {
   Card,
   CardContent,
@@ -15,107 +16,116 @@ import {
   Heart,
   Shield,
   ArrowRight,
-  AlertTriangle,
-  BadgeDollarSign,
-  Building2,
-  FileText,
-  Stethoscope,
-  Plane,
+  ShoppingCart,
+  Briefcase,
   Scale,
-  Users,
   FileCheck,
+  Plane,
+  Bot,
+  Users,
+  type LucideIcon,
 } from 'lucide-react'
+import { ALL_PRODUCTS } from '@/lib/products/catalog'
+import { CATEGORY_LABELS } from '@/lib/products/types'
 
-// Catalogo Unificado - Todos os produtos apontam para checkout
-const products = [
-  {
-    category: 'Direito Bancário',
-    icon: Banknote,
-    description: 'Recupere seu dinheiro e proteja suas financas',
-    items: [
-      { name: 'Desbloqueio de Conta', href: '/checkout?product=desbloqueio-conta', icon: Shield, price: 'a partir de R$ 1.500' },
-      { name: 'Golpe do PIX', href: '/checkout?product=golpe-pix', icon: AlertTriangle, price: 'a partir de R$ 1.200' },
-      { name: 'Negativacao Indevida', href: '/checkout?product=negativacao-indevida', icon: BadgeDollarSign, price: 'a partir de R$ 1.000' },
-      { name: 'Defesa em Execucao', href: '/checkout?product=defesa-execucao', icon: Scale, price: 'a partir de R$ 1.800' },
-    ],
-  },
-  {
-    category: 'Direito Imobiliário',
-    icon: Home,
-    description: 'Regularize e proteja seu patrimonio',
-    items: [
-      { name: 'Consultoria Imobiliaria', href: '/checkout?product=direito-imobiliario', icon: Building2, price: 'a partir de R$ 1.500' },
-      { name: 'Usucapiao', href: '/checkout?product=usucapiao', icon: FileText, price: 'a partir de R$ 3.000' },
-      { name: 'Holding Familiar', href: '/checkout?product=holding-familiar', icon: Building2, price: 'a partir de R$ 5.000' },
-      { name: 'Inventario', href: '/checkout?product=inventario', icon: FileText, price: 'a partir de R$ 3.500' },
-      { name: 'Regularizacao de Imovel', href: '/checkout?product=regularizacao-imovel', icon: Home, price: 'a partir de R$ 2.000' },
-      { name: 'Avaliacao de Imoveis', href: '/checkout?product=avaliacao-imoveis', icon: Home, price: 'a partir de R$ 1.200' },
-    ],
-  },
-  {
-    category: 'Direito da Saude',
-    icon: Heart,
-    description: 'Garanta seus direitos de saude e previdencia',
-    items: [
-      { name: 'Plano de Saude Negou', href: '/checkout?product=plano-saude', icon: Stethoscope, price: 'a partir de R$ 1.500' },
-      { name: 'Cirurgia Bariatrica', href: '/checkout?product=cirurgia-bariatrica', icon: Heart, price: 'a partir de R$ 1.800' },
-      { name: 'Tratamento TEA', href: '/checkout?product=tratamento-tea', icon: Heart, price: 'a partir de R$ 1.500' },
-      { name: 'BPC / LOAS', href: '/checkout?product=bpc-loas', icon: Shield, price: 'a partir de R$ 1.200' },
-      { name: 'Pericia Medica', href: '/checkout?product=pericia-medica', icon: Stethoscope, price: 'a partir de R$ 2.500' },
-      { name: 'Cannabis Medicinal', href: '/checkout?product=cannabis-medicinal', icon: Heart, price: 'a partir de R$ 2.000', featured: true },
-    ],
-  },
-  {
-    category: 'Pericia e Documentos',
-    icon: FileCheck,
-    description: 'Laudos tecnicos e analise documental',
-    items: [
-      { name: 'Pericia Documental', href: '/checkout?product=pericia-documental', icon: FileCheck, price: 'a partir de R$ 2.000' },
-      { name: 'Grafotecnia', href: '/checkout?product=grafotecnia', icon: FileText, price: 'a partir de R$ 1.800' },
-      { name: 'Laudo Tecnico', href: '/checkout?product=laudo-tecnico', icon: FileText, price: 'a partir de R$ 1.500' },
-    ],
-  },
-  {
-    category: 'Direito Criminal',
-    icon: Scale,
-    description: 'Proteja seus direitos em processos criminais',
-    items: [
-      { name: 'Defesa Criminal', href: '/checkout?product=defesa-criminal', icon: Scale, price: 'a partir de R$ 2.500' },
-      { name: 'Habeas Corpus', href: '/checkout?product=habeas-corpus', icon: Shield, price: 'a partir de R$ 3.000', featured: true },
-      { name: 'Crimes Economicos', href: '/checkout?product=crimes-economicos', icon: BadgeDollarSign, price: 'a partir de R$ 4.000' },
-      { name: 'Crimes contra Honra', href: '/checkout?product=crimes-honra', icon: AlertTriangle, price: 'a partir de R$ 2.000' },
-    ],
-  },
-  {
-    category: 'Direito Aeronautico',
-    icon: Plane,
-    description: 'Consultoria e compliance para empresas de aviacao',
-    items: [
-      { name: 'Consultoria Aeronautica', href: '/checkout?product=consultoria-aeronautica', icon: Plane, price: 'a partir de R$ 5.000' },
-    ],
-  },
-  {
-    category: 'Automacao Juridica',
-    icon: Users,
-    description: 'Tecnologia para seu escritorio',
-    items: [
-      { name: 'Secretaria Remota', href: '/checkout?product=secretaria-remota', icon: Users, price: 'R$ 800/mes' },
-    ],
-  },
-  {
-    category: 'Direito Previdenciario',
-    icon: Shield,
-    description: 'Aposentadoria e beneficios do INSS',
-    items: [
-      { name: 'Aposentadoria', href: '/checkout?product=aposentadoria', icon: Shield, price: 'a partir de R$ 1.500' },
-      { name: 'Beneficios INSS', href: '/checkout?product=beneficios-inss', icon: Heart, price: 'a partir de R$ 1.200' },
-      { name: 'Revisao de Beneficio', href: '/checkout?product=revisao-beneficio', icon: Scale, price: 'a partir de R$ 2.000' },
-      { name: 'Planejamento Previdenciario', href: '/checkout?product=planejamento-previdenciario', icon: FileCheck, price: 'R$ 800' },
-    ],
-  },
-]
+// Mapeamento de categorias para ícones
+const categoryIcons: Record<string, LucideIcon> = {
+  bancario: Banknote,
+  consumidor: ShoppingCart,
+  previdenciario: Users,
+  trabalhista: Briefcase,
+  administrativo: Scale,
+  saude: Heart,
+  imobiliario: Home,
+  pericia: FileCheck,
+  criminal: Shield,
+  aeronautico: Plane,
+  automacao: Bot,
+  // Legacy mappings
+  financeiro: Banknote,
+  patrimonial: Home,
+}
+
+// Descrições de categorias
+const categoryDescriptions: Record<string, string> = {
+  bancario: 'Recupere seu dinheiro e proteja suas finanças',
+  consumidor: 'Defesa dos seus direitos como consumidor',
+  previdenciario: 'Aposentadoria e benefícios do INSS',
+  trabalhista: 'Defesa dos seus direitos trabalhistas',
+  administrativo: 'Servidores públicos e questões administrativas',
+  saude: 'Garanta seus direitos de saúde',
+  imobiliario: 'Regularize e proteja seu patrimônio',
+  pericia: 'Laudos técnicos e análise documental',
+  criminal: 'Proteja seus direitos em processos criminais',
+  aeronautico: 'Consultoria e compliance para empresas de aviação',
+  automacao: 'Tecnologia para seu escritório',
+  // Legacy
+  financeiro: 'Recupere seu dinheiro e proteja suas finanças',
+  patrimonial: 'Regularize e proteja seu patrimônio',
+}
 
 export function ProductsCatalog() {
+  // Gerar categorias dinamicamente do catalog.ts
+  const productsByCategory = useMemo(() => {
+    // Filtrar apenas produtos ativos e de alta prioridade para a home
+    const featuredProducts = ALL_PRODUCTS.filter(p => p.isActive && p.priority >= 3)
+
+    // Mapeamento de categorias legadas para novas
+    const categoryMapping: Record<string, string> = {
+      financeiro: 'bancario',
+      patrimonial: 'imobiliario',
+      telecom: 'consumidor',
+      energia: 'consumidor',
+      digital: 'consumidor',
+      aereo: 'consumidor',
+      servidor: 'administrativo',
+      educacional: 'administrativo',
+      condominial: 'imobiliario',
+    }
+
+    // Agrupar por categoria (normalizando legadas)
+    const grouped = featuredProducts.reduce((acc, product) => {
+      // Normalizar categoria (converter legacy para novo padrão)
+      const normalizedCategory = categoryMapping[product.category] || product.category
+
+      if (!acc[normalizedCategory]) {
+        acc[normalizedCategory] = []
+      }
+      acc[normalizedCategory].push(product)
+      return acc
+    }, {} as Record<string, typeof featuredProducts>)
+
+    // Ordem preferencial de categorias
+    const categoryOrder = [
+      'bancario',
+      'consumidor',
+      'imobiliario',
+      'saude',
+      'previdenciario',
+      'trabalhista',
+      'criminal',
+      'administrativo',
+      'pericia',
+      'aeronautico',
+      'automacao',
+    ]
+
+    // Converter para array e ordenar pela ordem preferencial
+    return categoryOrder
+      .filter(cat => grouped[cat] && grouped[cat].length > 0)
+      .map(categoryKey => ({
+        category: CATEGORY_LABELS[categoryKey as keyof typeof CATEGORY_LABELS] || categoryKey,
+        categoryKey,
+        icon: categoryIcons[categoryKey] || FileCheck,
+        description: categoryDescriptions[categoryKey] || '',
+        items: grouped[categoryKey].map(p => ({
+          name: p.name,
+          href: `/checkout?product=${p.slug}`,
+          price: `a partir de R$ ${p.price.basic?.toLocaleString('pt-BR')}`,
+        })),
+      }))
+  }, [])
+
   return (
     <section className="py-24 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -128,21 +138,21 @@ export function ProductsCatalog() {
           className="max-w-3xl mx-auto text-center mb-16"
         >
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Qual e o seu problema?
+            Qual é o seu problema?
           </h2>
           <p className="text-xl text-muted-foreground">
-            Selecione a area mais proxima da sua situacao para uma solucao especializada
+            Selecione a área mais próxima da sua situação para uma solução especializada
           </p>
         </motion.div>
 
         {/* Products Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product, index) => {
-            const CategoryIcon = product.icon
+          {productsByCategory.map((categoryGroup, index) => {
+            const CategoryIcon = categoryGroup.icon
 
             return (
               <motion.div
-                key={product.category}
+                key={categoryGroup.categoryKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -154,34 +164,30 @@ export function ProductsCatalog() {
                       <CategoryIcon className="w-6 h-6 text-primary" />
                     </div>
                     <CardTitle className="font-heading text-lg">
-                      {product.category}
+                      {categoryGroup.category}
                     </CardTitle>
                     <CardDescription>
-                      {product.description}
+                      {categoryGroup.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {product.items.map((item) => {
-                        const ItemIcon = item.icon
-                        return (
-                          <li key={item.name}>
-                            <Link
-                              href={item.href}
-                              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
-                            >
-                              <ItemIcon className="w-4 h-4 opacity-60 group-hover:opacity-100 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <span className="block">{item.name}</span>
-                                <span className="text-xs text-primary/70 group-hover:text-primary">
-                                  {item.price}
-                                </span>
-                              </div>
-                              <ArrowRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-                            </Link>
-                          </li>
-                        )
-                      })}
+                      {categoryGroup.items.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+                          >
+                            <ArrowRight className="w-4 h-4 opacity-60 group-hover:opacity-100 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <span className="block">{item.name}</span>
+                              <span className="text-xs text-primary/70 group-hover:text-primary">
+                                {item.price}
+                              </span>
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </CardContent>
                 </Card>
@@ -189,6 +195,23 @@ export function ProductsCatalog() {
             )
           })}
         </div>
+
+        {/* CTA para ver todos os produtos */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <Link
+            href="/solucoes"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-semibold"
+          >
+            Ver Todas as Soluções ({ALL_PRODUCTS.filter(p => p.isActive).length} produtos)
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   )

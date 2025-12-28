@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { SOLUTIONS } from '@/types/checkout'
+import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, ArrowRight } from 'lucide-react'
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 }
 
 export default function AutomacaoPage() {
-  const automacaoSolutions = SOLUTIONS.filter((s) => s.category === 'automacao')
+  const automacaoSolutions = getAllSolutions().filter((s) => s.category === 'automacao')
 
   return (
     <div className="min-h-screen">

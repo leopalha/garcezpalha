@@ -5,7 +5,8 @@ import { Check } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Service, SERVICES, formatCurrency } from '@/types/checkout'
+import { Service } from '@/types/checkout'
+import { getAllSolutions, formatCurrency } from '@/lib/products/checkout-adapter'
 import { cn } from '@/lib/utils'
 
 interface ServiceSelectorProps {
@@ -15,6 +16,9 @@ interface ServiceSelectorProps {
 
 export function ServiceSelector({ selectedServiceId, onSelectService }: ServiceSelectorProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+
+  // Obter todos os serviços do catalog.ts
+  const services = getAllSolutions()
 
   return (
     <div className="space-y-6">
@@ -26,7 +30,7 @@ export function ServiceSelector({ selectedServiceId, onSelectService }: ServiceS
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((service) => {
+        {services.map((service) => {
           const isSelected = selectedServiceId === service.id
           const isHovered = hoveredId === service.id
 

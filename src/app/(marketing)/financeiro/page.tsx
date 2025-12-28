@@ -14,9 +14,9 @@ import {
   Banknote,
   ChevronRight,
 } from 'lucide-react'
-import { SOLUTIONS, formatCurrency } from '@/types/checkout'
+import { getAllSolutions, formatCurrency } from '@/lib/products/checkout-adapter'
 
-const financeiroSolutions = SOLUTIONS.filter((s) => s.category === 'bancario')
+const financeiroSolutions = getAllSolutions().filter((s) => s.category === 'bancario')
 
 const categoryInfo = {
   title: 'Direito Bancário',
