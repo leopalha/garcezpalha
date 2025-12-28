@@ -61,7 +61,21 @@ export function ChatAssistant({
   const [isVideoMode, setIsVideoMode] = useState(false)
 
   // Settings
-  const settings = useChatSettings()
+  const settingsData = useChatSettings()
+
+  // Convert ChatSettingsData to ChatSettings
+  const settings = useMemo(() => {
+    if (!settingsData) return undefined
+    return {
+      ttsEnabled: settingsData.ttsEnabled,
+      ttsVoice: settingsData.ttsVoice,
+      ttsSpeed: settingsData.ttsSpeed as 1 | 1.5 | 2,
+      ttsAutoPlay: settingsData.autoPlayResponses,
+      microphoneEnabled: settingsData.microphoneEnabled,
+      notificationsEnabled: settingsData.notificationsEnabled,
+      soundEffectsEnabled: settingsData.soundEnabled,
+    }
+  }, [settingsData])
 
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null)

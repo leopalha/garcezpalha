@@ -13,12 +13,14 @@ import { cn } from '@/lib/utils'
 interface AudioRecorderProps {
   onTranscription: (text: string) => void
   onError?: (error: string) => void
+  disabled?: boolean
   className?: string
 }
 
 export function AudioRecorder({
   onTranscription,
   onError,
+  disabled = false,
   className,
 }: AudioRecorderProps) {
   const [isRecording, setIsRecording] = useState(false)
@@ -170,7 +172,7 @@ export function AudioRecorder({
           variant="outline"
           size="icon"
           onClick={startRecording}
-          disabled={permissionDenied}
+          disabled={disabled || permissionDenied}
           title="Gravar áudio"
           className="h-10 w-10"
         >

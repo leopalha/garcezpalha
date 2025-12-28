@@ -9,48 +9,64 @@ export function parseMarkdown(text: string): React.ReactNode {
   if (!text) return text
 
   let parts: React.ReactNode[] = [text]
-  let key = 0
+  let keyCounter = 0
+
+  // Gera chave única
+  const getKey = () => `md-${keyCounter++}`
+
+  // Funções de componente
+  const createStrong = (match: string) =>
+    React.createElement('strong', { key: getKey() }, match)
+
+  const createEm = (match: string) =>
+    React.createElement('em', { key: getKey() }, match)
+
+  const createCode = (match: string) =>
+    React.createElement('code', {
+      key: getKey(),
+      className: 'bg-gray-800 px-1 rounded text-xs'
+    }, match)
+
+  const createLink = (_match: string, text: string, url: string) =>
+    React.createElement('a', {
+      key: getKey(),
+      href: url,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+      className: 'text-blue-400 hover:text-blue-300 underline'
+    }, text)
 
   // Patterns de markdown (ordem importa!)
-  const patterns = [
+  const patterns: Array<{
+    regex: RegExp
+    component: (match: string, ...args: string[]) => React.ReactElement
+    isLink?: boolean
+  }> = [
     {
       // Bold: **text**
       regex: /\*\*(.+?)\*\*/g,
-      component: (match: string) => <strong key={key++}>{match}</strong>,
+      component: createStrong,
     },
     {
       // Italic: *text*
       regex: /\*(.+?)\*/g,
-      component: (match: string) => <em key={key++}>{match}</em>,
+      component: createEm,
     },
     {
       // Code inline: `code`
       regex: /`(.+?)`/g,
-      component: (match: string) => (
-        <code key={key++} className="bg-gray-800 px-1 rounded text-xs">
-          {match}
-        </code>
-      ),
+      component: createCode,
     },
     {
       // Links: [text](url)
       regex: /\[(.+?)\]\((.+?)\)/g,
-      component: (match: string, text: string, url: string) => (
-        <a
-          key={key++}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300 underline"
-        >
-          {text}
-        </a>
-      ),
+      component: createLink,
+      isLink: true,
     },
   ]
 
   // Aplica cada pattern
-  for (const { regex, component } of patterns) {
+  for (const { regex, component, isLink } of patterns) {
     const newParts: React.ReactNode[] = []
 
     for (const part of parts) {
@@ -66,7 +82,7 @@ export function parseMarkdown(text: string): React.ReactNode {
 
           // Match (grupo capturado)
           if (i + 1 < splits.length) {
-            if (regex.source.includes('\\[')) {
+            if (isLink) {
               // Link: [text](url) - 2 grupos
               const text = splits[i + 1]
               const url = splits[i + 2]
@@ -95,7 +111,7 @@ export function parseMarkdown(text: string): React.ReactNode {
     parts = newParts
   }
 
-  return <>{parts}</>
+  return React.createElement(React.Fragment, null, ...parts)
 }
 
 /**

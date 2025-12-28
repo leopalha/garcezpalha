@@ -172,10 +172,18 @@ export interface ChatAssistantProps {
   onClose?: () => void
 }
 
+/**
+ * @deprecated Use UnifiedChatAssistantProps with mode="chat" instead
+ * This interface is kept for backward compatibility only
+ */
 export interface EnhancedChatAssistantProps extends ChatAssistantProps {
   useStateMachine?: boolean
 }
 
+/**
+ * @deprecated Use UnifiedChatAssistantProps with mode="agent-flow" instead
+ * This interface is kept for backward compatibility only
+ */
 export interface AgentFlowChatWidgetProps {
   productId?: string
   productName?: string

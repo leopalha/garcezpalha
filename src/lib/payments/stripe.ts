@@ -18,6 +18,10 @@ export function isStripeConfigured(): boolean {
   return !!process.env.STRIPE_SECRET_KEY
 }
 
+// Backward compatibility: export instance directly
+// @deprecated Use getStripe() instead
+export const stripe = getStripe()
+
 export interface CreateCheckoutSessionParams {
   clientId: string
   invoiceId: string

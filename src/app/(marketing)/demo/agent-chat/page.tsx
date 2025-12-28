@@ -5,7 +5,7 @@
  * Demonstração do novo widget integrado ao agent-flow API
  */
 
-import { AgentFlowChatWidget } from '@/components/chat'
+import { ChatAssistant } from '@/components/chat'
 import { Card } from '@/components/ui/card'
 
 export default function AgentChatDemoPage() {
@@ -152,10 +152,11 @@ export default function AgentChatDemoPage() {
         </Card>
       </div>
 
-      {/* Chat Widget */}
-      <AgentFlowChatWidget
+      {/* Chat Widget - Usando ChatAssistant unificado com mode="agent-flow" */}
+      <ChatAssistant
         productId="desbloqueio-conta"
         productName="Desbloqueio de Conta Bancária"
+        mode="agent-flow"
         autoOpen={false}
         channel="website"
         onConversationStart={(conversationId) => {

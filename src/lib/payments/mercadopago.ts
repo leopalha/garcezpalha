@@ -18,6 +18,10 @@ export function isMercadoPagoConfigured(): boolean {
   return !!process.env.MERCADOPAGO_ACCESS_TOKEN
 }
 
+// Backward compatibility: export client directly
+// @deprecated Use getMercadoPago() and create your own Payment instance
+export const paymentClient = new Payment(getMercadoPago())
+
 export interface CreatePixPaymentParams {
   clientId: string
   invoiceId: string
