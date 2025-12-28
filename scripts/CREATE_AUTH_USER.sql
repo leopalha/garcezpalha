@@ -62,8 +62,14 @@ INSERT INTO auth.users (
 -- PASSO 2: Criar identidade de autenticação
 -- ======================================================
 
+-- Delete existing identity if present (to allow re-running script)
+DELETE FROM auth.identities
+WHERE user_id = 'c8c9bbe7-dd8f-4faa-9f1c-d59a290b8aa1'::uuid
+  AND provider = 'email';
+
+-- Insert new identity (provider_id must match the user id for email provider)
 INSERT INTO auth.identities (
-  id,
+  provider_id,
   user_id,
   identity_data,
   provider,
@@ -71,17 +77,19 @@ INSERT INTO auth.identities (
   created_at,
   updated_at
 ) VALUES (
-  gen_random_uuid(),
+  'c8c9bbe7-dd8f-4faa-9f1c-d59a290b8aa1',  -- provider_id is the user's UUID for email provider
   'c8c9bbe7-dd8f-4faa-9f1c-d59a290b8aa1'::uuid,
   json_build_object(
     'sub', 'c8c9bbe7-dd8f-4faa-9f1c-d59a290b8aa1',
-    'email', 'leonardo.palha@gmail.com'
+    'email', 'leonardo.palha@gmail.com',
+    'email_verified', true,
+    'phone_verified', false
   ),
   'email',
   NOW(),
   NOW(),
   NOW()
-) ON CONFLICT (provider, id) DO NOTHING;
+);
 
 -- ======================================================
 -- PASSO 3: Criar profile do usuário

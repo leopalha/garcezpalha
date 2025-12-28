@@ -3,8 +3,8 @@ import { ProductVSL } from '@/components/vsl'
 import { getProductBySlug } from '@/lib/products/catalog'
 import { Shield } from 'lucide-react'
 
-export default function FiesRenegociacaoPage() {
-  const product = getProductBySlug('fies-renegociacao')
+export default function HorasExtrasPage() {
+  const product = getProductBySlug('horas-extras')
 
   if (!product) {
     notFound()
@@ -13,22 +13,22 @@ export default function FiesRenegociacaoPage() {
   return (
     <ProductVSL
       product={product}
-      heroColor="rose"
+      heroColor="orange"
       heroIcon={Shield}
       agitationPoints={[
-        "Dívida do FIES crescendo descontroladamente",
-        "Impossibilidade de pagar as parcelas",
-        "Nome negativado por dívida estudantil",
-        "Renegociação negada ou com juros abusivos",
-        "Faculdade cobrada indevidamente"
+        "Empresa não pagou verbas rescisórias corretamente",
+        "Horas extras trabalhadas não foram pagas",
+        "Férias e 13º salário calculados errado",
+        "FGTS não depositado",
+        "Direitos trabalhistas desrespeitados"
 ]}
       solutionSteps={[
-        "Análise do contrato FIES",
-        "Verificação de irregularidades",
-        "Negociação com FNDE/Caixa",
-        "Ação para renegociação com condições justas",
-        "Suspensão de negativação",
-        "Redução de juros e parcelamento viável"
+        "Análise de contracheques e rescisão",
+        "Cálculo de valores devidos",
+        "Tentativa de acordo extrajudicial",
+        "Reclamação trabalhista na Justiça do Trabalho",
+        "Audiência e sustentação oral",
+        "Execução para receber os valores"
 ]}
       urgencyMessage="⚡ Atendimento prioritário - Análise gratuita do seu caso"
       guaranteeTitle="Garantia de Resultado"
