@@ -217,7 +217,18 @@ Como prefere começar?`,
   // Gravação de áudio com transcrição em tempo real
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      // Constraints otimizadas para capturar APENAS microfone (não sistema)
+      const constraints = {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,
+          sampleRate: 48000,
+        }
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
       const mediaRecorder = new MediaRecorder(stream)
       mediaRecorderRef.current = mediaRecorder
 
@@ -499,6 +510,15 @@ Como prefere começar?`,
                   <span className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:300ms]" />
                 </div>
                 <span className="text-sm text-blue-600 dark:text-blue-400">Transcrevendo áudio...</span>
+              </div>
+            )}
+
+            {/* Aviso sobre fechar mídias antes de gravar */}
+            {isRecording && (
+              <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t flex items-center gap-2">
+                <span className="text-xs text-yellow-700 dark:text-yellow-400">
+                  💡 Dica: Feche todas as abas com vídeo ou música para evitar captura de áudio de fundo
+                </span>
               </div>
             )}
 
