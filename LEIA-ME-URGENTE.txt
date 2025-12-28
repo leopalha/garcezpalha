@@ -1,0 +1,27 @@
+================================================================================
+⚠️  AÇÃO NECESSÁRIA - Chat com IA e Avatar
+================================================================================
+
+PROBLEMA ENCONTRADO:
+1. OpenAI API Key está INVÁLIDA (401 Incorrect API key)
+2. D-ID API Key NÃO ESTÁ CONFIGURADA no .env.local
+
+SOLUÇÃO RÁPIDA:
+1. Atualize a chave OpenAI em .env.local
+   → https://platform.openai.com/api-keys
+
+2. Adicione a chave D-ID em .env.local
+   → https://studio.d-id.com/account/api-keys
+
+3. Reinicie o servidor: npm run dev
+
+4. Teste: bash check-chat.sh
+
+DOCUMENTAÇÃO COMPLETA:
+→ d:\garcezpalha\DIAGNOSTICO-FINAL.md
+→ d:\garcezpalha\SETUP-CHAT-API-KEYS.md
+→ d:\garcezpalha\TROUBLESHOOTING-CHAT.md
+
+O CÓDIGO JÁ ESTÁ CORRIGIDO E PRONTO. 
+SÓ FALTA CONFIGURAR AS CHAVES DE API! ✅
+================================================================================
