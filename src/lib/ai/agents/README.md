@@ -347,4 +347,4 @@ This system is part of Garcez Palha's proprietary legal tech stack. All prompts 
 ---
 
 **Questions or Issues?**
-Contact: Leonardo Garcez Palha | contato@garcezpalha.com | (21) 97503-0018
+Contact: Leonardo Mendonça Palha da Silva | contato@garcezpalha.com | (21) 97503-0018

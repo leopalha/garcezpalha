@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Award, Scale, Building2 } from 'lucide-react'
-import Image from 'next/image'
 
 const credentials = [
   { icon: Scale, label: 'OAB/RJ', value: '219.390', description: 'Advocacia' },
@@ -15,39 +14,19 @@ export function Credentials() {
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Brasao */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="flex justify-center"
-            >
-              <div className="relative">
-                <Image
-                  src="/brasao-garcez-palha.png"
-                  alt="Brasao Heraldico da Familia Garcez Palha"
-                  width={350}
-                  height={350}
-                  className="w-full h-auto max-w-[350px] drop-shadow-xl"
-                  priority
-                />
-              </div>
-            </motion.div>
-
+          <div className="flex justify-center">
             {/* Info */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6"
+              transition={{ duration: 0.6 }}
+              className="space-y-6 text-center max-w-3xl"
             >
               {/* Name */}
               <div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">
-                  Leonardo Garcez Palha
+                  Leonardo Mendonça Palha da Silva
                 </h2>
                 <p className="text-lg text-muted-foreground">
                   Advogado, Perito Judicial e Corretor de Imoveis
@@ -55,7 +34,7 @@ export function Credentials() {
               </div>
 
               {/* Credentials */}
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 justify-center">
                 {credentials.map((cred) => {
                   const Icon = cred.icon
                   return (

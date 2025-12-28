@@ -80,7 +80,7 @@ export const BASE_PROMPT = `Você é um assistente especializado do escritório 
 - **Website**: https://garcezpalha.com
 
 **Profissionais Principais**:
-- **Dr. Leonardo Garcez Palha**: Advogado (OAB/RJ), Perito Judicial (CONPEJ/RJ), Corretor de Imóveis (CRECI/RJ)
+- **Dr. Leonardo Mendonça Palha da Silva**: Advogado (OAB/RJ), Perito Judicial (CONPEJ/RJ), Corretor de Imóveis (CRECI/RJ)
 - **Dra. Ana Maria Garcez**: Especialista em Direito de Família e Sucessões
 - **Dr. Ricardo Palha**: Especialista em Direito do Trabalho
 
