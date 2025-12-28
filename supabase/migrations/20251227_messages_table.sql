@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS public.messages (
   conversation_id TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
   content TEXT NOT NULL,
-  timestamp TIMESTAMPTZ DEFAULT NOW(),
   metadata JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -17,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.messages (
 
 -- Add indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON public.messages(conversation_id);
-CREATE INDEX IF NOT EXISTS idx_messages_timestamp ON public.messages(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_messages_timestamp ON public.messages(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_messages_role ON public.messages(role);
 
 -- Add foreign key constraint (if conversations table exists)
@@ -87,7 +86,7 @@ SELECT
   c.client
 FROM public.messages m
 LEFT JOIN public.conversations c ON m.conversation_id = c.conversation_id
-WHERE m.timestamp > NOW() - INTERVAL '7 days'
-ORDER BY m.timestamp DESC;
+WHERE m.created_at > NOW() - INTERVAL '7 days'
+ORDER BY m.created_at DESC;
 
 GRANT SELECT ON public.recent_messages TO authenticated;
