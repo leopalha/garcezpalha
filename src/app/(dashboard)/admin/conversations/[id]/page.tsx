@@ -32,7 +32,7 @@ interface Message {
   id: string
   role: 'user' | 'assistant' | 'system'
   content: string
-  timestamp: string
+  created_at: string
 }
 
 interface ConversationDetail {
@@ -180,7 +180,7 @@ export default function ConversationDetailPage() {
         id: Date.now().toString(),
         role: 'user',
         content: userMessage,
-        timestamp: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       }
       setMessages((prev) => [...prev, newMessage])
 
@@ -308,7 +308,7 @@ export default function ConversationDetailPage() {
                         message.role === 'user' ? 'text-blue-100' : 'text-slate-500'
                       }`}
                     >
-                      {new Date(message.timestamp).toLocaleTimeString('pt-BR')}
+                      {new Date(message.created_at).toLocaleTimeString('pt-BR')}
                     </p>
                   </div>
 

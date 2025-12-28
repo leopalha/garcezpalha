@@ -25,7 +25,7 @@ export async function GET(
       .from('messages')
       .select('*')
       .eq('conversation_id', conversationId)
-      .order('timestamp', { ascending: true })
+      .order('created_at', { ascending: true })
 
     if (messagesError) {
       console.error('[Messages API] Error fetching messages:', messagesError)
