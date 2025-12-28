@@ -42,44 +42,78 @@ export default function SolucoesPage() {
 
   // Gerar categorias dinamicamente a partir do catálogo
   const allSolutions = useMemo(() => {
-    // Converter TODOS os produtos do catalog.ts
-    const allProductsFormatted = ALL_PRODUCTS.map(product => {
-      // Determinar a URL correta
-      const isLegacy = ['financeiro', 'patrimonial', 'saude', 'pericia', 'criminal', 'aeronautico', 'automacao', 'previdenciario'].includes(product.category)
+    // Ordem preferencial de categorias (mesma do ProductsCatalog)
+    const categoryOrder = [
+      'bancario',
+      'consumidor',
+      'imobiliario',
+      'saude',
+      'previdenciario',
+      'trabalhista',
+      'criminal',
+      'administrativo',
+      'pericia',
+      'aeronautico',
+      'automacao',
+    ]
 
-      let href = ''
-      if (isLegacy && product.category === 'financeiro') {
-        href = `/financeiro/${product.slug}`
-      } else if (isLegacy && product.category === 'patrimonial') {
-        href = `/patrimonial/${product.slug}`
-      } else if (isLegacy && product.category === 'saude') {
-        href = `/saude/${product.slug}`
-      } else if (isLegacy && product.category === 'pericia') {
-        href = `/pericia/${product.slug}`
-      } else if (isLegacy && product.category === 'criminal') {
-        href = `/criminal/${product.slug}`
-      } else if (isLegacy && product.category === 'aeronautico') {
-        href = `/aeronautico/${product.slug}`
-      } else if (isLegacy && product.category === 'automacao') {
-        href = `/automacao/${product.slug}`
-      } else if (isLegacy && product.category === 'previdenciario') {
-        href = `/previdenciario/${product.slug}`
-      } else {
-        href = `/solucoes/${product.category}/${product.slug}`
-      }
+    // Mapeamento de categorias legadas para novas
+    const categoryMapping: Record<string, string> = {
+      financeiro: 'bancario',
+      patrimonial: 'imobiliario',
+      telecom: 'consumidor',
+      energia: 'consumidor',
+      digital: 'consumidor',
+      aereo: 'consumidor',
+      servidor: 'administrativo',
+      educacional: 'administrativo',
+      condominial: 'imobiliario',
+    }
 
-      return {
-        name: product.name,
-        href,
-        category: product.category,
-        price: product.price.basic ? `R$ ${product.price.basic.toLocaleString('pt-BR')}` : 'Consulte',
-        description: product.description,
-        featured: product.priority >= 5,
-        timeline: product.timeline,
-      }
-    })
+    // Converter TODOS os produtos ativos do catalog.ts
+    const allProductsFormatted = ALL_PRODUCTS
+      .filter(p => p.isActive)
+      .map(product => {
+        // Normalizar categoria
+        const normalizedCategory = categoryMapping[product.category] || product.category
 
-    // Agrupar por categoria
+        // Determinar a URL correta baseada na estrutura de pastas existente
+        let href = ''
+        if (product.category === 'financeiro' || product.category === 'bancario') {
+          href = `/financeiro/${product.slug}`
+        } else if (product.category === 'patrimonial' || product.category === 'imobiliario') {
+          href = `/patrimonial/${product.slug}`
+        } else if (product.category === 'saude') {
+          href = `/saude/${product.slug}`
+        } else if (product.category === 'pericia') {
+          href = `/pericia/${product.slug}`
+        } else if (product.category === 'criminal') {
+          href = `/criminal/${product.slug}`
+        } else if (product.category === 'aeronautico') {
+          href = `/aeronautico/${product.slug}`
+        } else if (product.category === 'automacao') {
+          href = `/automacao/${product.slug}`
+        } else if (product.category === 'previdenciario') {
+          href = `/previdenciario/${product.slug}`
+        } else {
+          // Para produtos novos sem estrutura de pasta, usar checkout direto
+          href = `/checkout?product=${product.slug}`
+        }
+
+        return {
+          name: product.name,
+          href,
+          category: normalizedCategory,
+          originalCategory: product.category,
+          price: product.price.basic ? `R$ ${product.price.basic.toLocaleString('pt-BR')}` : 'Consulte',
+          description: product.description,
+          featured: product.priority >= 5,
+          timeline: product.timeline,
+          priority: product.priority,
+        }
+      })
+
+    // Agrupar por categoria normalizada
     const productsByCategory = allProductsFormatted.reduce((acc, product) => {
       if (!acc[product.category]) {
         acc[product.category] = []
@@ -88,20 +122,26 @@ export default function SolucoesPage() {
       return acc
     }, {} as Record<string, typeof allProductsFormatted>)
 
-    // Montar array final
-    return Object.entries(productsByCategory)
-      .map(([categoryKey, products]) => {
+    // Ordenar produtos dentro de cada categoria por prioridade
+    Object.values(productsByCategory).forEach(products => {
+      products.sort((a, b) => b.priority - a.priority)
+    })
+
+    // Montar array final seguindo a ordem preferencial
+    return categoryOrder
+      .filter(catKey => productsByCategory[catKey] && productsByCategory[catKey].length > 0)
+      .map(categoryKey => {
         const meta = categoryMetadata[categoryKey]
         if (!meta) return null
 
         return {
           category: meta.name,
+          categoryKey,
           icon: meta.icon,
-          products,
+          products: productsByCategory[categoryKey],
         }
       })
       .filter((cat): cat is NonNullable<typeof cat> => cat !== null)
-      .sort((a, b) => a.category.localeCompare(b.category))
   }, [])
 
   const totalProducts = allSolutions.reduce((sum, cat) => sum + cat.products.length, 0)

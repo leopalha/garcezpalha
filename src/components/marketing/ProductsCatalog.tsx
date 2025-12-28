@@ -67,8 +67,8 @@ const categoryDescriptions: Record<string, string> = {
 export function ProductsCatalog() {
   // Gerar categorias dinamicamente do catalog.ts
   const productsByCategory = useMemo(() => {
-    // Filtrar apenas produtos ativos e de alta prioridade para a home
-    const featuredProducts = ALL_PRODUCTS.filter(p => p.isActive && p.priority >= 3)
+    // Filtrar TODOS os produtos ativos (sem filtro de prioridade)
+    const activeProducts = ALL_PRODUCTS.filter(p => p.isActive)
 
     // Mapeamento de categorias legadas para novas
     const categoryMapping: Record<string, string> = {
@@ -84,7 +84,7 @@ export function ProductsCatalog() {
     }
 
     // Agrupar por categoria (normalizando legadas)
-    const grouped = featuredProducts.reduce((acc, product) => {
+    const grouped = activeProducts.reduce((acc, product) => {
       // Normalizar categoria (converter legacy para novo padrão)
       const normalizedCategory = categoryMapping[product.category] || product.category
 
@@ -93,7 +93,12 @@ export function ProductsCatalog() {
       }
       acc[normalizedCategory].push(product)
       return acc
-    }, {} as Record<string, typeof featuredProducts>)
+    }, {} as Record<string, typeof activeProducts>)
+
+    // Ordenar produtos dentro de cada categoria por prioridade (maior primeiro)
+    Object.values(grouped).forEach(products => {
+      products.sort((a, b) => b.priority - a.priority)
+    })
 
     // Ordem preferencial de categorias
     const categoryOrder = [
@@ -171,24 +176,26 @@ export function ProductsCatalog() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-3">
-                      {categoryGroup.items.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={item.href}
-                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
-                          >
-                            <ArrowRight className="w-4 h-4 opacity-60 group-hover:opacity-100 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <span className="block">{item.name}</span>
-                              <span className="text-xs text-primary/70 group-hover:text-primary">
-                                {item.price}
-                              </span>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="max-h-[280px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40">
+                      <ul className="space-y-3">
+                        {categoryGroup.items.map((item) => (
+                          <li key={item.name}>
+                            <Link
+                              href={item.href}
+                              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+                            >
+                              <ArrowRight className="w-4 h-4 opacity-60 group-hover:opacity-100 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <span className="block">{item.name}</span>
+                                <span className="text-xs text-primary/70 group-hover:text-primary">
+                                  {item.price}
+                                </span>
+                              </div>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>

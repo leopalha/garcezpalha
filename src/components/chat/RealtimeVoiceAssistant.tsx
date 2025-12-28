@@ -130,13 +130,30 @@ export function RealtimeVoiceAssistant({
 
   // Sync Realtime API responses to D-ID Avatar
   useEffect(() => {
+    // Debug: Log current state
+    console.log('[RealtimeVoiceAssistant] Sync check:', {
+      mode,
+      avatarConnected: avatar.isConnected,
+      messageCount: realtime.messages.length
+    })
+
     // Only sync when in avatar mode and avatar is connected
     if (mode !== 'avatar' || !avatar.isConnected) {
+      console.log('[RealtimeVoiceAssistant] Sync skipped - mode:', mode, 'connected:', avatar.isConnected)
       return
     }
 
     // Get the last assistant message
     const lastMessage = realtime.messages[realtime.messages.length - 1]
+
+    // Debug: Log last message details
+    console.log('[RealtimeVoiceAssistant] Last message:', {
+      role: lastMessage?.role,
+      contentLength: lastMessage?.content?.length,
+      id: lastMessage?.id,
+      lastSpokenId: lastSpokenMessageIdRef.current,
+      content: lastMessage?.content?.substring(0, 100)
+    })
 
     // Only process new assistant messages (not user messages)
     if (
@@ -144,13 +161,15 @@ export function RealtimeVoiceAssistant({
       lastMessage.content &&
       lastMessage.id !== lastSpokenMessageIdRef.current
     ) {
-      console.log('[RealtimeVoiceAssistant] Syncing to avatar:', lastMessage.content.substring(0, 50))
+      console.log('[RealtimeVoiceAssistant] ✅ Syncing to avatar:', lastMessage.content.substring(0, 50))
 
       // Send text to D-ID avatar for lip-synced speech
       avatar.speakText(lastMessage.content)
 
       // Track this message to avoid duplicate calls
       lastSpokenMessageIdRef.current = lastMessage.id
+    } else {
+      console.log('[RealtimeVoiceAssistant] ⏭️  Message skipped (already spoken or not assistant)')
     }
   }, [mode, realtime.messages, avatar.isConnected, avatar])
 

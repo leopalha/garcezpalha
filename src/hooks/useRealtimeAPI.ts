@@ -209,13 +209,15 @@ export function useRealtimeAPI(productId: string) {
 
       console.log('[useRealtimeAPI] Starting microphone...')
 
-      // Get microphone stream
+      // Get microphone stream with optimized settings
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
           sampleRate: 24000,
+          channelCount: 1, // Mono para melhor processamento
+          latency: 0, // Menor latência possível
         }
       })
       mediaStreamRef.current = stream

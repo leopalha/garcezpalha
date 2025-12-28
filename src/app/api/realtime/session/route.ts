@@ -38,9 +38,9 @@ Seja conciso e claro nas suas respostas.`,
         },
         turn_detection: {
           type: 'server_vad',
-          threshold: 0.5,
+          threshold: 0.7, // Aumentado de 0.5 para reduzir falsos positivos
           prefix_padding_ms: 300,
-          silence_duration_ms: 500
+          silence_duration_ms: 700 // Aumentado de 500ms para evitar cortes prematuros
         },
         temperature: 0.8,
         max_response_output_tokens: 4096,
