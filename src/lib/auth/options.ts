@@ -48,47 +48,46 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Configuração do Supabase ausente')
         }
 
-        // Use Supabase Direct Database Query (not Auth)
+        // Use Supabase Auth for authentication
         const supabase = createClient(
           process.env.NEXT_PUBLIC_SUPABASE_URL,
-          process.env.SUPABASE_SERVICE_ROLE_KEY
+          process.env.SUPABASE_SERVICE_ROLE_KEY,
+          {
+            auth: {
+              autoRefreshToken: false,
+              persistSession: false
+            }
+          }
         )
 
-        // Query users table directly
-        const { data: user, error: userError } = await supabase
-          .from('users')
-          .select('id, email, name, password_hash, role, is_active')
-          .eq('email', credentials.email)
+        // Sign in with Supabase Auth
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: credentials.email,
+          password: credentials.password,
+        })
+
+        if (authError || !authData.user) {
+          console.error('[Auth] Supabase sign in error:', authError)
+          throw new Error('Email ou senha incorretos')
+        }
+
+        // Get user profile from profiles table
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role, full_name')
+          .eq('id', authData.user.id)
           .single()
 
-        if (userError || !user) {
-          throw new Error('Email ou senha incorretos')
+        if (profileError || !profile) {
+          console.error('[Auth] Profile not found:', profileError)
+          throw new Error('Perfil de usuário não encontrado')
         }
-
-        // Check if user is active
-        if (!user.is_active) {
-          throw new Error('Usuário inativo. Entre em contato com o suporte.')
-        }
-
-        // Verify password with bcrypt
-        const bcrypt = require('bcryptjs')
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password_hash)
-
-        if (!isPasswordValid) {
-          throw new Error('Email ou senha incorretos')
-        }
-
-        // Update last login
-        await supabase
-          .from('users')
-          .update({ last_login: new Date().toISOString() })
-          .eq('id', user.id)
 
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
+          id: authData.user.id,
+          email: authData.user.email || credentials.email,
+          name: profile.full_name || authData.user.email || 'Usuário',
+          role: profile.role,
         }
       },
     }),
