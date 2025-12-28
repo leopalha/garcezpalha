@@ -33,7 +33,7 @@ export function WhatsAppFloat({
   return (
     <>
       {/* Floating Button */}
-      <div className={`fixed ${positionClasses} z-50`}>
+      <div className={`fixed ${positionClasses} z-40`}>
         {/* Tooltip */}
         {showTooltip && !showChat && (
           <div
