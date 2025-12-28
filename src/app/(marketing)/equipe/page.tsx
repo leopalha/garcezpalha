@@ -36,8 +36,8 @@ export default function EquipePage() {
     'Advogado inscrito na OAB/RJ',
     'Perito Judicial credenciado pelo CONPEJ/RJ',
     'Corretor de Imóveis com CRECI/RJ',
-    'Especialização em Perícia Documental e Grafotecnia',
-    'Especialização em Avaliação Imobiliária (ABNT NBR 14.653)',
+    'Capacitação em Perícia Documental e Grafotecnia',
+    'Capacitação em Avaliação Imobiliária (ABNT NBR 14.653)',
     'Descendente de Viscondes, Barões e Governadores Coloniais',
   ]
 

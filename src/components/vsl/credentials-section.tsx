@@ -125,10 +125,10 @@ export function CredentialsSection({
               🏆 OAB Certificado
             </div>
             <div className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-sm font-medium">
-              ⚖️ Especialista Registrado
+              ⚖️ Perito Credenciado CONPEJ
             </div>
             <div className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-sm font-medium">
-              🎓 Pós-Graduação
+              🏠 Corretor CRECI
             </div>
             <div className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-sm font-medium">
               💼 Atuação Nacional
