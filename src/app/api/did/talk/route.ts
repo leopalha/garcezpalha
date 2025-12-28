@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getDIDKey } from '@/lib/api/keys-manager'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { session_id, stream_id, script } = body
 
-    const apiKey = process.env.DID_API_KEY
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'DID_API_KEY not configured' },
-        { status: 500 }
-      )
-    }
+    // Get and validate D-ID API key (with automatic caching and validation)
+    const apiKey = await getDIDKey()
 
     const response = await fetch(`https://api.d-id.com/talks/streams/${session_id}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${apiKey}`,
+        'Authorization': apiKey, // Already includes "Basic " prefix from keys-manager
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

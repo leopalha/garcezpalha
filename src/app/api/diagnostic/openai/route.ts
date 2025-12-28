@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { getOpenAIKey } from '@/lib/api/keys-manager'
 
 /**
  * GET /api/diagnostic/openai
@@ -7,25 +8,8 @@ import OpenAI from 'openai'
  */
 export async function GET() {
   try {
-    const apiKey = process.env.OPENAI_API_KEY
-
-    if (!apiKey) {
-      return NextResponse.json({
-        status: 'error',
-        message: 'OPENAI_API_KEY not configured',
-        configured: false,
-      })
-    }
-
-    // Check API key format
-    if (!apiKey.startsWith('sk-')) {
-      return NextResponse.json({
-        status: 'error',
-        message: 'Invalid API key format (should start with sk-)',
-        configured: true,
-        validFormat: false,
-      })
-    }
+    // Get and validate OpenAI API key (with automatic caching and validation)
+    const apiKey = await getOpenAIKey()
 
     // Initialize OpenAI client
     const openai = new OpenAI({ apiKey })

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getOpenAIKey } from '@/lib/api/keys-manager'
 
 /**
  * POST /api/realtime/session
@@ -6,13 +7,8 @@ import { NextResponse } from 'next/server'
  */
 export async function POST(request: Request) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'OpenAI API key not configured' },
-        { status: 500 }
-      )
-    }
+    // Get and validate OpenAI API key (with automatic caching and validation)
+    const apiKey = await getOpenAIKey()
 
     const { productId } = await request.json()
 

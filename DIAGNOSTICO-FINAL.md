@@ -171,7 +171,17 @@ Testes passados: 6/6
 1. **VAD otimizado** - Menos falsos positivos na transcrição
 2. **Áudio otimizado** - Mono, latência zero, melhor qualidade
 3. **Logs de debug** - Facilita identificação de problemas
-4. **Commit realizado** - Todas as mudanças salvas
+4. **Sistema de Proteção de API Keys** - Validação automática, cache, retry (NOVO ✨)
+5. **Commit realizado** - Todas as mudanças salvas
+
+### 🔐 NOVO: Sistema de Proteção Automática
+- ✅ Validação automática de chaves antes de usar
+- ✅ Cache inteligente de 5 minutos
+- ✅ Retry automático em falhas 401/403
+- ✅ Mensagens de erro claras com links de solução
+- ✅ **Nunca mais** precisará debugar chaves expiradas manualmente
+
+**Veja detalhes em**: [SISTEMA-PROTECAO-API-KEYS.md](SISTEMA-PROTECAO-API-KEYS.md)
 
 ### ⚠️ Pendente (SUA AÇÃO)
 1. **Atualizar chave OpenAI** - A atual está inválida

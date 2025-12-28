@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getDIDKey } from '@/lib/api/keys-manager'
 
 /**
  * GET /api/diagnostic/did
@@ -6,22 +7,15 @@ import { NextResponse } from 'next/server'
  */
 export async function GET() {
   try {
-    const apiKey = process.env.DID_API_KEY
-
-    if (!apiKey) {
-      return NextResponse.json({
-        status: 'error',
-        message: 'DID_API_KEY not configured',
-        configured: false,
-      })
-    }
+    // Get and validate D-ID API key (with automatic caching and validation)
+    const apiKey = await getDIDKey()
 
     // Test D-ID API with credits check endpoint
     try {
       const response = await fetch('https://api.d-id.com/credits', {
         method: 'GET',
         headers: {
-          'Authorization': `Basic ${apiKey}`,
+          'Authorization': apiKey,
           'Content-Type': 'application/json',
         },
       })
