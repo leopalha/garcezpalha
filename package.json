@@ -30,6 +30,8 @@
     "check:apis": "node test-production-apis.js",
     "check:integrity": "node integrity-check.js",
     "check:all": "npm run check:deploy && npm run check:health && npm run check:integrity",
+    "audit": "npx tsx scripts/audit-automation.ts",
+    "audit:full": "npx tsx scripts/audit-automation.ts && open docs/audit-report-*.md",
     "migrate:products": "node scripts/migrate-products-to-db.mjs",
     "test:db-connection": "node scripts/test-db-connection.mjs",
     "verify:migration": "node scripts/verify-migration.mjs",
