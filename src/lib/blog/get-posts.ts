@@ -127,7 +127,7 @@ export async function getAllPosts(): Promise<BlogPostMetadata[]> {
 
   // Sort by date (newest first)
   return posts.sort((a, b) => {
-    return new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()
+    return new Date(b.datePublished + "T12:00:00").getTime() - new Date(a.datePublished + "T12:00:00").getTime()
   })
 }
 

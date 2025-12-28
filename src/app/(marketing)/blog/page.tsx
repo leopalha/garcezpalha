@@ -116,7 +116,7 @@ export default async function BlogPage() {
                         <div className="flex items-center gap-4">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {format(new Date(posts[0].datePublished), "d 'de' MMM", {
+                            {format(new Date(posts[0].datePublished + "T12:00:00"), "d 'de' MMM", {
                               locale: ptBR,
                             })}
                           </span>
@@ -181,7 +181,7 @@ export default async function BlogPage() {
                       <span>{post.author}</span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {format(new Date(post.datePublished), 'd MMM', { locale: ptBR })}
+                        {format(new Date(post.datePublished + "T12:00:00"), 'd MMM', { locale: ptBR })}
                       </span>
                     </div>
 
