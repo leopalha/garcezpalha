@@ -42,6 +42,37 @@ export const PRODUTO_SEGURO_PRESTAMISTA: Product = {
   ],
   crossSell: ['cartao-consignado-rmc', 'superendividamento', 'revisao-contrato-bancario'],
   isActive: true,
+  packages: [
+    {
+      id: 'seguro-prestamista-basico',
+      name: 'Análise + Ação',
+      description: 'Restituição do seguro prestamista',
+      price: 1500,
+      features: [
+        'Análise gratuita do contrato',
+        'Identificação do seguro prestamista',
+        'Petição inicial no JEC',
+        'Restituição em DOBRO',
+        'Acompanhamento até sentença',
+      ],
+      highlighted: true,
+      icon: 'Shield',
+    },
+    {
+      id: 'seguro-prestamista-completo',
+      name: 'Completo + Danos Morais',
+      description: 'Restituição + indenização',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Pedido de danos morais (R$ 3k-5k)',
+        'Recurso se necessário',
+        'Execução da sentença',
+        'Máxima indenização',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_REVISAO_CONTRATO_BANCARIO: Product = {
@@ -75,6 +106,37 @@ export const PRODUTO_REVISAO_CONTRATO_BANCARIO: Product = {
   ],
   crossSell: ['seguro-prestamista', 'portabilidade-credito'],
   isActive: true,
+  packages: [
+    {
+      id: 'revisao-contrato-basico',
+      name: 'Revisão Básica',
+      description: 'Análise e revisão de tarifas',
+      price: 2000,
+      features: [
+        'Análise com calculadora jurídica',
+        'Identificação de TAC/TEC ilegais',
+        'Petição inicial',
+        'Restituição em dobro',
+        'Redução do saldo devedor',
+      ],
+      highlighted: true,
+      icon: 'Calculator',
+    },
+    {
+      id: 'revisao-contrato-completo',
+      name: 'Revisão Completa',
+      description: 'Revisão total + recálculo',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Revisão de juros abusivos',
+        'Comparação taxa BACEN',
+        'Recálculo completo de parcelas',
+        'Recursos e execução',
+      ],
+      icon: 'TrendingDown',
+    },
+  ],
 }
 
 export const PRODUTO_PORTABILIDADE_CREDITO: Product = {
@@ -105,6 +167,23 @@ export const PRODUTO_PORTABILIDADE_CREDITO: Product = {
   ],
   crossSell: ['revisao-contrato-bancario'],
   isActive: true,
+  packages: [
+    {
+      id: 'portabilidade-credito-unico',
+      name: 'Portabilidade Garantida',
+      description: 'Garantir sua portabilidade de crédito',
+      price: 1500,
+      features: [
+        'Notificação extrajudicial ao banco',
+        'Reclamação formal ao BACEN',
+        'Ação judicial se necessário',
+        'Indenização por recusa injustificada',
+        'Resolução em 30-60 dias',
+      ],
+      highlighted: true,
+      icon: 'ArrowRightLeft',
+    },
+  ],
 }
 
 export const PRODUTO_FRAUDE_CONSIGNADO: Product = {
@@ -137,6 +216,38 @@ export const PRODUTO_FRAUDE_CONSIGNADO: Product = {
   ],
   crossSell: ['desbloqueio-conta', 'golpe-pix'],
   isActive: true,
+  packages: [
+    {
+      id: 'fraude-consignado-emergencia',
+      name: 'Cancelamento Urgente',
+      description: 'Parar descontos imediatamente',
+      price: 2500,
+      features: [
+        'Atendimento de emergência',
+        'Liminar para parar descontos (5-15 dias)',
+        'Cancelamento do empréstimo',
+        'Devolução de tudo descontado',
+        'Suporte policial',
+      ],
+      highlighted: true,
+      icon: 'AlertOctagon',
+      timeline: '5-15 dias para liminar',
+    },
+    {
+      id: 'fraude-consignado-completo',
+      name: 'Cancelamento + Indenização',
+      description: 'Máxima reparação',
+      price: 3000,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais R$ 5.000 a R$ 15.000',
+        'Responsabilidade objetiva do banco',
+        'Execução até receber tudo',
+        'Acompanhamento completo',
+      ],
+      icon: 'Shield',
+    },
+  ],
 }
 
 // ============================================================================
@@ -172,6 +283,37 @@ export const PRODUTO_COBRANCA_TELEFONIA: Product = {
   ],
   crossSell: ['negativacao-indevida', 'assinaturas-digitais'],
   isActive: true,
+  packages: [
+    {
+      id: 'cobranca-telefonia-basico',
+      name: 'Cancelamento + Restituição',
+      description: 'Parar cobranças indevidas',
+      price: 1500,
+      features: [
+        'Análise de faturas',
+        'Cancelamento das cobranças indevidas',
+        'Petição no JEC',
+        'Restituição em DOBRO',
+        'Acompanhamento até sentença',
+      ],
+      highlighted: true,
+      icon: 'Phone',
+    },
+    {
+      id: 'cobranca-telefonia-completo',
+      name: 'Cancelamento + Danos Morais',
+      description: 'Restituição + indenização',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Pedido de danos morais (R$ 3k-10k)',
+        'Limpeza de negativação',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_MULTA_FIDELIDADE: Product = {
@@ -201,6 +343,37 @@ export const PRODUTO_MULTA_FIDELIDADE: Product = {
   ],
   crossSell: ['cobranca-telefonia', 'portabilidade-numero'],
   isActive: true,
+  packages: [
+    {
+      id: 'multa-fidelidade-basico',
+      name: 'Cancelamento Sem Multa',
+      description: 'Cancelar sem pagar multa',
+      price: 1500,
+      features: [
+        'Análise do contrato de fidelidade',
+        'Documentação de falhas/testes de velocidade',
+        'Notificação à operadora',
+        'Cancelamento sem multa',
+        'Bloqueio de cobranças',
+      ],
+      highlighted: true,
+      icon: 'X',
+    },
+    {
+      id: 'multa-fidelidade-completo',
+      name: 'Cancelamento + Restituição',
+      description: 'Cancelar e recuperar valores',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Restituição de multas já pagas',
+        'Danos morais se negativou',
+        'Ação judicial Anatel',
+        'Execução da sentença',
+      ],
+      icon: 'RotateCcw',
+    },
+  ],
 }
 
 export const PRODUTO_PORTABILIDADE_NUMERO: Product = {
@@ -230,6 +403,24 @@ export const PRODUTO_PORTABILIDADE_NUMERO: Product = {
   ],
   crossSell: ['cobranca-telefonia', 'multa-fidelidade'],
   isActive: true,
+  packages: [
+    {
+      id: 'portabilidade-numero-unico',
+      name: 'Recuperação do Número',
+      description: 'Recuperar seu número de celular',
+      price: 1500,
+      features: [
+        'Análise do protocolo de portabilidade',
+        'Notificação às operadoras',
+        'Reclamação formal na Anatel',
+        'Recuperação do número (prazo legal: 3 dias)',
+        'Danos morais R$ 2.000-5.000',
+        'Acompanhamento completo',
+      ],
+      highlighted: true,
+      icon: 'Phone',
+    },
+  ],
 }
 
 // ============================================================================
@@ -263,6 +454,24 @@ export const PRODUTO_COBRANCA_ENERGIA: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'cobranca-energia-unico',
+      name: 'Análise + Restituição',
+      description: 'Questionar cobranças indevidas',
+      price: 1500,
+      features: [
+        'Análise histórico de consumo',
+        'Questionamento de consumo estimado',
+        'Investigação de troca de medidor',
+        'Identificação de débitos prescritos',
+        'Ação judicial se necessário',
+        'Restituição de valores cobrados indevidamente',
+      ],
+      highlighted: true,
+      icon: 'Zap',
+    },
+  ],
 }
 
 // ============================================================================
@@ -296,6 +505,37 @@ export const PRODUTO_DISTRATO_IMOBILIARIO: Product = {
   ],
   crossSell: ['usucapiao', 'inventario'],
   isActive: true,
+  packages: [
+    {
+      id: 'distrato-imobiliario-basico',
+      name: 'Distrato 75%',
+      description: 'Recuperar até 75% do valor pago',
+      price: 3000,
+      features: [
+        'Análise do contrato',
+        'Notificação extrajudicial à construtora',
+        'Negociação para distrato amigável',
+        'Devolução de até 75% dos valores',
+        'Acompanhamento do processo',
+      ],
+      highlighted: true,
+      icon: 'Home',
+    },
+    {
+      id: 'distrato-imobiliario-completo',
+      name: 'Distrato 100% + Danos',
+      description: 'Máxima recuperação',
+      price: 4000,
+      features: [
+        'Tudo do plano básico',
+        'Se culpa da construtora: recuperar 100%',
+        'Danos morais por atraso/problemas',
+        'Ação judicial completa',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_ASSINATURAS_DIGITAIS: Product = {
@@ -326,6 +566,37 @@ export const PRODUTO_ASSINATURAS_DIGITAIS: Product = {
   ],
   crossSell: ['negativacao-indevida', 'cobranca-telefonia'],
   isActive: true,
+  packages: [
+    {
+      id: 'assinaturas-basico',
+      name: 'Cancelamento + Restituição',
+      description: 'Parar cobranças de assinatura',
+      price: 1500,
+      features: [
+        'Análise de cobranças indevidas',
+        'Bloqueio imediato das cobranças',
+        'Petição no JEC',
+        'Restituição em DOBRO',
+        'Cancelamento da assinatura',
+      ],
+      highlighted: true,
+      icon: 'Play',
+    },
+    {
+      id: 'assinaturas-completo',
+      name: 'Cancelamento + Danos Morais',
+      description: 'Recuperação total',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais se negativou',
+        'Limpeza de nome',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'Shield',
+    },
+  ],
 }
 
 export const PRODUTO_OVERBOOKING_VOO: Product = {
@@ -355,6 +626,37 @@ export const PRODUTO_OVERBOOKING_VOO: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'overbooking-voo-basico',
+      name: 'Indenização Básica',
+      description: 'Danos morais por problema',
+      price: 2000,
+      features: [
+        'Análise de direitos',
+        'Documentação de despesas (hotel, alimentação)',
+        'Petição contra companhia aérea',
+        'Danos morais R$ 1.000-3.000',
+        'Reembolso de gastos comprovados',
+      ],
+      highlighted: true,
+      icon: 'Plane',
+    },
+    {
+      id: 'overbooking-voo-completo',
+      name: 'Indenização Máxima',
+      description: 'Máxima reparação',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais até R$ 5.000',
+        'Reembolso integral da passagem',
+        'Ação contra ANAC se necessário',
+        'Recurso e execução',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_PRODUTO_VICIO: Product = {
@@ -385,6 +687,37 @@ export const PRODUTO_PRODUTO_VICIO: Product = {
   ],
   crossSell: ['atraso-entrega'],
   isActive: true,
+  packages: [
+    {
+      id: 'produto-vicio-basico',
+      name: 'Troca ou Restituição',
+      description: 'Garantir direito à troca',
+      price: 1500,
+      features: [
+        'Análise do problema',
+        'Documentação fotográfica/vídeo',
+        'Notificação à loja/fabricante',
+        'Petição no JEC',
+        'Troca por produto igual ou restituição',
+      ],
+      highlighted: true,
+      icon: 'RefreshCw',
+    },
+    {
+      id: 'produto-vicio-completo',
+      name: 'Troca + Danos Morais',
+      description: 'Recuperação total',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais por transtorno',
+        'Abatimento proporcional',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'Shield',
+    },
+  ],
 }
 
 export const PRODUTO_ATRASO_ENTREGA: Product = {
@@ -414,6 +747,37 @@ export const PRODUTO_ATRASO_ENTREGA: Product = {
   ],
   crossSell: ['produto-vicio'],
   isActive: true,
+  packages: [
+    {
+      id: 'atraso-entrega-basico',
+      name: 'Entrega Forçada',
+      description: 'Forçar cumprimento da entrega',
+      price: 1500,
+      features: [
+        'Análise de prazo contratado',
+        'Notificação ao vendedor',
+        'Petição no JEC',
+        'Cumprimento forçado da entrega',
+        'Acompanhamento até recebimento',
+      ],
+      highlighted: true,
+      icon: 'Truck',
+    },
+    {
+      id: 'atraso-entrega-completo',
+      name: 'Entrega ou Reembolso + Danos',
+      description: 'Máxima compensação',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Opção: entrega ou reembolso total',
+        'Danos morais por atraso/presente perdido',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 // ============================================================================
@@ -447,6 +811,37 @@ export const PRODUTO_REVISAO_APOSENTADORIA: Product = {
   ],
   crossSell: ['auxilio-acidente', 'bpc-loas'],
   isActive: true,
+  packages: [
+    {
+      id: 'revisao-aposentadoria-basico',
+      name: 'Revisão Simples',
+      description: 'Aumentar valor da aposentadoria',
+      price: 2000,
+      features: [
+        'Análise GRATUITA com calculadora jurídica',
+        'Revisão de períodos não computados',
+        'Requerimento administrativo',
+        'Aumento no benefício',
+        'Atrasados de até 5 anos',
+      ],
+      highlighted: true,
+      icon: 'TrendingUp',
+    },
+    {
+      id: 'revisao-aposentadoria-completo',
+      name: 'Revisão Especial + Judicial',
+      description: 'Máxima revisão',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Reconhecimento de atividade especial',
+        'Ação judicial se negado INSS',
+        'Cálculo de "vida toda"',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_BENEFICIO_NEGADO: Product = {
@@ -476,6 +871,37 @@ export const PRODUTO_BENEFICIO_NEGADO: Product = {
   ],
   crossSell: ['bpc-loas', 'auxilio-acidente'],
   isActive: true,
+  packages: [
+    {
+      id: 'beneficio-negado-basico',
+      name: 'Requerimento + Perícia',
+      description: 'Reverter negativa INSS',
+      price: 2000,
+      features: [
+        'Análise da negativa',
+        'Coleta de novos laudos médicos',
+        'Perícia médica judicial',
+        'Requerimento administrativo',
+        'Atrasados desde a negação',
+      ],
+      highlighted: true,
+      icon: 'AlertCircle',
+    },
+    {
+      id: 'beneficio-negado-completo',
+      name: 'Perícia + Judicial + Tutela',
+      description: 'Máxima garantia',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Ação judicial contra INSS',
+        'Tutela antecipada se possível',
+        'Liberação de benefício durante processo',
+        'Execução completa',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_AUXILIO_ACIDENTE: Product = {
@@ -506,6 +932,38 @@ export const PRODUTO_AUXILIO_ACIDENTE: Product = {
   ],
   crossSell: ['beneficio-negado', 'revisao-aposentadoria'],
   isActive: true,
+  packages: [
+    {
+      id: 'auxilio-acidente-unico',
+      name: 'Auxílio-Acidente Vitalício',
+      description: '50% + vitalício + cumulativo',
+      price: 2000,
+      features: [
+        'Análise de sequela permanente',
+        'Coleta de documentação CAT/médica',
+        'Requerimento ao INSS',
+        'Auxílio-acidente 50% vitalício',
+        'Cumulativo com salário normal',
+        'Atrasados desde sequela',
+      ],
+      highlighted: true,
+      icon: 'DollarSign',
+    },
+    {
+      id: 'auxilio-acidente-judicial',
+      name: 'Judicial + Máxima Recuperação',
+      description: 'Garantir benefício + atrasados',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Perícia médica se negado',
+        'Ação judicial contra INSS',
+        'Atrasados de até 5 anos',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 // ============================================================================
@@ -539,6 +997,37 @@ export const PRODUTO_VERBAS_RESCISORIA: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'verbas-rescisoria-basico',
+      name: 'Cobrança + Liberação',
+      description: 'Recuperar verbas não pagas',
+      price: 1500,
+      features: [
+        'Análise de verbas devidas',
+        'Notificação extrajudicial',
+        'Liberação de guia de FGTS',
+        'Multa 40% FGTS',
+        'Multa art. 477 CLT',
+      ],
+      highlighted: true,
+      icon: 'DollarSign',
+    },
+    {
+      id: 'verbas-rescisoria-completo',
+      name: 'Ação Judicial Completa',
+      description: 'Máxima recuperação',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Ação trabalhista completa',
+        'Seguro-desemprego desbloqueado',
+        'Recursos se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_HORAS_EXTRAS: Product = {
@@ -567,6 +1056,37 @@ export const PRODUTO_HORAS_EXTRAS: Product = {
   ],
   crossSell: ['verbas-rescisoria'],
   isActive: true,
+  packages: [
+    {
+      id: 'horas-extras-basico',
+      name: 'Cobrança de Horas',
+      description: 'Recuperar horas extras',
+      price: 2000,
+      features: [
+        'Análise de registros de ponto',
+        'Documentação de horas extras',
+        'Requerimento administrativo',
+        'Cálculo com respectivos adicionais',
+        'Notificação à empresa',
+      ],
+      highlighted: true,
+      icon: 'Clock',
+    },
+    {
+      id: 'horas-extras-completo',
+      name: 'Ação Judicial Completa',
+      description: 'Máxima recuperação',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Ação trabalhista contra empresa',
+        'Prova com emails/mensagens',
+        'Recursos se necessário',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 // ============================================================================
@@ -600,6 +1120,37 @@ export const PRODUTO_INCORPORACAO_GRATIFICACAO: Product = {
   ],
   crossSell: ['diferencas-salariais'],
   isActive: true,
+  packages: [
+    {
+      id: 'incorporacao-gratificacao-basico',
+      name: 'Requerimento Administrativo',
+      description: 'Incorporar gratificação ao salário',
+      price: 2500,
+      features: [
+        'Análise de histórico funcional',
+        'Identificação período gratificação',
+        'Cálculo de direitos',
+        'Requerimento administrativo',
+        'Atrasados desde perda do cargo',
+      ],
+      highlighted: true,
+      icon: 'User',
+    },
+    {
+      id: 'incorporacao-gratificacao-completo',
+      name: 'Judicial + Reflexos Completos',
+      description: 'Máxima recuperação',
+      price: 3000,
+      features: [
+        'Tudo do plano básico',
+        'Ação judicial contra administração',
+        'Reflexos em 13º, férias, previdência',
+        'Atrasados até 5 anos',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_DIFERENCAS_SALARIAIS: Product = {
@@ -627,6 +1178,37 @@ export const PRODUTO_DIFERENCAS_SALARIAIS: Product = {
   ],
   crossSell: ['incorporacao-gratificacao'],
   isActive: true,
+  packages: [
+    {
+      id: 'diferencas-salariais-basico',
+      name: 'Cálculo + Requerimento',
+      description: 'Recuperar diferenças salariais',
+      price: 2000,
+      features: [
+        'Análise de legislação de reajuste',
+        'Cálculo de diferenças retroativas',
+        'Identificação de períodos não pagos',
+        'Requerimento administrativo',
+        'Comprovação de direitos',
+      ],
+      highlighted: true,
+      icon: 'DollarSign',
+    },
+    {
+      id: 'diferencas-salariais-completo',
+      name: 'Judicial + Atrasados Completos',
+      description: 'Máxima recuperação',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Ação judicial contra administração',
+        'Atrasados até 5 anos',
+        'Professores/militares especializados',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 // ============================================================================
@@ -638,7 +1220,7 @@ export const PRODUTO_FIES: Product = {
   name: 'Renegociação/Revisão FIES',
   slug: 'fies-renegociacao',
   category: 'educacional',
-  description: '🔥 NOVIDADE 2025: Renegociação com 100% desconto juros. Resolução MEC 64/2025.',
+  description: 'NOVIDADE 2025: Renegociação com 100% desconto juros. Resolução MEC 64/2025.',
   price: { basic: 1500 },
   successFee: 0,
   timeline: '3-6 meses',
@@ -662,6 +1244,37 @@ export const PRODUTO_FIES: Product = {
   ],
   crossSell: ['superendividamento', 'negativacao-indevida'],
   isActive: true,
+  packages: [
+    {
+      id: 'fies-renegociacao-basico',
+      name: 'Renegociação com Desconto',
+      description: '100% desconto em juros moratórios',
+      price: 1500,
+      features: [
+        'Análise de contrato FIES',
+        'Cálculo de desconto (Res. MEC 64/2025)',
+        'Negociação com agente financeiro',
+        'Eliminação de 100% juros moratórios',
+        'Acordo com parcelas reduzidas',
+      ],
+      highlighted: true,
+      icon: 'GraduationCap',
+    },
+    {
+      id: 'fies-renegociacao-completo',
+      name: 'Renegociação + Revisão Total',
+      description: 'Máxima economia',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Parcelamento até 180 meses',
+        'Parcela mínima R$ 200',
+        'Revisão de juros e encargos',
+        'Acompanhamento do acordo',
+      ],
+      icon: 'TrendingDown',
+    },
+  ],
 }
 
 // ============================================================================
@@ -694,6 +1307,37 @@ export const PRODUTO_COBRANCA_CONDOMINIAL: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'cobranca-condominial-basico',
+      name: 'Revisão + Restituição',
+      description: 'Reduzir cobranças do condomínio',
+      price: 1500,
+      features: [
+        'Análise de boletos e convenção',
+        'Identificação de multas abusivas',
+        'Revisão de juros acima do legal',
+        'Petição no JEC',
+        'Restituição de valores ilegais',
+      ],
+      highlighted: true,
+      icon: 'Building2',
+    },
+    {
+      id: 'cobranca-condominial-completo',
+      name: 'Revisão + Danos Morais',
+      description: 'Máxima recuperação',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Questionamento de rateios',
+        'Danos morais por cobrança abusiva',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingDown',
+    },
+  ],
 }
 
 // ============================================================================
@@ -772,6 +1416,24 @@ export const PRODUTO_DESBLOQUEIO_CONTA: Product = {
   ],
   crossSell: ['golpe-pix', 'defesa-execucao'],
   isActive: true,
+  packages: [
+    {
+      id: 'desbloqueio-conta-urgente',
+      name: 'Desbloqueio Urgente',
+      description: 'Liminar em 24-72h via BACENJUD',
+      price: 2500,
+      features: [
+        'Análise gratuita imediata',
+        'Petição de liminar urgente',
+        'Desbloqueio em 24-72h',
+        'Via BACENJUD (sistema eletrônico)',
+        'Atendimento prioritário',
+        'Acompanhamento até liberação',
+      ],
+      highlighted: true,
+      icon: 'Lock',
+    },
+  ],
 }
 
 export const PRODUTO_GOLPE_PIX: Product = {
@@ -796,6 +1458,37 @@ export const PRODUTO_GOLPE_PIX: Product = {
   ],
   crossSell: ['desbloqueio-conta', 'fraude-consignado'],
   isActive: true,
+  packages: [
+    {
+      id: 'golpe-pix-recuperacao',
+      name: 'Recuperação do Valor',
+      description: 'Bloqueio da conta e recuperação',
+      price: 2500,
+      features: [
+        'Análise do boletim de ocorrência',
+        'Bloqueio preventivo da conta golpista',
+        'Requerimento ao banco',
+        'Petição judicial se necessário',
+        'Acompanhamento até recuperação',
+      ],
+      highlighted: true,
+      icon: 'AlertOctagon',
+    },
+    {
+      id: 'golpe-pix-completo',
+      name: 'Recuperação + Danos Morais',
+      description: 'Máxima indenização',
+      price: 3500,
+      features: [
+        'Tudo do plano básico',
+        'Ação por danos morais',
+        'Suporte policial (Polícia Federal)',
+        'Execução de sentença',
+        'Recuperação total do prejuízo',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_NEGATIVACAO_INDEVIDA: Product = {
@@ -820,6 +1513,37 @@ export const PRODUTO_NEGATIVACAO_INDEVIDA: Product = {
   ],
   crossSell: ['revisao-contrato-bancario', 'defesa-execucao'],
   isActive: true,
+  packages: [
+    {
+      id: 'negativacao-limpeza',
+      name: 'Limpeza de Nome',
+      description: 'Liminar para limpar negativação',
+      price: 1800,
+      features: [
+        'Análise de registros SPC/Serasa',
+        'Identificação de negativações irregulares',
+        'Liminar para exclusão imediata',
+        'Petição no JEC',
+        'Limpeza do nome em 24-48h',
+      ],
+      highlighted: true,
+      icon: 'Sparkles',
+    },
+    {
+      id: 'negativacao-danos',
+      name: 'Limpeza + Danos Morais',
+      description: 'Limpeza + indenização',
+      price: 2500,
+      features: [
+        'Tudo do plano básico',
+        'Ação por danos morais (R$ 3k-10k)',
+        'Restituição em dobro se pago',
+        'Recurso se necessário',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_DEFESA_EXECUCAO: Product = {
@@ -844,6 +1568,37 @@ export const PRODUTO_DEFESA_EXECUCAO: Product = {
   ],
   crossSell: ['revisao-contrato-bancario', 'negativacao-indevida'],
   isActive: true,
+  packages: [
+    {
+      id: 'defesa-execucao-embargos',
+      name: 'Embargos à Execução',
+      description: 'Defesa técnica e suspensão',
+      price: 3000,
+      features: [
+        'Análise completa da dívida',
+        'Elaboração de embargos técnicos',
+        'Suspensão de penhoras',
+        'Negociação com credor',
+        'Acompanhamento até sentença',
+      ],
+      highlighted: true,
+      icon: 'Shield',
+    },
+    {
+      id: 'defesa-execucao-revisao',
+      name: 'Embargos + Revisão de Juros',
+      description: 'Máxima redução de débito',
+      price: 4000,
+      features: [
+        'Tudo do plano básico',
+        'Revisão de juros abusivos',
+        'Redução do saldo devedor',
+        'Acordo com redução',
+        'Execução da sentença',
+      ],
+      icon: 'TrendingDown',
+    },
+  ],
 }
 
 export const PRODUTO_DIREITO_IMOBILIARIO: Product = {
@@ -868,6 +1623,36 @@ export const PRODUTO_DIREITO_IMOBILIARIO: Product = {
   ],
   crossSell: ['usucapiao', 'inventario'],
   isActive: true,
+  packages: [
+    {
+      id: 'direito-imobiliario-consultoria',
+      name: 'Consultoria Básica',
+      description: 'Análise de contrato imobiliário',
+      price: 500,
+      features: [
+        'Análise completa do contrato',
+        'Revisão de cláusulas',
+        'Parecer jurídico',
+        'Orientações estratégicas',
+      ],
+      highlighted: true,
+      icon: 'Home',
+    },
+    {
+      id: 'direito-imobiliario-completo',
+      name: 'Consultoria + Suporte Jurídico',
+      description: 'Acompanhamento completo',
+      price: 2000,
+      features: [
+        'Tudo do plano básico',
+        'Negociações com contraparte',
+        'Revisão de documentação',
+        'Acompanhamento até finalization',
+        'Suporte em litígios',
+      ],
+      icon: 'FileText',
+    },
+  ],
 }
 
 export const PRODUTO_USUCAPIAO: Product = {
@@ -892,6 +1677,37 @@ export const PRODUTO_USUCAPIAO: Product = {
   ],
   crossSell: ['direito-imobiliario', 'inventario'],
   isActive: true,
+  packages: [
+    {
+      id: 'usucapiao-extrajudicial',
+      name: 'Usucapião Extrajudicial',
+      description: 'Regularização rápida via cartório',
+      price: 5000,
+      features: [
+        'Análise de requisitos de posse',
+        'Documentação de comprovantes',
+        'Processo extrajudicial no cartório',
+        'Registro em cartório (1º ofício)',
+        'Matrícula do imóvel gerada',
+      ],
+      highlighted: true,
+      icon: 'Home',
+    },
+    {
+      id: 'usucapiao-judicial',
+      name: 'Usucapião Judicial Completo',
+      description: 'Acompanhamento processual completo',
+      price: 8000,
+      features: [
+        'Tudo do plano básico',
+        'Se extrajudicial não for possível',
+        'Ação judicial de usucapião',
+        'Acompanhamento até sentença',
+        'Recursos e execução',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_HOLDING_FAMILIAR: Product = {
@@ -916,6 +1732,37 @@ export const PRODUTO_HOLDING_FAMILIAR: Product = {
   ],
   crossSell: ['inventario', 'usucapiao'],
   isActive: true,
+  packages: [
+    {
+      id: 'holding-familiar-constituicao',
+      name: 'Constituição + Planejamento',
+      description: 'Criar holding + proteção patrimonial',
+      price: 10000,
+      features: [
+        'Análise patrimonial completa',
+        'Constituição da holding',
+        'Planejamento sucessório',
+        'Estratégia tributária',
+        'Documentação e registros',
+      ],
+      highlighted: true,
+      icon: 'Building2',
+    },
+    {
+      id: 'holding-familiar-completo',
+      name: 'Suporte Contínuo',
+      description: 'Proteção + consultoria permanente',
+      price: 25000,
+      features: [
+        'Tudo do plano básico',
+        'Blindagem patrimonial completa',
+        'Consultoria tributária contínua',
+        'Adaptações e ajustes anuais',
+        'Defesa em litígios',
+      ],
+      icon: 'Shield',
+    },
+  ],
 }
 
 export const PRODUTO_INVENTARIO: Product = {
@@ -940,6 +1787,37 @@ export const PRODUTO_INVENTARIO: Product = {
   ],
   crossSell: ['holding-familiar', 'usucapiao'],
   isActive: true,
+  packages: [
+    {
+      id: 'inventario-extrajudicial',
+      name: 'Inventário Extrajudicial',
+      description: 'Partilha rápida e consensual',
+      price: 5000,
+      features: [
+        'Inventário extrajudicial no cartório',
+        'Documentação de bens',
+        'Análise fiscal básica',
+        'Partilha consensual entre herdeiros',
+        'Escrituras e registros',
+      ],
+      highlighted: true,
+      icon: 'FileText',
+    },
+    {
+      id: 'inventario-judicial',
+      name: 'Inventário Judicial Completo',
+      description: 'Acompanhamento processual + análise tributária',
+      price: 6000,
+      features: [
+        'Se partilha litigiosa ou complexa',
+        'Ação judicial de inventário',
+        'Análise fiscal e tributária completa',
+        'Acompanhamento até partilha final',
+        'Defesa em conflitos entre herdeiros',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_PLANO_SAUDE: Product = {
@@ -964,6 +1842,37 @@ export const PRODUTO_PLANO_SAUDE: Product = {
   ],
   crossSell: ['bariatrica', 'tratamento-tea'],
   isActive: true,
+  packages: [
+    {
+      id: 'plano-saude-liminar',
+      name: 'Liminar Urgente',
+      description: 'Cobertura em 24-72h',
+      price: 3500,
+      features: [
+        'Análise imediata da negativa',
+        'Petição de liminar urgente',
+        'Cobertura em 24-72h',
+        'Multa diária ao plano',
+        'Acompanhamento até juiz libertar',
+      ],
+      highlighted: true,
+      icon: 'AlertOctagon',
+    },
+    {
+      id: 'plano-saude-completo',
+      name: 'Liminar + Indenização',
+      description: 'Cobertura + danos morais',
+      price: 5000,
+      features: [
+        'Tudo do plano básico',
+        'Ação por danos morais (R$ 5k-15k)',
+        'Multa diária continuada',
+        'Recurso se necessário',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_BARIATRICA: Product = {
@@ -988,6 +1897,37 @@ export const PRODUTO_BARIATRICA: Product = {
   ],
   crossSell: ['plano-saude', 'tratamento-tea'],
   isActive: true,
+  packages: [
+    {
+      id: 'bariatrica-liminar',
+      name: 'Liminar Cirurgia',
+      description: 'Obrigar cobertura em 24-72h',
+      price: 3500,
+      features: [
+        'Análise de laudos médicos',
+        'Petição de liminar urgente',
+        'Obrigação de cobertura da cirurgia',
+        'Multa diária ao plano',
+        'Acompanhamento pré e pós-cirurgia',
+      ],
+      highlighted: true,
+      icon: 'AlertOctagon',
+    },
+    {
+      id: 'bariatrica-completo',
+      name: 'Cobertura + Danos Morais',
+      description: 'Cirurgia + indenização',
+      price: 5000,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais pela negativa',
+        'Cobertura de toda sequência pós',
+        'Multa diária continuada',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_TRATAMENTO_TEA: Product = {
@@ -1012,6 +1952,37 @@ export const PRODUTO_TRATAMENTO_TEA: Product = {
   ],
   crossSell: ['plano-saude', 'bpc-loas'],
   isActive: true,
+  packages: [
+    {
+      id: 'tea-terapias',
+      name: 'Liminar Terapias',
+      description: 'Cobertura de ABA, fono, TO',
+      price: 4000,
+      features: [
+        'Análise de laudo e prescrições',
+        'Petição de liminar urgente',
+        'Cobertura ilimitada de sessões',
+        'ABA, fonoaudiologia, terapia ocupacional',
+        'Multa diária ao plano',
+      ],
+      highlighted: true,
+      icon: 'AlertOctagon',
+    },
+    {
+      id: 'tea-completo',
+      name: 'Cobertura + Danos Morais',
+      description: 'Terapias + indenização',
+      price: 5500,
+      features: [
+        'Tudo do plano básico',
+        'Danos morais pelo atraso',
+        'Cobertura de medicações relacionadas',
+        'Multa diária continuada',
+        'Execução de sentença',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 export const PRODUTO_BPC_LOAS: Product = {
@@ -1036,6 +2007,37 @@ export const PRODUTO_BPC_LOAS: Product = {
   ],
   crossSell: ['tratamento-tea', 'auxilio-doenca'],
   isActive: true,
+  packages: [
+    {
+      id: 'bpc-administrativo',
+      name: 'Requerimento Administrativo',
+      description: 'Solicitar BPC/LOAS ao INSS',
+      price: 2000,
+      features: [
+        'Análise de elegibilidade',
+        'Coleta de documentação',
+        'Requerimento administrativo ao INSS',
+        'Perícia médica',
+        'Retroativo desde o pedido',
+      ],
+      highlighted: true,
+      icon: 'FileText',
+    },
+    {
+      id: 'bpc-judicial',
+      name: 'Ação Judicial + Atrasados',
+      description: 'Garantir benefício na Justiça',
+      price: 3000,
+      features: [
+        'Se INSS negar administrativamente',
+        'Ação judicial contra INSS',
+        'Perícia médica judicial',
+        'Atrasados desde pedido',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_PERICIA_DOCUMENTAL: Product = {
@@ -1060,6 +2062,37 @@ export const PRODUTO_PERICIA_DOCUMENTAL: Product = {
   ],
   crossSell: ['grafotecnica', 'laudo-tecnico'],
   isActive: true,
+  packages: [
+    {
+      id: 'pericia-documental-basico',
+      name: 'Perícia Documental',
+      description: 'Análise de autenticidade',
+      price: 2500,
+      features: [
+        'Análise técnica com microscopia',
+        'Exame de tinta e papel',
+        'Laudo técnico oficial',
+        'Validade judicial',
+        'Prazo: 15-30 dias',
+      ],
+      highlighted: true,
+      icon: 'FileText',
+    },
+    {
+      id: 'pericia-documental-completo',
+      name: 'Perícia + Sustentação Judicial',
+      description: 'Laudo + presença em audiência',
+      price: 5000,
+      features: [
+        'Tudo do plano básico',
+        'Sustentação oral em audiência',
+        'Esclarecimentos adicionais ao juiz',
+        'Contra-perícia se necessário',
+        'Acompanhamento processual',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_GRAFOTECNICA: Product = {
@@ -1084,6 +2117,37 @@ export const PRODUTO_GRAFOTECNICA: Product = {
   ],
   crossSell: ['pericia-documental', 'laudo-tecnico'],
   isActive: true,
+  packages: [
+    {
+      id: 'grafotecnica-basico',
+      name: 'Perícia Grafotécnica',
+      description: 'Análise de assinatura',
+      price: 3000,
+      features: [
+        'Comparação de assinaturas',
+        'Análise grafoscópica completa',
+        'Laudo pericial oficial',
+        'Validade judicial',
+        'Prazo: 15-30 dias',
+      ],
+      highlighted: true,
+      icon: 'Pen',
+    },
+    {
+      id: 'grafotecnica-completo',
+      name: 'Perícia + Sustentação Oral',
+      description: 'Laudo + defesa em juízo',
+      price: 6000,
+      features: [
+        'Tudo do plano básico',
+        'Sustentação oral em audiência',
+        'Esclarecimentos complementares',
+        'Contra-perícia se necessário',
+        'Acompanhamento em processo',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_LAUDO_TECNICO: Product = {
@@ -1108,6 +2172,37 @@ export const PRODUTO_LAUDO_TECNICO: Product = {
   ],
   crossSell: ['pericia-documental', 'grafotecnica'],
   isActive: true,
+  packages: [
+    {
+      id: 'laudo-tecnico-basico',
+      name: 'Laudo Técnico',
+      description: 'Análise técnica especializada',
+      price: 2000,
+      features: [
+        'Laudo técnico em diversas áreas',
+        'Análise de materiais/estruturas',
+        'Validade judicial',
+        'Parecer especializado',
+        'Prazo: 20-40 dias',
+      ],
+      highlighted: true,
+      icon: 'FileText',
+    },
+    {
+      id: 'laudo-tecnico-assistencia',
+      name: 'Laudo + Assistência Processual',
+      description: 'Laudo + acompanhamento em juízo',
+      price: 5000,
+      features: [
+        'Tudo do plano básico',
+        'Assistência técnica durante processo',
+        'Sustentação em audiências',
+        'Contra-perícia se necessário',
+        'Acompanhamento até sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_DEFESA_CRIMINAL: Product = {
@@ -1132,6 +2227,53 @@ export const PRODUTO_DEFESA_CRIMINAL: Product = {
   ],
   crossSell: ['habeas-corpus'],
   isActive: true,
+  packages: [
+    {
+      id: 'criminal-defesa-flagrante',
+      name: 'Flagrante',
+      description: 'Atendimento imediato em prisão',
+      price: 5000,
+      priceLabel: 'R$ 5.000+',
+      features: [
+        'Atendimento 24h na delegacia',
+        'Orientação em depoimento',
+        'Habeas corpus preventivo',
+      ],
+      icon: 'Phone',
+      ctaText: 'Atendimento Urgente',
+    },
+    {
+      id: 'criminal-defesa-completa',
+      name: 'Defesa Completa',
+      description: 'Acompanhamento em todo o processo',
+      price: 15000,
+      priceLabel: 'A partir de R$ 15.000',
+      features: [
+        'Defesa no inquérito policial',
+        'Atuação no processo criminal',
+        'Recursos em todas instâncias',
+        'Audiências e sustentações',
+      ],
+      highlighted: true,
+      icon: 'Shield',
+    },
+    {
+      id: 'criminal-habeas-corpus',
+      name: 'Habeas Corpus',
+      description: 'Liberdade provisória e relaxamento',
+      price: 8000,
+      priceLabel: 'R$ 8.000+',
+      features: [
+        'Análise de legalidade da prisão',
+        'Elaboração de HC urgente',
+        'Peticionamento imediato',
+        'Sustentação oral',
+      ],
+      icon: 'Scale',
+      timeline: '24-48h',
+      ctaText: 'Solicitar HC',
+    },
+  ],
 }
 
 export const PRODUTO_DIREITO_AERONAUTICO: Product = {
@@ -1156,6 +2298,23 @@ export const PRODUTO_DIREITO_AERONAUTICO: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'aeronautico-consultoria',
+      name: 'Consultoria Aeronáutica',
+      description: 'Compliance e análise ANAC',
+      price: 5000,
+      features: [
+        'Consultoria especializada em aviação',
+        'Análise de compliance ANAC',
+        'Revisão de contratos aeronáuticos',
+        'Parecer jurídico especializado',
+        'Acompanhamento regulatório',
+      ],
+      highlighted: true,
+      icon: 'Plane',
+    },
+  ],
 }
 
 export const PRODUTO_SECRETARIA_REMOTA: Product = {
@@ -1180,6 +2339,37 @@ export const PRODUTO_SECRETARIA_REMOTA: Product = {
   ],
   crossSell: [],
   isActive: true,
+  packages: [
+    {
+      id: 'secretaria-setup',
+      name: 'Implantação + 1 Mês',
+      description: 'Setup inicial + atendimento',
+      price: 3000,
+      features: [
+        'Setup e implantação IA',
+        'Integração WhatsApp/telefone',
+        'Agendamento automático',
+        'Qualificação de leads',
+        '1 mês de utilização incluído',
+      ],
+      highlighted: true,
+      icon: 'Bot',
+    },
+    {
+      id: 'secretaria-mensal',
+      name: 'Plano Mensal',
+      description: 'Atendimento mensal contínuo',
+      price: 500,
+      features: [
+        'Atendimento 24/7 automatizado',
+        'Integração completa',
+        'Suporte técnico',
+        'Qualificação de leads',
+        'Relatórios mensais de atendimento',
+      ],
+      icon: 'Zap',
+    },
+  ],
 }
 
 // Produtos previdenciários legados (já existem versões novas, manter compatibilidade)
@@ -1205,6 +2395,37 @@ export const PRODUTO_APOSENTADORIA_INVALIDEZ: Product = {
   ],
   crossSell: ['auxilio-doenca', 'bpc-loas'],
   isActive: true,
+  packages: [
+    {
+      id: 'aposentadoria-invalidez-administrativo',
+      name: 'Requerimento Administrativo',
+      description: 'Requerer aposentadoria ao INSS',
+      price: 3000,
+      features: [
+        'Análise de elegibilidade',
+        'Coleta de documentação médica',
+        'Requerimento administrativo INSS',
+        'Perícia médica estratégica',
+        'Retroativo desde afastamento',
+      ],
+      highlighted: true,
+      icon: 'DollarSign',
+    },
+    {
+      id: 'aposentadoria-invalidez-judicial',
+      name: 'Ação Judicial + Atrasados',
+      description: 'Garantir benefício na Justiça',
+      price: 4000,
+      features: [
+        'Se INSS negar administrativamente',
+        'Ação judicial contra INSS',
+        'Perícia médica judicial',
+        'Atrasados desde o afastamento',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_AUXILIO_DOENCA: Product = {
@@ -1229,6 +2450,37 @@ export const PRODUTO_AUXILIO_DOENCA: Product = {
   ],
   crossSell: ['aposentadoria-invalidez', 'auxilio-acidente'],
   isActive: true,
+  packages: [
+    {
+      id: 'auxilio-doenca-administrativo',
+      name: 'Requerimento/Reversão',
+      description: 'Requerer ou reverter auxílio-doença',
+      price: 2500,
+      features: [
+        'Análise da negativa ou cessação',
+        'Coleta de laudos médicos',
+        'Requerimento de reversão',
+        'Perícia médica',
+        'Retroativo desde afastamento',
+      ],
+      highlighted: true,
+      icon: 'Heart',
+    },
+    {
+      id: 'auxilio-doenca-judicial',
+      name: 'Ação Judicial + Tutela',
+      description: 'Garantir benefício com tutela',
+      price: 3500,
+      features: [
+        'Ação judicial contra INSS',
+        'Perícia médica judicial',
+        'Tutela antecipada se possível',
+        'Benefício durante o processo',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_APOSENTADORIA_INSS: Product = {
@@ -1253,6 +2505,37 @@ export const PRODUTO_APOSENTADORIA_INSS: Product = {
   ],
   crossSell: ['revisao-aposentadoria', 'beneficio-negado'],
   isActive: true,
+  packages: [
+    {
+      id: 'aposentadoria-inss-administrativo',
+      name: 'Requerimento Administrativo',
+      description: 'Requerer aposentadoria ao INSS',
+      price: 3000,
+      features: [
+        'Análise de tempo de contribuição',
+        'Verificação CNIS',
+        'Averbação de períodos',
+        'Requerimento administrativo',
+        'Retroativo desde o requerimento',
+      ],
+      highlighted: true,
+      icon: 'Calendar',
+    },
+    {
+      id: 'aposentadoria-inss-judicial',
+      name: 'Ação Judicial + Atrasados',
+      description: 'Garantir aposentadoria na Justiça',
+      price: 4000,
+      features: [
+        'Se INSS negar administrativamente',
+        'Ação judicial contra INSS',
+        'Perícia de comprovação',
+        'Atrasados desde requerimento',
+        'Execução de sentença',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_REGULARIZACAO_IMOVEL: Product = {
@@ -1277,6 +2560,37 @@ export const PRODUTO_REGULARIZACAO_IMOVEL: Product = {
   ],
   crossSell: ['usucapiao', 'direito-imobiliario'],
   isActive: true,
+  packages: [
+    {
+      id: 'regularizacao-basica',
+      name: 'Regularização Fundiária',
+      description: 'Documentar imóvel irregular',
+      price: 3000,
+      features: [
+        'Análise de documentação',
+        'Processo de regularização fundiária',
+        'Averbação em cartório',
+        'Legalização de construção',
+        'Certidões negativas',
+      ],
+      highlighted: true,
+      icon: 'Home',
+    },
+    {
+      id: 'regularizacao-completa',
+      name: 'Regularização + Judicial',
+      description: 'Regularização com suporte judicial',
+      price: 6000,
+      features: [
+        'Tudo do plano básico',
+        'Ação judicial se necessário',
+        'Defesa em litígios possessórios',
+        'Acompanhamento processual',
+        'Execução de sentença',
+      ],
+      icon: 'FileText',
+    },
+  ],
 }
 
 export const PRODUTO_AVALIACAO_IMOVEIS: Product = {
@@ -1301,6 +2615,37 @@ export const PRODUTO_AVALIACAO_IMOVEIS: Product = {
   ],
   crossSell: ['direito-imobiliario', 'inventario'],
   isActive: true,
+  packages: [
+    {
+      id: 'avaliacao-basica',
+      name: 'Avaliação Técnica',
+      description: 'Laudo de avaliação imobiliária',
+      price: 1500,
+      features: [
+        'Vistoria técnica in loco',
+        'Análise de mercado',
+        'Método avaliatório NBR',
+        'Laudo técnico oficial',
+        'Validade judicial',
+      ],
+      highlighted: true,
+      icon: 'Home',
+    },
+    {
+      id: 'avaliacao-completa',
+      name: 'Avaliação + Perícia Judicial',
+      description: 'Laudo com suporte processual',
+      price: 3000,
+      features: [
+        'Tudo do plano básico',
+        'Perícia em processo judicial',
+        'Sustentação oral em audiência',
+        'Contra-perícia se necessário',
+        'Acompanhamento processual',
+      ],
+      icon: 'Scale',
+    },
+  ],
 }
 
 export const PRODUTO_HABEAS_CORPUS: Product = {
@@ -1325,6 +2670,37 @@ export const PRODUTO_HABEAS_CORPUS: Product = {
   ],
   crossSell: ['defesa-criminal'],
   isActive: true,
+  packages: [
+    {
+      id: 'habeas-corpus-urgente',
+      name: 'Habeas Corpus Urgente',
+      description: 'Petição em 24-72h',
+      price: 8000,
+      features: [
+        'Análise imediata do caso',
+        'Elaboração de petição urgente',
+        'Peticionamento em 24-72h',
+        'Sustentação oral junto ao juiz',
+        'Atendimento 24 horas',
+      ],
+      highlighted: true,
+      icon: 'Scale',
+    },
+    {
+      id: 'habeas-corpus-recursos',
+      name: 'HC + Recursos',
+      description: 'Habeas corpus com recursos',
+      price: 12000,
+      features: [
+        'Tudo do plano básico',
+        'Recursos em tribunais superiores',
+        'Acompanhamento em instâncias',
+        'Sustentação em recursos',
+        'Execução de decisão',
+      ],
+      icon: 'TrendingUp',
+    },
+  ],
 }
 
 // ============================================================================
