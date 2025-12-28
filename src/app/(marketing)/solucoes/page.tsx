@@ -9,7 +9,7 @@ import {
   Bot, Clock, ArrowRight, Sparkles, Phone, Zap,
   Lightbulb, ShoppingCart, Briefcase, GraduationCap, Building, Users
 } from 'lucide-react'
-import { NEW_PRODUCTS } from '@/lib/products/catalog'
+import { ALL_PRODUCTS } from '@/lib/products/catalog'
 import type { LucideIcon } from 'lucide-react'
 
 // Mapeamento de categorias para ícones e metadados
@@ -125,43 +125,60 @@ const categoryMetadata: Record<string, { name: string; icon: LucideIcon; color: 
   },
 }
 
-// Produtos legados
-const legacyProducts = [
-  { name: 'Desbloqueio de Conta', href: '/financeiro/desbloqueio-conta', category: 'financeiro', price: 'R$ 2.500', description: 'Desbloqueio judicial urgente de conta bancária' },
-  { name: 'Golpe do PIX', href: '/financeiro/golpe-pix', category: 'financeiro', price: 'R$ 2.500', description: 'Recuperação de valores perdidos em golpes', featured: true },
-  { name: 'Negativação Indevida', href: '/financeiro/negativacao-indevida', category: 'financeiro', price: 'R$ 1.800 + êxito', description: 'Limpar nome + indenização por danos morais' },
-  { name: 'Defesa em Execução', href: '/financeiro/defesa-execucao', category: 'financeiro', price: 'R$ 3.000', description: 'Embargos e defesa em cobranças judiciais' },
-  { name: 'Consultoria Imobiliária', href: '/patrimonial/direito-imobiliario', category: 'patrimonial', price: 'Consulta R$ 500', description: 'Compra, venda, regularização de imóveis' },
-  { name: 'Usucapião', href: '/patrimonial/usucapiao', category: 'patrimonial', price: 'A partir de R$ 5.000', description: 'Regularização de imóveis por usucapião' },
-  { name: 'Holding Familiar', href: '/patrimonial/holding-familiar', category: 'patrimonial', price: 'A partir de R$ 10.000', description: 'Proteção patrimonial e sucessão' },
-  { name: 'Inventário', href: '/patrimonial/inventario', category: 'patrimonial', price: 'R$ 5.000 a 6.000', description: 'Inventário judicial ou extrajudicial' },
-  { name: 'Plano de Saúde Negou', href: '/saude/plano-saude-negou', category: 'saude', price: 'R$ 3.500', description: 'Liminar em 24-72h + danos morais' },
-  { name: 'Cirurgia Bariátrica', href: '/saude/cirurgia-bariatrica', category: 'saude', price: 'R$ 3.500', description: 'Obrigar plano a cobrir bariátrica' },
-  { name: 'Tratamento TEA', href: '/saude/tea', category: 'saude', price: 'R$ 4.000', description: 'Garantir tratamento para autismo' },
-  { name: 'BPC / LOAS', href: '/saude/bpc-loas', category: 'saude', price: 'R$ 2.000 + êxito', description: 'Benefício assistencial (1 salário/mês)' },
-  { name: 'Perícia Documental', href: '/pericia/pericia-documental', category: 'pericia', price: 'A partir de R$ 2.500', description: 'Análise de autenticidade de documentos' },
-  { name: 'Grafotecnia', href: '/pericia/grafotecnia', category: 'pericia', price: 'A partir de R$ 3.000', description: 'Exame de autenticidade de assinaturas' },
-  { name: 'Laudo Técnico', href: '/pericia/laudo-tecnico', category: 'pericia', price: 'A partir de R$ 2.000', description: 'Laudos periciais com validade judicial' },
-  { name: 'Defesa Criminal', href: '/criminal/direito-criminal', category: 'criminal', price: 'A partir de R$ 5.000', description: 'Defesa técnica 24 horas', featured: true },
-  { name: 'Consultoria Aeronáutica', href: '/aeronautico/direito-aeronautico', category: 'aeronautico', price: 'Consulta sob demanda', description: 'Consultoria e compliance para empresas de aviação' },
-  { name: 'Secretária Virtual IA', href: '/automacao/secretaria-remota', category: 'automacao', price: 'R$ 3.000 + R$ 500/mês', description: 'Atendimento automatizado 24/7' },
-]
+// Mapeamento de categorias antigas para novas
+const categoryMapping: Record<string, string> = {
+  'financeiro': 'bancario',
+  'patrimonial': 'patrimonial',
+  'saude': 'saude',
+  'pericia': 'pericia',
+  'criminal': 'criminal',
+  'aeronautico': 'aeronautico',
+  'automacao': 'automacao',
+  'previdenciario': 'previdenciario',
+}
 
 export default function SolucoesPage() {
   // Gerar categorias dinamicamente
   const allSolutions = useMemo(() => {
-    // Converter produtos do catalog.ts para o formato da página
-    const newProductsFormatted = NEW_PRODUCTS.map(product => ({
-      name: product.name,
-      href: `/solucoes/${product.category}/${product.slug}`,
-      category: product.category,
-      price: product.price.basic ? `R$ ${product.price.basic.toLocaleString('pt-BR')}` : 'Consulte',
-      description: product.description,
-      featured: product.priority >= 5,
-    }))
+    // Converter TODOS os produtos do catalog.ts para o formato da página
+    const allProductsFormatted = ALL_PRODUCTS.map(product => {
+      // Determinar a URL correta (legacy usa categoria antiga, novos usam nova estrutura)
+      const isLegacy = ['financeiro', 'patrimonial', 'saude', 'pericia', 'criminal', 'aeronautico', 'automacao', 'previdenciario'].includes(product.category)
 
-    // Agrupar produtos (novos + legados) por categoria
-    const allProducts = [...newProductsFormatted, ...legacyProducts]
+      let href = ''
+      if (isLegacy && product.category === 'financeiro') {
+        href = `/financeiro/${product.slug}`
+      } else if (isLegacy && product.category === 'patrimonial') {
+        href = `/patrimonial/${product.slug}`
+      } else if (isLegacy && product.category === 'saude') {
+        href = `/saude/${product.slug}`
+      } else if (isLegacy && product.category === 'pericia') {
+        href = `/pericia/${product.slug}`
+      } else if (isLegacy && product.category === 'criminal') {
+        href = `/criminal/${product.slug}`
+      } else if (isLegacy && product.category === 'aeronautico') {
+        href = `/aeronautico/${product.slug}`
+      } else if (isLegacy && product.category === 'automacao') {
+        href = `/automacao/${product.slug}`
+      } else if (isLegacy && product.category === 'previdenciario') {
+        href = `/previdenciario/${product.slug}`
+      } else {
+        // Novos produtos
+        href = `/solucoes/${product.category}/${product.slug}`
+      }
+
+      return {
+        name: product.name,
+        href,
+        category: product.category,
+        price: product.price.basic ? `R$ ${product.price.basic.toLocaleString('pt-BR')}` : 'Consulte',
+        description: product.description,
+        featured: product.priority >= 5,
+      }
+    })
+
+    // Agrupar produtos por categoria
+    const allProducts = allProductsFormatted
 
     const productsByCategory = allProducts.reduce((acc, product) => {
       if (!acc[product.category]) {

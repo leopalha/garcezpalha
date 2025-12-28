@@ -746,36 +746,668 @@ export const NEW_PRODUCTS: Product[] = [
   PRODUTO_COBRANCA_CONDOMINIAL,
 ]
 
+// ============================================================================
+// PRODUTOS LEGADOS (25 produtos existentes)
+// ============================================================================
+
+export const PRODUTO_DESBLOQUEIO_CONTA: Product = {
+  id: 'desbloqueio-conta',
+  name: 'Desbloqueio de Conta',
+  slug: 'desbloqueio-conta',
+  category: 'financeiro',
+  description: 'Desbloqueio judicial urgente de conta bancária',
+  price: { basic: 2500 },
+  successFee: 0,
+  timeline: '24-72h (liminar)',
+  documents: ['Decisão de bloqueio', 'Extratos', 'RG/CPF', 'Comprovante residência'],
+  keywords: ['conta bloqueada', 'desbloqueio urgente', 'liminar bancária', 'bacenjud'],
+  priority: 5,
+  automation: 85,
+  demandPerMonth: 12000,
+  features: [
+    'Liminar em 24-72h',
+    'Desbloqueio imediato via BACENJUD',
+    'Análise gratuita do caso',
+    'Atendimento prioritário',
+  ],
+  crossSell: ['golpe-pix', 'defesa-execucao'],
+  isActive: true,
+}
+
+export const PRODUTO_GOLPE_PIX: Product = {
+  id: 'golpe-pix',
+  name: 'Golpe do PIX',
+  slug: 'golpe-pix',
+  category: 'financeiro',
+  description: 'Recuperação de valores perdidos em golpes de PIX e transferências',
+  price: { basic: 2500 },
+  successFee: 0.30,
+  timeline: '3-6 meses',
+  documents: ['Comprovante do PIX', 'Conversas/prints', 'Boletim de ocorrência', 'RG/CPF'],
+  keywords: ['golpe pix', 'pix errado', 'recuperar dinheiro', 'fraude transferência'],
+  priority: 5,
+  automation: 80,
+  demandPerMonth: 25000,
+  features: [
+    'Bloqueio da conta do golpista',
+    'Recuperação do valor',
+    'Danos morais',
+    'Suporte policial',
+  ],
+  crossSell: ['desbloqueio-conta', 'fraude-consignado'],
+  isActive: true,
+}
+
+export const PRODUTO_NEGATIVACAO_INDEVIDA: Product = {
+  id: 'negativacao-indevida',
+  name: 'Negativação Indevida',
+  slug: 'negativacao-indevida',
+  category: 'financeiro',
+  description: 'Limpar nome + indenização por danos morais (negativação irregular)',
+  price: { basic: 1800 },
+  successFee: 0.30,
+  timeline: '4-8 meses',
+  documents: ['Consulta SPC/Serasa', 'RG/CPF', 'Comprovante residência'],
+  keywords: ['nome sujo indevido', 'serasa irregular', 'limpar nome', 'danos morais negativação'],
+  priority: 4,
+  automation: 90,
+  demandPerMonth: 18000,
+  features: [
+    'Liminar para limpar nome',
+    'Danos morais R$ 3.000 a R$ 10.000',
+    'Restituição em dobro (se pago)',
+    'Processo no JEC (sem custas)',
+  ],
+  crossSell: ['revisao-contrato-bancario', 'defesa-execucao'],
+  isActive: true,
+}
+
+export const PRODUTO_DEFESA_EXECUCAO: Product = {
+  id: 'defesa-execucao',
+  name: 'Defesa em Execução',
+  slug: 'defesa-execucao',
+  category: 'financeiro',
+  description: 'Embargos e defesa técnica em cobranças judiciais',
+  price: { basic: 3000 },
+  successFee: 0.20,
+  timeline: '6-12 meses',
+  documents: ['Citação/intimação', 'Contrato original', 'Extratos', 'RG/CPF'],
+  keywords: ['cobrança judicial', 'embargos execução', 'defesa dívida', 'execução bancária'],
+  priority: 4,
+  automation: 70,
+  demandPerMonth: 15000,
+  features: [
+    'Embargos à execução',
+    'Suspensão de penhoras',
+    'Redução de juros abusivos',
+    'Negociação estratégica',
+  ],
+  crossSell: ['revisao-contrato-bancario', 'negativacao-indevida'],
+  isActive: true,
+}
+
+export const PRODUTO_DIREITO_IMOBILIARIO: Product = {
+  id: 'direito-imobiliario',
+  name: 'Consultoria Imobiliária',
+  slug: 'direito-imobiliario',
+  category: 'patrimonial',
+  description: 'Compra, venda, regularização de imóveis e contratos',
+  price: { basic: 500, complete: 2000 },
+  successFee: 0,
+  timeline: 'Variável',
+  documents: ['Matrícula do imóvel', 'Contrato', 'RG/CPF'],
+  keywords: ['advogado imobiliário', 'compra venda imóvel', 'contrato aluguel', 'despejo'],
+  priority: 3,
+  automation: 60,
+  demandPerMonth: 8000,
+  features: [
+    'Consultoria especializada',
+    'Análise de contratos',
+    'Due diligence imobiliária',
+    'Regularização documental',
+  ],
+  crossSell: ['usucapiao', 'inventario'],
+  isActive: true,
+}
+
+export const PRODUTO_USUCAPIAO: Product = {
+  id: 'usucapiao',
+  name: 'Usucapião',
+  slug: 'usucapiao',
+  category: 'patrimonial',
+  description: 'Regularização de imóveis por usucapião (posse prolongada)',
+  price: { basic: 5000, complete: 8000 },
+  successFee: 0,
+  timeline: '1-3 anos',
+  documents: ['Comprovantes de posse', 'Contas (água, luz)', 'Testemunhas', 'RG/CPF'],
+  keywords: ['usucapião urbano', 'usucapião rural', 'regularização posse', 'adquirir imóvel'],
+  priority: 4,
+  automation: 50,
+  demandPerMonth: 6000,
+  features: [
+    'Usucapião ordinário e extraordinário',
+    'Usucapião especial urbano/rural',
+    'Processo extrajudicial (se possível)',
+    'Acompanhamento completo',
+  ],
+  crossSell: ['direito-imobiliario', 'inventario'],
+  isActive: true,
+}
+
+export const PRODUTO_HOLDING_FAMILIAR: Product = {
+  id: 'holding-familiar',
+  name: 'Holding Familiar',
+  slug: 'holding-familiar',
+  category: 'patrimonial',
+  description: 'Proteção patrimonial, sucessão e planejamento tributário',
+  price: { basic: 10000, complete: 25000 },
+  successFee: 0,
+  timeline: '2-4 meses',
+  documents: ['Patrimônio declarado', 'CNPJ (se houver)', 'RG/CPF', 'Certidões'],
+  keywords: ['holding familiar', 'proteção patrimonial', 'sucessão familiar', 'planejamento tributário'],
+  priority: 3,
+  automation: 40,
+  demandPerMonth: 3000,
+  features: [
+    'Constituição de holding',
+    'Planejamento sucessório',
+    'Redução de impostos',
+    'Blindagem patrimonial',
+  ],
+  crossSell: ['inventario', 'usucapiao'],
+  isActive: true,
+}
+
+export const PRODUTO_INVENTARIO: Product = {
+  id: 'inventario',
+  name: 'Inventário',
+  slug: 'inventario',
+  category: 'patrimonial',
+  description: 'Inventário judicial ou extrajudicial (partilha de bens)',
+  price: { basic: 5000, complete: 6000 },
+  successFee: 0,
+  timeline: '6-18 meses',
+  documents: ['Certidão de óbito', 'Documentos do falecido', 'Herdeiros RG/CPF', 'Patrimônio'],
+  keywords: ['inventário extrajudicial', 'inventário judicial', 'partilha bens', 'herança'],
+  priority: 4,
+  automation: 55,
+  demandPerMonth: 7000,
+  features: [
+    'Inventário judicial e extrajudicial',
+    'Análise fiscal e tributária',
+    'Partilha consensual ou litigiosa',
+    'Suporte em todo processo',
+  ],
+  crossSell: ['holding-familiar', 'usucapiao'],
+  isActive: true,
+}
+
+export const PRODUTO_PLANO_SAUDE: Product = {
+  id: 'plano-saude',
+  name: 'Plano de Saúde Negou',
+  slug: 'plano-saude-negou',
+  category: 'saude',
+  description: 'Liminar em 24-72h para obrigar plano a cobrir tratamento + danos morais',
+  price: { basic: 3500 },
+  successFee: 0.25,
+  timeline: '24-72h (liminar)',
+  documents: ['Negativa do plano', 'Pedido médico', 'Contrato do plano', 'RG/CPF'],
+  keywords: ['plano saude negou', 'liminar plano saude', 'cobertura negada', 'cirurgia negada'],
+  priority: 5,
+  automation: 85,
+  demandPerMonth: 30000,
+  features: [
+    'Liminar em 24-72h',
+    'Cobertura imediata',
+    'Danos morais R$ 5.000 a R$ 15.000',
+    'Multa diária ao plano',
+  ],
+  crossSell: ['bariatrica', 'tratamento-tea'],
+  isActive: true,
+}
+
+export const PRODUTO_BARIATRICA: Product = {
+  id: 'bariatrica',
+  name: 'Cirurgia Bariátrica',
+  slug: 'cirurgia-bariatrica',
+  category: 'saude',
+  description: 'Obrigar plano de saúde a cobrir cirurgia bariátrica',
+  price: { basic: 3500 },
+  successFee: 0.25,
+  timeline: '24-72h (liminar)',
+  documents: ['Negativa do plano', 'Laudos médicos', 'Indicação cirúrgica', 'RG/CPF'],
+  keywords: ['bariatrica plano saude', 'cirurgia obesidade', 'gastroplastia negada'],
+  priority: 5,
+  automation: 85,
+  demandPerMonth: 10000,
+  features: [
+    'Liminar urgente',
+    'Cobertura completa da cirurgia',
+    'Danos morais',
+    'Acompanhamento pós-operatório',
+  ],
+  crossSell: ['plano-saude', 'tratamento-tea'],
+  isActive: true,
+}
+
+export const PRODUTO_TRATAMENTO_TEA: Product = {
+  id: 'tratamento-tea',
+  name: 'Tratamento TEA',
+  slug: 'tea',
+  category: 'saude',
+  description: 'Garantir tratamento completo para autismo (TEA) via plano de saúde',
+  price: { basic: 4000 },
+  successFee: 0.25,
+  timeline: '24-72h (liminar)',
+  documents: ['Laudo médico', 'Negativa do plano', 'Prescrição de terapias', 'RG/CPF'],
+  keywords: ['tea plano saude', 'autismo tratamento', 'terapia aba negada', 'cobertura tea'],
+  priority: 5,
+  automation: 80,
+  demandPerMonth: 8000,
+  features: [
+    'Liminar para terapias (ABA, fono, TO)',
+    'Cobertura ilimitada de sessões',
+    'Danos morais',
+    'Multa diária ao plano',
+  ],
+  crossSell: ['plano-saude', 'bpc-loas'],
+  isActive: true,
+}
+
+export const PRODUTO_BPC_LOAS: Product = {
+  id: 'bpc-loas',
+  name: 'BPC / LOAS',
+  slug: 'bpc-loas',
+  category: 'saude',
+  description: 'Benefício assistencial de 1 salário mínimo/mês para idosos e deficientes',
+  price: { basic: 2000 },
+  successFee: 0.30,
+  timeline: '6-12 meses',
+  documents: ['Laudos médicos', 'Renda familiar', 'RG/CPF', 'Comprovante residência'],
+  keywords: ['bpc loas', 'benefício assistencial', 'salário deficiente', 'renda idoso'],
+  priority: 4,
+  automation: 75,
+  demandPerMonth: 20000,
+  features: [
+    '1 salário mínimo por mês',
+    'Benefício vitalício',
+    'Retroativo desde o pedido',
+    'Sem contribuição ao INSS',
+  ],
+  crossSell: ['tratamento-tea', 'auxilio-doenca'],
+  isActive: true,
+}
+
+export const PRODUTO_PERICIA_DOCUMENTAL: Product = {
+  id: 'pericia-documental',
+  name: 'Perícia Documental',
+  slug: 'pericia-documental',
+  category: 'pericia',
+  description: 'Análise técnica de autenticidade de documentos',
+  price: { basic: 2500, complete: 5000 },
+  successFee: 0,
+  timeline: '15-30 dias',
+  documents: ['Documentos originais', 'Contexto/histórico', 'RG/CPF'],
+  keywords: ['perícia documental', 'documento falso', 'autenticidade documento'],
+  priority: 3,
+  automation: 50,
+  demandPerMonth: 4000,
+  features: [
+    'Análise com microscopia',
+    'Laudo técnico oficial',
+    'Validade judicial',
+    'Suporte pericial em processos',
+  ],
+  crossSell: ['grafotecnica', 'laudo-tecnico'],
+  isActive: true,
+}
+
+export const PRODUTO_GRAFOTECNICA: Product = {
+  id: 'grafotecnica',
+  name: 'Grafotecnia',
+  slug: 'grafotecnia',
+  category: 'pericia',
+  description: 'Exame de autenticidade de assinaturas e manuscritos',
+  price: { basic: 3000, complete: 6000 },
+  successFee: 0,
+  timeline: '15-30 dias',
+  documents: ['Documento questionado', 'Padrões de assinatura', 'RG/CPF'],
+  keywords: ['perícia grafotécnica', 'assinatura falsa', 'exame assinatura'],
+  priority: 3,
+  automation: 50,
+  demandPerMonth: 3500,
+  features: [
+    'Comparação de assinaturas',
+    'Análise grafoscópica',
+    'Laudo pericial oficial',
+    'Sustentação oral em audiência',
+  ],
+  crossSell: ['pericia-documental', 'laudo-tecnico'],
+  isActive: true,
+}
+
+export const PRODUTO_LAUDO_TECNICO: Product = {
+  id: 'laudo-tecnico',
+  name: 'Laudo Técnico',
+  slug: 'laudo-tecnico',
+  category: 'pericia',
+  description: 'Laudos periciais com validade judicial (diversas áreas)',
+  price: { basic: 2000, complete: 5000 },
+  successFee: 0,
+  timeline: '20-40 dias',
+  documents: ['Material para análise', 'Quesitos', 'RG/CPF'],
+  keywords: ['laudo técnico', 'perícia judicial', 'assistente técnico'],
+  priority: 3,
+  automation: 45,
+  demandPerMonth: 5000,
+  features: [
+    'Laudos técnicos especializados',
+    'Validade judicial',
+    'Assistência técnica em processos',
+    'Diversas especialidades',
+  ],
+  crossSell: ['pericia-documental', 'grafotecnica'],
+  isActive: true,
+}
+
+export const PRODUTO_DEFESA_CRIMINAL: Product = {
+  id: 'defesa-criminal',
+  name: 'Defesa Criminal',
+  slug: 'direito-criminal',
+  category: 'criminal',
+  description: 'Defesa técnica completa 24 horas (inquérito, processo, habeas corpus)',
+  price: { basic: 5000, complete: 15000 },
+  successFee: 0,
+  timeline: 'Variável',
+  documents: ['Documentos do caso', 'Boletim de ocorrência', 'Intimações', 'RG/CPF'],
+  keywords: ['advogado criminal', 'defesa criminal', 'habeas corpus', 'inquérito policial'],
+  priority: 5,
+  automation: 30,
+  demandPerMonth: 12000,
+  features: [
+    'Atendimento 24 horas',
+    'Defesa em flagrante',
+    'Habeas corpus',
+    'Atuação em todas instâncias',
+  ],
+  crossSell: ['habeas-corpus'],
+  isActive: true,
+}
+
+export const PRODUTO_DIREITO_AERONAUTICO: Product = {
+  id: 'direito-aeronautico',
+  name: 'Consultoria Aeronáutica',
+  slug: 'direito-aeronautico',
+  category: 'aeronautico',
+  description: 'Consultoria e compliance para empresas de aviação',
+  price: { basic: 5000 },
+  successFee: 0,
+  timeline: 'Sob demanda',
+  documents: ['Documentação da empresa', 'Certidões ANAC', 'Contratos'],
+  keywords: ['direito aeronáutico', 'aviação civil', 'compliance ANAC'],
+  priority: 2,
+  automation: 20,
+  demandPerMonth: 500,
+  features: [
+    'Consultoria ANAC',
+    'Compliance regulatório',
+    'Contratos aeronáuticos',
+    'Defesa em processos',
+  ],
+  crossSell: [],
+  isActive: true,
+}
+
+export const PRODUTO_SECRETARIA_REMOTA: Product = {
+  id: 'secretaria-remota',
+  name: 'Secretária Virtual IA',
+  slug: 'secretaria-remota',
+  category: 'automacao',
+  description: 'Atendimento automatizado 24/7 com inteligência artificial',
+  price: { basic: 3000, complete: 500 }, // 3000 setup + 500/mês
+  successFee: 0,
+  timeline: '7-15 dias (implantação)',
+  documents: ['Informações do escritório', 'FAQs', 'Fluxos de atendimento'],
+  keywords: ['secretária virtual', 'chatbot jurídico', 'automação atendimento', 'ia advocacia'],
+  priority: 3,
+  automation: 95,
+  demandPerMonth: 2000,
+  features: [
+    'Atendimento 24/7',
+    'Qualificação automática de leads',
+    'Integração WhatsApp',
+    'Agendamento automático',
+  ],
+  crossSell: [],
+  isActive: true,
+}
+
+// Produtos previdenciários legados (já existem versões novas, manter compatibilidade)
+export const PRODUTO_APOSENTADORIA_INVALIDEZ: Product = {
+  id: 'aposentadoria-invalidez',
+  name: 'Aposentadoria por Invalidez',
+  slug: 'aposentadoria-invalidez',
+  category: 'previdenciario',
+  description: 'Aposentadoria por invalidez (incapacidade permanente)',
+  price: { basic: 3000 },
+  successFee: 0.30,
+  timeline: '8-18 meses',
+  documents: ['Laudos médicos', 'Histórico laboral', 'RG/CPF', 'CNIS'],
+  keywords: ['aposentadoria invalidez', 'incapacidade permanente', 'inss invalidez'],
+  priority: 4,
+  automation: 70,
+  demandPerMonth: 15000,
+  features: [
+    'Benefício vitalício',
+    'Retroativo desde o afastamento',
+    'Perícia médica estratégica',
+    'Recursos administrativos e judiciais',
+  ],
+  crossSell: ['auxilio-doenca', 'bpc-loas'],
+  isActive: true,
+}
+
+export const PRODUTO_AUXILIO_DOENCA: Product = {
+  id: 'auxilio-doenca',
+  name: 'Auxílio-Doença',
+  slug: 'auxilio-doenca',
+  category: 'previdenciario',
+  description: 'Auxílio-doença negado ou cessado indevidamente',
+  price: { basic: 2500 },
+  successFee: 0.30,
+  timeline: '6-12 meses',
+  documents: ['Laudos médicos', 'Negativa INSS', 'RG/CPF', 'CNIS'],
+  keywords: ['auxílio doença negado', 'benefício cortado', 'perícia inss'],
+  priority: 4,
+  automation: 75,
+  demandPerMonth: 25000,
+  features: [
+    'Reversão de negativa',
+    'Retroativo desde o afastamento',
+    'Perícia médica judicial',
+    'Prorrogação do benefício',
+  ],
+  crossSell: ['aposentadoria-invalidez', 'auxilio-acidente'],
+  isActive: true,
+}
+
+export const PRODUTO_APOSENTADORIA_INSS: Product = {
+  id: 'aposentadoria-inss',
+  name: 'Aposentadoria INSS',
+  slug: 'aposentadoria',
+  category: 'previdenciario',
+  description: 'Aposentadoria por idade, tempo de contribuição ou especial',
+  price: { basic: 3000 },
+  successFee: 0.30,
+  timeline: '8-18 meses',
+  documents: ['CNIS', 'Carteira de trabalho', 'Carnês', 'RG/CPF', 'Comprovantes'],
+  keywords: ['aposentadoria inss', 'aposentadoria idade', 'tempo contribuição'],
+  priority: 4,
+  automation: 65,
+  demandPerMonth: 30000,
+  features: [
+    'Análise de tempo de contribuição',
+    'Averbação de períodos',
+    'Aposentadoria especial',
+    'Retroativo desde o requerimento',
+  ],
+  crossSell: ['revisao-aposentadoria', 'beneficio-negado'],
+  isActive: true,
+}
+
+export const PRODUTO_REGULARIZACAO_IMOVEL: Product = {
+  id: 'regularizacao-imovel',
+  name: 'Regularização de Imóvel',
+  slug: 'regularizacao-imovel',
+  category: 'patrimonial',
+  description: 'Regularização fundiária e documentação de imóveis',
+  price: { basic: 3000, complete: 6000 },
+  successFee: 0,
+  timeline: '6-18 meses',
+  documents: ['Documentação do imóvel', 'Comprovantes de posse', 'RG/CPF'],
+  keywords: ['regularização fundiária', 'documentar imóvel', 'posse irregular'],
+  priority: 3,
+  automation: 55,
+  demandPerMonth: 5000,
+  features: [
+    'Regularização fundiária',
+    'Averbação em cartório',
+    'Legalização de construções',
+    'Certidões negativas',
+  ],
+  crossSell: ['usucapiao', 'direito-imobiliario'],
+  isActive: true,
+}
+
+export const PRODUTO_AVALIACAO_IMOVEIS: Product = {
+  id: 'avaliacao-imoveis',
+  name: 'Avaliação de Imóveis',
+  slug: 'avaliacao-imoveis',
+  category: 'patrimonial',
+  description: 'Laudo de avaliação técnica de imóveis',
+  price: { basic: 1500, complete: 3000 },
+  successFee: 0,
+  timeline: '10-20 dias',
+  documents: ['Matrícula do imóvel', 'Documentação', 'Acesso ao imóvel'],
+  keywords: ['avaliação imóvel', 'laudo técnico imóvel', 'valor venal'],
+  priority: 2,
+  automation: 40,
+  demandPerMonth: 3000,
+  features: [
+    'Laudo técnico oficial',
+    'Método avaliatório NBR',
+    'Validade judicial',
+    'Vistoria in loco',
+  ],
+  crossSell: ['direito-imobiliario', 'inventario'],
+  isActive: true,
+}
+
+export const PRODUTO_HABEAS_CORPUS: Product = {
+  id: 'habeas-corpus',
+  name: 'Habeas Corpus',
+  slug: 'habeas-corpus',
+  category: 'criminal',
+  description: 'Liberdade provisória e relaxamento de prisão ilegal',
+  price: { basic: 8000 },
+  successFee: 0,
+  timeline: '24-72h',
+  documents: ['Mandado de prisão', 'Documentos do caso', 'RG/CPF'],
+  keywords: ['habeas corpus', 'liberdade provisória', 'soltura prisão'],
+  priority: 5,
+  automation: 35,
+  demandPerMonth: 8000,
+  features: [
+    'Peticionamento urgente',
+    'Sustentação oral',
+    'Atendimento 24h',
+    'Recursos em todas instâncias',
+  ],
+  crossSell: ['defesa-criminal'],
+  isActive: true,
+}
+
+// ============================================================================
+// CATÁLOGO COMPLETO (47 PRODUTOS)
+// ============================================================================
+
+/**
+ * Catálogo completo: 22 novos + 25 legados = 47 produtos
+ */
+export const ALL_PRODUCTS: Product[] = [
+  // 22 NOVOS
+  ...NEW_PRODUCTS,
+
+  // 25 LEGADOS
+  PRODUTO_DESBLOQUEIO_CONTA,
+  PRODUTO_GOLPE_PIX,
+  PRODUTO_NEGATIVACAO_INDEVIDA,
+  PRODUTO_DEFESA_EXECUCAO,
+  PRODUTO_DIREITO_IMOBILIARIO,
+  PRODUTO_USUCAPIAO,
+  PRODUTO_HOLDING_FAMILIAR,
+  PRODUTO_INVENTARIO,
+  PRODUTO_PLANO_SAUDE,
+  PRODUTO_BARIATRICA,
+  PRODUTO_TRATAMENTO_TEA,
+  PRODUTO_BPC_LOAS,
+  PRODUTO_PERICIA_DOCUMENTAL,
+  PRODUTO_GRAFOTECNICA,
+  PRODUTO_LAUDO_TECNICO,
+  PRODUTO_DEFESA_CRIMINAL,
+  PRODUTO_DIREITO_AERONAUTICO,
+  PRODUTO_SECRETARIA_REMOTA,
+  PRODUTO_APOSENTADORIA_INVALIDEZ,
+  PRODUTO_AUXILIO_DOENCA,
+  PRODUTO_APOSENTADORIA_INSS,
+  PRODUTO_REGULARIZACAO_IMOVEL,
+  PRODUTO_AVALIACAO_IMOVEIS,
+  PRODUTO_HABEAS_CORPUS,
+]
+
 /**
  * Buscar produto por ID
  */
 export function getProductById(id: string): Product | undefined {
-  return NEW_PRODUCTS.find(p => p.id === id)
+  return ALL_PRODUCTS.find(p => p.id === id)
 }
 
 /**
  * Buscar produto por slug
  */
 export function getProductBySlug(slug: string): Product | undefined {
-  return NEW_PRODUCTS.find(p => p.slug === slug)
+  return ALL_PRODUCTS.find(p => p.slug === slug)
 }
 
 /**
  * Buscar produtos por categoria
  */
 export function getProductsByCategory(category: string): Product[] {
-  return NEW_PRODUCTS.filter(p => p.category === category)
+  return ALL_PRODUCTS.filter(p => p.category === category)
 }
 
 /**
  * Buscar produtos por prioridade
  */
 export function getProductsByPriority(minPriority: number = 4): Product[] {
-  return NEW_PRODUCTS.filter(p => p.priority >= minPriority)
+  return ALL_PRODUCTS.filter(p => p.priority >= minPriority)
     .sort((a, b) => b.priority - a.priority)
 }
 
 /**
- * TOP 5 produtos de maior prioridade
+ * TOP produtos de maior prioridade e demanda
  */
 export const TOP_5_PRODUTOS = getProductsByPriority(5)
+
+/**
+ * Estatísticas do catálogo
+ */
+export const CATALOG_STATS = {
+  total: ALL_PRODUCTS.length,
+  new: NEW_PRODUCTS.length,
+  legacy: ALL_PRODUCTS.length - NEW_PRODUCTS.length,
+  byCategory: ALL_PRODUCTS.reduce((acc, p) => {
+    acc[p.category] = (acc[p.category] || 0) + 1
+    return acc
+  }, {} as Record<string, number>),
+}
