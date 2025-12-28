@@ -14,7 +14,7 @@ export default function FraudeConsignadoPage() {
     <ProductVSL
       product={product}
       heroColor="blue"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Tarifas e juros abusivos consomem seu dinheiro sem você perceber",
         "Contratos bancários complexos escondem cobranças ilegais",

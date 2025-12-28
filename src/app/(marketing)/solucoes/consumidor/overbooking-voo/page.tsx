@@ -14,7 +14,7 @@ export default function OverbookingVooPage() {
     <ProductVSL
       product={product}
       heroColor="green"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Produtos com defeito e loja se recusa a trocar",
         "Entrega atrasada sem previsão ou compensação",

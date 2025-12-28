@@ -14,7 +14,7 @@ export default function CobrancaCondominialPage() {
     <ProductVSL
       product={product}
       heroColor="slate"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Cobrança de condomínio com valores abusivos",
         "Taxas extras não autorizadas em assembleia",

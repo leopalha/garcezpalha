@@ -14,7 +14,7 @@ export default function DiferencasSalariaisPage() {
     <ProductVSL
       product={product}
       heroColor="indigo"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Gratificações e vantagens não incorporadas ao salário",
         "Diferenças salariais não pagas",

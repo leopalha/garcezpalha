@@ -14,7 +14,7 @@ export default function FiesRenegociacaoPage() {
     <ProductVSL
       product={product}
       heroColor="rose"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Dívida do FIES crescendo descontroladamente",
         "Impossibilidade de pagar as parcelas",

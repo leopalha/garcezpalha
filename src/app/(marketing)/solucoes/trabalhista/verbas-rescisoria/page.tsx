@@ -14,7 +14,7 @@ export default function VerbasRescisoriaPage() {
     <ProductVSL
       product={product}
       heroColor="orange"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Empresa não pagou verbas rescisórias corretamente",
         "Horas extras trabalhadas não foram pagas",

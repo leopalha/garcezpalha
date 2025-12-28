@@ -14,7 +14,7 @@ export default function MultaFidelidadePage() {
     <ProductVSL
       product={product}
       heroColor="purple"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Cobranças indevidas em faturas de telefone/internet",
         "Multas abusivas por cancelamento ou troca de operadora",

@@ -25,7 +25,7 @@ import type { Product } from '@/lib/products/types'
 interface ProductVSLProps {
   product: Product
   heroColor?: string // Ex: 'violet', 'blue', 'green'
-  heroIcon?: LucideIcon
+  heroIcon?: string // Icon name as string (e.g., 'Shield', 'Phone')
   agitationPoints: string[]
   solutionSteps: string[]
   stats?: {
@@ -59,7 +59,7 @@ function getIconComponent(iconName?: string): LucideIcon {
 export function ProductVSL({
   product,
   heroColor = 'blue',
-  heroIcon: HeroIcon = Shield,
+  heroIcon = 'Shield',
   agitationPoints,
   solutionSteps,
   stats = { years: 10, cases: 300, successRate: 85, clients: 250 },
@@ -69,6 +69,7 @@ export function ProductVSL({
   customAlert,
 }: ProductVSLProps) {
   const router = useRouter()
+  const HeroIcon = getIconComponent(heroIcon)
 
   const handleCTA = () => {
     router.push(`/checkout?product=${product.id}`)

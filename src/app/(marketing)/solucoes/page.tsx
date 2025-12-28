@@ -13,30 +13,33 @@ import {
 import { ALL_PRODUCTS } from '@/lib/products/catalog'
 import type { LucideIcon } from 'lucide-react'
 
-// Mapeamento de categorias para ícones e metadados
-const categoryMetadata: Record<string, { name: string; icon: LucideIcon }> = {
-  bancario: { name: 'Direito Bancário', icon: Banknote },
-  telecom: { name: 'Telecomunicações', icon: Phone },
-  energia: { name: 'Energia Elétrica', icon: Zap },
-  consumidor: { name: 'Direito do Consumidor', icon: ShoppingCart },
-  digital: { name: 'Serviços Digitais', icon: Bot },
-  aereo: { name: 'Direito Aéreo', icon: Plane },
-  previdenciario: { name: 'Direito Previdenciário', icon: Users },
-  trabalhista: { name: 'Direito Trabalhista', icon: Briefcase },
-  servidor: { name: 'Servidor Público', icon: Scale },
-  educacional: { name: 'Direito Educacional', icon: GraduationCap },
-  condominial: { name: 'Direito Condominial', icon: Building },
-  // Categorias legadas
-  financeiro: { name: 'Proteção Financeira', icon: Banknote },
-  patrimonial: { name: 'Proteção Patrimonial', icon: Home },
-  saude: { name: 'Direito da Saúde', icon: Heart },
-  pericia: { name: 'Perícia e Documentos', icon: FileCheck },
-  criminal: { name: 'Defesa Criminal', icon: Scale },
-  aeronautico: { name: 'Direito Aeronáutico', icon: Plane },
-  automacao: { name: 'Automação Jurídica', icon: Bot },
-}
-
 export default function SolucoesPage() {
+  // Mapeamento de categorias para ícones e metadados (dentro do componente para evitar serialização)
+  const categoryMetadata: Record<string, { name: string; icon: LucideIcon }> = {
+    // Categorias principais
+    bancario: { name: 'Direito Bancário', icon: Banknote },
+    consumidor: { name: 'Direito do Consumidor', icon: ShoppingCart },
+    previdenciario: { name: 'Direito Previdenciário', icon: Users },
+    trabalhista: { name: 'Direito Trabalhista', icon: Briefcase },
+    administrativo: { name: 'Direito Administrativo', icon: Scale },
+    saude: { name: 'Direito da Saúde', icon: Heart },
+    imobiliario: { name: 'Direito Imobiliário', icon: Home },
+    pericia: { name: 'Perícia e Documentos', icon: FileCheck },
+    criminal: { name: 'Direito Criminal', icon: Shield },
+    aeronautico: { name: 'Direito Aeronáutico', icon: Plane },
+    automacao: { name: 'Automação Jurídica', icon: Bot },
+    // Categorias legadas (mapeamento)
+    financeiro: { name: 'Direito Bancário', icon: Banknote },
+    patrimonial: { name: 'Direito Imobiliário', icon: Home },
+    telecom: { name: 'Direito do Consumidor', icon: ShoppingCart },
+    energia: { name: 'Direito do Consumidor', icon: ShoppingCart },
+    digital: { name: 'Direito do Consumidor', icon: ShoppingCart },
+    aereo: { name: 'Direito do Consumidor', icon: ShoppingCart },
+    servidor: { name: 'Direito Administrativo', icon: Scale },
+    educacional: { name: 'Direito Administrativo', icon: Scale },
+    condominial: { name: 'Direito Imobiliário', icon: Home },
+  }
+
   // Gerar categorias dinamicamente a partir do catálogo
   const allSolutions = useMemo(() => {
     // Converter TODOS os produtos do catalog.ts

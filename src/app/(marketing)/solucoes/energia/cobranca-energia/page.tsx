@@ -14,7 +14,7 @@ export default function CobrancaEnergiaPage() {
     <ProductVSL
       product={product}
       heroColor="yellow"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "Contas de luz absurdamente altas sem explicação",
         "Cobranças retroativas de consumo não medido",

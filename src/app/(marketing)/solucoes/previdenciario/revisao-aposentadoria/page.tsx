@@ -14,7 +14,7 @@ export default function RevisaoAposentadoriaPage() {
     <ProductVSL
       product={product}
       heroColor="cyan"
-      heroIcon={Shield}
+      heroIcon="Shield"
       agitationPoints={[
         "INSS negou seu benefício sem justificativa adequada",
         "Aposentadoria calculada errada, valor menor que o devido",
