@@ -10,7 +10,6 @@ export { Credentials } from './Credentials'
 export { Testimonials } from './Testimonials'
 export { FAQ } from './FAQ'
 export { FinalCTA } from './FinalCTA'
-export { WhatsAppFloat } from './WhatsAppFloat'
 
 // Templates
 export { ProductPageTemplate } from './templates/ProductPageTemplate'

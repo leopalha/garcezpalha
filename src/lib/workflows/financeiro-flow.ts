@@ -4,7 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { stripe } from '@/lib/payments/stripe'
 import Stripe from 'stripe'
 
 export interface FinanceiroInput {

@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Image, { type ImageProps } from 'next/image'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/lib/utils'
 
 export interface OptimizedImageProps extends Omit<ImageProps, 'onLoadingComplete'> {
   fallback?: React.ReactNode

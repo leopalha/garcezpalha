@@ -35,3 +35,187 @@
  ✓ Compiled in 568ms (460 modules)
    Reload env: .env.local
  ✓ Compiled in 359ms (460 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 21.2s (2074 modules)
+ GET / 200 in 23301ms
+ ✓ Compiled in 2.4s (991 modules)
+ ○ Compiling /contato ...
+ ✓ Compiled /contato in 3.2s (2054 modules)
+ GET /contato 200 in 4759ms
+ ✓ Compiled in 1720ms (999 modules)
+ ✓ Compiled in 2.5s (999 modules)
+ ✓ Compiled in 1379ms (999 modules)
+ ✓ Compiled in 888ms (999 modules)
+ ✓ Compiled in 1022ms (999 modules)
+ ✓ Compiled in 1162ms (999 modules)
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (126kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'D:\garcezpalha\.next\cache\webpack\edge-server-development\0.pack.gz_' -> 'D:\garcezpalha\.next\cache\webpack\edge-server-development\0.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from D:\garcezpalha\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx
+ ⨯ ./src/components/marketing/WhatsAppFloat.tsx
+Error: Failed to read source code from D:\garcezpalha\src\components\marketing\WhatsAppFloat.tsx
+
+Caused by:
+    O sistema não pode encontrar o arquivo especificado. (os error 2)
+
+Import trace for requested module:
+./src/components/marketing/WhatsAppFloat.tsx

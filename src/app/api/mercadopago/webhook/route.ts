@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { paymentClient, isMercadoPagoConfigured } from '@/lib/mercadopago'
+import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {

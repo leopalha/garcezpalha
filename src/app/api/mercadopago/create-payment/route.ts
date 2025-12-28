@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { paymentClient, isMercadoPagoConfigured } from '@/lib/mercadopago'
+import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
 
 const createPaymentSchema = z.object({

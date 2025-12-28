@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from '@/lib/utils/cn'
+import { cn } from '@/lib/utils'
 
 // Base Skeleton component
 const Skeleton = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
