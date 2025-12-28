@@ -1,0 +1,33 @@
+
+> garcezpalha-platform@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+ ⚠ Port 3002 is in use, trying 3003 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3003
+  - Environments: .env.local
+
+ ✓ Starting...   Reload env: .env.local
+   Reload env: .env.local
+   Reload env: .env.local
+.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Ready in 4.9s
+ ○ Compiling /src/middleware ...
+ ✓ Compiled /src/middleware in 2.8s (257 modules)
+ ○ Compiling /api/diagnostic/openai ...
+ ✓ Compiled /api/diagnostic/openai in 1622ms (166 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (126kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ GET /api/diagnostic/openai 200 in 4574ms
+ ✓ Compiled /api/diagnostic/did in 214ms (168 modules)
+ GET /api/diagnostic/did 500 in 1068ms
+ ✓ Compiled /api/realtime/session in 193ms (57 modules)
+ POST /api/realtime/session 200 in 1865ms
+   Reload env: .env.local
+ ✓ Compiled in 4.7s (460 modules)
+   Reload env: .env.local
+<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from D:\garcezpalha\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
+ ✓ Compiled in 682ms (460 modules)
+ ✓ Compiled /api/diagnostic/did in 221ms (57 modules)
+ GET /api/diagnostic/did 500 in 1055ms
