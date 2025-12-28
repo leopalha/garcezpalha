@@ -31,3 +31,7 @@
  ✓ Compiled in 682ms (460 modules)
  ✓ Compiled /api/diagnostic/did in 221ms (57 modules)
  GET /api/diagnostic/did 500 in 1055ms
+ ✓ Compiled in 23ms
+ ✓ Compiled in 568ms (460 modules)
+   Reload env: .env.local
+ ✓ Compiled in 359ms (460 modules)

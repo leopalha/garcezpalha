@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
-import { ContactHub } from '@/components/marketing'
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -58,21 +57,17 @@ export default function ContatoPage() {
   }
 
   return (
-    <>
-      {/* Contact Hub - Centraliza todas as opções */}
-      <ContactHub />
-
-      <div className="py-16">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
-              Ou use o Formulário Tradicional
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              Preencha o formulário abaixo e nossa equipe entrará em contato em até 24 horas.
-            </p>
-          </div>
+    <div className="py-16">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="max-w-4xl mx-auto text-center mb-16">
+          <h1 className="font-display text-5xl md:text-6xl font-bold mb-6">
+            Entre em Contato
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Preencha o formulário abaixo e nossa equipe entrará em contato em até 24 horas.
+          </p>
+        </div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-5 gap-8">
           {/* Informações de Contato */}
@@ -328,6 +323,5 @@ export default function ContatoPage() {
         </div>
       </div>
     </div>
-    </>
   )
 }
