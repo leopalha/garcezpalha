@@ -3,7 +3,8 @@
  * Isso mantém a compatibilidade com o sistema de checkout existente
  */
 
-import { ALL_PRODUCTS, type Product, type ProductPackage } from './catalog'
+import { ALL_PRODUCTS } from './catalog'
+import type { Product, ProductPackage } from './types'
 import type { Solution, SolutionVariant } from '@/types/checkout'
 
 /**

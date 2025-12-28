@@ -5,14 +5,27 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X } from 'lucide-react'
 import Link from 'next/link'
 
-export function WhatsAppFloat() {
+interface WhatsAppFloatProps {
+  phoneNumber?: string
+  message?: string
+  position?: 'bottom-right' | 'bottom-left'
+  showTooltip?: boolean
+}
+
+export function WhatsAppFloat({
+  phoneNumber = '5521995354010',
+  message = 'Olá! Preciso de ajuda jurídica.',
+  position = 'bottom-right',
+  showTooltip: showTooltipProp = true
+}: WhatsAppFloatProps = {}) {
   const [isVisible, setIsVisible] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
 
-  const whatsappNumber = '5521995354010'
-  const whatsappMessage = encodeURIComponent('Olá! Preciso de ajuda jurídica.')
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+  const whatsappMessage = encodeURIComponent(message)
+  const whatsappLink = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`
+
+  const positionClasses = position === 'bottom-right' ? 'bottom-6 right-6' : 'bottom-6 left-6'
 
   // Show button after scroll
   useEffect(() => {
@@ -29,14 +42,14 @@ export function WhatsAppFloat() {
 
   // Show tooltip after delay (only once)
   useEffect(() => {
-    if (isVisible && !hasInteracted) {
+    if (isVisible && !hasInteracted && showTooltipProp) {
       const timer = setTimeout(() => {
         setShowTooltip(true)
       }, 3000)
 
       return () => clearTimeout(timer)
     }
-  }, [isVisible, hasInteracted])
+  }, [isVisible, hasInteracted, showTooltipProp])
 
   // Auto-hide tooltip after 5 seconds
   useEffect(() => {
@@ -70,7 +83,7 @@ export function WhatsAppFloat() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-6 right-6 z-50"
+          className={`fixed ${positionClasses} z-50`}
         >
           {/* Tooltip */}
           <AnimatePresence>
