@@ -75,8 +75,23 @@ CREATE TABLE public.messages (
 
 ### 1.3 `profiles` ⚠️
 
-**Status:** Necessária para autenticação
+**Status:** Necessária para autenticação e RLS
 
+**Migration:** `supabase/migrations/20251227_profiles_table.sql`
+
+**⚠️ CRÍTICO:** Execute esta migration ANTES da `messages_table.sql`
+
+```bash
+# Run migration
+psql $DATABASE_URL < supabase/migrations/20251227_profiles_table.sql
+```
+
+**Ou via Supabase Dashboard:**
+1. Dashboard → SQL Editor
+2. Copiar conteúdo de `supabase/migrations/20251227_profiles_table.sql`
+3. Execute
+
+**Estrutura:**
 ```sql
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -87,30 +102,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+```
 
--- Enable RLS
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-
--- Policies
-CREATE POLICY "Users can view own profile"
-  ON public.profiles
-  FOR SELECT
-  USING (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile"
-  ON public.profiles
-  FOR UPDATE
-  USING (auth.uid() = id);
-
--- Admins can view all profiles
-CREATE POLICY "Admins can view all profiles"
-  ON public.profiles
-  FOR SELECT
-  USING (
-    auth.uid() IN (
-      SELECT id FROM public.profiles WHERE role = 'admin'
-    )
-  );
+**Após criar a tabela, adicione seu primeiro admin:**
+```sql
+-- Primeiro, crie um usuário via Supabase Auth Dashboard
+-- Depois, execute (substitua YOUR-USER-UUID pelo id do auth.users):
+INSERT INTO public.profiles (id, role, email, full_name)
+VALUES ('YOUR-USER-UUID', 'admin', 'seu@email.com', 'Seu Nome');
 ```
 
 ### 1.4 `leads` ✅
@@ -166,9 +165,12 @@ supabase db push
 
 ### Lista de Migrations
 
-| Arquivo | Data | Descrição | Status |
-|---------|------|-----------|--------|
-| `20251227_messages_table.sql` | 27/12/2025 | Cria tabela messages + indexes + RLS | 🆕 **EXECUTAR** |
+**⚠️ ORDEM IMPORTANTE:** Execute na ordem numérica abaixo!
+
+| # | Arquivo | Data | Descrição | Status |
+|---|---------|------|-----------|--------|
+| 1 | `20251227_profiles_table.sql` | 27/12/2025 | Cria tabela profiles + RLS + policies | 🆕 **EXECUTAR PRIMEIRO** |
+| 2 | `20251227_messages_table.sql` | 27/12/2025 | Cria tabela messages + indexes + RLS | 🆕 **EXECUTAR SEGUNDO** |
 
 ---
 
