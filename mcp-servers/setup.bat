@@ -18,6 +18,17 @@ if %ERRORLEVEL% NEQ 0 (
 echo [OK] Node.js detected
 echo.
 
+REM Setup Figma
+if exist "figma" (
+    echo Setting up Figma Integration...
+    cd figma
+    call npm install
+    call npm run build
+    cd ..
+    echo [OK] Figma ready
+    echo.
+)
+
 REM Setup GA4
 if exist "ga4" (
     echo Setting up Google Analytics 4...
@@ -82,6 +93,7 @@ echo   2. Restart Claude Code
 echo   3. Verify servers loaded in Claude startup logs
 echo.
 echo For detailed setup instructions, see:
+echo   - mcp-servers\figma\README.md
 echo   - mcp-servers\ga4\README.md
 echo   - mcp-servers\sentry\README.md
 echo   - mcp-servers\whatsapp\README.md
