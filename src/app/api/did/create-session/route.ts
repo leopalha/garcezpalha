@@ -5,10 +5,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { source_url } = body
 
+    const apiKey = process.env.DID_API_KEY
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'DID_API_KEY not configured' },
+        { status: 500 }
+      )
+    }
+
     const response = await fetch('https://api.d-id.com/talks/streams', {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${process.env.DID_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

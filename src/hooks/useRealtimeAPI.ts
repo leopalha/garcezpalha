@@ -26,50 +26,33 @@ export function useRealtimeAPI(productId: string) {
       setIsConnecting(true)
       setError(null)
 
-      const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY
-      if (!apiKey) {
-        throw new Error('NEXT_PUBLIC_OPENAI_API_KEY not configured')
+      console.log('[useRealtimeAPI] Creating ephemeral session...')
+
+      // Get ephemeral token from our API
+      const sessionResponse = await fetch('/api/realtime/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId })
+      })
+
+      if (!sessionResponse.ok) {
+        const error = await sessionResponse.json()
+        throw new Error(error.error || 'Failed to create session')
       }
+
+      const { client_secret } = await sessionResponse.json()
 
       console.log('[useRealtimeAPI] Connecting to OpenAI Realtime API...')
 
-      // Connect to OpenAI Realtime API
+      // Connect to OpenAI Realtime API with ephemeral token
       const ws = new WebSocket(
-        'wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01',
-        ['realtime', `openai-insecure-api-key.${apiKey}`.trim()]
+        `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17`,
+        ['realtime', `openai-ephemeral-token.${client_secret}`.trim()]
       )
 
       ws.onopen = () => {
         console.log('[useRealtimeAPI] WebSocket connected')
         wsRef.current = ws
-
-        // Send session.update to configure the session
-        ws.send(JSON.stringify({
-          type: 'session.update',
-          session: {
-            modalities: ['text', 'audio'],
-            instructions: `Você é um assistente jurídico especializado em ${productId}.
-Seja educado, profissional e objetivo.
-Responda em português brasileiro.
-Pergunte detalhes quando necessário para qualificar o lead.
-Seja conciso e claro nas suas respostas.`,
-            voice: 'alloy',
-            input_audio_format: 'pcm16',
-            output_audio_format: 'pcm16',
-            input_audio_transcription: {
-              model: 'whisper-1'
-            },
-            turn_detection: {
-              type: 'server_vad',
-              threshold: 0.5,
-              prefix_padding_ms: 300,
-              silence_duration_ms: 500
-            },
-            temperature: 0.8,
-            max_response_output_tokens: 4096,
-          }
-        }))
-
         setIsConnected(true)
         setIsConnecting(false)
       }
