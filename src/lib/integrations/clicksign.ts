@@ -110,7 +110,7 @@ export class ClickSignClient {
    * Upload document (PDF)
    */
   async uploadDocument(params: {
-    file: Buffer | Blob
+    file: Blob
     filename: string
   }): Promise<ClickSignResponse> {
     if (!this.isConfigured()) {

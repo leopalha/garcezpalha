@@ -24,6 +24,81 @@ O projeto Garcez Palha é uma plataforma jurídica completa que automatiza o ate
 
 ## 📅 LINHA DO TEMPO - DEZEMBRO 2025
 
+### 🎉 27/12/2025 (06:30-08:00) - IMPLEMENTAÇÃO P1: FLUXOS OPERACIONAIS
+
+**Objetivo:** Implementar features P1 (fluxos de triagem, fechamento e human handoff)
+
+**Status Final:** ✅ 6/7 features completas (Google e Docs → P2)
+
+#### Implementações Concluídas
+
+**1. Agent Flow Chat Widget** ✅
+- Arquivo: `src/components/chat/AgentFlowChatWidget.tsx` (523 linhas)
+- Integração total com `/api/chat/agent-flow`
+- 17 estados do State Machine visualizados
+- Barra de progresso de qualificação
+- Auto-escalação inteligente
+
+**2. Webhooks de Pagamento** ✅
+- Stripe: Integração com State Machine
+- MercadoPago: Integração com State Machine
+- Transição automática: `paid` → `contract_pending`
+- Metadados: `conversation_id`, `leadId`, `productId`
+
+**3. ClickSign Integration** ✅
+- Arquivo: `src/lib/integrations/clicksign.ts` (517 linhas)
+- Geração automática de contratos pós-pagamento
+- Webhook handler: `src/app/api/webhooks/clicksign/route.ts` (290 linhas)
+- Transições: `contract_pending` → `onboarding` → `active_case`
+
+**4. Human Handoff UI** ✅
+- Dashboard admin: `/admin/conversations` (389 linhas)
+- Página de detalhes: `/admin/conversations/[id]` (437 linhas)
+- 7 APIs criadas para admin
+- Filtros, busca, takeover de conversas
+
+**5. Autenticação Admin** ✅
+- Middleware existente atualizado
+- APIs protegidas com Supabase Auth
+- Role-based access control (admin/lawyer)
+
+**6. Histórico de Mensagens** ✅
+- Migration SQL: `supabase/migrations/20251227_messages_table.sql`
+- APIs atualizadas para salvar/carregar mensagens reais
+- Substituído mock por persistência real
+
+**7. Real-time Updates** ✅
+- Supabase Realtime subscriptions
+- Messages: auto-update no chat
+- Conversations: auto-update na lista admin
+
+**8. Documentação de Setup** ✅
+- Arquivo: `SUPABASE_SETUP.md` (completoguia de configuração)
+- Migrations, RLS, Realtime, Storage
+- Troubleshooting e verificações
+
+#### Métricas da Sessão
+
+| Métrica | Valor |
+|---------|-------|
+| **Arquivos Criados** | 18 |
+| **Arquivos Modificados** | 6 |
+| **Linhas de Código** | ~3,200 |
+| **Componentes React** | 3 |
+| **APIs** | 7 |
+| **Webhooks** | 3 |
+| **Migrations** | 1 |
+| **Documentação** | 2 |
+
+#### Pendências (P2)
+
+- ⚠️ Google Calendar OAuth (requer setup no Google Cloud)
+- ⚠️ Sistema de upload de documentos (requer AI provider)
+
+**Resultado:** Plataforma pronta para deployment com fluxos completos de triagem e fechamento automatizados.
+
+---
+
 ### 🚀 27/12/2025 - IMPLEMENTAÇÃO COMPLETA DOS 22 NICHOS
 
 #### FASE 1: Auditoria e Mapeamento

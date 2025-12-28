@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Demo Page - Agent Flow Chat Widget
  * Demonstração do novo widget integrado ao agent-flow API
@@ -5,11 +7,6 @@
 
 import { AgentFlowChatWidget } from '@/components/chat'
 import { Card } from '@/components/ui/card'
-
-export const metadata = {
-  title: 'Demo: Agent Flow Chat Widget | Garcez Palha',
-  description: 'Demonstração do widget de chat integrado ao fluxo de agentes',
-}
 
 export default function AgentChatDemoPage() {
   return (
