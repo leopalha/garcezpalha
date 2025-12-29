@@ -155,7 +155,7 @@ export class ChatQualificationManager {
     sessionId: string
     userId?: string
     message: string
-    source: 'website' | 'whatsapp' | 'email'
+    source: 'website' | 'whatsapp' | 'email' | 'telegram'
     clientInfo?: {
       name?: string
       phone?: string
@@ -525,6 +525,51 @@ export class ChatQualificationManager {
       'negativacao-indevida': 'Remoção de Negativação Indevida',
     }
     return names[productId] || 'Serviço Jurídico'
+  }
+
+  /**
+   * Continue qualification with user message
+   * Automatically detects if it's the first interaction or subsequent answer
+   */
+  async continueQualification(params: {
+    sessionId: string
+    userId?: string
+    message: string
+    source: 'website' | 'whatsapp' | 'email' | 'telegram'
+    clientInfo?: {
+      name?: string
+      phone?: string
+      email?: string
+    }
+  }): Promise<ChatQualificationResponse> {
+    // Check if session exists
+    const session = activeSessions.get(params.sessionId)
+
+    if (!session) {
+      // No session = start new qualification
+      return await this.startQualification(params)
+    }
+
+    // Session exists = submit answer
+    // Try to extract question ID from current state
+    const qualifierState = session.qualifierState
+    const currentQuestionIndex = qualifierState.engineState.currentQuestionIndex || 0
+    const questions = qualifierState.engineState.questions as Question[] || []
+    const currentQuestion = questions[currentQuestionIndex]
+
+    if (!currentQuestion) {
+      return {
+        message: 'Erro ao identificar pergunta atual. Vamos recomeçar.',
+        type: 'error',
+      }
+    }
+
+    // Submit the answer
+    return await this.submitAnswer({
+      sessionId: params.sessionId,
+      questionId: currentQuestion.id,
+      answer: params.message,
+    })
   }
 
   /**

@@ -33,19 +33,11 @@ export class QualifyingBehavior implements StateBehavior {
     data: ConversationData
   }> {
     try {
-      // TODO: Integrate with existing qualification system
-      // The qualification API needs to be aligned with state machine expectations
-      // Expected method: continueQualification
-      // Available methods: startQualification, submitAnswer
-
-      throw new Error('Qualification integration pending - see P0 blocker in tasks.md')
-
-      /* PENDING IMPLEMENTATION
       const qualificationResponse = await this.qualificationManager.continueQualification({
         sessionId: data.conversation_id,
         userId: data.client.email,
         message,
-        source: data.channel as any,
+        source: data.channel as 'website' | 'whatsapp' | 'email' | 'telegram',
         clientInfo: {
           name: data.client.name,
           phone: data.client.phone || data.phone_number,
@@ -62,19 +54,28 @@ export class QualifyingBehavior implements StateBehavior {
       // Check if qualification is complete
       if (qualificationResponse.type === 'completion' && qualificationResponse.result) {
         data.qualification.status = 'complete'
-        data.qualification.score = qualificationResponse.result.score
+        data.qualification.score = qualificationResponse.result.score.total
 
         // Add flags based on category
-        if (qualificationResponse.result.category === 'hot') {
+        if (qualificationResponse.result.score.category === 'hot') {
+          data.qualification.flags = data.qualification.flags || []
           data.qualification.flags.push('high_priority')
         }
 
         // Determine next state based on score
-        const nextState = this.determineNextState(qualificationResponse.result.score)
+        const nextState = this.determineNextState(qualificationResponse.result.score.total)
 
         return {
           response: qualificationResponse.message,
           nextState,
+          data,
+        }
+      }
+
+      // Handle error responses
+      if (qualificationResponse.type === 'error') {
+        return {
+          response: qualificationResponse.message,
           data,
         }
       }
@@ -84,7 +85,6 @@ export class QualifyingBehavior implements StateBehavior {
         response: qualificationResponse.message,
         data,
       }
-      */
 
     } catch (error) {
       console.error('[Qualifying] Error:', error)

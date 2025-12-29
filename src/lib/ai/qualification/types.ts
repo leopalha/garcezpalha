@@ -157,7 +157,7 @@ export interface ScoringRule {
 export interface QualificationContext {
   userId?: string
   sessionId: string
-  source: 'website' | 'whatsapp' | 'phone' | 'email'
+  source: 'website' | 'whatsapp' | 'phone' | 'email' | 'telegram'
   initialMessage?: string
   metadata?: Record<string, unknown>
 }
