@@ -81,10 +81,10 @@ export function VoicePlayer({
       const audioBlob = await response.blob()
       return audioBlob
 
-    } catch (err: any) {
+    } catch (err) {
       console.error('[VoicePlayer] TTS error:', err)
       setError('Erro ao gerar áudio')
-      onError?.(err.message)
+      onError?.(err instanceof Error ? err.message : String(err))
       throw err
     } finally {
       setIsLoading(false)

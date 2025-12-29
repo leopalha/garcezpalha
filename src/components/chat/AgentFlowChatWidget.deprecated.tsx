@@ -185,7 +185,7 @@ export function AgentFlowChatWidget({
           onQualificationComplete(data)
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('[AgentFlowChat] Error:', err)
       setError('Erro ao processar mensagem. Tente novamente.')
       addMessage({

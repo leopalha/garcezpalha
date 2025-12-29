@@ -136,9 +136,9 @@ Como prefere começar?`,
         finalMessage = input ? `${input}\n\n[Áudio transcrito]: ${text}` : text
         audioFileToSend = audioFile
 
-      } catch (error: any) {
+      } catch (error) {
         console.error('[ChatAssistant] Transcription error:', error)
-        setTranscriptionError(error.message)
+        setTranscriptionError(error instanceof Error ? error.message : String(error))
         setIsTranscribing(false)
         return
       } finally {
@@ -278,9 +278,9 @@ Como prefere começar?`,
           // Inserir texto transcrito no input
           setInput(text)
 
-        } catch (error: any) {
+        } catch (error) {
           console.error('[ChatAssistant] Erro na transcrição:', error)
-          setTranscriptionError(error.message || 'Erro ao transcrever áudio')
+          setTranscriptionError(error instanceof Error ? error.message : 'Erro ao transcrever áudio')
         } finally {
           setIsTranscribing(false)
         }

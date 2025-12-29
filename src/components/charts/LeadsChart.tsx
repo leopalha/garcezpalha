@@ -132,7 +132,11 @@ export function CategoryDistributionChart({ data }: CategoryChartProps) {
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={(props: any) => `${props.name}: ${props.percentage}%`}
+          label={((props: Record<string, unknown>) => {
+            const name = props.name as string
+            const percentage = props.percentage as number
+            return `${name}: ${percentage}%`
+          }) as never}
           outerRadius={100}
           fill="#8884d8"
           dataKey="value"
@@ -185,10 +189,14 @@ export function ConversionFunnelChart({ data }: ConversionFunnelChartProps) {
             border: '1px solid hsl(var(--border))',
             borderRadius: '8px',
           }}
-          formatter={(value: any, name: any, props: any) => [
-            `${value} (${props?.payload?.percentage || 0}%)`,
-            'Count',
-          ]}
+          formatter={(value: unknown, _name: unknown, props: unknown) => {
+            const val = value as number
+            const p = props as { payload?: { percentage?: number } }
+            return [
+              `${val} (${p?.payload?.percentage || 0}%)`,
+              'Count',
+            ]
+          }}
         />
         <Bar dataKey="count" fill="hsl(var(--primary))">
           {data.map((entry, index) => (

@@ -97,16 +97,16 @@ export function AudioRecorder({
         setRecordingTime(prev => prev + 1)
       }, 1000)
 
-    } catch (err: any) {
+    } catch (err) {
       console.error('[AudioRecorder] Error starting recording:', err)
 
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      if (err instanceof Error && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
         setPermissionDenied(true)
         setError('Permissão de microfone negada. Habilite nas configurações do navegador.')
         onError?.('Permissão de microfone negada')
       } else {
         setError('Erro ao iniciar gravação. Verifique se seu microfone está conectado.')
-        onError?.(err.message)
+        onError?.(err instanceof Error ? err.message : String(err))
       }
     }
   }, [onError])
@@ -149,10 +149,10 @@ export function AudioRecorder({
         throw new Error('No transcription text received')
       }
 
-    } catch (err: any) {
+    } catch (err) {
       console.error('[AudioRecorder] Transcription error:', err)
       setError('Erro ao transcrever áudio. Tente novamente.')
-      onError?.(err.message)
+      onError?.(err instanceof Error ? err.message : String(err))
     } finally {
       setIsTranscribing(false)
     }
