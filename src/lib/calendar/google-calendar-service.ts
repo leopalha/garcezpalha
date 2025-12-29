@@ -23,6 +23,8 @@
  */
 
 import { google } from 'googleapis'
+import type { calendar_v3 } from 'googleapis'
+import type { OAuth2Client } from 'google-auth-library'
 import { createClient } from '@/lib/supabase/server'
 
 const calendar = google.calendar('v3')
@@ -37,7 +39,7 @@ interface CalendarEvent {
 }
 
 class GoogleCalendarService {
-  private oauth2Client: any
+  private oauth2Client: OAuth2Client | null = null
 
   constructor() {
     if (this.isConfigured()) {
@@ -116,7 +118,7 @@ class GoogleCalendarService {
       }
 
       return null
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Google Calendar] Error creating event:', error)
       return null
     }
@@ -134,7 +136,7 @@ class GoogleCalendarService {
     }
 
     try {
-      const updateData: any = {}
+      const updateData: calendar_v3.Schema$Event = {}
 
       if (event.summary) {
         updateData.summary = `⚖️ ${event.summary}`
@@ -175,7 +177,7 @@ class GoogleCalendarService {
 
       console.log('[Google Calendar] Event updated:', eventId)
       return true
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Google Calendar] Error updating event:', error)
       return false
     }
@@ -198,7 +200,7 @@ class GoogleCalendarService {
 
       console.log('[Google Calendar] Event deleted:', eventId)
       return true
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Google Calendar] Error deleting event:', error)
       return false
     }
