@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Erro ao criar sessão de pagamento',
-        message: error instanceof Error ? error.message : 'Erro desconhecido',
+        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Erro desconhecido',
       },
       { status: 500 }
     )

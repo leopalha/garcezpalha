@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 interface ProcessCardProps {
   id: string
-  number: string
+  number?: string | null
   title: string
   status: 'active' | 'pending' | 'completed' | 'archived'
   nextDeadline?: string
@@ -39,7 +39,7 @@ export function ProcessCard({
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <CardTitle className="text-base font-medium">{title}</CardTitle>
-            <p className="text-sm text-muted-foreground">{number}</p>
+            {number && <p className="text-sm text-muted-foreground">{number}</p>}
           </div>
           <Badge variant={config.variant}>{config.label}</Badge>
         </div>

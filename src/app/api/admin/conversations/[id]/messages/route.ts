@@ -45,7 +45,7 @@ export async function GET(
   } catch (error) {
     console.error('[Messages API] Error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch messages', details: error instanceof Error ? error.message : String(error) },
+      { error: 'Failed to fetch messages', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
     )
   }
@@ -126,7 +126,7 @@ export async function POST(
   } catch (error) {
     console.error('[Messages API] Error sending message:', error)
     return NextResponse.json(
-      { error: 'Failed to send message', details: error instanceof Error ? error.message : String(error) },
+      { error: 'Failed to send message', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
     )
   }

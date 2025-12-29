@@ -11,6 +11,16 @@ import {
 import { Search, Filter } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 
+interface ProcessAlertDB {
+  id: string
+  process_number?: string | null
+  description?: string | null
+  status?: string | null
+  deadline_date?: string | null
+  created_at: string
+  tribunal?: string | null
+}
+
 export default async function ProcessosPage() {
   const supabase = await createClient()
 
@@ -20,7 +30,7 @@ export default async function ProcessosPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
-  const processes = (processData || []).map((p: any) => ({
+  const processes = (processData || []).map((p: ProcessAlertDB) => ({
     id: p.id,
     number: p.process_number,
     title: p.description || 'Processo sem descrição',

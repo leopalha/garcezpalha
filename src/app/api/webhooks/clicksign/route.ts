@@ -90,10 +90,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ received: true })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[ClickSign Webhook] Error:', error)
     return NextResponse.json(
-      { error: 'Webhook processing failed', details: error.message },
+      { error: 'Webhook processing failed', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

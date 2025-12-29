@@ -27,6 +27,23 @@ interface ProcessDetailsPageProps {
   }
 }
 
+interface ClientDocumentDB {
+  id: string
+  file_name?: string | null
+  file_type?: string | null
+  file_size?: number | null
+  created_at: string
+  public_url?: string | null
+}
+
+interface ProcessDeadlineDB {
+  id: string
+  deadline_type?: string | null
+  due_date: string
+  status?: string | null
+  description?: string | null
+}
+
 export default async function ProcessDetailsPage({ params }: ProcessDetailsPageProps) {
   const session = await getServerSession(authOptions)
   const supabase = await createClient()
@@ -127,7 +144,7 @@ export default async function ProcessDetailsPage({ params }: ProcessDetailsPageP
     .eq('process_id', params.id)
     .order('created_at', { ascending: false })
 
-  const documents = (documentsData || []).map((doc: any) => ({
+  const documents = (documentsData || []).map((doc: ClientDocumentDB) => ({
     id: doc.id,
     name: doc.file_name,
     type: doc.file_type?.split('/')[1]?.toUpperCase() || 'FILE',
@@ -137,7 +154,7 @@ export default async function ProcessDetailsPage({ params }: ProcessDetailsPageP
   }))
 
   // Build deadlines from database or use placeholder
-  const deadlines = (deadlinesData || []).map((d: any) => ({
+  const deadlines = (deadlinesData || []).map((d: ProcessDeadlineDB) => ({
     id: d.id,
     title: d.deadline_type || 'Prazo',
     date: new Date(d.due_date).toLocaleDateString('pt-BR'),
@@ -375,7 +392,7 @@ export default async function ProcessDetailsPage({ params }: ProcessDetailsPageP
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {documents.map((doc: any) => (
+                  {documents.map((doc) => (
                     <div
                       key={doc.id}
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
@@ -418,7 +435,7 @@ export default async function ProcessDetailsPage({ params }: ProcessDetailsPageP
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {deadlines.map((deadline: any) => (
+                  {deadlines.map((deadline) => (
                     <div
                       key={deadline.id}
                       className="p-4 border border-orange-200 bg-orange-50 rounded-lg"

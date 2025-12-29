@@ -58,10 +58,10 @@ Seja conciso e claro nas suas respostas.`,
       client_secret: data.client_secret.value,
       expires_at: data.client_secret.expires_at,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Realtime API] Error:', error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error instanceof Error ? error.message : String(error) || 'Internal server error' },
       { status: 500 }
     )
   }

@@ -153,7 +153,14 @@ export default function DocumentosPage() {
 
     setActionLoading(true)
     try {
-      const body: any = {
+      const body: {
+        action: string
+        itemId: string
+        reviewerId: string
+        notes?: string
+        reason?: string
+        feedback?: string
+      } = {
         action,
         itemId: selectedItem.item.id,
         reviewerId: session?.user?.id || session?.user?.email || 'admin'

@@ -37,6 +37,19 @@ import {
 import { trpc } from '@/lib/trpc/client'
 import { toast } from '@/components/ui/use-toast'
 
+interface UserProfile {
+  full_name?: string
+  phone?: string
+}
+
+interface User {
+  id: string
+  email: string
+  role: string
+  created_at: string
+  profiles?: UserProfile | UserProfile[]
+}
+
 const roleColors: Record<string, string> = {
   admin: 'bg-red-100 text-red-800',
   lawyer: 'bg-blue-100 text-blue-800',
@@ -100,10 +113,10 @@ export default function UsuariosPage() {
       refetch()
       setIsDeleteDialogOpen(false)
       setUserToDelete(null)
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Erro ao excluir',
-        description: error.message || 'Não foi possível excluir o usuário.',
+        description: error instanceof Error ? error.message : 'Não foi possível excluir o usuário.',
         variant: 'destructive',
       })
     }
@@ -237,7 +250,7 @@ export default function UsuariosPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {filteredUsers.map((user: any) => {
+                {filteredUsers.map((user: User) => {
                   const profile = Array.isArray(user.profiles) ? user.profiles[0] : user.profiles
                   return (
                   <div

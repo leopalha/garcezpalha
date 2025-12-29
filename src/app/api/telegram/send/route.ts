@@ -24,12 +24,12 @@ export async function GET() {
       bot: botInfo,
       webhook: webhookInfo
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error checking Telegram bot status:', error)
     return NextResponse.json({
       configured: true,
       status: 'error',
-      error: error.message
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 })
   }
 }
@@ -64,11 +64,11 @@ export async function POST(request: NextRequest) {
       success: true,
       data: result
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error sending Telegram message:', error)
     return NextResponse.json({
       success: false,
-      error: error.message
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 })
   }
 }

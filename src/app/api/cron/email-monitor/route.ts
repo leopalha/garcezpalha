@@ -42,11 +42,11 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('[Cron] Email Monitor Error:', error instanceof Error ? error.message : String(error))
+    console.error('[Cron] Email Monitor Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error',
       },
       { status: 500 }
     )

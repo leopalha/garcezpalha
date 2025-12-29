@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[API] Error processing review action:', error)
     return NextResponse.json(
-      { error: 'Failed to process review action', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to process review action', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },
       { status: 500 }
     )
   }

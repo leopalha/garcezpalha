@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     const duration = Date.now() - startTime
 
     console.error('[Twilio Webhook] Error processing webhook', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       duration: `${duration}ms`,
     })

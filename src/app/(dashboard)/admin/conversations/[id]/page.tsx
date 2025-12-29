@@ -112,7 +112,7 @@ export default function ConversationDetailPage() {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload: any) => {
+        (payload: { new: Message }) => {
           console.log('[Real-time] New message:', payload.new)
           setMessages((prev) => [...prev, payload.new])
         }

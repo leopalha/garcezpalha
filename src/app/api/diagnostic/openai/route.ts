@@ -42,11 +42,11 @@ export async function GET() {
       })
     }
 
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({
       status: 'error',
       message: 'Unexpected error',
-      error: error.message,
+      error: error instanceof Error ? error.message : String(error),
     }, { status: 500 })
   }
 }

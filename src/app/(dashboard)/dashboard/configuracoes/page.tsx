@@ -128,10 +128,10 @@ export default function ConfiguracoesPage() {
         title: 'Perfil atualizado',
         description: 'Suas informações foram salvas com sucesso.',
       })
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Erro ao salvar',
-        description: error.message || 'Não foi possível salvar suas informações.',
+        description: error instanceof Error ? error.message : 'Não foi possível salvar suas informações.',
         variant: 'destructive',
       })
     } finally {
@@ -159,10 +159,10 @@ export default function ConfiguracoesPage() {
         title: 'Preferências salvas',
         description: 'Suas preferências de notificação foram atualizadas.',
       })
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Erro ao salvar',
-        description: error.message || 'Não foi possível salvar suas preferências.',
+        description: error instanceof Error ? error.message : 'Não foi possível salvar suas preferências.',
         variant: 'destructive',
       })
     } finally {
@@ -202,10 +202,10 @@ export default function ConfiguracoesPage() {
         title: 'Senha alterada',
         description: 'Sua senha foi atualizada com sucesso.',
       })
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Erro ao alterar senha',
-        description: error.message || 'Não foi possível alterar sua senha.',
+        description: error instanceof Error ? error.message : 'Não foi possível alterar sua senha.',
         variant: 'destructive',
       })
     } finally {

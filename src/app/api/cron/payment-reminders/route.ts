@@ -189,11 +189,11 @@ Garcez Palha - Consultoria Jurídica & Pericial
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Payment Reminders] Error:', error instanceof Error ? error.message : String(error))
+    console.error('[Payment Reminders] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error instanceof Error ? error.message : String(error),
+        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )

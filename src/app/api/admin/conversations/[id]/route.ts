@@ -34,7 +34,7 @@ export async function GET(
   } catch (error) {
     console.error('[Conversation Detail API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
+      { error: 'Internal server error', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
     )
   }

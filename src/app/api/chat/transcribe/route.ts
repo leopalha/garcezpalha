@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Transcription failed', details: error instanceof Error ? error.message : String(error) },
+      { error: 'Transcription failed', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
     )
   }

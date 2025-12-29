@@ -81,7 +81,7 @@ export default function AdminConversationsPage() {
           schema: 'public',
           table: 'conversations',
         },
-        (payload: any) => {
+        (payload: { eventType: string; new: Conversation; old: Conversation }) => {
           console.log('[Real-time] Conversation changed:', payload)
 
           if (payload.eventType === 'INSERT') {

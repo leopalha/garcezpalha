@@ -57,12 +57,12 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     )
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Analytics API] Error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error.message,
+        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )

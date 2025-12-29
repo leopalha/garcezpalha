@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: 'Failed to send message',
-        details: error instanceof Error ? error.message : String(error),
+        details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )
@@ -77,7 +77,7 @@ export async function GET() {
     return NextResponse.json(
       {
         configured: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )

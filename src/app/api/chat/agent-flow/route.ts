@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Failed to process message',
-        details: error instanceof Error ? error.message : String(error),
+        details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Failed to get conversation state',
-        details: error instanceof Error ? error.message : String(error),
+        details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )
@@ -112,7 +112,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Failed to transition state',
-        details: error instanceof Error ? error.message : String(error),
+        details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )

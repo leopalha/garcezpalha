@@ -25,7 +25,7 @@ import { useSession } from 'next-auth/react'
 
 type SettingsTab = 'profile' | 'notifications' | 'security' | 'integrations' | 'billing' | 'appearance'
 
-const tabs: { id: SettingsTab; label: string; icon: any }[] = [
+const tabs: { id: SettingsTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'profile', label: 'Perfil', icon: User },
   { id: 'notifications', label: 'Notificações', icon: Bell },
   { id: 'security', label: 'Segurança', icon: Lock },

@@ -15,6 +15,17 @@ import {
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
+interface ProcessAlertDB {
+  id: string
+  process_number?: string | null
+  description?: string | null
+  deadline_date: string
+  update_type?: string | null
+  tribunal?: string | null
+  status?: string | null
+  created_at: string
+}
+
 export default async function PrazosPage() {
   const session = await getServerSession(authOptions)
   const supabase = await createClient()
@@ -27,7 +38,7 @@ export default async function PrazosPage() {
     .gte('deadline_date', new Date().toISOString())
     .order('deadline_date', { ascending: true })
 
-  const deadlines = (deadlinesData || []).map((d: any) => {
+  const deadlines = (deadlinesData || []).map((d: ProcessAlertDB) => {
     const deadlineDate = new Date(d.deadline_date)
     const today = new Date()
     const daysUntil = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
@@ -209,12 +220,14 @@ export default async function PrazosPage() {
                                 <p className="text-sm text-gray-600 mt-1">
                                   {deadline.description}
                                 </p>
-                                <Link
-                                  href={`/dashboard/processos/${deadline.process.number.split('-')[0]}`}
-                                  className="text-sm text-primary-600 hover:text-primary-700 mt-2 inline-block"
-                                >
-                                  {deadline.process.number} - {deadline.process.title}
-                                </Link>
+                                {deadline.process.number && (
+                                  <Link
+                                    href={`/dashboard/processos/${deadline.process.number.split('-')[0]}`}
+                                    className="text-sm text-primary-600 hover:text-primary-700 mt-2 inline-block"
+                                  >
+                                    {deadline.process.number} - {deadline.process.title}
+                                  </Link>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -277,12 +290,14 @@ export default async function PrazosPage() {
                                 <p className="text-sm text-gray-600 mt-1">
                                   {deadline.description}
                                 </p>
-                                <Link
-                                  href={`/dashboard/processos/${deadline.process.number.split('-')[0]}`}
-                                  className="text-sm text-primary-600 hover:text-primary-700 mt-2 inline-block"
-                                >
-                                  {deadline.process.number} - {deadline.process.title}
-                                </Link>
+                                {deadline.process.number && (
+                                  <Link
+                                    href={`/dashboard/processos/${deadline.process.number.split('-')[0]}`}
+                                    className="text-sm text-primary-600 hover:text-primary-700 mt-2 inline-block"
+                                  >
+                                    {deadline.process.number} - {deadline.process.title}
+                                  </Link>
+                                )}
                               </div>
                             </div>
                           </div>

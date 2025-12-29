@@ -96,12 +96,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true }, { status: 200 })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Resend Webhook] Error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error.message,
+        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
       },
       { status: 500 }
     )

@@ -624,3 +624,123 @@ Iteração 1/50
     at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
 
 ⏸️  Aguardando 2 minutos antes de tentar novamente...
+
+══════════════════════════════════════════════════════════════════════
+CICLO 22
+══════════════════════════════════════════════════════════════════════
+
+======================================================================
+🤖 MANUS AGENT - Iniciando ciclo de trabalho
+⏰ 29/12/2025, 01:22:10
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Iteração 1/50
+──────────────────────────────────────────────────────────────────────
+
+❌ Erro no ciclo: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLd3q9EyPt2GUpSARdr"}
+   Stack: Error: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLd3q9EyPt2GUpSARdr"}
+    at APIError.generate (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/error.mjs:40:20)
+    at Anthropic.makeStatusError (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:275:25)
+    at Anthropic.makeRequest (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:319:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async workCycle (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:325:22)
+    at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
+
+⏸️  Aguardando 2 minutos antes de tentar novamente...
+
+══════════════════════════════════════════════════════════════════════
+CICLO 23
+══════════════════════════════════════════════════════════════════════
+
+======================================================================
+🤖 MANUS AGENT - Iniciando ciclo de trabalho
+⏰ 29/12/2025, 01:24:10
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Iteração 1/50
+──────────────────────────────────────────────────────────────────────
+
+❌ Erro no ciclo: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLmuf1advUxBJ5s61nJ"}
+   Stack: Error: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLmuf1advUxBJ5s61nJ"}
+    at APIError.generate (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/error.mjs:40:20)
+    at Anthropic.makeStatusError (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:275:25)
+    at Anthropic.makeRequest (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:319:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async workCycle (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:325:22)
+    at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
+
+⏸️  Aguardando 2 minutos antes de tentar novamente...
+
+══════════════════════════════════════════════════════════════════════
+CICLO 24
+══════════════════════════════════════════════════════════════════════
+
+======================================================================
+🤖 MANUS AGENT - Iniciando ciclo de trabalho
+⏰ 29/12/2025, 01:26:11
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Iteração 1/50
+──────────────────────────────────────────────────────────────────────
+
+❌ Erro no ciclo: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLvnAJykwGus4ez3URu"}
+   Stack: Error: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaLvnAJykwGus4ez3URu"}
+    at APIError.generate (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/error.mjs:40:20)
+    at Anthropic.makeStatusError (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:275:25)
+    at Anthropic.makeRequest (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:319:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async workCycle (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:325:22)
+    at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
+
+⏸️  Aguardando 2 minutos antes de tentar novamente...
+
+══════════════════════════════════════════════════════════════════════
+CICLO 25
+══════════════════════════════════════════════════════════════════════
+
+======================================================================
+🤖 MANUS AGENT - Iniciando ciclo de trabalho
+⏰ 29/12/2025, 01:28:11
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Iteração 1/50
+──────────────────────────────────────────────────────────────────────
+
+❌ Erro no ciclo: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaM5e49nvkrdeR3ErNYd"}
+   Stack: Error: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaM5e49nvkrdeR3ErNYd"}
+    at APIError.generate (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/error.mjs:40:20)
+    at Anthropic.makeStatusError (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:275:25)
+    at Anthropic.makeRequest (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:319:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async workCycle (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:325:22)
+    at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
+
+⏸️  Aguardando 2 minutos antes de tentar novamente...
+
+══════════════════════════════════════════════════════════════════════
+CICLO 26
+══════════════════════════════════════════════════════════════════════
+
+======================================================================
+🤖 MANUS AGENT - Iniciando ciclo de trabalho
+⏰ 29/12/2025, 01:30:11
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+Iteração 1/50
+──────────────────────────────────────────────────────────────────────
+
+❌ Erro no ciclo: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaMEVw1G2KHGgmETSEMu"}
+   Stack: Error: 401 {"type":"error","error":{"type":"authentication_error","message":"invalid x-api-key"},"request_id":"req_011CWaMEVw1G2KHGgmETSEMu"}
+    at APIError.generate (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/error.mjs:40:20)
+    at Anthropic.makeStatusError (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:275:25)
+    at Anthropic.makeRequest (file:///D:/garcezpalha/agente-autonomo/node_modules/@anthropic-ai/sdk/core.mjs:319:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async workCycle (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:325:22)
+    at async continuousLoop (file:///D:/garcezpalha/agente-autonomo/manus-agent.js:460:7)
+
+⏸️  Aguardando 2 minutos antes de tentar novamente...

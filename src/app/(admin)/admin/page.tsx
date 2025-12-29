@@ -118,7 +118,7 @@ export default function AdminDashboard() {
 
       if (leadsRes.ok) {
         const leadsData = await leadsRes.json()
-        setRecentLeads((leadsData.leads || []).slice(0, 5).map((l: any) => ({
+        setRecentLeads((leadsData.leads || []).slice(0, 5).map((l: { id: string; name?: string; email?: string; product_name?: string; product?: string; category?: string; status?: string; created_at?: string }) => ({
           id: l.id,
           name: l.name || 'Cliente',
           email: l.email || '',

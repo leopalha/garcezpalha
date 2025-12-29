@@ -222,7 +222,7 @@ A: ${faq.answer}
   } catch (error) {
     console.error('Erro no assistente:', error)
     return NextResponse.json(
-      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },
+      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
     )
   }

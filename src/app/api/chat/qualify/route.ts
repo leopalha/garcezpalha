@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'An error occurred',
+        message: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error)) : 'An error occurred',
       },
       { status: 500 }
     )

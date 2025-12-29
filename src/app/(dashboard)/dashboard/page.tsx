@@ -6,6 +6,16 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
+interface ProcessAlertDB {
+  id: string
+  process_number?: string | null
+  description?: string | null
+  status?: string | null
+  deadline_date?: string | null
+  created_at: string
+  tribunal?: string | null
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient()
 
@@ -31,7 +41,7 @@ export default async function DashboardPage() {
     .order('created_at', { ascending: false })
     .limit(2)
 
-  const recentProcesses = (recentProcessesData || []).map((p: any) => ({
+  const recentProcesses = (recentProcessesData || []).map((p: ProcessAlertDB) => ({
     id: p.id,
     number: p.process_number,
     title: p.description || 'Processo sem descrição',
@@ -50,8 +60,8 @@ export default async function DashboardPage() {
     .order('deadline_date', { ascending: true })
     .limit(2)
 
-  const upcomingDeadlines = (upcomingDeadlinesData || []).map((d: any) => {
-    const deadlineDate = new Date(d.deadline_date)
+  const upcomingDeadlines = (upcomingDeadlinesData || []).map((d: ProcessAlertDB) => {
+    const deadlineDate = new Date(d.deadline_date!)
     const today = new Date()
     const daysRemaining = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 

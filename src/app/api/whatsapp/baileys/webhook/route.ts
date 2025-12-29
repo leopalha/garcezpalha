@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         error: 'Erro ao processar mensagem',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error'
       },
       { status: 500 }
     )

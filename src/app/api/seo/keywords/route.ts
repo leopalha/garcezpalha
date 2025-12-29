@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to fetch keyword research', details: error.message },
+        { error: 'Failed to fetch keyword research', details: error instanceof Error ? error.message : String(error) },
         { status: 500 }
       )
     }

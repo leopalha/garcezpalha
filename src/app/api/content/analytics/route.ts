@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to update metrics', details: error.message },
+        { error: 'Failed to update metrics', details: error instanceof Error ? error.message : String(error) },
         { status: 500 }
       )
     }

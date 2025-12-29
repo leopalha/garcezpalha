@@ -15,6 +15,16 @@ import {
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
+interface InvoiceDB {
+  id: string
+  notes?: string | null
+  amount: number
+  due_date?: string | null
+  paid_at?: string | null
+  status: string
+  payment_method?: string | null
+}
+
 export default async function PagamentosPage() {
   const session = await getServerSession(authOptions)
   const supabase = await createClient()
@@ -25,7 +35,7 @@ export default async function PagamentosPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
-  const payments = (paymentsData || []).map((p: any) => ({
+  const payments = (paymentsData || []).map((p: InvoiceDB) => ({
     id: p.id,
     description: p.notes || 'Pagamento',
     amount: p.amount,
