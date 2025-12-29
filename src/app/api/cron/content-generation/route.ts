@@ -201,7 +201,7 @@ export async function GET(request: NextRequest) {
             status: 'scheduled',
           })
         } catch (error) {
-          console.error(`Error generating content for ${platform}:`, error)
+          console.error(`Error generating content for ${platform}:`, error instanceof Error ? error.message : String(error))
           results.failed++
           results.details.push({
             platform,
@@ -219,7 +219,7 @@ export async function GET(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Content generation cron error:', error)
+    console.error('Content generation cron error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       { error: 'Cron job failed', details: (error as Error).message },
       { status: 500 }

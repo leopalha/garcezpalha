@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(stats)
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API /admin/leads/stats] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

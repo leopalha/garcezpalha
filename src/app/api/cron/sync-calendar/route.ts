@@ -41,12 +41,12 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     )
-  } catch (error: any) {
-    console.error('[Calendar Sync] Error:', error)
+  } catch (error) {
+    console.error('[Calendar Sync] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error.message,
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
@@ -71,12 +71,12 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     )
-  } catch (error: any) {
-    console.error('[Calendar Sync] Error:', error)
+  } catch (error) {
+    console.error('[Calendar Sync] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error.message,
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )

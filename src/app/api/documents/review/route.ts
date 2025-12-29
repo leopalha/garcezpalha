@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       filters
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error fetching review queue:', error)
     return NextResponse.json(
       { error: 'Failed to fetch review queue' },
@@ -133,10 +133,10 @@ export async function POST(request: NextRequest) {
       itemId
     }, { status: success ? 200 : 500 })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error processing review action:', error)
     return NextResponse.json(
-      { error: 'Failed to process review action', details: error.message },
+      { error: 'Failed to process review action', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

@@ -42,10 +42,10 @@ export async function GET(
     }
 
     return NextResponse.json({ messages: messages || [] })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Messages API] Error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch messages', details: error.message },
+      { error: 'Failed to fetch messages', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
@@ -123,10 +123,10 @@ export async function POST(
       response: data.response,
       state: data.state,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Messages API] Error sending message:', error)
     return NextResponse.json(
-      { error: 'Failed to send message', details: error.message },
+      { error: 'Failed to send message', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

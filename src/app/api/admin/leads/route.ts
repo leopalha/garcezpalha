@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       totalPages: result.totalPages,
       total: result.total,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API /admin/leads] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('[Admin Conversations API] Error:', error)
       return NextResponse.json(
-        { error: 'Failed to fetch conversations', details: error.message },
+        { error: 'Failed to fetch conversations', details: error instanceof Error ? error.message : String(error) },
         { status: 500 }
       )
     }
@@ -63,10 +63,10 @@ export async function GET(request: NextRequest) {
       conversations: conversations || [],
       total: conversations?.length || 0,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Admin Conversations API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

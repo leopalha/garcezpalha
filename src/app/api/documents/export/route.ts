@@ -100,10 +100,10 @@ export async function GET(request: NextRequest) {
       )
     }
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error exporting document:', error)
     return NextResponse.json(
-      { error: 'Failed to export document', details: error.message },
+      { error: 'Failed to export document', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
@@ -171,10 +171,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error exporting document:', error)
     return NextResponse.json(
-      { error: 'Failed to export document', details: error.message },
+      { error: 'Failed to export document', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

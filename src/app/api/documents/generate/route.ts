@@ -69,10 +69,10 @@ export async function POST(request: NextRequest) {
       message: 'Document generated and added to review queue'
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error generating document:', error)
     return NextResponse.json(
-      { error: 'Failed to generate document', details: error.message },
+      { error: 'Failed to generate document', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
       categories: ['financeiro', 'imobiliario', 'previdenciario', 'criminal', 'trabalhista', 'consumidor', 'geral']
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Error fetching templates:', error)
     return NextResponse.json(
       { error: 'Failed to fetch templates' },

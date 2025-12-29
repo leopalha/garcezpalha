@@ -2,6 +2,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 /**
+ * Database type definitions
+ */
+interface QualifiedLeadDB {
+  id: string
+  client_name: string
+  phone?: string
+  product_id: string
+  product_name: string
+  score_total: number
+  score_urgency: number
+  score_probability: number
+  score_complexity: number
+  category: string
+  answers?: unknown[]
+  created_at: string
+  source: string
+  status?: string
+}
+
+/**
  * GET /api/admin/leads/qualified
  * Get all qualified leads with filtering
  */
@@ -50,7 +70,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Format leads
-    const formattedLeads = leads?.map((lead: any) => ({
+    const formattedLeads = leads?.map((lead: QualifiedLeadDB) => ({
       id: lead.id,
       clientName: lead.client_name,
       phone: lead.phone,
@@ -73,10 +93,10 @@ export async function GET(request: NextRequest) {
       leads: formattedLeads,
       total: formattedLeads.length,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API /admin/leads/qualified] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
@@ -184,10 +204,10 @@ export async function POST(request: NextRequest) {
       { lead: formattedLead, message: 'Lead created successfully' },
       { status: 201 }
     )
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API /admin/leads/qualified POST] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

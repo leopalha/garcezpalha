@@ -31,10 +31,10 @@ export async function GET(
     }
 
     return NextResponse.json({ conversation })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Conversation Detail API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

@@ -175,12 +175,12 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     )
-  } catch (error: any) {
-    console.error('[Send Follow-ups] Error:', error)
+  } catch (error) {
+    console.error('[Send Follow-ups] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error.message,
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )

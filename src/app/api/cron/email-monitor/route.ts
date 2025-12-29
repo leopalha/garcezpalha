@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('[Cron] Email Monitor Error:', error)
+    console.error('[Cron] Email Monitor Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         success: false,

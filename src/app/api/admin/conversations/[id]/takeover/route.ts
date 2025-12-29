@@ -75,10 +75,10 @@ export async function POST(
       success: true,
       message: 'Conversation taken over successfully',
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Takeover API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

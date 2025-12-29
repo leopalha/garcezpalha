@@ -3,6 +3,21 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getToken } from 'next-auth/jwt'
 
 /**
+ * Database type definitions
+ */
+interface Conversation {
+  id: string
+  user_id?: string | null
+  product_id?: string | null
+  session_id?: string | null
+  status?: string | null
+  mode?: string | null
+  started_at?: string
+  updated_at?: string
+  total_messages?: number | null
+}
+
+/**
  * GET /api/conversations
  * Lista todas as conversas ativas com leads
  */
@@ -29,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch messages for each conversation
     const conversationsWithMessages = await Promise.all(
-      (conversations || []).map(async (conv: any) => {
+      (conversations || []).map(async (conv: Conversation) => {
         const { data: messages } = await supabase
           .from('realtime_messages')
           .select('*')
