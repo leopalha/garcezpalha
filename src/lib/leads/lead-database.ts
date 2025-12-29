@@ -8,6 +8,7 @@ import type {
   QualificationResult,
   LeadCategory,
   QuestionAnswer,
+  QualificationQuestion,
 } from '@/lib/ai/qualification/types'
 import type { PaymentLink } from '@/lib/ai/qualification/payment-link-generator'
 import type { Proposal } from '@/lib/ai/qualification/proposal-generator'
@@ -46,7 +47,7 @@ export interface Lead {
   updatedAt: string
   lastContactAt: string | null
   convertedAt: string | null
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
 }
 
 export interface QualificationSession {
@@ -57,10 +58,10 @@ export interface QualificationSession {
   productName: string
   agentRole: string
   status: 'in_progress' | 'completed' | 'abandoned'
-  questions: any[]
+  questions: QualificationQuestion[]
   answers: QuestionAnswer[]
   currentQuestionIndex: number
-  context: Record<string, any>
+  context: Record<string, unknown>
   clientInfo: {
     name?: string
     email?: string
@@ -72,7 +73,7 @@ export interface QualificationSession {
   updatedAt: string
   completedAt: string | null
   expiresAt: string | null
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
 }
 
 export interface LeadStatistics {
@@ -736,61 +737,61 @@ export async function getLeadInteractions(
 /**
  * Format database lead to TypeScript Lead type
  */
-function formatLead(data: any): Lead {
+function formatLead(data: Record<string, unknown>): Lead {
   return {
-    id: data.id,
-    clientName: data.client_name,
-    email: data.email,
-    phone: data.phone,
-    productId: data.product_id,
-    productName: data.product_name,
-    agentRole: data.agent_role,
-    scoreTotal: data.score_total,
-    scoreUrgency: data.score_urgency,
-    scoreProbability: data.score_probability,
-    scoreComplexity: data.score_complexity,
-    category: data.category,
-    scoreReasoning: data.score_reasoning || [],
-    status: data.status,
-    estimatedValue: data.estimated_value,
-    estimatedFee: data.estimated_fee,
-    recommendedActionType: data.recommended_action_type,
-    recommendedActionPriority: data.recommended_action_priority,
-    recommendedActionMessage: data.recommended_action_message,
-    source: data.source,
-    sessionId: data.session_id,
-    userId: data.user_id,
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
-    lastContactAt: data.last_contact_at,
-    convertedAt: data.converted_at,
-    metadata: data.metadata || {},
+    id: data.id as string,
+    clientName: data.client_name as string,
+    email: data.email as string | null,
+    phone: data.phone as string | null,
+    productId: data.product_id as string,
+    productName: data.product_name as string,
+    agentRole: data.agent_role as string,
+    scoreTotal: data.score_total as number,
+    scoreUrgency: data.score_urgency as number,
+    scoreProbability: data.score_probability as number,
+    scoreComplexity: data.score_complexity as number,
+    category: data.category as LeadCategory,
+    scoreReasoning: (data.score_reasoning as string[]) || [],
+    status: data.status as LeadStatus,
+    estimatedValue: data.estimated_value as number | null,
+    estimatedFee: data.estimated_fee as number | null,
+    recommendedActionType: data.recommended_action_type as string | null,
+    recommendedActionPriority: data.recommended_action_priority as string | null,
+    recommendedActionMessage: data.recommended_action_message as string | null,
+    source: data.source as string,
+    sessionId: data.session_id as string | null,
+    userId: data.user_id as string | null,
+    createdAt: data.created_at as string,
+    updatedAt: data.updated_at as string,
+    lastContactAt: data.last_contact_at as string | null,
+    convertedAt: data.converted_at as string | null,
+    metadata: (data.metadata as Record<string, unknown>) || {},
   }
 }
 
 /**
  * Format database qualification session to TypeScript type
  */
-function formatQualificationSession(data: any): QualificationSession {
+function formatQualificationSession(data: Record<string, unknown>): QualificationSession {
   return {
-    id: data.id,
-    sessionId: data.session_id,
-    leadId: data.lead_id,
-    productId: data.product_id,
-    productName: data.product_name,
-    agentRole: data.agent_role,
-    status: data.status,
-    questions: data.questions || [],
-    answers: data.answers || [],
-    currentQuestionIndex: data.current_question_index || 0,
-    context: data.context || {},
-    clientInfo: data.client_info || {},
-    source: data.source,
-    userId: data.user_id,
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
-    completedAt: data.completed_at,
-    expiresAt: data.expires_at,
-    metadata: data.metadata || {},
+    id: data.id as string,
+    sessionId: data.session_id as string,
+    leadId: data.lead_id as string | null,
+    productId: data.product_id as string,
+    productName: data.product_name as string,
+    agentRole: data.agent_role as string,
+    status: data.status as 'in_progress' | 'completed' | 'abandoned',
+    questions: (data.questions as QualificationQuestion[]) || [],
+    answers: (data.answers as QuestionAnswer[]) || [],
+    currentQuestionIndex: (data.current_question_index as number) || 0,
+    context: (data.context as Record<string, unknown>) || {},
+    clientInfo: (data.client_info as { name?: string; email?: string; phone?: string }) || {},
+    source: data.source as string,
+    userId: data.user_id as string | null,
+    createdAt: data.created_at as string,
+    updatedAt: data.updated_at as string,
+    completedAt: data.completed_at as string | null,
+    expiresAt: data.expires_at as string | null,
+    metadata: (data.metadata as Record<string, unknown>) || {},
   }
 }

@@ -257,7 +257,14 @@ async function handleApprovedPayment(
 
   // Processar fluxo financeiro completo
   try {
-    await processMercadoPagoPaymentWebhook(payment)
+    // Convert payment to MercadoPagoPayment type
+    const mercadoPagoPayment = {
+      id: payment.id as number | string,
+      transaction_amount: payment.transaction_amount as number,
+      description: payment.description as string | undefined,
+      metadata: payment.metadata as Record<string, unknown> | undefined,
+    }
+    await processMercadoPagoPaymentWebhook(mercadoPagoPayment)
   } catch (error) {
     console.error('Error processing financeiro flow:', error)
   }

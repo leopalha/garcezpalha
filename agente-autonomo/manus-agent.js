@@ -323,7 +323,7 @@ Seja proativo, eficiente e mantenha alta qualidade.`,
 
     // Chamar Claude
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-opus-4-20250514',
       max_tokens: 4096,
       system: MANUS_SYSTEM_PROMPT,
       tools: tools,
@@ -434,8 +434,9 @@ async function checkTasksFile() {
 // ========================================
 
 async function continuousLoop() {
-  console.log('🚀 MANUS AUTONOMOUS AGENT')
+  console.log('🚀 MANUS AUTONOMOUS AGENT - CLAUDE OPUS 4')
   console.log('━'.repeat(70))
+  console.log('Modelo: Claude Opus 4 (Mais Avançado)')
   console.log('Modo: Trabalho contínuo autônomo')
   console.log('Arquivo: tasks.md')
   console.log('Protocolo: Claude Code (Manus)')
@@ -446,7 +447,7 @@ async function continuousLoop() {
   await checkTasksFile()
 
   let cycleCount = 0
-  const CYCLE_INTERVAL_MINUTES = 5 // Intervalo entre ciclos completos
+  const CYCLE_INTERVAL_MINUTES = 2 // Intervalo entre ciclos (reduzido para 2 min)
 
   while (true) {
     cycleCount++
@@ -459,9 +460,15 @@ async function continuousLoop() {
       await workCycle()
 
       // Após ciclo completo, aguardar um pouco antes do próximo
-      console.log(`\n⏸️  Ciclo ${cycleCount} concluído`)
-      console.log(`   Aguardando ${CYCLE_INTERVAL_MINUTES} minutos antes do próximo ciclo...`)
-      console.log(`   Próximo ciclo: ${new Date(Date.now() + CYCLE_INTERVAL_MINUTES * 60 * 1000).toLocaleString('pt-BR')}`)
+      console.log(`\n✅ Ciclo ${cycleCount} concluído!`)
+      console.log(`\n${'🎯'.repeat(35)}`)
+      console.log('📊 RESUMO DO CICLO:')
+      console.log(`   ⏰ Horário: ${new Date().toLocaleString('pt-BR')}`)
+      console.log(`   🔄 Ciclos completados: ${cycleCount}`)
+      console.log(`   📋 Verifique tasks.md para ver progresso`)
+      console.log('🎯'.repeat(35))
+      console.log(`\n⏸️  Aguardando ${CYCLE_INTERVAL_MINUTES} minutos antes do próximo ciclo...`)
+      console.log(`   ⏰ Próximo ciclo: ${new Date(Date.now() + CYCLE_INTERVAL_MINUTES * 60 * 1000).toLocaleString('pt-BR')}\n`)
 
       await new Promise((resolve) => setTimeout(resolve, CYCLE_INTERVAL_MINUTES * 60 * 1000))
 

@@ -7,6 +7,41 @@ import { createClient } from '@/lib/supabase/server'
 import { stripe } from '@/lib/payments/stripe'
 import Stripe from 'stripe'
 
+/**
+ * Database type definitions
+ */
+interface Invoice {
+  id: string
+  invoice_number: string
+  issue_date: string
+  amount: number
+  tax_amount: number
+  net_amount: number
+  service_description: string
+  pdf_url?: string
+}
+
+interface Client {
+  id: string
+  full_name: string
+  email: string
+  cpf?: string
+  cnpj?: string
+}
+
+interface Payment {
+  id: string
+  amount: number
+  payment_method: string
+}
+
+interface MercadoPagoPayment {
+  id: number | string
+  transaction_amount: number
+  description?: string
+  metadata?: Record<string, unknown>
+}
+
 export interface FinanceiroInput {
   paymentId: string // ID do pagamento (Stripe ou MercadoPago)
   paymentMethod: 'stripe' | 'mercadopago'
@@ -14,7 +49,7 @@ export interface FinanceiroInput {
   clientId: string
   serviceType: string
   description: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface FinanceiroOutput {
@@ -188,9 +223,9 @@ function calcularImpostos(amount: number): number {
  * Gera PDF da nota fiscal
  */
 async function gerarPDFNotaFiscal(params: {
-  invoice: any
-  client: any
-  payment: any
+  invoice: Invoice
+  client: Client
+  payment: Payment
 }): Promise<string | undefined> {
   // TODO: Integrar com biblioteca de PDF (PDFKit, Puppeteer, etc)
   // TODO: Upload PDF para Supabase Storage
@@ -349,7 +384,7 @@ export async function processStripePaymentWebhook(
  * Webhook MercadoPago: Processa payment approved
  */
 export async function processMercadoPagoPaymentWebhook(
-  payment: any
+  payment: MercadoPagoPayment
 ): Promise<void> {
   console.log('[Financeiro] 💰 MercadoPago payment received:', payment.id)
 
@@ -359,8 +394,8 @@ export async function processMercadoPagoPaymentWebhook(
     paymentId: String(payment.id),
     paymentMethod: 'mercadopago',
     amount: payment.transaction_amount,
-    clientId: metadata.client_id,
-    serviceType: metadata.service_type || 'Serviços Jurídicos',
+    clientId: typeof metadata.client_id === 'string' ? metadata.client_id : '',
+    serviceType: typeof metadata.service_type === 'string' ? metadata.service_type : 'Serviços Jurídicos',
     description: payment.description || 'Pagamento de serviços',
     metadata,
   })

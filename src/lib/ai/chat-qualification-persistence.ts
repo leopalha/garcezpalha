@@ -13,7 +13,11 @@ import {
   createFollowUpMessages,
   logLeadInteraction,
 } from '@/lib/leads/lead-database'
-import type { QualificationResult } from './qualification/types'
+import type {
+  QualificationResult,
+  QuestionAnswer,
+  QualificationQuestion,
+} from './qualification/types'
 import type { PaymentLink } from './qualification/payment-link-generator'
 import type { Proposal } from './qualification/proposal-generator'
 import type { FollowUpMessage } from './qualification/follow-up-scheduler'
@@ -26,7 +30,7 @@ export async function saveQualificationSession(params: {
   productId: string
   productName: string
   agentRole: string
-  questions: any[]
+  questions: QualificationQuestion[]
   clientInfo: {
     name?: string
     email?: string
@@ -60,10 +64,10 @@ export async function loadQualificationSession(sessionId: string): Promise<{
   sessionId: string
   productId: string
   agentRole: string
-  questions: any[]
-  answers: any[]
+  questions: QualificationQuestion[]
+  answers: QuestionAnswer[]
   currentQuestionIndex: number
-  context: Record<string, any>
+  context: Record<string, unknown>
   clientInfo: { name?: string; email?: string; phone?: string }
 } | null> {
   try {
@@ -92,9 +96,9 @@ export async function loadQualificationSession(sessionId: string): Promise<{
 export async function updateSessionProgress(
   sessionId: string,
   params: {
-    answers: any[]
+    answers: QuestionAnswer[]
     currentQuestionIndex: number
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   }
 ): Promise<void> {
   try {
