@@ -25,6 +25,17 @@ import { createClient } from '@/lib/supabase/server'
 import { createPreference, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { emailService } from '@/lib/email/email-service'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+/**
+ * Database type definitions
+ */
+interface Contract {
+  id: string
+  amount: number
+  contract_type?: string
+  clicksign_document_key?: string
+}
 
 interface ClickSignWebhookPayload {
   event: string
@@ -173,8 +184,8 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
  * Create payment link and send to client
  */
 async function createPaymentLinkForContract(
-  supabase: any,
-  contract: any,
+  supabase: SupabaseClient,
+  contract: Contract,
   lead: { id: string; name: string; email: string; phone?: string },
   signedDocumentUrl: string
 ) {
@@ -287,7 +298,7 @@ Garcez Palha - Consultoria Jurídica & Pericial
  */
 async function sendContractConfirmationEmail(
   lead: { name: string; email: string },
-  contract: any,
+  contract: Contract,
   signedDocumentUrl: string
 ) {
   try {

@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { whatsappMessageHandler } from '@/lib/whatsapp/message-handler'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
+import type { WhatsAppIncomingMessage } from '@/lib/whatsapp/types'
+
+/**
+ * WhatsApp Cloud API webhook type definitions
+ */
+interface WhatsAppWebhookMessage {
+  from: string
+  id: string
+  timestamp: string
+  type: string
+  text?: { body: string }
+  audio?: { id: string; mime_type: string }
+  image?: { id: string; mime_type: string }
+  document?: { id: string; mime_type: string; filename?: string }
+  interactive?: unknown
+}
+
+interface WhatsAppContact {
+  profile?: {
+    name?: string
+  }
+  wa_id?: string
+}
 
 /**
  * GET /api/whatsapp-cloud/webhook
@@ -102,23 +125,10 @@ export async function POST(request: NextRequest) {
 /**
  * Process message asynchronously to avoid webhook timeout
  */
-async function processMessageAsync(message: any, contact?: any): Promise<void> {
+async function processMessageAsync(message: WhatsAppWebhookMessage, contact?: WhatsAppContact): Promise<void> {
   try {
-    // Build message object for handler
-    const incomingMessage = {
-      from: message.from,
-      id: message.id,
-      timestamp: message.timestamp,
-      type: message.type,
-      text: message.text,
-      audio: message.audio,
-      image: message.image,
-      document: message.document,
-      interactive: message.interactive
-    }
-
-    // Process with qualification system
-    await whatsappMessageHandler.processMessage(incomingMessage)
+    // Process with qualification system (cast to compatible type)
+    await whatsappMessageHandler.processMessage(message as any)
 
   } catch (error) {
     console.error('[WhatsApp Webhook] Async processing error:', error)

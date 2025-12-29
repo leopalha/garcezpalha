@@ -6,6 +6,7 @@
 
 import { BaseAgent } from '../agents/base-agent'
 import { LEGAL_AGENTS_CONFIG } from '../config/legal-agents-config'
+import { getPromptsModule } from '../prompts/prompts-registry'
 import type { LegalAgentConfig, AgentTaskConfig } from '../config/agent-config'
 import type { AgentConfig, AgentContext, AgentResponse } from '../agents/types'
 
@@ -95,11 +96,6 @@ class GenericLegalAgent extends BaseAgent {
 const agentCache = new Map<string, GenericLegalAgent>()
 
 /**
- * Cache for loaded prompt modules
- */
-const promptModuleCache = new Map<string, any>()
-
-/**
  * Create or retrieve a legal domain agent
  *
  * @param agentId - Agent identifier from LEGAL_AGENTS_CONFIG
@@ -133,17 +129,12 @@ export async function createLegalAgent(
     )
   }
 
-  // Load prompts module (with caching)
-  let prompts = promptModuleCache.get(agentConfig.promptsModule)
+  // Load prompts module from registry (replaces dynamic import for webpack compatibility)
+  const prompts = getPromptsModule(agentConfig.promptsModule)
   if (!prompts) {
-    try {
-      prompts = await import(agentConfig.promptsModule)
-      promptModuleCache.set(agentConfig.promptsModule, prompts)
-    } catch (error) {
-      throw new Error(
-        `Failed to load prompts module for ${agentId}: ${agentConfig.promptsModule}\nError: ${error}`
-      )
-    }
+    throw new Error(
+      `Failed to load prompts module for ${agentId}: ${agentConfig.promptsModule} not found in registry`
+    )
   }
 
   // Create agent instance
@@ -202,5 +193,4 @@ export function findRelevantLegalAgent(input: string): string | undefined {
  */
 export function clearLegalAgentCache(): void {
   agentCache.clear()
-  promptModuleCache.clear()
 }

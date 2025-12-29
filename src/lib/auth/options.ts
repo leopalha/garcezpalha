@@ -1,6 +1,7 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { createClient } from '@supabase/supabase-js'
+import bcrypt from 'bcryptjs'
 
 // Extend the built-in session types
 declare module 'next-auth' {
@@ -67,13 +68,9 @@ export const authOptions: NextAuthOptions = {
           .eq('is_active', true)
           .single()
 
-        if (user) {
-          // For now, accept admin123 password for all users
-          // TODO: Implement proper bcrypt password verification
-          const isValidPassword = credentials.password === 'admin123' ||
-                                   credentials.password === 'advogado123' ||
-                                   credentials.password === 'parceiro123' ||
-                                   credentials.password === 'cliente123'
+        if (user && user.password_hash) {
+          // Verify password using bcrypt
+          const isValidPassword = await bcrypt.compare(credentials.password, user.password_hash)
 
           if (isValidPassword) {
             return {
@@ -83,6 +80,9 @@ export const authOptions: NextAuthOptions = {
               role: user.role as 'admin' | 'lawyer' | 'partner' | 'client',
             }
           }
+
+          // Password is incorrect
+          throw new Error('Email ou senha incorretos')
         }
 
         // Fallback: Try Supabase Auth (for profiles table users)
