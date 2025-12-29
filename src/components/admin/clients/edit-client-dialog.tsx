@@ -22,6 +22,7 @@ import {
 import { Loader2 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
 import { toast } from '@/components/ui/use-toast'
+import { formatPhone, formatCpfCnpj, formatCep } from '@/lib/formatting/br-formats'
 
 interface EditClientDialogProps {
   open: boolean
@@ -139,29 +140,6 @@ export function EditClientDialog({
       zip_code: formData.zip_code || undefined,
       status: formData.status,
     })
-  }
-
-  const formatPhone = (value: string) => {
-    const cleaned = value.replace(/\D/g, '')
-    if (cleaned.length <= 10) {
-      return cleaned.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3')
-    }
-    return cleaned.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3')
-  }
-
-  const formatCpfCnpj = (value: string) => {
-    const cleaned = value.replace(/\D/g, '')
-    if (cleaned.length <= 11) {
-      // CPF
-      return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4')
-    }
-    // CNPJ
-    return cleaned.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5')
-  }
-
-  const formatCep = (value: string) => {
-    const cleaned = value.replace(/\D/g, '')
-    return cleaned.replace(/(\d{5})(\d{0,3})/, '$1-$2')
   }
 
   if (!client) return null

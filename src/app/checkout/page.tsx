@@ -14,6 +14,7 @@ import { Service, CheckoutFormData } from '@/types/checkout'
 import { getSolutionById, formatCurrency, getSolutionPrice, getSolutionFullName } from '@/lib/products/checkout-adapter'
 import { ArrowLeft, ArrowRight, CreditCard, QrCode, Loader2 } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
+import { formatPhone, formatCpfCnpj } from '@/lib/formatting/br-formats'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -61,33 +62,6 @@ export default function CheckoutPage() {
       setEmailError('Email inválido. Use o formato: exemplo@dominio.com')
     } else {
       setEmailError('')
-    }
-  }
-
-  // Phone mask: (21) 99999-9999
-  const formatPhone = (value: string): string => {
-    const numbers = value.replace(/\D/g, '')
-    if (numbers.length <= 2) return `(${numbers}`
-    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`
-  }
-
-  // CPF/CNPJ mask
-  const formatCpfCnpj = (value: string): string => {
-    const numbers = value.replace(/\D/g, '')
-    if (numbers.length <= 11) {
-      // CPF: 123.456.789-00
-      if (numbers.length <= 3) return numbers
-      if (numbers.length <= 6) return `${numbers.slice(0, 3)}.${numbers.slice(3)}`
-      if (numbers.length <= 9) return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`
-      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`
-    } else {
-      // CNPJ: 12.345.678/0001-00
-      if (numbers.length <= 2) return numbers
-      if (numbers.length <= 5) return `${numbers.slice(0, 2)}.${numbers.slice(2)}`
-      if (numbers.length <= 8) return `${numbers.slice(0, 2)}.${numbers.slice(2, 5)}.${numbers.slice(5)}`
-      if (numbers.length <= 12) return `${numbers.slice(0, 2)}.${numbers.slice(2, 5)}.${numbers.slice(5, 8)}/${numbers.slice(8)}`
-      return `${numbers.slice(0, 2)}.${numbers.slice(2, 5)}.${numbers.slice(5, 8)}/${numbers.slice(8, 12)}-${numbers.slice(12, 14)}`
     }
   }
 

@@ -3,6 +3,8 @@
  * Centralized type definitions for Twilio and WhatsApp Cloud API integrations
  */
 
+import { unformatPhone } from '@/lib/formatting/br-formats'
+
 // ============================================================================
 // Twilio Types
 // ============================================================================
@@ -321,9 +323,10 @@ export function isWhatsAppIncomingMessage(message: any): message is WhatsAppInco
 
 /**
  * Helper to format phone numbers consistently
+ * @deprecated Use unformatPhone from @/lib/formatting/br-formats instead
  */
 export function formatPhoneNumber(phone: string): PhoneNumber {
-  return phone.replace(/[^\d]/g, '')
+  return unformatPhone(phone)
 }
 
 /**
