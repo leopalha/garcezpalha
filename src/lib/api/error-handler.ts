@@ -14,7 +14,7 @@ export class APIError extends Error {
     message: string,
     public statusCode: number = 500,
     public code?: string,
-    public details?: any
+    public details?: unknown
   ) {
     super(message)
     this.name = 'APIError'
@@ -26,7 +26,7 @@ export class APIError extends Error {
  */
 export const APIErrors = {
   // 400 Bad Request
-  BadRequest: (message: string, details?: any) =>
+  BadRequest: (message: string, details?: unknown) =>
     new APIError(message, 400, 'BAD_REQUEST', details),
 
   // 401 Unauthorized
@@ -46,7 +46,7 @@ export const APIErrors = {
     new APIError(message, 409, 'CONFLICT'),
 
   // 422 Validation Error
-  ValidationError: (message: string, details?: any) =>
+  ValidationError: (message: string, details?: unknown) =>
     new APIError(message, 422, 'VALIDATION_ERROR', details),
 
   // 429 Rate Limit
@@ -68,8 +68,17 @@ export const APIErrors = {
 interface ErrorResponse {
   error: string
   code: string
-  details?: any
+  details?: unknown
   timestamp: string
+}
+
+/**
+ * Database Error Interface
+ */
+interface DatabaseError {
+  code: string
+  message?: string
+  details?: string
 }
 
 /**
@@ -132,7 +141,7 @@ export function handleAPIError(error: unknown, context?: string): NextResponse<E
 
   // Supabase/PostgreSQL Errors
   if (error && typeof error === 'object' && 'code' in error) {
-    const dbError = error as any
+    const dbError = error as DatabaseError
 
     // Handle common database errors
     if (dbError.code === '23505') {
