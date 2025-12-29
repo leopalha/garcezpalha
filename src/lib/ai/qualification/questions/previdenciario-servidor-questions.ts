@@ -5,7 +5,7 @@
  */
 
 import type { QualificationQuestion, ScoringRule } from '../types'
-import { answerEquals, answerGreaterThan, answerIn, answerContains } from '../score-calculator'
+import { answerEquals, answerGreaterThan, answerIn, answerContains, getAnswerValue } from '../score-calculator'
 
 // ============================================================================
 // PREV-001: REVISÃO DE APOSENTADORIA
@@ -84,8 +84,7 @@ export const REVISAO_APOSENTADORIA_RULES: ScoringRule[] = [
     id: 'vida-toda-high-impact',
     description: 'Revisão da Vida Toda - STF favorável',
     condition: (answers) => {
-      // @ts-ignore
-      const reasons = answers['revision-reason'] as string[]
+      const reasons = getAnswerValue(answers, 'revision-reason')
       return Array.isArray(reasons) && reasons.includes('vida-toda')
     },
     impact: { probability: 40, urgency: 30 },
@@ -94,8 +93,7 @@ export const REVISAO_APOSENTADORIA_RULES: ScoringRule[] = [
     id: 'special-activity-not-recognized',
     description: 'Atividade especial - aumenta tempo',
     condition: (answers) => {
-      // @ts-ignore
-      const reasons = answers['revision-reason'] as string[]
+      const reasons = getAnswerValue(answers, 'revision-reason')
       return Array.isArray(reasons) && reasons.includes('special-activity')
     },
     impact: { probability: 35, urgency: 25 },
@@ -390,13 +388,11 @@ export const DIFERENCAS_SALARIAIS_RULES: ScoringRule[] = [
     id: 'high-retroactive-value',
     description: 'Retroativo alto (>= R$ 10.000)',
     condition: (answers) => {
-      // @ts-ignore
-      const monthly = answers['estimated-monthly-diff'] as number
-      // @ts-ignore
-      const monthsKey = answers['months-not-paid'] as string
+      const monthly = getAnswerValue(answers, 'estimated-monthly-diff')
+      const monthsKey = getAnswerValue(answers, 'months-not-paid')
       const monthsMap: Record<string, number> = { '1-6': 3, '6-12': 9, '12-24': 18, '24-60': 36, '60+': 40 }
-      const months = monthsMap[monthsKey] || 0
-      return monthly * months >= 10000
+      const months = typeof monthsKey === 'string' ? monthsMap[monthsKey] || 0 : 0
+      return typeof monthly === 'number' && monthly * months >= 10000
     },
     impact: { urgency: 30, probability: 25 },
   },
@@ -473,8 +469,7 @@ export const COBRANCA_ENERGIA_RULES: ScoringRule[] = [
     id: 'wrongful-cutoff-severe',
     description: 'Corte sem aviso - ilegal',
     condition: (answers) => {
-      // @ts-ignore
-      const problems = answers['energy-problem'] as string[]
+      const problems = getAnswerValue(answers, 'energy-problem')
       return Array.isArray(problems) && problems.includes('wrongful-cutoff')
     },
     impact: { urgency: 45, probability: 40 },
@@ -509,8 +504,7 @@ export const COBRANCA_CONDOMINIAL_RULES: ScoringRule[] = [
     id: 'fine-over-legal-limit',
     description: 'Multa > 2% - Lei 4.591/64 proíbe',
     condition: (answers) => {
-      // @ts-ignore
-      const problems = answers['condo-problem'] as string[]
+      const problems = getAnswerValue(answers, 'condo-problem')
       return Array.isArray(problems) && problems.includes('fine-over-2')
     },
     impact: { probability: 40, urgency: 25 },

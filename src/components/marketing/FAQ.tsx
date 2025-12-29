@@ -18,16 +18,16 @@ const faqs = [
     answer: 'Sim! Atuamos em todo o Brasil para a maioria dos casos. Como somos 100% digitais, a distância não é problema.',
   },
   {
-    question: 'O que é a garantia de 72h?',
-    answer: 'Garantimos que a primeira ação do seu caso será protocolada em até 72 horas após você enviar todos os documentos. Se não cumprirmos, devolvemos seu dinheiro.',
+    question: 'Como funciona o atendimento inicial?',
+    answer: 'Nosso objetivo é protocolar a primeira ação do seu caso em até 72 horas úteis após você enviar todos os documentos. Os prazos podem variar de acordo com a complexidade de cada situação.',
   },
   {
     question: 'Como acompanho meu caso?',
-    answer: 'Você recebe atualizações automáticas pelo WhatsApp sempre que houver movimentação. Transparência total.',
+    answer: 'Você recebe atualizações automáticas pelo WhatsApp sempre que houver movimentação. Comunicação ágil sobre atualizações do processo.',
   },
   {
-    question: 'E se eu não ficar satisfeito?',
-    answer: 'Temos garantia de satisfação de 72h. Se não estiver satisfeito com nosso atendimento antes do protocolo, devolvemos 100% do valor pago.',
+    question: 'Como funciona a análise inicial?',
+    answer: 'Oferecemos análise preliminar sem compromisso para avaliar a viabilidade da ação. Nossa equipe está disponível para esclarecimento de dúvidas jurídicas.',
   },
 ]
 
@@ -140,6 +140,19 @@ export function FAQ() {
               index={index}
             />
           ))}
+        </div>
+
+        {/* OAB Compliance Disclaimer */}
+        <div className="max-w-3xl mx-auto mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-400">
+          <p className="font-semibold mb-2">IMPORTANTE:</p>
+          <p>
+            Este conteúdo tem caráter meramente informativo e educacional.
+            Não constitui promessa de resultado ou garantia de êxito em processos judiciais.
+            Cada caso é analisado individualmente conforme suas particularidades.
+            Os prazos processuais variam de acordo com a complexidade de cada situação
+            e o andamento do Poder Judiciário.
+          </p>
+          <p className="mt-2 text-xs">OAB/RJ 219.390 | CONPEJ/RJ | CRECI/RJ</p>
         </div>
       </div>
     </section>

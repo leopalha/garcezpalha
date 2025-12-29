@@ -24,8 +24,8 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       initials: 'MS',
       city: 'São Paulo, SP',
       rating: 5,
-      text: 'Excelente atendimento! Resolveram meu caso em tempo recorde. Profissionais extremamente competentes e atenciosos.',
-      result: 'Caso resolvido em 45 dias',
+      text: 'Excelente atendimento! Acompanhamento constante do andamento processual. Profissionais extremamente competentes e atenciosos.',
+      result: 'Caso atendido com excelência',
     },
     {
       name: 'João Santos',
@@ -33,7 +33,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       city: 'Rio de Janeiro, RJ',
       rating: 5,
       text: 'Estava desesperado com minha situação e eles me ajudaram de forma excepcional. Recomendo muito!',
-      result: 'R$ 12.000 de indenização',
+      result: 'Orientação completa recebida',
     },
     {
       name: 'Ana Costa',
@@ -41,15 +41,15 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       city: 'Belo Horizonte, MG',
       rating: 5,
       text: 'Profissionalismo e dedicação do início ao fim. Superaram minhas expectativas.',
-      result: '100% de sucesso',
+      result: 'Atendimento de qualidade',
     },
     {
       name: 'Carlos Oliveira',
       initials: 'CO',
       city: 'Brasília, DF',
       rating: 5,
-      text: 'A melhor decisão que tomei foi contratar esse escritório. Resultados comprovados!',
-      result: 'Processo ganho',
+      text: 'A melhor decisão que tomei foi contratar esse escritório. Atuação técnica diferenciada!',
+      result: 'Processo bem conduzido',
     },
     {
       name: 'Juliana Ferreira',
@@ -57,7 +57,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       city: 'Porto Alegre, RS',
       rating: 5,
       text: 'Equipe muito preparada e sempre disponível para tirar dúvidas. Fiquei muito satisfeita.',
-      result: 'Liminar concedida em 48h',
+      result: 'Comunicação ágil e transparente',
     },
     {
       name: 'Roberto Alves',
@@ -65,7 +65,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
       city: 'Curitiba, PR',
       rating: 5,
       text: 'Honestidade e transparência em todo o processo. Realmente se importam com o cliente.',
-      result: 'Acordo vantajoso obtido',
+      result: 'Acordo obtido com orientação especializada',
     },
   ]
 
@@ -153,12 +153,25 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">95%</div>
-              <div className="text-sm text-muted-foreground">Taxa de Sucesso</div>
+              <div className="text-sm text-muted-foreground">Taxa de Sucesso em Casos Similares</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">15+</div>
               <div className="text-sm text-muted-foreground">Anos no Mercado</div>
             </div>
+          </div>
+
+          {/* OAB Compliance Disclaimer */}
+          <div className="mt-12 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-400">
+            <p className="font-semibold mb-2">IMPORTANTE:</p>
+            <p>
+              Este conteúdo tem caráter meramente informativo e educacional.
+              Não constitui promessa de resultado ou garantia de êxito em processos judiciais.
+              Cada caso é analisado individualmente conforme suas particularidades.
+              Os prazos processuais variam de acordo com a complexidade de cada situação
+              e o andamento do Poder Judiciário.
+            </p>
+            <p className="mt-2 text-xs">OAB/RJ 219.390 | CONPEJ/RJ | CRECI/RJ</p>
           </div>
         </div>
       </div>

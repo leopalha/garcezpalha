@@ -5,7 +5,7 @@
  */
 
 import type { QualificationQuestion, ScoringRule } from '../types'
-import { answerEquals, answerGreaterThan, answerIn, answerContains } from '../score-calculator'
+import { answerEquals, answerGreaterThan, answerIn, answerContains, getAnswerValue } from '../score-calculator'
 
 // ============================================================================
 // TEL-001: COBRANÇA INDEVIDA TELEFONIA
@@ -77,8 +77,7 @@ export const COBRANCA_TELEFONIA_RULES: ScoringRule[] = [
     id: 'service-not-ordered',
     description: 'Serviço não solicitado - forte',
     condition: (answers) => {
-      // @ts-ignore
-      const types = answers['charge-type']
+      const types = getAnswerValue(answers, 'charge-type')
       return Array.isArray(types) && types.includes('service-not-ordered')
     },
     impact: { probability: 35, urgency: 25 },
@@ -143,8 +142,7 @@ export const MULTA_FIDELIDADE_RULES: ScoringRule[] = [
     id: 'anatel-632',
     description: 'Resolução Anatel 632/2014 - não paga multa se serviço ruim',
     condition: (answers) => {
-      // @ts-ignore
-      const reasons = answers['fine-reason']
+      const reasons = getAnswerValue(answers, 'fine-reason')
       return Array.isArray(reasons) && (reasons.includes('slow-internet') || reasons.includes('frequent-drops'))
     },
     impact: { probability: 40, complexity: -15 },
@@ -153,8 +151,7 @@ export const MULTA_FIDELIDADE_RULES: ScoringRule[] = [
     id: 'not-informed',
     description: 'Não informado da fidelidade - multa ilegal',
     condition: (answers) => {
-      // @ts-ignore
-      const reasons = answers['fine-reason']
+      const reasons = getAnswerValue(answers, 'fine-reason')
       return Array.isArray(reasons) && reasons.includes('no-fidelity-info')
     },
     impact: { probability: 45, urgency: 25 },
@@ -249,10 +246,7 @@ export const ASSINATURAS_DIGITAIS_RULES: ScoringRule[] = [
     id: 'cancelled-charging',
     description: 'Cancelou mas cobra - CDC Art. 49',
     condition: (answers) => {
-      // @ts-ignore
-
-      // @ts-ignore
-      const problems = answers['problem-type']
+      const problems = getAnswerValue(answers, 'problem-type')
       return Array.isArray(problems) && problems.includes('cancelled-still-charging')
     },
     impact: { probability: 40, urgency: 25 },
@@ -305,8 +299,7 @@ export const PRODUTO_VICIO_RULES: ScoringRule[] = [
     id: 'art-18-cdc',
     description: 'Art. 18 CDC - 30 dias para consertar',
     condition: (answers) => {
-      // @ts-ignore
-      const situations = answers['defect-situation']
+      const situations = getAnswerValue(answers, 'defect-situation')
       return Array.isArray(situations) && situations.includes('repair-failed')
     },
     impact: { probability: 40, complexity: -15 },
@@ -315,10 +308,8 @@ export const PRODUTO_VICIO_RULES: ScoringRule[] = [
     id: 'essential-product',
     description: 'Produto essencial - danos morais certos',
     condition: (answers) => {
-      // @ts-ignore
-      const situations = answers['defect-situation']
-      // @ts-ignore
-      const type = answers['product-type']
+      const situations = getAnswerValue(answers, 'defect-situation')
+      const type = getAnswerValue(answers, 'product-type')
       return (Array.isArray(situations) && situations.includes('essential')) || type === 'appliance'
     },
     impact: { urgency: 30, probability: 25 },
@@ -423,10 +414,7 @@ export const OVERBOOKING_VOO_RULES: ScoringRule[] = [
     id: 'overbooking-severe',
     description: 'Overbooking - jurisprudência consolidada',
     condition: (answers) => {
-      // @ts-ignore
-
-      // @ts-ignore
-      const problems = answers['flight-problem']
+      const problems = getAnswerValue(answers, 'flight-problem')
       return Array.isArray(problems) && problems.includes('overbooking')
     },
     impact: { probability: 40, urgency: 30 },
@@ -435,10 +423,7 @@ export const OVERBOOKING_VOO_RULES: ScoringRule[] = [
     id: 'missed-important-event',
     description: 'Perdeu compromisso importante - danos morais altos',
     condition: (answers) => {
-      // @ts-ignore
-
-      // @ts-ignore
-      const problems = answers['flight-problem']
+      const problems = getAnswerValue(answers, 'flight-problem')
       return Array.isArray(problems) && problems.includes('missed-event')
     },
     impact: { urgency: 40, probability: 30 },
@@ -520,8 +505,7 @@ export const DISTRATO_IMOBILIARIO_RULES: ScoringRule[] = [
     id: 'judicial-recovery',
     description: 'Construtora em recuperação - urgência máxima',
     condition: (answers) => {
-      // @ts-ignore
-      const reasons = answers['reason-withdrawal']
+      const reasons = getAnswerValue(answers, 'reason-withdrawal')
       return Array.isArray(reasons) && reasons.includes('judicial-recovery')
     },
     impact: { urgency: 45, probability: 30 },

@@ -11,16 +11,16 @@ interface GuaranteeSectionProps {
 }
 
 export function GuaranteeSection({
-  guaranteeTitle = 'Garantia de 100% de Satisfação',
-  guaranteeDescription = 'Estamos tão confiantes no nosso trabalho que oferecemos garantia total',
+  guaranteeTitle = 'Compromisso com a Excelência',
+  guaranteeDescription = 'Escritório com sólida atuação e compromisso com atendimento de qualidade',
   guaranteePeriod = '30 dias',
   guaranteePoints,
 }: GuaranteeSectionProps) {
   const defaultPoints = [
-    'Se não ficarmos satisfeitos com o resultado, devolvemos 100% do investimento',
-    'Acompanhamento gratuito durante todo o período da garantia',
-    'Sem letras miúdas: garantia clara e transparente',
-    'Atendimento prioritário para clientes com garantia ativa',
+    'Acompanhamento transparente de todas as etapas do processo',
+    'Acompanhamento durante todo o período de atuação',
+    'Orientação sobre expectativas realistas do andamento processual',
+    'Atendimento prioritário e personalizado',
   ]
 
   const points = guaranteePoints || defaultPoints
@@ -52,10 +52,10 @@ export function GuaranteeSection({
                   </span>
                 </div>
                 <h3 className="text-2xl font-bold mb-4">
-                  Risco Zero para Você
+                  Compromisso com Qualidade
                 </h3>
                 <p className="text-muted-foreground">
-                  Você não arrisca nada. Se não alcançarmos o resultado prometido, devolvemos seu investimento.
+                  Atuação comprometida e transparente. Orientação sobre os diferentes cenários processuais possíveis.
                 </p>
               </div>
 
@@ -105,9 +105,9 @@ export function GuaranteeSection({
                 <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <RefreshCcw className="h-6 w-6 text-emerald-600" />
                 </div>
-                <h4 className="font-semibold mb-2">Garantia Ativada</h4>
+                <h4 className="font-semibold mb-2">Compromisso Ativo</h4>
                 <p className="text-sm text-muted-foreground">
-                  Satisfação garantida ou seu dinheiro de volta
+                  Atendimento de qualidade e acompanhamento completo
                 </p>
               </CardContent>
             </Card>
@@ -115,8 +115,21 @@ export function GuaranteeSection({
 
           <div className="mt-8 p-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-center">
             <p className="text-emerald-900 dark:text-emerald-100 font-semibold">
-              ✅ Garantia incondicional - Sem perguntas, sem complicações
+              ✅ Atendimento ético e comprometido - Transparência em todas as etapas
             </p>
+          </div>
+
+          {/* OAB Compliance Disclaimer */}
+          <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-400">
+            <p className="font-semibold mb-2">IMPORTANTE:</p>
+            <p>
+              Este conteúdo tem caráter meramente informativo e educacional.
+              Não constitui promessa de resultado ou garantia de êxito em processos judiciais.
+              Cada caso é analisado individualmente conforme suas particularidades.
+              Os prazos processuais variam de acordo com a complexidade de cada situação
+              e o andamento do Poder Judiciário.
+            </p>
+            <p className="mt-2 text-xs">OAB/RJ 219.390 | CONPEJ/RJ | CRECI/RJ</p>
           </div>
         </div>
       </div>

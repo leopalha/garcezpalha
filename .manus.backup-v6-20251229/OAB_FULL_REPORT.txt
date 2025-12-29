@@ -1,0 +1,208 @@
+=== Checking: docs/00_ACTIVATION_PROMPT.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/00_EMPRESA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/00-INDICE-GERAL.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/01-POSICIONAMENTO-MARCA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/02_DESIGN_SYSTEM.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/02-ARQUITETURA-PLATAFORMA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/03_PRD.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/03-CATALOGO-PRODUTOS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/04_USER_FLOWS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/04-LANDING-PAGE-PRINCIPAL.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/05_TECHNICAL_ARCHITECTURE.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/05-GOOGLE-ADS-CAMPANHAS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/06_COMPONENT_LIBRARY.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/06-SEO-CONTEUDO.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/07_DEV_BRIEF.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/07-IA-TRIAGEM-UNIVERSAL.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/08_BUSINESS_MODEL.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/08-FLUXOS-QUALIFICACAO.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/09-PRECIFICACAO-DINAMICA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/10-PROPOSTAS-CONTRATOS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/11-PAGAMENTOS-AUTOMACAO.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/12-ONBOARDING-CLIENTE.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/13-TEMPLATES-PETICOES.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/14-IA-PRODUCAO-JURIDICA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/15_CATALOGO_SERVICOS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/15-PROTOCOLOS-ACOMPANHAMENTO.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/16_ARQUITETURA_AGENTES_IA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/16-METRICAS-KPIS.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/17_INTEGRACOES.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/17-STACK-TECNOLOGICA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/18_DEPLOY_GUIDE.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/18-ROADMAP-IMPLEMENTACAO.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/19-IA-VERTICAL-AUTONOMA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/20_TESTES.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/API_DOCUMENTATION.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/AUDIT_REPORT.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/CRONOGRAMA_EXECUCAO_GARCEZPALHA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/DATABASE_SCHEMA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/desbloqueio-conta-estrutura-completa.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/FOLLOW_UP_AUTOMATION.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/IMPLEMENTATION_COMPLETE.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/INDEX.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/NEXT_PHASE_PLAN.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/POLITICA_SLA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/PRODUCTS_QUICK_START.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/PRODUCTS_SYSTEM.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/QUALIFICATION_SYSTEM.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/tasks.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/VSL_PAGINAS_VENDA_GARCEZPALHA.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: docs/VSL_PRODUTOS_COMPLETO_FINAL.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: business/DADOS_MESTRES.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+
+=== Checking: business/OAB_COMPLIANCE_GUIDE.md ===
+🔍 MANUS v6.0 - OAB Compliance Check
+======================================
+

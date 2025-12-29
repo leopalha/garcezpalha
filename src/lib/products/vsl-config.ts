@@ -38,11 +38,11 @@ export const DEFAULT_VSL_CONFIG: VSLConfig = {
     "Notificação extrajudicial",
     "Ação judicial se necessário",
     "Acompanhamento até resolução",
-    "Garantia de resultado"
+    "Comunicação ágil sobre atualizações"
   ],
   urgencyMessage: "⚡ Atendimento prioritário - Análise gratuita do seu caso",
-  guaranteeTitle: "Garantia de Resultado",
-  guaranteeDescription: "Trabalhamos com honorários de êxito. Só cobramos se você ganhar.",
+  guaranteeTitle: "Compromisso com Excelência",
+  guaranteeDescription: "Atuação com honorários de êxito em casos selecionados. Análise preliminar sem compromisso.",
   stats: {
     years: 10,
     cases: 300,

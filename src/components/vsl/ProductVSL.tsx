@@ -299,11 +299,11 @@ export function ProductVSL({
       <section className={`py-16 bg-gradient-to-r from-${heroColor}-600 to-${heroColor}-500 text-white`}>
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Resolva Seu Caso Hoje Mesmo
+            Entre em Contato para Análise do Seu Caso
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Advogados especializados prontos para atender você.
-            <strong className="block mt-2">Análise Gratuita • Atendimento Rápido • Resultados Garantidos</strong>
+            <strong className="block mt-2">Análise Gratuita • Atendimento Especializado • Acompanhamento Transparente</strong>
           </p>
           <Button
             size="lg"
@@ -315,8 +315,21 @@ export function ProductVSL({
             <ArrowRight className="h-6 w-6 ml-2" />
           </Button>
           <p className="mt-4 text-sm">
-            Mais de {stats.clients} clientes já resolveram seus casos conosco
+            Mais de {stats.clients} clientes já foram atendidos com excelência
           </p>
+
+          {/* OAB Compliance Disclaimer */}
+          <div className="mt-8 p-4 bg-white/10 backdrop-blur-sm rounded-lg text-sm text-white/90 max-w-3xl mx-auto">
+            <p className="font-semibold mb-2">IMPORTANTE:</p>
+            <p>
+              Este conteúdo tem caráter meramente informativo e educacional.
+              Não constitui promessa de resultado ou garantia de êxito em processos judiciais.
+              Cada caso é analisado individualmente conforme suas particularidades.
+              Os prazos processuais variam de acordo com a complexidade de cada situação
+              e o andamento do Poder Judiciário.
+            </p>
+            <p className="mt-2 text-xs">OAB/RJ 219.390 | CONPEJ/RJ | CRECI/RJ</p>
+          </div>
         </div>
       </section>
     </div>
