@@ -12,7 +12,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Criminal Law Agent',
     description: 'Specializes in criminal defense and procedural law',
     systemPromptKey: 'CRIMINAL_LAW_SYSTEM_PROMPT',
-    promptsModule: '../prompts/criminal-law-prompts',
+    promptsModule: '@/lib/ai/prompts/criminal-law-prompts',
     keywords: [
       // Criminal terms
       'criminal', 'penal', 'crime', 'delito',
@@ -82,7 +82,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Health Insurance Agent',
     description: 'Specializes in health plan denials, bariatric surgery, TEA treatment, and medical coverage',
     systemPromptKey: 'HEALTH_INSURANCE_SYSTEM_PROMPT',
-    promptsModule: '../prompts/health-insurance-prompts',
+    promptsModule: '@/lib/ai/prompts/health-insurance-prompts',
     keywords: [
       // Health plan terms
       'plano de saude', 'plano de saúde', 'plano', 'operadora',
@@ -155,7 +155,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Financial Protection Agent',
     description: 'Specializes in banking issues, fraud, account blocking, and consumer protection',
     systemPromptKey: 'FINANCIAL_PROTECTION_SYSTEM_PROMPT',
-    promptsModule: '../prompts/financial-protection-prompts',
+    promptsModule: '@/lib/ai/prompts/financial-protection-prompts',
     keywords: [
       // Banking
       'banco', 'bancário', 'bancario', 'conta bancária', 'conta bancaria',
@@ -195,7 +195,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Real Estate Agent',
     description: 'Specializes in property law, usucapião, eviction, and real estate transactions',
     systemPromptKey: 'REAL_ESTATE_SYSTEM_PROMPT',
-    promptsModule: '../prompts/real-estate-prompts',
+    promptsModule: '@/lib/ai/prompts/real-estate-prompts',
     keywords: [
       // Property
       'imóvel', 'imovel', 'casa', 'apartamento', 'terreno', 'propriedade',
@@ -234,7 +234,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Social Security Agent',
     description: 'Specializes in INSS benefits, retirement, disability, and social security law',
     systemPromptKey: 'SOCIAL_SECURITY_SYSTEM_PROMPT',
-    promptsModule: '../prompts/social-security-prompts',
+    promptsModule: '@/lib/ai/prompts/social-security-prompts',
     keywords: [
       // INSS
       'inss', 'previdência', 'previdencia', 'aposentadoria',
@@ -272,7 +272,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Medical Expertise Agent',
     description: 'Specializes in medical error, malpractice, and health law',
     systemPromptKey: 'MEDICAL_EXPERTISE_SYSTEM_PROMPT',
-    promptsModule: '../prompts/medical-expertise-prompts',
+    promptsModule: '@/lib/ai/prompts/medical-expertise-prompts',
     keywords: [
       // Medical error
       'erro médico', 'erro medico', 'negligência médica', 'negligencia medica',
@@ -301,7 +301,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Document Forensics Agent',
     description: 'Specializes in document analysis, signature fraud, and forensic expertise',
     systemPromptKey: 'DOCUMENT_FORENSICS_SYSTEM_PROMPT',
-    promptsModule: '../prompts/document-forensics-prompts',
+    promptsModule: '@/lib/ai/prompts/document-forensics-prompts',
     keywords: [
       // Forensics
       'perícia', 'pericia', 'laudo', 'grafotécnica', 'grafotecnica',
@@ -328,7 +328,7 @@ export const LEGAL_AGENTS_CONFIG: AgentConfigMap = {
     name: 'Property Valuation Agent',
     description: 'Specializes in property appraisal and real estate valuation',
     systemPromptKey: 'PROPERTY_VALUATION_SYSTEM_PROMPT',
-    promptsModule: '../prompts/property-valuation-prompts',
+    promptsModule: '@/lib/ai/prompts/property-valuation-prompts',
     keywords: [
       // Valuation
       'avaliação', 'avaliacao', 'laudo de avaliação', 'laudo de avaliacao',

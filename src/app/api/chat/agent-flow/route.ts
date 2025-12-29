@@ -28,13 +28,13 @@ export async function POST(request: NextRequest) {
       conversationData: result.data,
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {
         error: 'Failed to process message',
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
@@ -66,13 +66,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ state })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {
         error: 'Failed to get conversation state',
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
@@ -106,13 +106,13 @@ export async function PUT(request: NextRequest) {
       data: updatedData,
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {
         error: 'Failed to transition state',
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )

@@ -109,17 +109,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response)
 
-  } catch (error: any) {
+  } catch (error) {
     const duration = timer.getDuration()
 
-    logger.error('Qualification failed', error, {
+    logger.error('Qualification failed', error instanceof Error ? error : new Error(String(error)), {
       duration: `${duration}ms`,
     })
 
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred',
+        message: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'An error occurred',
       },
       { status: 500 }
     )
@@ -176,10 +176,10 @@ export async function GET(request: NextRequest) {
       clientInfo: session.clientInfo,
     })
 
-  } catch (error: any) {
+  } catch (error) {
     const duration = timer.getDuration()
 
-    logger.error('Failed to retrieve session', error, {
+    logger.error('Failed to retrieve session', error instanceof Error ? error : new Error(String(error)), {
       duration: `${duration}ms`,
     })
 
@@ -233,10 +233,10 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true })
 
-  } catch (error: any) {
+  } catch (error) {
     const duration = timer.getDuration()
 
-    logger.error('Failed to cancel session', error, {
+    logger.error('Failed to cancel session', error instanceof Error ? error : new Error(String(error)), {
       duration: `${duration}ms`,
     })
 

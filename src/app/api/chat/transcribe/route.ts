@@ -51,18 +51,18 @@ export async function POST(request: NextRequest) {
       text: transcription.text,
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Transcribe API] Error:', error)
 
     // Handle specific OpenAI errors
-    if (error.code === 'insufficient_quota') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'insufficient_quota') {
       return NextResponse.json(
         { error: 'OpenAI quota exceeded. Please check your billing.' },
         { status: 429 }
       )
     }
 
-    if (error.status === 401) {
+    if (error && typeof error === 'object' && 'status' in error && error.status === 401) {
       return NextResponse.json(
         { error: 'Invalid OpenAI API key' },
         { status: 401 }
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Transcription failed', details: error.message },
+      { error: 'Transcription failed', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
