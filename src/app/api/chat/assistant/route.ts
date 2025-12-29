@@ -6,6 +6,31 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+/**
+ * Database type definitions
+ */
+interface ProductPackage {
+  name: string
+  price: number
+  is_recommended?: boolean
+  description?: string
+  features?: string
+}
+
+interface Product {
+  id: string
+  name: string
+  category?: string
+  description?: string
+  base_price?: number
+  hero_problem?: string
+  benefits?: string
+  features?: string
+  documents_required?: string
+  faq_items?: string
+  product_packages?: ProductPackage[]
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { productId, message, history } = await request.json()
@@ -18,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Se for productId genérico (não UUID), usar contexto geral
-    let product: any = null
+    let product: Product | null = null
     let systemPrompt = ''
 
     if (productId === 'geral' || productId === 'general') {
@@ -98,14 +123,14 @@ O Garcez Palha é um escritório de advocacia online especializado em diversas �
         )
       }
 
-      product = productData
+      product = productData as Product
 
       // Construir contexto rico para o GPT
       systemPrompt = `Você é um assistente de vendas especializado em ${product.name}.
 
 **PRODUTO: ${product.name}**
-Categoria: ${product.category}
-Descrição: ${product.description}
+Categoria: ${product.category || 'N/A'}
+Descrição: ${product.description || 'N/A'}
 
 **PROBLEMA QUE RESOLVE:**
 ${product.hero_problem || 'Não especificado'}
@@ -120,15 +145,15 @@ ${product.features ? JSON.parse(product.features).join('\n- ') : 'Não especific
 ${product.documents_required ? JSON.parse(product.documents_required).join('\n- ') : 'Não especificado'}
 
 **PACOTES DISPONÍVEIS:**
-${product.product_packages?.map((pkg: any) => `
+${product.product_packages?.map((pkg: ProductPackage) => `
 - ${pkg.name} (R$ ${(pkg.price / 100).toFixed(2)})
   ${pkg.is_recommended ? '⭐ RECOMENDADO' : ''}
-  ${pkg.description}
+  ${pkg.description || ''}
   Inclui: ${pkg.features ? JSON.parse(pkg.features).join(', ') : 'N/A'}
 `).join('\n') || 'Nenhum pacote disponível'}
 
 **PERGUNTAS FREQUENTES:**
-${product.faq_items ? JSON.parse(product.faq_items).map((faq: any) => `
+${product.faq_items ? JSON.parse(product.faq_items).map((faq: { question: string; answer: string }) => `
 Q: ${faq.question}
 A: ${faq.answer}
 `).join('\n') : 'Não especificado'}
@@ -194,10 +219,10 @@ A: ${faq.answer}
       } : null
     })
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Erro no assistente:', error)
     return NextResponse.json(
-      { error: 'Erro ao processar mensagem', details: error.message },
+      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

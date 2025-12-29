@@ -72,10 +72,10 @@ export const chatRouter = router({
           response,
           conversation_id: input.conversation_id,
         }
-      } catch (error: any) {
+      } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: error.message || 'Erro ao processar mensagem',
+          message: error instanceof Error ? error.message : 'Erro ao processar mensagem',
           cause: error,
         })
       }
@@ -209,10 +209,10 @@ export const chatRouter = router({
           ...response,
           conversation_id: input.conversation_id,
         }
-      } catch (error: any) {
+      } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: error.message || 'Erro ao processar mensagem',
+          message: error instanceof Error ? error.message : 'Erro ao processar mensagem',
           cause: error,
         })
       }

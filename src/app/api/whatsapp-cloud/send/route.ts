@@ -46,13 +46,13 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error sending WhatsApp message:', error)
     return NextResponse.json(
       {
         success: false,
         error: 'Failed to send message',
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
@@ -73,11 +73,11 @@ export async function GET() {
         ? 'WhatsApp Cloud API configured'
         : 'WhatsApp Cloud API not configured',
     })
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         configured: false,
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
