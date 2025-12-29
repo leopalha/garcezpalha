@@ -6,6 +6,16 @@
 import { createClient } from '@/lib/supabase/server'
 import { googleCalendar } from '@/lib/calendar/google-calendar-service'
 
+/**
+ * Database type definitions
+ */
+interface Lead {
+  id: string
+  client_name: string
+  email?: string
+  phone?: string
+}
+
 export interface AgendamentoInput {
   leadId: string
   serviceType: string
@@ -171,7 +181,7 @@ async function enviarConfirmacaoAgendamento(params: {
  */
 async function agendarLembretes(
   appointmentId: string,
-  lead: any,
+  lead: Lead,
   slot: { date: string; time: string }
 ): Promise<void> {
   // TODO: Implementar via cron job ou sistema de filas

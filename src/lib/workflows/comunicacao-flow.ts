@@ -13,7 +13,7 @@ export interface ComunicacaoInput {
   fromName?: string
   message: string
   messageId?: string // ID externo da mensagem
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface ComunicacaoOutput {
@@ -236,11 +236,18 @@ async function buscarHistoricoConversa(conversationId: string): Promise<any[]> {
 /**
  * Verifica se precisa de handoff humano
  */
+interface ConversationMessage {
+  sender_type: string
+  metadata?: {
+    confidence?: number
+  }
+}
+
 function verificarNecessidadeHandoff(params: {
   message: string
   confidence: number
   agentUsed: string
-  conversationHistory: any[]
+  conversationHistory: ConversationMessage[]
 }): boolean {
   // Regras de handoff:
 
@@ -401,7 +408,23 @@ async function enviarEmail(to: string, message: string): Promise<void> {
 /**
  * Webhook: Recebe mensagem do WhatsApp Cloud API
  */
-export async function processWhatsAppWebhook(webhookData: any): Promise<void> {
+interface WhatsAppWebhookData {
+  entry?: Array<{
+    changes?: Array<{
+      value?: {
+        messages?: Array<{
+          from: string
+          id: string
+          text?: {
+            body?: string
+          }
+        }>
+      }
+    }>
+  }>
+}
+
+export async function processWhatsAppWebhook(webhookData: WhatsAppWebhookData): Promise<void> {
   console.log('[Comunicação] 📲 WhatsApp webhook recebido')
 
   // Extrair dados do webhook

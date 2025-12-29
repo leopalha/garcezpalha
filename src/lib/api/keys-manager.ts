@@ -73,9 +73,9 @@ export async function getOpenAIKey(): Promise<string> {
     }
 
     return key
-  } catch (error: any) {
+  } catch (error) {
     // Se for erro de rede/timeout, usar cache antigo se disponível
-    if (cached && cached.isValid && error.name === 'AbortError') {
+    if (cached && cached.isValid && error instanceof Error && error.name === 'AbortError') {
       console.warn('[Keys Manager] Usando cache OpenAI (timeout na validação)')
       return key
     }
@@ -111,8 +111,8 @@ export async function validateOpenAIKey(): Promise<{
   try {
     await getOpenAIKey()
     return { valid: true }
-  } catch (error: any) {
-    return { valid: false, error: error.message }
+  } catch (error) {
+    return { valid: false, error: error instanceof Error ? error.message : String(error) }
   }
 }
 
@@ -126,9 +126,9 @@ export async function withValidKey<T>(
   try {
     const key = await getOpenAIKey()
     return await operation(key)
-  } catch (error: any) {
+  } catch (error) {
     // Se erro 401/403, invalidar cache e tentar uma vez
-    if (error.status === 401 || error.status === 403) {
+    if (error && typeof error === 'object' && 'status' in error && (error.status === 401 || error.status === 403)) {
       invalidateKeyCache()
 
       // Tentar uma última vez com validação forçada

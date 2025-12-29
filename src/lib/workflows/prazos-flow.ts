@@ -6,6 +6,35 @@
 import { createClient } from '@/lib/supabase/server'
 import { googleCalendar } from '@/lib/calendar/google-calendar-service'
 
+/**
+ * Database type definitions
+ */
+interface Processo {
+  id: string
+  numero_processo?: string
+  client?: {
+    full_name?: string
+  }
+}
+
+interface Deadline {
+  id: string
+  deadline_date: string
+  description: string
+  case_id: string
+  status: string
+}
+
+interface DeadlineReminder {
+  id: string
+  deadline_id: string
+  reminder_time: string
+  channel: string
+  status: string
+  recipient_id?: string
+  deadline: Deadline
+}
+
 export interface PrazosInput {
   caseId: string
   deadlineType: string // 'prazo_judicial', 'prazo_administrativo', 'prazo_interno'
@@ -125,7 +154,7 @@ async function agendarLembretesPrazos(
   deadlineId: string,
   deadlineDate: string,
   notifyBefore: number[],
-  processo: any,
+  processo: Processo,
   assignedTo?: string
 ): Promise<number> {
   const supabase = await createClient()
@@ -274,7 +303,7 @@ export async function processarLembretesPendentes(): Promise<{
 /**
  * Envia email de lembrete
  */
-async function enviarEmailLembrete(reminder: any): Promise<void> {
+async function enviarEmailLembrete(reminder: DeadlineReminder): Promise<void> {
   const deadline = reminder.deadline
   const daysUntil = Math.ceil(
     (new Date(deadline.deadline_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
@@ -297,7 +326,7 @@ async function enviarEmailLembrete(reminder: any): Promise<void> {
 /**
  * Envia WhatsApp de lembrete
  */
-async function enviarWhatsAppLembrete(reminder: any): Promise<void> {
+async function enviarWhatsAppLembrete(reminder: DeadlineReminder): Promise<void> {
   const deadline = reminder.deadline
 
   console.log('[Prazos] 📱 WhatsApp lembrete:', {

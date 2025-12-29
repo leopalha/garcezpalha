@@ -130,7 +130,7 @@ export async function executeDocumentosFlow(
  */
 async function uploadDocumentToStorage(
   file: File | { name: string; url: string; type: string }
-): Promise<{ url: string; storageError?: any }> {
+): Promise<{ url: string; storageError?: unknown }> {
   const supabase = await createClient()
 
   // Se já tem URL, retorna direto

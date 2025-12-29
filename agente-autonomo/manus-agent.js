@@ -323,7 +323,7 @@ Seja proativo, eficiente e mantenha alta qualidade.`,
 
     // Chamar Claude
     const response = await anthropic.messages.create({
-      model: 'claude-opus-4-20250514',
+      model: 'claude-3-7-sonnet-20250219',
       max_tokens: 4096,
       system: MANUS_SYSTEM_PROMPT,
       tools: tools,
@@ -434,9 +434,9 @@ async function checkTasksFile() {
 // ========================================
 
 async function continuousLoop() {
-  console.log('🚀 MANUS AUTONOMOUS AGENT - CLAUDE OPUS 4')
+  console.log('🚀 MANUS AUTONOMOUS AGENT - CLAUDE 3.7 SONNET')
   console.log('━'.repeat(70))
-  console.log('Modelo: Claude Opus 4 (Mais Avançado)')
+  console.log('Modelo: Claude 3.7 Sonnet (Balanceado - Custo/Benefício)')
   console.log('Modo: Trabalho contínuo autônomo')
   console.log('Arquivo: tasks.md')
   console.log('Protocolo: Claude Code (Manus)')
