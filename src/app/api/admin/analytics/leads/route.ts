@@ -2,6 +2,57 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 /**
+ * Analytics Interfaces
+ */
+interface ProductStats {
+  productId: string
+  productName: string
+  total: number
+  hot: number
+  warm: number
+  cold: number
+  veryCold: number
+  converted: number
+  avgScore: number
+  conversionRate: number
+  scores?: number[]
+}
+
+interface SourceStats {
+  source: string
+  total: number
+  converted: number
+  avgScore: number
+  conversionRate: number
+  scores?: number[]
+}
+
+interface TimeSeriesData {
+  date: string
+  total: number
+  hot: number
+  warm: number
+  cold: number
+  veryCold: number
+  converted: number
+  avgScore: number
+  scores?: number[]
+}
+
+interface QualifiedLead {
+  created_at: string
+  category: 'hot' | 'warm' | 'cold' | 'very-cold'
+  status: 'new' | 'in-progress' | 'converted' | 'lost'
+  product_id: string
+  product_name: string
+  source: string
+  score_total: number
+  score_urgency: number
+  score_probability: number
+  score_complexity: number
+}
+
+/**
  * GET /api/admin/analytics/leads
  * Get analytics data for qualified leads
  */
@@ -61,71 +112,79 @@ export async function GET(request: NextRequest) {
         : 0
 
     // Group by product
-    const productStats = leads?.reduce(
-      (acc, lead) => {
-        if (!acc[lead.product_id]) {
-          acc[lead.product_id] = {
-            productId: lead.product_id,
-            productName: lead.product_name,
-            total: 0,
-            hot: 0,
-            warm: 0,
-            cold: 0,
-            veryCold: 0,
-            converted: 0,
-            avgScore: 0,
-            scores: [],
+    const productStats: Record<string, ProductStats> =
+      leads?.reduce(
+        (acc, lead) => {
+          if (!acc[lead.product_id]) {
+            acc[lead.product_id] = {
+              productId: lead.product_id,
+              productName: lead.product_name,
+              total: 0,
+              hot: 0,
+              warm: 0,
+              cold: 0,
+              veryCold: 0,
+              converted: 0,
+              avgScore: 0,
+              conversionRate: 0,
+              scores: [],
+            }
           }
-        }
 
-        acc[lead.product_id].total++
-        acc[lead.product_id].scores.push(lead.score_total)
+          acc[lead.product_id].total++
+          acc[lead.product_id].scores!.push(lead.score_total)
 
-        if (lead.category === 'hot') acc[lead.product_id].hot++
-        if (lead.category === 'warm') acc[lead.product_id].warm++
-        if (lead.category === 'cold') acc[lead.product_id].cold++
-        if (lead.category === 'very-cold') acc[lead.product_id].veryCold++
-        if (lead.status === 'converted') acc[lead.product_id].converted++
+          if (lead.category === 'hot') acc[lead.product_id].hot++
+          if (lead.category === 'warm') acc[lead.product_id].warm++
+          if (lead.category === 'cold') acc[lead.product_id].cold++
+          if (lead.category === 'very-cold') acc[lead.product_id].veryCold++
+          if (lead.status === 'converted') acc[lead.product_id].converted++
 
-        return acc
-      },
-      {} as Record<string, any>
-    )
+          return acc
+        },
+        {} as Record<string, ProductStats>
+      ) || {}
 
     // Calculate average scores per product
-    Object.values(productStats || {}).forEach((stat: any) => {
-      stat.avgScore =
-        stat.scores.reduce((sum: number, score: number) => sum + score, 0) / stat.scores.length
+    Object.values(productStats).forEach((stat) => {
+      if (stat.scores && stat.scores.length > 0) {
+        stat.avgScore =
+          stat.scores.reduce((sum: number, score: number) => sum + score, 0) / stat.scores.length
+      }
       stat.conversionRate = stat.total > 0 ? (stat.converted / stat.total) * 100 : 0
       delete stat.scores
     })
 
     // Group by source
-    const sourceStats = leads?.reduce(
-      (acc, lead) => {
-        if (!acc[lead.source]) {
-          acc[lead.source] = {
-            source: lead.source,
-            total: 0,
-            converted: 0,
-            avgScore: 0,
-            scores: [],
+    const sourceStats: Record<string, SourceStats> =
+      leads?.reduce(
+        (acc, lead) => {
+          if (!acc[lead.source]) {
+            acc[lead.source] = {
+              source: lead.source,
+              total: 0,
+              converted: 0,
+              avgScore: 0,
+              conversionRate: 0,
+              scores: [],
+            }
           }
-        }
 
-        acc[lead.source].total++
-        acc[lead.source].scores.push(lead.score_total)
-        if (lead.status === 'converted') acc[lead.source].converted++
+          acc[lead.source].total++
+          acc[lead.source].scores!.push(lead.score_total)
+          if (lead.status === 'converted') acc[lead.source].converted++
 
-        return acc
-      },
-      {} as Record<string, any>
-    )
+          return acc
+        },
+        {} as Record<string, SourceStats>
+      ) || {}
 
     // Calculate average scores per source
-    Object.values(sourceStats || {}).forEach((stat: any) => {
-      stat.avgScore =
-        stat.scores.reduce((sum: number, score: number) => sum + score, 0) / stat.scores.length
+    Object.values(sourceStats).forEach((stat) => {
+      if (stat.scores && stat.scores.length > 0) {
+        stat.avgScore =
+          stat.scores.reduce((sum: number, score: number) => sum + score, 0) / stat.scores.length
+      }
       stat.conversionRate = stat.total > 0 ? (stat.converted / stat.total) * 100 : 0
       delete stat.scores
     })
@@ -184,14 +243,14 @@ export async function GET(request: NextRequest) {
         avgComplexity: Math.round(avgComplexity * 100) / 100,
         distribution: scoreDistribution,
       },
-      byProduct: Object.values(productStats || {}).sort((a: any, b: any) => b.total - a.total),
-      bySource: Object.values(sourceStats || {}).sort((a: any, b: any) => b.total - a.total),
+      byProduct: Object.values(productStats).sort((a, b) => b.total - a.total),
+      bySource: Object.values(sourceStats).sort((a, b) => b.total - a.total),
       timeSeries: timeSeriesData,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API /admin/analytics/leads] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
@@ -201,12 +260,12 @@ export async function GET(request: NextRequest) {
  * Generate time series data grouped by day, week, or month
  */
 function generateTimeSeries(
-  leads: any[],
+  leads: QualifiedLead[],
   groupBy: string,
   startDate: Date,
   endDate: Date
-): any[] {
-  const data: Record<string, any> = {}
+): TimeSeriesData[] {
+  const data: Record<string, TimeSeriesData> = {}
 
   // Initialize all periods with zero values
   const current = new Date(startDate)
@@ -241,7 +300,7 @@ function generateTimeSeries(
 
     if (data[key]) {
       data[key].total++
-      data[key].scores.push(lead.score_total)
+      data[key].scores!.push(lead.score_total)
 
       if (lead.category === 'hot') data[key].hot++
       if (lead.category === 'warm') data[key].warm++
@@ -252,8 +311,8 @@ function generateTimeSeries(
   })
 
   // Calculate averages
-  Object.values(data).forEach((item: any) => {
-    if (item.scores.length > 0) {
+  Object.values(data).forEach((item: TimeSeriesData) => {
+    if (item.scores && item.scores.length > 0) {
       item.avgScore =
         Math.round(
           (item.scores.reduce((sum: number, score: number) => sum + score, 0) / item.scores.length) *

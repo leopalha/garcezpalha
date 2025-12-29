@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node agente.js"
+    "start": "node agente.js",
+    "manus": "node manus-agent.js",
+    "manus:test": "node manus-agent.js test",
+    "manus:continuous": "node manus-agent.js continuous"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
