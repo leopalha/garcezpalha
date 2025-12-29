@@ -1,0 +1,50 @@
+#!/bin/bash
+# Pre-commit hook para prevenir commit de API keys e secrets
+
+echo "🔍 Verificando secrets antes do commit..."
+
+# Padrões perigosos para detectar
+PATTERNS=(
+    "sk-proj-[A-Za-z0-9_-]{20,}"  # OpenAI keys
+    "sk-[A-Za-z0-9]{20,}"          # OpenAI old format
+    "Basic [A-Za-z0-9+/=]{20,}"    # D-ID keys
+    "OPENAI_API_KEY=\"sk-"         # Keys in env files
+    "DID_API_KEY=\"Basic"          # D-ID in env files
+)
+
+# Arquivos a serem verificados (staged files)
+FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+FOUND_SECRET=0
+
+for file in $FILES; do
+    # Pular arquivos binários e node_modules
+    if [[ "$file" == *"node_modules"* ]] || [[ "$file" == *".next"* ]]; then
+        continue
+    fi
+    
+    # Verificar cada padrão
+    for pattern in "${PATTERNS[@]}"; do
+        if git diff --cached "$file" | grep -E "$pattern" > /dev/null; then
+            echo "❌ SECRET DETECTADO em $file"
+            echo "   Padrão encontrado: $pattern"
+            FOUND_SECRET=1
+        fi
+    done
+done
+
+if [ $FOUND_SECRET -eq 1 ]; then
+    echo ""
+    echo "🚫 COMMIT BLOQUEADO!"
+    echo "📋 Secrets/API keys foram detectadas nos arquivos."
+    echo ""
+    echo "💡 Para resolver:"
+    echo "   1. Remova as chaves dos arquivos"
+    echo "   2. Use variáveis de ambiente (.env.local)"
+    echo "   3. Adicione arquivos sensíveis ao .gitignore"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Nenhum secret detectado. Commit permitido."
+exit 0
