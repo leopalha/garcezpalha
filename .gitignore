@@ -13,3 +13,7 @@ node_modules/
 
 # MCP Servers (não fazer deploy no Vercel)
 mcp-servers/
+*.md com API keys
+SETUP-*.md
+BLOQUEADOR_*.md
+SISTEMA-*.md
