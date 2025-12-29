@@ -63,7 +63,7 @@ export interface WhatsAppMessage {
   role: 'user' | 'assistant'
   content: string
   timestamp: Date
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // ============================================================================
@@ -131,7 +131,7 @@ export interface WhatsAppOutgoingMessage {
     language: {
       code: string
     }
-    components?: any[]
+    components?: Array<Record<string, unknown>>
   }
   interactive?: {
     type: 'button' | 'list'
@@ -215,7 +215,7 @@ export interface ClientInfo {
   phone?: string
   email?: string
   cpf?: string
-  additionalData?: Record<string, any>
+  additionalData?: Record<string, unknown>
 }
 
 export interface QualificationResponse {
@@ -224,7 +224,7 @@ export interface QualificationResponse {
   progress?: QualificationProgress
   paymentLink?: string
   proposalText?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface QualificationProgress {
@@ -260,7 +260,7 @@ export class WhatsAppError extends Error {
     message: string,
     public code: string,
     public statusCode?: number,
-    public details?: any
+    public details?: unknown
   ) {
     super(message)
     this.name = 'WhatsAppError'
@@ -270,7 +270,7 @@ export class WhatsAppError extends Error {
 export interface ErrorResponse {
   error: string
   code?: string
-  details?: any
+  details?: unknown
   timestamp: string
 }
 
@@ -285,7 +285,7 @@ export interface LogEntry {
   timestamp: Date
   service: string
   message: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   error?: Error
 }
 
@@ -299,25 +299,34 @@ export type SessionId = string   // Format: wa_5521999999999_timestamp or custom
 /**
  * Type guard for Twilio webhook payload
  */
-export function isTwilioWebhookPayload(payload: any): payload is TwilioWebhookPayload {
+export function isTwilioWebhookPayload(payload: unknown): payload is TwilioWebhookPayload {
   return (
     typeof payload === 'object' &&
-    typeof payload.MessageSid === 'string' &&
-    typeof payload.From === 'string' &&
-    typeof payload.To === 'string' &&
-    typeof payload.Body === 'string'
+    payload !== null &&
+    'MessageSid' in payload &&
+    'From' in payload &&
+    'To' in payload &&
+    'Body' in payload &&
+    typeof (payload as TwilioWebhookPayload).MessageSid === 'string' &&
+    typeof (payload as TwilioWebhookPayload).From === 'string' &&
+    typeof (payload as TwilioWebhookPayload).To === 'string' &&
+    typeof (payload as TwilioWebhookPayload).Body === 'string'
   )
 }
 
 /**
  * Type guard for WhatsApp incoming message
  */
-export function isWhatsAppIncomingMessage(message: any): message is WhatsAppIncomingMessage {
+export function isWhatsAppIncomingMessage(message: unknown): message is WhatsAppIncomingMessage {
   return (
     typeof message === 'object' &&
-    typeof message.from === 'string' &&
-    typeof message.id === 'string' &&
-    typeof message.type === 'string'
+    message !== null &&
+    'from' in message &&
+    'id' in message &&
+    'type' in message &&
+    typeof (message as WhatsAppIncomingMessage).from === 'string' &&
+    typeof (message as WhatsAppIncomingMessage).id === 'string' &&
+    typeof (message as WhatsAppIncomingMessage).type === 'string'
   )
 }
 
