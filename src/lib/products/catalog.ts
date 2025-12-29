@@ -3478,6 +3478,13 @@ export function getProductBySlug(slug: string): Product | undefined {
 }
 
 /**
+ * Retornar todos os produtos
+ */
+export function getAllProducts(): Product[] {
+  return ALL_PRODUCTS
+}
+
+/**
  * Buscar produtos por categoria
  */
 export function getProductsByCategory(category: string): Product[] {
