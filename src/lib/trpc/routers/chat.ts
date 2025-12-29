@@ -228,7 +228,7 @@ export const chatRouter = router({
     .query(async ({ input }) => {
       const { getOrchestrator } = await import('@/lib/ai/agents')
       const orchestrator = getOrchestrator()
-      const suggestion = orchestrator.suggestAgent(input.query)
+      const suggestion = await orchestrator.suggestAgent(input.query)
 
       return {
         agent: suggestion.role,

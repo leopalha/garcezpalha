@@ -243,7 +243,7 @@ export class EnhancedLegalChatbot {
    */
   async suggestAgent(query: string): Promise<{ agent: string; confidence: number }> {
     const orchestrator = getOrchestrator()
-    const suggestion = orchestrator.suggestAgent(query)
+    const suggestion = await orchestrator.suggestAgent(query)
 
     return {
       agent: suggestion.role,

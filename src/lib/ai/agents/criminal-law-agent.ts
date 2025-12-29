@@ -1,53 +1,44 @@
 /**
  * Criminal Law Agent
  * Specializes in criminal defense and procedural law
+ *
+ * @deprecated This class is now a wrapper around the config-driven factory.
+ * Use `createLegalAgent('criminal-law')` from '@/lib/ai/factories' instead.
+ *
+ * This wrapper maintains backward compatibility but will be removed in future versions.
  */
 
-import { BaseAgent } from './base-agent'
-import { CRIMINAL_LAW_SYSTEM_PROMPT, CRIMINAL_LAW_TASKS } from '../prompts/criminal-law-prompts'
+import { createLegalAgent } from '../factories/legal-agent-factory'
 import type { AgentConfig, AgentContext, AgentResponse } from './types'
 
-export class CriminalLawAgent extends BaseAgent {
+/**
+ * @deprecated Use createLegalAgent('criminal-law') instead
+ */
+export class CriminalLawAgent {
+  private instance: Awaited<ReturnType<typeof createLegalAgent>>
+
   constructor(config?: Partial<AgentConfig>) {
-    super(CRIMINAL_LAW_SYSTEM_PROMPT, config)
+    // Initialize as promise that will be resolved on first use
+    this.instance = null as any
+    this.initPromise = createLegalAgent('criminal-law', config)
+  }
+
+  private initPromise: Promise<Awaited<ReturnType<typeof createLegalAgent>>>
+
+  private async getInstance() {
+    if (!this.instance) {
+      this.instance = await this.initPromise
+    }
+    return this.instance
   }
 
   get name(): string {
     return 'Criminal Law Agent'
   }
 
-  isRelevant(input: string): boolean {
-    const keywords = [
-      // Criminal terms
-      'criminal', 'penal', 'crime', 'delito',
-      // Procedures
-      'prisão', 'prisao', 'preso', 'presa', 'flagrante', 'preventiva',
-      // Legal actions
-      'habeas corpus', 'habeas', 'denúncia', 'denuncia', 'inquérito', 'inquerito',
-      // Court
-      'delegacia', 'audiência criminal', 'audiencia criminal', 'júri', 'juri',
-      // Crimes
-      'furto', 'roubo', 'homicídio', 'homicidio', 'latrocínio', 'latrocinio',
-      'estelionato', 'receptação', 'recepta', 'ameaça', 'ameaca',
-      'lesão corporal', 'lesao corporal', 'agressão', 'agressao',
-      // Charges
-      'calúnia', 'calunia', 'difamação', 'difamacao', 'injúria', 'injuria',
-      // Traffic
-      'embriaguez ao volante', 'dirigir bêbado', 'dirigir bebado',
-      // Drugs
-      'tráfico', 'trafico', 'droga', 'entorpecente',
-      // Violence
-      'violência doméstica', 'violencia domestica', 'maria da penha',
-      // Process
-      'defesa criminal', 'advogado criminal', 'intimação', 'intimacao',
-      'sentença criminal', 'sentenca criminal', 'condenação', 'condenacao',
-      // Freedom
-      'liberdade provisória', 'liberdade provisoria', 'fiança', 'fianca',
-      'medidas cautelares', 'progressão de regime', 'progressao de regime',
-    ]
-
-    const lowerInput = input.toLowerCase()
-    return keywords.some(keyword => lowerInput.includes(keyword))
+  async isRelevant(input: string): Promise<boolean> {
+    const instance = await this.getInstance()
+    return instance.isRelevant(input)
   }
 
   /**
@@ -57,11 +48,8 @@ export class CriminalLawAgent extends BaseAgent {
     caseDetails: string,
     context?: AgentContext
   ): Promise<AgentResponse> {
-    return this.processTask(
-      CRIMINAL_LAW_TASKS.analyzeCase,
-      `Detalhes do caso:\n\n${caseDetails}`,
-      context
-    )
+    const instance = await this.getInstance()
+    return (instance as any).analyzeCase(caseDetails, context)
   }
 
   /**
@@ -71,11 +59,8 @@ export class CriminalLawAgent extends BaseAgent {
     situationDetails: string,
     context?: AgentContext
   ): Promise<AgentResponse> {
-    return this.processTask(
-      CRIMINAL_LAW_TASKS.habeascorpus,
-      `Situação:\n\n${situationDetails}`,
-      context
-    )
+    const instance = await this.getInstance()
+    return (instance as any).evaluateHabeasCorpus(situationDetails, context)
   }
 
   /**
@@ -85,11 +70,8 @@ export class CriminalLawAgent extends BaseAgent {
     caseInfo: string,
     context?: AgentContext
   ): Promise<AgentResponse> {
-    return this.processTask(
-      CRIMINAL_LAW_TASKS.defensestrategy,
-      `Informações do caso:\n\n${caseInfo}`,
-      context
-    )
+    const instance = await this.getInstance()
+    return (instance as any).createDefenseStrategy(caseInfo, context)
   }
 
   /**
@@ -99,10 +81,7 @@ export class CriminalLawAgent extends BaseAgent {
     crimeDetails: string,
     context?: AgentContext
   ): Promise<AgentResponse> {
-    return this.processTask(
-      CRIMINAL_LAW_TASKS.sentenceCalculation,
-      `Detalhes do crime:\n\n${crimeDetails}`,
-      context
-    )
+    const instance = await this.getInstance()
+    return (instance as any).calculateSentence(crimeDetails, context)
   }
 }

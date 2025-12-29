@@ -1,110 +1,40 @@
 /**
  * Medical Expertise Agent
- * Specializes in medical-legal analysis and disability assessment
+ * Specializes in medical error and malpractice
+ *
+ * @deprecated This class is now a wrapper around the config-driven factory.
+ * Use `createLegalAgent('medical-expertise')` from '@/lib/ai/factories' instead.
  */
 
-import { BaseAgent } from './base-agent'
-import { MEDICAL_SYSTEM_PROMPT, MEDICAL_TASKS } from '../prompts'
+import { createLegalAgent } from '../factories/legal-agent-factory'
 import type { AgentConfig, AgentContext, AgentResponse } from './types'
 
-export class MedicalExpertiseAgent extends BaseAgent {
+export class MedicalExpertiseAgent {
+  private instance: Awaited<ReturnType<typeof createLegalAgent>>
+  private initPromise: Promise<Awaited<ReturnType<typeof createLegalAgent>>>
+
   constructor(config?: Partial<AgentConfig>) {
-    super(MEDICAL_SYSTEM_PROMPT, config)
+    this.instance = null as any
+    this.initPromise = createLegalAgent('medical-expertise', config)
+  }
+
+  private async getInstance() {
+    if (!this.instance) {
+      this.instance = await this.initPromise
+    }
+    return this.instance
   }
 
   get name(): string {
     return 'Medical Expertise Agent'
   }
 
-  isRelevant(input: string): boolean {
-    const keywords = [
-      // Medical terms
-      'médico', 'medico', 'saúde', 'saude', 'lesão', 'lesao',
-      // Work-related
-      'acidente de trabalho', 'doença ocupacional', 'inss', 'auxílio', 'auxilio',
-      // Incapacity
-      'incapacidade', 'invalidez', 'sequela', 'deficiência', 'deficiencia',
-      // Legal
-      'laudo', 'perícia', 'pericia', 'indenização', 'indenizacao',
-      // Insurance
-      'dpvat', 'seguro', 'aposentadoria',
-      // Conditions
-      'fratura', 'cirurgia', 'tratamento', 'nexo causal',
-      // Error
-      'erro médico', 'erro medico', 'negligência', 'negligencia',
-    ]
-
-    const lowerInput = input.toLowerCase()
-    return keywords.some(keyword => lowerInput.includes(keyword))
+  async isRelevant(input: string): Promise<boolean> {
+    const instance = await this.getInstance()
+    return instance.isRelevant(input)
   }
 
-  /**
-   * Analyze medical report
-   */
-  async analyzeMedicalReport(
-    reportContent: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      MEDICAL_TASKS.analyzeMedicalReport,
-      `Laudo médico:\n\n${reportContent}`,
-      context
-    )
-  }
-
-  /**
-   * Calculate disability degree
-   */
-  async calculateDisability(
-    injuryDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      MEDICAL_TASKS.calculateDisability,
-      `Detalhes da lesão:\n\n${injuryDetails}`,
-      context
-    )
-  }
-
-  /**
-   * Estimate indemnity value
-   */
-  async estimateIndemnity(
-    caseDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      MEDICAL_TASKS.estimateIndemnity,
-      `Detalhes do caso:\n\n${caseDetails}`,
-      context
-    )
-  }
-
-  /**
-   * Analyze work accident
-   */
-  async analyzeWorkAccident(
-    accidentDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      MEDICAL_TASKS.workAccidentAnalysis,
-      `Detalhes do acidente:\n\n${accidentDetails}`,
-      context
-    )
-  }
-
-  /**
-   * Assess medical error case
-   */
-  async assessMedicalError(
-    errorDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      MEDICAL_TASKS.medicalErrorAssessment,
-      `Detalhes do possível erro:\n\n${errorDetails}`,
-      context
-    )
+  async evaluateMalpractice(caseDetails: string, context?: AgentContext): Promise<AgentResponse> {
+    return (await this.getInstance() as any).evaluateMalpractice(caseDetails, context)
   }
 }

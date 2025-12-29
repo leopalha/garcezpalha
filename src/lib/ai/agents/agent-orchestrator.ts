@@ -21,7 +21,7 @@ export interface OrchestratorResponse extends AgentResponse {
 }
 
 export class AgentOrchestrator {
-  private agents: Map<AgentRole, BaseAgent>
+  private agents: Map<AgentRole, any>  // Changed to any - wrappers don't extend BaseAgent
   private config: Partial<AgentConfig>
 
   constructor(config?: Partial<AgentConfig>) {
@@ -29,6 +29,7 @@ export class AgentOrchestrator {
     this.agents = new Map()
 
     // Initialize all specialized agents
+    // Note: These now use factory-based wrappers
     this.agents.set('real-estate', new RealEstateAgent(this.config))
     this.agents.set('forensics', new DocumentForensicsAgent(this.config))
     this.agents.set('valuation', new PropertyValuationAgent(this.config))
@@ -50,14 +51,14 @@ export class AgentOrchestrator {
   /**
    * Determine which agent should handle the query
    */
-  private selectAgent(input: string): { role: AgentRole; confidence: number } {
+  private async selectAgent(input: string): Promise<{ role: AgentRole; confidence: number }> {
     const scores: Array<{ role: AgentRole; score: number }> = []
 
     // Check relevance for each specialized agent
     for (const [role, agent] of Array.from(this.agents.entries())) {
       if (role === 'general') continue // Skip general agent in scoring
 
-      const isRelevant = agent.isRelevant(input)
+      const isRelevant = await agent.isRelevant(input)
       if (isRelevant) {
         // Count keyword matches for confidence score
         const lowerInput = input.toLowerCase()
@@ -161,7 +162,7 @@ export class AgentOrchestrator {
     context?: AgentContext
   ): Promise<OrchestratorResponse> {
     // Select the best agent
-    const { role, confidence } = this.selectAgent(userMessage)
+    const { role, confidence } = await this.selectAgent(userMessage)
     const agent = this.agents.get(role)!
 
     console.log(`[Orchestrator] Routing to ${role} agent (confidence: ${(confidence * 100).toFixed(0)}%)`)
@@ -221,8 +222,8 @@ export class AgentOrchestrator {
   /**
    * Get suggested agent for query (without processing)
    */
-  suggestAgent(input: string): { role: AgentRole; confidence: number } {
-    return this.selectAgent(input)
+  async suggestAgent(input: string): Promise<{ role: AgentRole; confidence: number }> {
+    return await this.selectAgent(input)
   }
 }
 

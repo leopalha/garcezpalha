@@ -1,92 +1,40 @@
 /**
  * Document Forensics Agent
- * Specializes in graphological analysis and document authentication
+ * Specializes in document analysis and signature fraud
+ *
+ * @deprecated This class is now a wrapper around the config-driven factory.
+ * Use `createLegalAgent('document-forensics')` from '@/lib/ai/factories' instead.
  */
 
-import { BaseAgent } from './base-agent'
-import { FORENSICS_SYSTEM_PROMPT, FORENSICS_TASKS } from '../prompts'
+import { createLegalAgent } from '../factories/legal-agent-factory'
 import type { AgentConfig, AgentContext, AgentResponse } from './types'
 
-export class DocumentForensicsAgent extends BaseAgent {
+export class DocumentForensicsAgent {
+  private instance: Awaited<ReturnType<typeof createLegalAgent>>
+  private initPromise: Promise<Awaited<ReturnType<typeof createLegalAgent>>>
+
   constructor(config?: Partial<AgentConfig>) {
-    super(FORENSICS_SYSTEM_PROMPT, config)
+    this.instance = null as any
+    this.initPromise = createLegalAgent('document-forensics', config)
+  }
+
+  private async getInstance() {
+    if (!this.instance) {
+      this.instance = await this.initPromise
+    }
+    return this.instance
   }
 
   get name(): string {
     return 'Document Forensics Agent'
   }
 
-  isRelevant(input: string): boolean {
-    const keywords = [
-      // Forensics terms
-      'assinatura', 'grafotécnica', 'grafotecnica', 'perícia', 'pericia',
-      // Document issues
-      'falsificação', 'falsificacao', 'falsa', 'falso', 'adulteração', 'adulteracao',
-      // Analysis methods
-      'autenticidade', 'reconhecimento de firma', 'laudo',
-      // Document types
-      'documento', 'contrato', 'procuração', 'procuracao', 'cheque',
-      // Indicators
-      'rasura', 'emenda', 'alteração', 'alteracao', 'fraude',
-    ]
-
-    const lowerInput = input.toLowerCase()
-    return keywords.some(keyword => lowerInput.includes(keyword))
+  async isRelevant(input: string): Promise<boolean> {
+    const instance = await this.getInstance()
+    return instance.isRelevant(input)
   }
 
-  /**
-   * Analyze signature authenticity
-   */
-  async analyzeSignature(
-    signatureInfo: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      FORENSICS_TASKS.analyzeSignature,
-      `Informações sobre a assinatura:\n\n${signatureInfo}`,
-      context
-    )
-  }
-
-  /**
-   * Detect document alterations
-   */
-  async detectAlterations(
-    documentInfo: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      FORENSICS_TASKS.detectAlterations,
-      `Informações sobre o documento:\n\n${documentInfo}`,
-      context
-    )
-  }
-
-  /**
-   * Assess document authenticity
-   */
-  async assessAuthenticity(
-    documentDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      FORENSICS_TASKS.documentAuthenticity,
-      `Detalhes do documento:\n\n${documentDetails}`,
-      context
-    )
-  }
-
-  /**
-   * Prepare for forensic case
-   */
-  async prepareForensicCase(
-    caseDetails: string,
-    context?: AgentContext
-  ): Promise<AgentResponse> {
-    return this.processTask(
-      FORENSICS_TASKS.prepareForensicCase,
-      `Detalhes do caso:\n\n${caseDetails}`,
-      context
-    )
+  async analyzeDocument(documentDetails: string, context?: AgentContext): Promise<AgentResponse> {
+    return (await this.getInstance() as any).analyzeDocument(documentDetails, context)
   }
 }

@@ -23,7 +23,7 @@ export class ClassifyingBehavior implements StateBehavior {
     data: ConversationData
   }> {
     // Use agent orchestrator to classify
-    const suggestion = this.orchestrator.suggestAgent(message)
+    const suggestion = await this.orchestrator.suggestAgent(message)
 
     // Update classification
     data.classification = {
