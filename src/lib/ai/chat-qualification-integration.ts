@@ -39,6 +39,7 @@ interface QualifierState {
   scoringRules?: unknown[]
   startedAt?: Date
   basePrice?: number
+  context?: QualificationContext
   engineState: {
     questions?: unknown[]
     answers?: unknown[]
@@ -46,7 +47,6 @@ interface QualifierState {
     currentQuestionIndex?: number
     [key: string]: unknown
   }
-  context?: QualificationContext
   [key: string]: unknown
 }
 
@@ -393,7 +393,7 @@ export class ChatQualificationManager {
         paymentLink,
         proposal,
         followUpMessages,
-        source: (qualifierState.context || qualifierState.engineState.context)?.source || 'website',
+        source: qualifierState.engineState.context?.source || 'website',
         userId: session.userId,
       })
 

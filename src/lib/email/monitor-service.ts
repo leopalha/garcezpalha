@@ -88,7 +88,7 @@ class EmailMonitorService {
     maxResults: number = 50,
     daysBack: number = 7
   ): Promise<TribunalEmail[]> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured() || !this.oauth2Client) {
       console.warn('Gmail API not configured')
       return []
     }
@@ -122,9 +122,9 @@ class EmailMonitorService {
         })
 
         const headers = details.data.payload?.headers || []
-        const subject = headers.find((h) => h.name === 'Subject')?.value || ''
-        const from = headers.find((h) => h.name === 'From')?.value || ''
-        const dateStr = headers.find((h) => h.name === 'Date')?.value || ''
+        const subject = headers.find((h: gmail_v1.Schema$MessagePartHeader) => h.name === 'Subject')?.value || ''
+        const from = headers.find((h: gmail_v1.Schema$MessagePartHeader) => h.name === 'From')?.value || ''
+        const dateStr = headers.find((h: gmail_v1.Schema$MessagePartHeader) => h.name === 'Date')?.value || ''
 
         // Extract process number from subject/body
         const processNumber = this.extractProcessNumber(subject)
@@ -258,7 +258,7 @@ class EmailMonitorService {
     messageId: string,
     attachmentId: string
   ): Promise<Buffer | null> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured() || !this.oauth2Client) {
       return null
     }
 

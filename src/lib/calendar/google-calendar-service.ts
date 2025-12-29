@@ -71,7 +71,7 @@ class GoogleCalendarService {
    * Create calendar event for deadline
    */
   async createDeadlineEvent(event: CalendarEvent): Promise<string | null> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured() || !this.oauth2Client) {
       console.warn('Google Calendar API not configured')
       return null
     }
@@ -131,7 +131,7 @@ class GoogleCalendarService {
     eventId: string,
     event: Partial<CalendarEvent>
   ): Promise<boolean> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured() || !this.oauth2Client) {
       return false
     }
 
@@ -187,7 +187,7 @@ class GoogleCalendarService {
    * Delete calendar event
    */
   async deleteDeadlineEvent(eventId: string): Promise<boolean> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured() || !this.oauth2Client) {
       return false
     }
 

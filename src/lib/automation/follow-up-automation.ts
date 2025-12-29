@@ -7,6 +7,48 @@ import { createClient } from '@/lib/supabase/server'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 
 /**
+ * Database type definitions
+ */
+interface FollowUpTaskDB {
+  id: string
+  lead_id: string
+  scheduled_for: string
+  attempt_number: number
+  category: 'hot' | 'warm' | 'cold' | 'very-cold'
+  status: 'pending' | 'sent' | 'failed' | 'cancelled'
+  sent_at?: string
+  error?: string
+  metadata?: {
+    scheduleType?: string
+    leadCategory?: string
+    productName?: string
+    clientName?: string
+    phone?: string
+  }
+  created_at?: string
+  updated_at?: string
+}
+
+interface QualifiedLeadDB {
+  id: string
+  client_name: string | null
+  product_name: string
+  status: string
+  source: string
+  phone: string | null
+  assigned_to: string | null
+  last_interaction_at?: string
+  category?: string
+}
+
+interface FollowUpTaskUpdate {
+  status: string
+  updated_at: string
+  sent_at?: string
+  error?: string
+}
+
+/**
  * Follow-up schedule based on lead category
  * - Hot: 2h, 6h, 24h, 3d, 7d
  * - Warm: 24h, 3d, 7d, 14d
@@ -184,7 +226,7 @@ export async function processPendingFollowUps() {
 /**
  * Process a single follow-up task
  */
-async function processFollowUpTask(task: any) {
+async function processFollowUpTask(task: FollowUpTaskDB) {
   const supabase = await createClient()
 
   try {
@@ -236,9 +278,9 @@ async function processFollowUpTask(task: any) {
           .from('qualified_leads')
           .update({ last_interaction_at: new Date().toISOString() })
           .eq('id', lead.id)
-      } catch (error: any) {
+      } catch (error) {
         console.error(`[Follow-up] Error sending message:`, error)
-        await updateTaskStatus(task.id, 'failed', error.message)
+        await updateTaskStatus(task.id, 'failed', error instanceof Error ? error.message : String(error))
       }
     } else {
       // For non-WhatsApp leads, create a notification/task for manual follow-up
@@ -250,9 +292,9 @@ async function processFollowUpTask(task: any) {
         await createFollowUpNotification(lead.assigned_to, lead, message)
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error(`[Follow-up] Error processing task ${task.id}:`, error)
-    await updateTaskStatus(task.id, 'failed', error.message)
+    await updateTaskStatus(task.id, 'failed', error instanceof Error ? error.message : String(error))
   }
 }
 
@@ -262,7 +304,7 @@ async function processFollowUpTask(task: any) {
 async function updateTaskStatus(taskId: string, status: string, error?: string) {
   const supabase = await createClient()
 
-  const updates: any = {
+  const updates: FollowUpTaskUpdate = {
     status,
     updated_at: new Date().toISOString(),
   }
@@ -297,7 +339,7 @@ async function cancelFutureFollowUps(leadId: string) {
 /**
  * Create a notification for manual follow-up
  */
-async function createFollowUpNotification(userId: string, lead: any, message: string) {
+async function createFollowUpNotification(userId: string, lead: QualifiedLeadDB, message: string) {
   const supabase = await createClient()
 
   await supabase.from('notifications').insert({

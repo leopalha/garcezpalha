@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+teste.txt
+data.txt
+hello.txt
