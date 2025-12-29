@@ -22,6 +22,8 @@
  */
 
 import { google } from 'googleapis'
+import type { gmail_v1 } from 'googleapis'
+import type { OAuth2Client } from 'google-auth-library'
 import { createClient } from '@/lib/supabase/server'
 
 const gmail = google.gmail('v1')
@@ -50,7 +52,7 @@ interface ProcessAlert {
 }
 
 class EmailMonitorService {
-  private oauth2Client: any
+  private oauth2Client: OAuth2Client | null = null
 
   constructor() {
     if (this.isConfigured()) {
@@ -120,9 +122,9 @@ class EmailMonitorService {
         })
 
         const headers = details.data.payload?.headers || []
-        const subject = headers.find((h: any) => h.name === 'Subject')?.value || ''
-        const from = headers.find((h: any) => h.name === 'From')?.value || ''
-        const dateStr = headers.find((h: any) => h.name === 'Date')?.value || ''
+        const subject = headers.find((h) => h.name === 'Subject')?.value || ''
+        const from = headers.find((h) => h.name === 'From')?.value || ''
+        const dateStr = headers.find((h) => h.name === 'Date')?.value || ''
 
         // Extract process number from subject/body
         const processNumber = this.extractProcessNumber(subject)
@@ -146,7 +148,7 @@ class EmailMonitorService {
       }
 
       return emails
-    } catch (error: any) {
+    } catch (error) {
       console.error('Gmail API error:', error)
       return []
     }
@@ -229,7 +231,7 @@ class EmailMonitorService {
   /**
    * Check if email has PDF attachments
    */
-  private hasAttachments(payload: any): boolean {
+  private hasAttachments(payload: gmail_v1.Schema$MessagePart | undefined): boolean {
     if (!payload) return false
 
     // Check parts for attachments
@@ -274,7 +276,7 @@ class EmailMonitorService {
       // Decode base64url to buffer
       const buffer = Buffer.from(data, 'base64url')
       return buffer
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to download attachment:', error)
       return null
     }
@@ -347,7 +349,7 @@ class EmailMonitorService {
         emailsFound: emails.length,
         alertsCreated,
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Email Monitor] Error:', error)
       return {
         success: false,
