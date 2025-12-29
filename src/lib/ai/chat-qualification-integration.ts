@@ -21,6 +21,7 @@ import {
   CREDIT_NEGATIVATION_QUESTIONS,
   CREDIT_NEGATIVATION_RULES,
 } from './qualification'
+import type { PaymentLink as GeneratedPaymentLink } from './qualification/payment-link-generator'
 import type { AgentRole } from './agents/types'
 import {
   saveQualificationSession,
@@ -32,12 +33,29 @@ import {
 /**
  * Session state for qualification
  */
+interface QualifierState {
+  leadId?: string
+  productId?: string
+  scoringRules?: unknown[]
+  startedAt?: Date
+  basePrice?: number
+  engineState: {
+    questions?: unknown[]
+    answers?: unknown[]
+    context: QualificationContext
+    currentQuestionIndex?: number
+    [key: string]: unknown
+  }
+  context?: QualificationContext
+  [key: string]: unknown
+}
+
 interface QualificationSession {
   sessionId: string
   userId?: string
   productId: string
   agentRole: AgentRole
-  qualifierState: any
+  qualifierState: QualifierState
   startedAt: Date
   lastInteractionAt: Date
   clientInfo?: {
@@ -45,6 +63,18 @@ interface QualificationSession {
     phone?: string
     email?: string
   }
+}
+
+/**
+ * Question structure
+ */
+interface Question {
+  id: string
+  text: string
+  type: string
+  helpText?: string
+  options?: Array<{ value: string; label: string }>
+  priority: string
 }
 
 /**
@@ -208,7 +238,7 @@ export class ChatQualificationManager {
         },
         progress: qualifier.getProgress(),
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('[ChatQualification] Error starting qualification:', error)
       return {
         message: 'Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.',
@@ -306,7 +336,7 @@ export class ChatQualificationManager {
         },
         progress: restoredQualifier.getProgress(),
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('[ChatQualification] Error submitting answer:', error)
       return {
         message: 'Erro ao processar resposta. Tente novamente.',
@@ -320,7 +350,7 @@ export class ChatQualificationManager {
    */
   private async handleQualificationComplete(
     session: QualificationSession,
-    qualifier: any
+    qualifier: ReturnType<typeof createLeadQualifier>
   ): Promise<ChatQualificationResponse> {
     try {
       // Get qualification result
@@ -351,6 +381,7 @@ export class ChatQualificationManager {
       }
 
       // Persist complete qualification to database
+      const qualifierState = qualifier.exportState()
       await persistQualificationComplete({
         sessionId: session.sessionId,
         result,
@@ -362,7 +393,7 @@ export class ChatQualificationManager {
         paymentLink,
         proposal,
         followUpMessages,
-        source: qualifier.exportState().context.source || 'website',
+        source: (qualifierState.context || qualifierState.engineState.context)?.source || 'website',
         userId: session.userId,
       })
 
@@ -387,7 +418,7 @@ export class ChatQualificationManager {
           paymentLink
         ),
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('[ChatQualification] Error handling completion:', error)
       return {
         message: 'Erro ao finalizar qualificação. Nossa equipe entrará em contato.',
@@ -399,7 +430,7 @@ export class ChatQualificationManager {
   /**
    * Format question as chat message
    */
-  private formatQuestionMessage(question: any, productId: string): string {
+  private formatQuestionMessage(question: Question, productId: string): string {
     let message = `${question.text}\n\n`
 
     if (question.helpText) {
@@ -408,7 +439,7 @@ export class ChatQualificationManager {
 
     if (question.options && question.options.length > 0) {
       message += '*Opções:*\n'
-      question.options.forEach((option: any, index: number) => {
+      question.options.forEach((option, index: number) => {
         message += `${index + 1}. ${option.label}\n`
       })
     }
@@ -425,7 +456,7 @@ export class ChatQualificationManager {
    */
   private formatCompletionMessage(
     result: QualificationResult,
-    paymentLink: any,
+    paymentLink: GeneratedPaymentLink,
     clientName: string
   ): string {
     const categoryMessages: Record<string, string> = {
@@ -541,7 +572,8 @@ export class ChatQualificationManager {
     const expirationTime = 24 * 60 * 60 * 1000 // 24 hours
     let cleaned = 0
 
-    for (const [sessionId, session] of activeSessions.entries()) {
+    const entries = Array.from(activeSessions.entries())
+    for (const [sessionId, session] of entries) {
       if (now - session.lastInteractionAt.getTime() > expirationTime) {
         activeSessions.delete(sessionId)
         cleaned++
@@ -612,7 +644,7 @@ export async function handleChatWithQualification(params: {
 /**
  * Extract answer from user message
  */
-function extractAnswerFromMessage(message: string, session: QualificationSession): any {
+function extractAnswerFromMessage(message: string, session: QualificationSession): string | number | boolean {
   // Simple extraction - can be enhanced with NLP
   const trimmed = message.trim()
 
