@@ -13,15 +13,6 @@ import { ptBR } from 'date-fns/locale'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'Blog | Garcez Palha - Advocacia e Perícia',
-  description: 'Insights, guias e novidades sobre direito, perícia e tecnologia jurídica. Artigos escritos por especialistas com 364 anos de tradição.',
-  openGraph: {
-    title: 'Blog Garcez Palha',
-    description: 'Conteúdo especializado sobre direito, perícia e tecnologia jurídica',
-    type: 'website',
-  },
-}
 
 export default async function BlogPage() {
   const posts = await getAllPosts()
