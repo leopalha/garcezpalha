@@ -1,1304 +1,887 @@
-# 📋 Tarefas do Projeto Garcez Palha
+# 📋 GARCEZ PALHA ENGINE - TAREFAS DE IMPLEMENTAÇÃO
 
-## 🚀 P2 - AUTOMATION SYSTEMS (29/12/2025)
+**Última Atualização**: 30/12/2024
+**Metodologia**: MANUS v7.0
+**Modelo**: B2B2C White-Label (Secretária Jurídica IA + Marketing)
+**Status**: Implementação Pendente
 
-**Status**: ✅ 8/9 TASKS COMPLETAS
-**Score**: 95/100 → 98/100 (+3 pontos)
-**Horas Implementadas**: 64.5h
-**ROI Projetado (12 meses)**: 3.341% (33x retorno)
+---
 
-### ✅ P2-001: Email Sequences (10h)
-[x] Sistema de sequências de email automatizadas (✅ 29/12/2025)
-[x] 5 tipos de sequências (Welcome, Nurturing, Post-Payment, Reactivation, NPS) (✅ 29/12/2025)
-[x] Integração Resend API com idempotência (✅ 29/12/2025)
-[x] 3-email welcome sequence (0h, 48h, 7 dias) (✅ 29/12/2025)
-[x] API REST /api/email/sequences/subscribe (✅ 29/12/2025)
-**Arquivos**: 5 criados (850 linhas)
+## 📖 REFERÊNCIAS DE DOCUMENTAÇÃO
 
-### ✅ P2-002: WhatsApp Automation (8h)
-[x] WhatsApp Business API integration (✅ 29/12/2025)
-[x] 5 mensagens automáticas (Welcome, Payment, Updates, Alerts) (✅ 29/12/2025)
-[x] Templates + Interactive messages (✅ 29/12/2025)
-[x] Flows automatizados com triggers (✅ 29/12/2025)
-**Arquivos**: 2 criados (250 linhas)
+Antes de implementar, leia nesta ordem:
 
-### ✅ P2-003: Legal Document Generator (15h)
-[x] 10 tipos de documentos jurídicos (✅ 29/12/2025)
-   - Petição Inicial, Contestação, Apelação, Agravo, Embargos
-   - Mandado Segurança, Habeas Corpus, Ação Revisional, Defesa Prévia, Memoriais
-[x] Compliance OAB automático (✅ 29/12/2025)
-[x] Formatação CPF/CNPJ, datas por extenso (✅ 29/12/2025)
-[x] API REST /api/documents/legal (✅ 29/12/2025)
-**Arquivos**: 2 criados (770 linhas)
+1. ✅ **[docs/MODELO_CORRETO_FINAL.md](./docs/MODELO_CORRETO_FINAL.md)** - Modelo errado vs correto
+2. ✅ **[docs/ESTRUTURA_PRODUTOS.md](./docs/ESTRUTURA_PRODUTOS.md)** - 3 planos (Starter/Pro/Enterprise)
+3. ✅ **[docs/IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md](./docs/IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md)** - Produto core (15 dias)
+4. ✅ **[docs/IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./docs/IMPLEMENTACAO_WHITE_LABEL_ENGINE.md)** - Multi-tenancy (13 dias)
+5. ✅ **[docs/IMPLEMENTACAO_AGENTE_MARKETING.md](./docs/IMPLEMENTACAO_AGENTE_MARKETING.md)** - Add-on Pro (10 dias)
 
-### ✅ P2-004: Process Monitoring (20h)
-[x] Monitoramento automático de processos judiciais (✅ 29/12/2025)
-[x] Integração PJe (+ TJ-RJ, CNJ preparados) (✅ 29/12/2025)
-[x] Detecção de prazos fatais (✅ 29/12/2025)
-[x] Alertas urgentes (Email + WhatsApp) (✅ 29/12/2025)
-[x] Cron job /api/process-monitor/cron (✅ 29/12/2025)
-[x] API REST /api/process-monitor (✅ 29/12/2025)
-**Arquivos**: 5 criados (870 linhas)
+---
 
-### ✅ P2-005: Automated Reports (8h)
-[x] 8 tipos de relatórios (Conversão, Receita, Cases, Products, Agents, Compliance, Payments, Operations) (✅ 29/12/2025)
-[x] Exportação JSON, CSV, HTML (PDF pendente) (✅ 29/12/2025)
-[x] Frequências: Daily, Weekly, Monthly, Quarterly, Yearly, On-Demand (✅ 29/12/2025)
-[x] API REST /api/reports/generate (✅ 29/12/2025)
-**Arquivos**: 3 criados (1.045 linhas)
+## 🎯 ESTRUTURA DO PRODUTO
+
+### **Garcez Palha Engine = Secretária Jurídica IA**
+
+**3 Planos:**
+- **Starter** (R$ 497/mês): Secretária IA (chat 24/7, qualificação, agendamento, propostas)
+- **Pro** (R$ 997/mês): Starter + Marketing Automation (conteúdo + ads)
+- **Enterprise** (R$ 1.997/mês): Pro + API + Custom training + Ilimitado
+
+**Modelo de Negócio:**
+- B2C: Google Ads → Clientes diretos (gerenciado pelo parceiro)
+- B2B2C: White-Label → Parceiros advogados → Clientes finais
+
+---
+
+## ⏳ P0 - BLOQUEADORES CRÍTICOS (DO NOW!)
 
 ### ⏸️ P2-006: MCP Servers (83-107h)
-[ ] JusBrasil integration (PENDENTE)
-[ ] PJe integration completa (PENDENTE)
-[ ] ClickSign integration (PENDENTE)
-[ ] Stripe integration avançada (PENDENTE)
-[ ] Google Analytics MCP (PENDENTE)
-[ ] Facebook Ads MCP (PENDENTE)
-[ ] Google Ads MCP (PENDENTE)
-[ ] HubSpot MCP (PENDENTE)
-[ ] Intercom MCP (PENDENTE)
-[ ] CNJ MCP (PENDENTE)
-**Status**: Requer projeto dedicado multi-sprint
+**Status**: PENDENTE (Requer projeto dedicado multi-sprint)
+**Prioridade**: 🔴 P0 CRÍTICO
 
-### ✅ P2-007: Practical Examples (2h)
-[x] docs/EXEMPLOS_PRATICOS.md criado (580 linhas) (✅ 29/12/2025)
-[x] 20+ exemplos TypeScript (✅ 29/12/2025)
-[x] 15+ exemplos API curl (✅ 29/12/2025)
-[x] Fluxo completo Lead → Conversão → Processo (✅ 29/12/2025)
+[ ] JusBrasil integration
+[ ] PJe integration completa
+[ ] ClickSign integration (expandir)
+[ ] Stripe integration avançada
+[ ] Google Analytics MCP
+[ ] Facebook Ads MCP
+[ ] Google Ads MCP
+[ ] HubSpot MCP
+[ ] Intercom MCP
+[ ] CNJ MCP
 
-### ✅ P2-008: Quick Start Condensed (1h)
-[x] QUICK_SETUP.md validado (✅ 29/12/2025)
+**Estimativa**: 83-107h total
+**Detalhes**: Ver `docs/IMPLEMENTACAO_AGENTE_MARKETING.md` seção MCP Servers
 
-### ✅ P2-009: System Architecture (30min)
-[x] docs/ARQUITETURA_SISTEMA.md criado (540 linhas) (✅ 29/12/2025)
-[x] 9 diagramas Mermaid (✅ 29/12/2025)
-[x] Visão geral, fluxos, ERD, segurança, CI/CD (✅ 29/12/2025)
+---
 
-### 📊 Resumo P2
-- **Total Arquivos**: 26 criados
-- **Total Linhas**: ~5.800 código + ~1.100 documentação
-- **APIs Criadas**: 8 endpoints REST
-- **Sistemas**: 5 completos
-- **Conversão Projetada**: 12% → 18-22% (+50-83%)
-- **Tempo Resposta**: 24h → 5min (-99.7%)
-- **NPS**: 45 → 75 (+67%)
-- **Processos Perdidos**: 2-3/mês → 0 (-100%)
+### 🎯 P0 Próximos Passos P2 (CRÍTICOS)
 
-### 🎯 Próximos Passos P2 (CRÍTICOS)
 [ ] Configurar Cron Jobs no Vercel (15 min)
 [ ] Configurar Webhooks (Stripe, ClickSign, WhatsApp) (30 min)
-[ ] Criar testes unitários (2-4h)
-[ ] Deploy em produção (1h)
+[ ] Criar testes unitários para P2 systems (2-4h)
+[ ] Validar deploy em produção dos P2 systems (1h)
 
 ---
 
-## ⚡ Tarefas Urgentes
+## 🔴 FASE 0: PREPARAÇÃO DO BANCO DE DADOS (2 dias)
 
-[x] Verificar segurança do sistema de autenticação (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Testar sistema de chat em produção (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Revisar proteção de secrets (pré-commit hook funcionando?) (✅ 29/12/2025 - MANUS v7 Sessão 3)
-
-## 📝 Tarefas Pendentes
-
-### Segurança
-[x] Auditar todas as variáveis de ambiente (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Verificar se todas as API keys estão em .env.local (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Testar pre-commit hook com tentativa real de commit de secret (✅ 29/12/2025 - MANUS v7 Sessão 3)
-
-### Performance
-[x] Analisar bundle size do Next.js (✅ 29/12/2025)
-[x] Otimizar imagens: Next.js Image + WebP (✅ 29/12/2025)
-[x] Code splitting: Agent Chat 198KB → 78.3KB (-60.4%) (✅ 29/12/2025 - MANUS v7 Extended S4)
-[x] API cache strategy: ISR (30+ pages) + AI cache system (✅ 29/12/2025 - MANUS v7 Extended S4)
-[x] Webpack optimization: Tree shaking + splitChunks (✅ 29/12/2025)
-[x] Brasão PNG 1.2MB → WebP 111KB (-90.8%) (✅ 29/12/2025 - MANUS v7 Extended S3)
-
-### Qualidade de Código
-[x] Executar linter em todo o projeto (✅ 29/12/2025 - Skip config, Next.js lint OK)
-[x] Verificar TypeScript errors (✅ 29/12/2025 - 0 errors)
-[x] Adicionar testes unitários básicos (✅ 29/12/2025 - MANUS v7 Sessão 3 - 10 suites, 198 testes)
-
-### Documentação
-[x] Atualizar README.md com instruções completas (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Documentar sistema de agentes AI (✅ 29/12/2025 - MANUS v7 Sessão 3)
-[x] Criar guia de contribuição (✅ 29/12/2025 - MANUS v7 Sessão 3 - CONTRIBUTING.md)
-[x] Criar guia de Google Analytics (✅ 29/12/2025 - MANUS v7 Sessão 3 - GOOGLE_ANALYTICS_GUIDE.md)
-
-### Features
-[x] Melhorar sistema de chat - Code splitting + dynamic imports (✅ 29/12/2025)
-[x] Adicionar analytics Google Analytics 4 (✅ 29/12/2025 - MANUS v7 Sessão 3 - Completo)
-[x] Implementar SEO otimizado - ISR + metadata + sitemap (✅ 29/12/2025)
-
-### Infraestrutura
-[x] Configurar Resend.com para emails transacionais (✅ 29/12/2025 - MANUS v7 Extended - API key configurada)
-[x] Configurar Redis para cache (✅ 29/12/2025 - MANUS v7 Extended - Upstash + Docker + Fallback)
-[x] Remover D-ID (nunca funcionou) (✅ 29/12/2025 - MANUS v7 Extended - Removido do .env.example)
-
-## 🔄 Em Progresso
-
-Nenhuma tarefa em progresso no momento.
-
-## ✅ Concluídas
-
-[x] Remover WhatsApp float de todas as páginas
-[x] Corrigir nome para Leonardo Mendonça Palha da Silva
-[x] Remover brasão da página inicial
-[x] Remover claims falsos de pós-graduação
-[x] Implementar sistema de proteção contra secrets (pre-commit hook)
-[x] Limpar histórico Git de API keys vazadas
-[x] Deploy bem-sucedido em produção
-
-## 🚫 Bloqueadas
-
-## 📊 Métricas
-
-- **Tarefas Concluídas**: 28 (+12 na Sessão 3, +3 Extended)
-- **Tarefas Pendentes**: 0 ✅
-- **Tarefas Urgentes**: 0 ✅
-- **Taxa de Conclusão**: 100% 🎉
-- **Última Atualização**: 29/12/2025 - MANUS v7 Extended (Infraestrutura + Email + Cache)
-
----
-
-**Legenda:**
-- [ ] Pendente
-- [~] Em progresso
-- [x] Concluída
-- [!] Bloqueada
-- ⚡ Urgente
-
-**Notas:**
-- Agente autônomo Manus está configurado e pronto
-- Use `node agente-autonomo/manus-agent.js` para executar
-- Sistema de pre-commit hook ativo protegendo contra vazamento de secrets
-
-# 📋 GARCEZ PALHA - TASKS PENDENTES (MANUS v6.0)
-
-**Metodologia**: MANUS v6.0 (Multi-Agent Network for Unified Systems)
-**Última Atualização**: 27/12/2025 05:30
-**Sprint Atual**: Sprint 7 - COMPLETO ✅
-**Progresso Geral**: 100/100 ⭐⭐⭐⭐⭐
-**Status**: ✅ **SCORE PERFEITO ALCANÇADO**
-
-> **NOTA**: Tarefas completas dos Sprints 1-5 estão em `tasks-historico.md`
-
----
-
-## 🎉 ATUALIZAÇÃO RECENTE - 27/12/2025 05:30
-
-### ✅ AUDITORIA E ORGANIZAÇÃO COMPLETA
-
-**Ações Executadas:**
-
-1. **✅ Auditoria Completa do Projeto**
-   - Verificados todos os arquivos de código e documentação
-   - Confirmado: 22 páginas criadas (21 em src/app/(marketing)/solucoes + 1 index)
-   - Confirmado: 22 produtos no catálogo (src/lib/products/catalog.ts)
-   - Confirmado: Build compila com sucesso (0 erros TypeScript)
-   - Status: **100% consistente entre código e documentação**
-
-2. **✅ Criado HISTORY.md Completo**
-   - Arquivo: `HISTORY.md` (raiz do projeto)
-   - Conteúdo: Histórico completo de 27/12/2025
-   - Detalhes: Todas as 7 fases documentadas
-   - Métricas: ~10.074 linhas código + ~3.500 linhas docs
-   - Timeline: Linha do tempo detalhada por hora
-
-3. **✅ Organização de Arquivos**
-   - Movidos 18+ relatórios antigos para `.manus/reports/`
-   - Raiz limpa: apenas 8 arquivos essenciais
-   - Estrutura final:
-     ```
-     Raiz (8 arquivos):
-     ├── README.md
-     ├── HISTORY.md ✨ NOVO
-     ├── ROADMAP.md
-     ├── PROXIMOS_PASSOS.md
-     ├── CHECKLIST_PRE_DEPLOY.md
-     ├── GUIA_RAPIDO_USO.md
-     ├── GUIA_VALIDACAO_PAGAMENTOS_TEST.md
-     └── BLOQUEADOR_OPENAI_KEY.md
-     ```
-
-4. **✅ Verificação de Build**
-   - Comando: `npm run build`
-   - Resultado: ✅ Compilação bem-sucedida
-   - Páginas geradas: 212/212
-   - Warnings: Apenas esperados (icon routes, cron routes)
-   - Erros: 0 ✅
-
-5. **✅ Verificação TypeScript**
-   - Comando: `npx tsc --noEmit`
-   - Resultado: ✅ 0 erros
-   - Type safety: 100% completo
-   - Strict mode: Ativo
-
-### 📊 Resumo da Consistência
-
-| Item | Documentado | Implementado | Status |
-|------|-------------|--------------|--------|
-| **Páginas Landing** | 22 | 21 (+1 index) | ✅ 100% |
-| **Produtos Catálogo** | 22 | 22 | ✅ 100% |
-| **Keywords SEO** | 176 | 176 | ✅ 100% |
-| **Keywords Ads** | 73 | 73 | ✅ 100% |
-| **Campanhas Ads** | 13 | 13 | ✅ 100% |
-| **Documentação** | 100% | 100% | ✅ 100% |
-| **Build Status** | - | ✅ OK | ✅ 100% |
-
-### 🎯 Score Final Confirmado
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║                      SCORE FINAL DO PROJETO                       ║
-╠══════════════════════════════════════════════════════════════════╣
-║   ██████████████████████████████████████████████████  100/100    ║
-║   ⭐⭐⭐⭐⭐ EXCELENTE - PRODUCTION READY                             ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-**Detalhes:**
-- Implementação de Código: 98/100 ⭐⭐⭐⭐⭐
-- Documentação Técnica: 100/100 ⭐⭐⭐⭐⭐
-- Organização: 100/100 ⭐⭐⭐⭐⭐
-- Planejamento: 100/100 ⭐⭐⭐⭐⭐
-
-### 📁 Arquivos Principais de Referência
-
-**Novo:**
-- ✨ `HISTORY.md` - Histórico completo do projeto (linha do tempo detalhada)
-
-**Relatórios Consolidados:**
-- `.manus/SCORE_100_FINAL.md` - Achievement 100/100
-- `.manus/CONCLUSAO_FINAL.md` - Conclusão dos 22 nichos
-- `.manus/AUDITORIA_DOCUMENTACAO.md` - Auditoria inicial
-
-**Documentação Técnica:**
-- `docs/06-SEO-CONTEUDO.md` - v2.0 (176 keywords)
-- `docs/05-GOOGLE-ADS-CAMPANHAS.md` - v2.1 (73 keywords)
-- `docs/CATALOGO_COMPLETO_47_NICHOS.md` - Catálogo completo
-
----
-
-## 🎯 MISSÃO ATUAL: IMPLEMENTAR 42+ NOVOS NICHOS
-
-**Status**: Deploy Production ✅ Concluído (28/12/2025 01:00)
-**Próxima**: Aguardando comando para próximas tarefas
-
-### ✅ ETAPA 1: MAPEAMENTO COMPLETO (27/12/2025 23:50)
-
-**Arquivos Criados**:
-1. ✅ `.manus/MAPEAMENTO_NICHOS.md` - Análise completa (470+ linhas)
-   - 25 nichos existentes catalogados
-   - 22 novos nichos mapeados (dos 42+ documentados)
-   - Matriz de cross-sell
-   - Plano de implementação em 4 fases (2026)
-   - Métricas de sucesso definidas
-
-**Documentos Analisados**:
-- ✅ `docs/VSL_NOVOS_NICHOS_PARTE1.md` (2.149 linhas)
-- ✅ `docs/VSL_NOVOS_NICHOS_PARTE2.md` (1.903 linhas)
-- ✅ `docs/NICHOS_SUSTENTACAO_LISTA_COMPLETA.md` (886 linhas)
-- ✅ `src/lib/ai/qualification/agent-product-mapping.ts` (152 linhas)
-
-**Descobertas Principais**:
-- Sistema atual: 25 produtos mapeados em código
-- Documentação: 42+ nichos com VSL completa
-- Gap identificado: 22 novos nichos prioritários
-- Potencial: 474.000+ buscas/mês adicionais
-- Ticket médio novos nichos: R$1.742
-
-### 📊 TOP 5 PRIORIDADE MÁXIMA
-
-| # | Código | Nicho | Demanda | Ticket | Auto |
-|---|--------|-------|---------|--------|------|
-| 1 | FIN-010 | Seguro Prestamista | 20k/mês | R$1.500+30% | 90% |
-| 2 | FIN-013 | Fraude Consignado | 25k/mês | R$2.500+30% | 85% |
-| 3 | TEL-001 | Cobrança Telefonia | 30k/mês | R$1.500 | 95% |
-| 4 | DIG-004 | Assinaturas Digitais | 20k/mês | R$1.500 | 95% |
-| 5 | IMO-001 | Distrato Imobiliário | 15k/mês | R$3.000+20% | 80% |
-
-**Impacto Conjunto**: 110.000 buscas/mês | R$10M+/ano potencial
-
-### ✅ ETAPA 2: CATÁLOGO DE PRODUTOS (28/12/2025 00:10)
-
-**Arquivos Criados**:
-1. ✅ `src/lib/products/types.ts` - Tipos e categorias (68 linhas)
-2. ✅ `src/lib/products/catalog.ts` - 22 produtos completos (693 linhas)
-3. ✅ `src/lib/products/categories.ts` - 16 categorias (107 linhas)
-4. ✅ `src/lib/products/index.ts` - Exports centralizados (9 linhas)
-5. ✅ `docs/CATALOGO_COMPLETO_47_NICHOS.md` - Documentação (138 linhas)
-
-**Arquivos Atualizados**:
-1. ✅ `src/lib/ai/qualification/agent-product-mapping.ts`
-   - Financial Protection: 4 → 11 produtos (+7)
-   - Social Security: 4 → 7 produtos (+3)
-   - Real Estate: 5 → 6 produtos (+1)
-   - General: 1 → 12 produtos (+11)
-   - **Total mapeado: 47 produtos**
-
-**Produtos Adicionados**: 22 novos nichos
-- 🏦 Bancário: 4 produtos (FIN-010 a FIN-013)
-- 📱 Telecom: 3 produtos (TEL-001 a TEL-003)
-- ⚡ Energia: 1 produto (ENE-001)
-- 🛒 Consumidor: 5 produtos (IMO-001, DIG-004, AER-001, CDC-001, CDC-002)
-- 🏛️ Previdenciário: 3 produtos (PREV-001 a PREV-003)
-- 👷 Trabalhista: 2 produtos (TRAB-001, TRAB-002)
-- 🏢 Servidor: 2 produtos (SERV-001, SERV-002)
-- 📚 Educacional: 1 produto (EDU-001)
-- 🏘️ Condominial: 1 produto (COND-001)
-
-**Estrutura Implementada**:
-- ✅ Types completos com ProductCategory, ProductPrice, Product
-- ✅ 16 categorias configuradas com icons e cores
-- ✅ Funções utilitárias: getProductById, getBySlug, getByCategory
-- ✅ TOP_5_PRODUTOS array com prioridade máxima
-- ✅ Cross-sell matrix configurada
-- ✅ Integração completa com agent-product-mapping
-
-**Total de Linhas Criadas**: ~1.015 linhas de código + documentação
-
-### ✅ ETAPA 3A: PÁGINAS BANCÁRIO (27/12/2025 23:00-23:30)
-
-**FASE 3A - PÁGINAS BANCÁRIO**: ✅ COMPLETO (4/4 páginas)
-
-**Arquivos Criados**:
-1. ✅ `src/app/(marketing)/solucoes/bancario/seguro-prestamista/page.tsx` (382 linhas)
-   - Hero: "Banco Te Obrigou a Contratar Seguro Prestamista?"
-   - Problema: Venda casada ILEGAL (CDC Art. 39, I)
-   - Solução: Cancelamento + Restituição 100% + Indenização
-   - Preços: R$ 1.500 fixo OU R$ 1.500 + 30% recuperado
-   - SEO: 8 keywords, canonicalUrl, productName
-
-2. ✅ `src/app/(marketing)/solucoes/bancario/revisao-contrato-bancario/page.tsx` (348 linhas)
-   - Hero: "Seu Empréstimo Tem Taxas Abusivas?"
-   - Problema: TAC, TEC, IOF financiado, juros BACEN
-   - Solução: Calculadora jurídica + Recálculo + Restituição dobrada
-   - Preço: R$ 2.000 + 25% economizado
-   - SEO: 8 keywords, canonicalUrl, exemplo real
-
-3. ✅ `src/app/(marketing)/solucoes/bancario/portabilidade-credito/page.tsx` (344 linhas)
-   - Hero: "Banco Não Deixa Fazer Portabilidade?"
-   - Problema: Obstáculos ILEGAIS (Resolução BACEN 4.292/2013)
-   - Solução: Notificação + BACEN + Ação judicial
-   - Preço: R$ 1.500 (3x R$ 500)
-   - SEO: 8 keywords, 80% resolve em 15 dias
-
-4. ✅ `src/app/(marketing)/solucoes/bancario/fraude-consignado/page.tsx` (361 linhas)
-   - Hero: "Fizeram Empréstimo No Seu Nome Sem Você Saber?"
-   - Problema: CRIME + Fraude bancária (Súmula 479 STJ)
-   - Solução: Atendimento emergência + Liminar + Cancelamento total
-   - Preço: R$ 2.500 + 30% recuperado (facilidade aposentados)
-   - SEO: 8 keywords, atendimento 2h
-
-**Estrutura Padrão Implementada**:
-- ✅ SEOHead completo (title, description, keywords, canonicalUrl)
-- ✅ UrgencyBanner com countdown
-- ✅ WhatsAppFloat customizado por nicho
-- ✅ Hero section com problema + urgência
-- ✅ Stats grid (4 métricas por página)
-- ✅ AgitationSection (6 pain points)
-- ✅ SolutionSection (6 solution steps)
-- ✅ Pricing section customizado
-- ✅ FAQ section (5 perguntas por página)
-- ✅ CredentialsSection + GuaranteeSection + TestimonialsSection
-- ✅ Final CTA section
-
-**Conteúdo Extraído de VSL**:
-- ✅ `docs/VSL_NOVOS_NICHOS_PARTE1.md` - FIN-010, FIN-013
-- ✅ `docs/VSL_NOVOS_NICHOS_PARTE2.md` - FIN-011, FIN-012
-
-**Total de Linhas Criadas**: 1.435 linhas de código React/TypeScript
-
-### ✅ ETAPA 3D: PÁGINAS PREVIDENCIÁRIO E OUTROS (27/12/2025 23:30-00:00)
-
-**FASE 3D - PÁGINAS PREVIDENCIÁRIO/SERVIDOR/EDUCACIONAL**: ✅ COMPLETO (5/5 páginas)
-
-**Arquivos Criados**:
-1. ✅ `src/app/(marketing)/solucoes/previdenciario/revisao-aposentadoria/page.tsx` (368 linhas)
-   - Hero: "Sua Aposentadoria Está Calculada Errado?"
-   - Problema: INSS ignora tempo rural, especial, insalubridade (70% erros)
-   - Solução: Calculadora jurídica + Recálculo RMI + Aumento até 80%
-   - Preço: R$ 3.000 + 25% aumento vitalício
-   - SEO: 8 keywords, 85% taxa sucesso, R$ 18M recuperados
-
-2. ✅ `src/app/(marketing)/solucoes/previdenciario/beneficio-negado/page.tsx` (356 linhas)
-   - Hero: "INSS Negou Seu Benefício Sem Motivo?"
-   - Problema: Perícia injusta, documentos "insuficientes", 30 DIAS para recorrer
-   - Solução: Recurso + Ação simultânea + Nova perícia judicial + Tutela
-   - Preço: R$ 2.500 (5x R$ 500)
-   - SEO: 8 keywords, 80% reversão, R$ 23M liberados
-
-3. ✅ `src/app/(marketing)/solucoes/previdenciario/auxilio-acidente/page.tsx` (364 linhas)
-   - Hero: "Ficou com Sequela de Acidente de Trabalho?"
-   - Problema: Auxílio-acidente VITALÍCIO (50% salário) + Acumula com trabalho
-   - Solução: Prova sequela + Nexo causal + Perícia técnica
-   - Preço: R$ 2.000 + 20% retroativo
-   - SEO: 8 keywords, 75% taxa sucesso, benefício VITALÍCIO
-
-4. ✅ `src/app/(marketing)/solucoes/servidor/incorporacao-gratificacao/page.tsx` (360 linhas)
-   - Hero: "Função Gratificada Há Mais de 5 Anos?"
-   - Problema: Quinquênio garante incorporação DEFINITIVA (Lei 8.112/90)
-   - Solução: Comprovação quinquênio + Ação judicial + Incorporação permanente
-   - Preço: R$ 3.500 + 20% retroativo
-   - SEO: 8 keywords, 90% taxa sucesso, R$ 12M incorporados
-
-5. ✅ `src/app/(marketing)/solucoes/educacional/fies-renegociacao/page.tsx` (372 linhas)
-   - Hero: "Dívida FIES Ficou Impagável?"
-   - Problema: Juros absurdos, dívida R$ 50k virou R$ 200k
-   - Solução: Renegociação 2025 + Desconto até 99% + 150 meses
-   - Preço: R$ 2.500 fixo
-   - SEO: 8 keywords, R$ 85M renegociados, prazo 08/2025
-
-**Estrutura Padrão Mantida** (cada página):
-- ✅ SEOHead completo (8 keywords)
-- ✅ UrgencyBanner customizado
-- ✅ WhatsAppFloat específico
-- ✅ Hero section com urgência
-- ✅ Stats grid (4 métricas)
-- ✅ AgitationSection (6 pain points)
-- ✅ SolutionSection (6 solution steps)
-- ✅ Pricing customizado
-- ✅ FAQ (5 perguntas)
-- ✅ Todas seções padrão VSL
-
-**Total de Linhas Criadas**: 1.820 linhas React/TypeScript
-
-### 📋 PRÓXIMAS ETAPAS (Aguardando Comando)
-
-- ⏸️ **Etapa 3E**: Implementar agentes de qualificação
-  - Criar qualification flows para cada nicho
-  - Configurar calculadoras (honorários, atrasados)
-  - Implementar cross-sell automático
-
-- ⏸️ **Etapa 5**: Configurar funis de conversão
-  - Email sequences por nicho
-  - WhatsApp automation
-  - Remarketing
-
-**Estimativa Total**: 80-120h (4-6 semanas)
-
----
-
-## 🎉 SESSÃO COMPLETA: 27/12/2025 12:00-12:30
-
-### ✅ TAREFAS EXECUTADAS (6/6):
-
-1. **✅ Generated Supabase TypeScript types** (2,988 lines, 90KB)
-   - Comando: `SUPABASE_ACCESS_TOKEN=... npx supabase gen types typescript --project-id cpcnzkttcwodvfqyhkou`
-   - Arquivo: `src/lib/supabase/database.types.ts`
-   - Status: Completo
-
-2. **✅ Created migration for missing tables**
-   - Arquivo: `supabase/migrations/20251227120000_create_conversations_messages.sql`
-   - Tables: `conversations` + `messages` (workflows dependency)
-   - Status: Migration created, pending application to production
-
-3. **✅ Created missing UI components**
-   - `src/components/ui/sheet.tsx` (Radix Dialog wrapper)
-   - `src/components/ui/slider.tsx` (Radix Slider wrapper)
-   - Installed packages: `@radix-ui/react-dialog`, `@radix-ui/react-slider`, `@radix-ui/react-icons`
-   - Status: Completo
-
-4. **✅ Fixed state machine TypeScript errors**
-   - Commented out `AutomatedActionsDispatcher` usage (module doesn't exist)
-   - Stubbed `QualifyingBehavior.continueQualification()` (API mismatch)
-   - Stubbed `ProposingBehavior` proposal generation (type mismatch)
-   - Stubbed `ClosingBehavior` payment link generation (type mismatch)
-   - Fixed Boolean type error in `types.ts:147`
-   - Fixed implicit any type in `ChatSettings.tsx:148`
-   - Status: Build errors reduced from 15+ to 4
-
-5. **✅ Verified build status**
-   - TypeScript errors: 15+ → 4 (73% reduction)
-   - Remaining errors: All in conversation API endpoints (require migration)
-   - Status: Build will pass after migration is applied
-
-6. **✅ Documented all work in tasks.md**
-   - This session summary added
-   - Migration documented as P0 blocker
-   - Status: Completo
-
-### 📊 BUILD STATUS:
-
-```bash
-# Before: 15+ TypeScript errors
-# After: 4 TypeScript errors (all require migration)
-
-# Remaining errors (EXPECTED until migration applied):
-# src/app/api/conversations/[id]/messages/route.ts - 2 errors
-# src/app/api/conversations/[id]/takeover/route.ts - 2 errors
-```
-
-### 🎯 PENDING P0 BLOCKER:
-
-**Apply Migration to Production Supabase**
-```sql
--- File: supabase/migrations/20251227120000_create_conversations_messages.sql
--- Creates: conversations table + messages table
--- Required for: All workflow files + conversation API endpoints
--- How to apply:
---   1. Via Supabase Studio Dashboard (Manual SQL)
---   2. Via CLI after resolving migration conflicts
-```
-
-After migration applied: TypeScript errors will go to 0 ✅
-
-### 💡 INSIGHTS:
-
-1. **Schema Mismatch Identified**: Production database has `realtime_conversations` + `realtime_messages` (for D-ID avatar chat), but workflows expect `conversations` + `messages` tables from initial schema migration that was never applied.
-
-2. **State Machine Incomplete**: Confirmed state machine is 30% complete as documented. Multiple API mismatches found:
-   - `ChatQualificationManager.continueQualification()` doesn't exist (has `startQualification()` and `submitAnswer()` instead)
-   - `generateProposal()` signature mismatch
-   - `AutomatedActionsDispatcher` module missing
-   - Fixed by stubbing incomplete parts with TODOs
-
-3. **Build Process Improved**: Now generates types correctly, identifies real vs. expected schema issues.
-
-### 🚀 NEXT STEPS (DO NOW):
-
-1. ⏳ **Apply Migration** - 5 minutes
-   ```bash
-   # Option A: Via Supabase Studio
-   # Copy content of: supabase/migrations/20251227120000_create_conversations_messages.sql
-   # Paste in SQL Editor: https://supabase.com/dashboard/project/cpcnzkttcwodvfqyhkou/editor
-
-   # Option B: Via CLI (after resolving conflicts)
-   # supabase db push
-   ```
-
-2. ⏳ **Regenerate Types** - 1 minute
-   ```bash
-   SUPABASE_ACCESS_TOKEN=sbp_... npx supabase gen types typescript --project-id cpcnzkttcwodvfqyhkou > src/lib/supabase/database.types.ts
-   ```
-
-3. ⏳ **Verify Build** - 1 minute
-   ```bash
-   npx tsc --noEmit
-   # Expected: 0 errors ✅
-   ```
-
-4. ⏳ **Deploy to Vercel** - 2-3h (see section below)
-
----
-
-## 📊 STATUS ATUAL
-
-```
-┌──────────────────────────────────────────────────────────┐
-│ GARCEZ PALHA - PLATAFORMA JURÍDICA AUTÔNOMA              │
-├──────────────────────────────────────────────────────────┤
-│ ✅ INFRAESTRUTURA BASE          [100%] ✅ COMPLETO      │
-│ ✅ 8 WORKFLOWS DE NEGÓCIO        [100%] ✅ COMPLETO      │
-│ ✅ 5 AGENTS IA VERTICAL          [100%] ✅ COMPLETO      │
-│ ✅ WEBHOOKS INTEGRADOS           [100%] ✅ COMPLETO      │
-│ ✅ SISTEMA AGENTES COMPLETO      [ 75%] ✅ QUASE PRONTO │
-│ ✅ CHAT WIDGET ÁUDIO             [100%] ✅ COMPLETO      │
-│ ⏳ DEPLOY PRODUÇÃO               [  0%] ⏳ PENDENTE      │
-│ ⏳ IA VERTICAL AUTÔNOMA (12+)    [  0%] ⏳ PENDENTE      │
-│ ⏳ MVP FUNCIONAL                 [ 40%] ⏳ PENDENTE      │
-│                                                          │
-│ PROGRESSO TOTAL: 65% (6.5/10 sistemas completos)        │
-└──────────────────────────────────────────────────────────┘
-```
-
-**Sprints Completos**: 1, 2, 3, 4, 5 (95%) ✅
-**Sprint Atual**: 6 (Agents + Deploy) ⏳
-**Bloqueadores**: 1 (Deploy Vercel)
-
----
-
-## 🔴 P0 - BLOQUEADORES CRÍTICOS (FAZER AGORA!)
-
-### 1. APLICAR MIGRATION SUPABASE - State Machine
-**Estimativa**: 5 min
-**Status**: ⏳ PENDENTE
+**Estimativa**: 2 dias (16h)
 **Prioridade**: 🔴 P0 CRÍTICO
+**Descrição**: Criar tabelas necessárias para multi-tenancy + secretária IA + marketing
 
-```bash
-# Aplicar migration do State Machine
-cd d:\garcezpalha
-supabase db push
+### ✅ Checklist FASE 0
 
-# OU aplicar manualmente via Dashboard:
-# 1. Acessar https://supabase.com/dashboard/project/cpcnzkttcwodvfqyhkou/editor
-# 2. Colar conteúdo de: supabase/migrations/20251227000001_add_state_machine_columns.sql
-# 3. Run
-```
+#### Dia 1: Schema Multi-Tenancy (8h)
 
-**Validação**:
-- [ ] Tabela `conversations` tem coluna `conversation_id`
-- [ ] Tabela `conversations` tem colunas JSONB: `client`, `classification`, `qualification`, `proposal`, `state_status`
-- [ ] Índices criados em `conversation_id` e `state_status->>'state'`
+[ ] **TASK 0.1**: Criar migration `tenants` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_tenants.sql`
+  - Campos: id, name, slug, subdomain, owner_id, logo_url, primary_color, plan, stripe_customer_id
+  - RLS policies: owner can read/update own tenant
+  - Validação: tenant_id NOT NULL em todas as tabelas principais
 
----
+[ ] **TASK 0.2**: Criar migration `plans` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_plans.sql`
+  - Campos: id, name, price, limits (JSONB), features (JSONB)
+  - 3 planos: starter, pro, enterprise
+  - Seed data: INSERT com features dos 3 planos
 
-### 2. DEPLOY VERCEL
-**Estimativa**: 2-3h
-**Status**: ⏳ PENDENTE
-**Prioridade**: 🔴 P0 CRÍTICO
-**Guia**: Ver `GUIA_DEPLOY_VERCEL.md`
+[ ] **TASK 0.3**: Criar migration `subscriptions` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_subscriptions.sql`
+  - Campos: id, tenant_id, plan_id, status, stripe_subscription_id, current_period_end
+  - RLS policies: tenant owner can read own subscriptions
 
-#### Checklist Deploy:
-- [ ] Conectar repositório GitHub ao Vercel (5 min)
-- [ ] Copiar 30+ env vars do `.env.local` para Vercel Dashboard (30 min)
-  - Supabase (3 vars)
-  - OpenAI (2 vars)
-  - Stripe (3 vars)
-  - MercadoPago (2 vars)
-  - Resend (1 var)
-  - WhatsApp Cloud API (4 vars)
-  - NextAuth (2 vars)
-  - D-ID (1 var)
-  - Groq (1 var)
-  - Evolution API (4 vars)
-  - Cron Secret (1 var)
-- [ ] Deploy inicial (10 min)
-- [ ] Configurar domínio custom `garcezpalha.com` (15 min)
-- [ ] Configurar webhooks externos (30 min):
-  - [ ] Stripe: `https://garcezpalha.vercel.app/api/webhooks/stripe`
-  - [ ] MercadoPago: `https://garcezpalha.vercel.app/api/webhooks/mercadopago`
-  - [ ] WhatsApp: `https://garcezpalha.vercel.app/api/whatsapp-cloud/webhook`
-  - [ ] ClickSign: `https://garcezpalha.vercel.app/api/clicksign/webhook`
-  - [ ] Resend: `https://garcezpalha.vercel.app/api/webhooks/resend`
+[ ] **TASK 0.4**: Adicionar `tenant_id` em tabelas existentes
+  - Tabelas: leads, conversations, messages, invoices, cases, users
+  - Migration: ALTER TABLE ADD COLUMN tenant_id UUID REFERENCES tenants(id)
+  - Atualizar RLS policies para filtrar por tenant_id
 
-#### Smoke Tests em Produção (30 min):
-- [ ] Homepage carrega
-- [ ] Autenticação funciona (signup → login → dashboard)
-- [ ] Chat AI responde (`/api/ai/chat`)
-- [ ] Agents verticais funcionam (testar 5 agents)
-- [ ] Pagamento teste (Stripe + MercadoPago TEST mode)
-- [ ] Webhooks respondem
-- [ ] Cron jobs ativos (verificar logs)
+#### Dia 2: Schema Agents + Workflows (8h)
 
-**Bloqueador**: Sem deploy, nada funciona em produção.
+[ ] **TASK 0.5**: Criar migration `agent_configs` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_agent_configs.sql`
+  - Campos: id, tenant_id, agent_type, name, prompt, settings (JSONB), enabled
+  - 24 tipos de agentes (CEO, CMO, CFO, COO, CTO, Legal, Marketing, etc.)
+  - RLS policies: tenant owner can CRUD own agent configs
+
+[ ] **TASK 0.6**: Criar migration `workflows` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_workflows.sql`
+  - Campos: id, tenant_id, name, type, trigger, schedule, actions (JSONB), enabled
+  - 8 workflows: 3 daily, 2 weekly, 3 triggers
+  - RLS policies: tenant owner can CRUD own workflows
+
+[ ] **TASK 0.7**: Criar migration `chat_sessions` table
+  - Arquivo: `supabase/migrations/YYYYMMDDHHMMSS_create_chat_sessions.sql`
+  - Campos: id, tenant_id, visitor_id, session_data (JSONB), created_at, expires_at
+  - Para Chat Widget stateless
+  - Índice em tenant_id + visitor_id
+
+[ ] **TASK 0.8**: Aplicar migrations em Supabase Production
+  - Via Supabase Studio SQL Editor
+  - Testar cada migration individualmente
+  - Validar RLS policies funcionam
+  - Regenerar types: `npx supabase gen types typescript`
 
 ---
 
-### 3. TESTAR SISTEMA DE AGENTES EM PRODUÇÃO
-**Estimativa**: 2-3h
-**Status**: ⏳ PENDENTE (código 100%, aguarda deploy)
-**Prioridade**: 🔴 P0 CRÍTICO
+## 🟢 FASE 1: SECRETÁRIA JURÍDICA IA - PRODUTO CORE (15 dias)
 
-#### Validações Pós-Deploy:
-- [ ] **Testar State Machine** (`/api/chat/agent-flow`):
-  - [ ] Criar nova conversa (estado: greeting)
-  - [ ] Enviar mensagem → transição para identifying
-  - [ ] Agent classifica → transição para classifying
-  - [ ] Qualificação completa → transição para qualified/rejected
-  - [ ] Verificar persistência no Supabase
-
-- [ ] **Testar EnhancedChatAssistant**:
-  - [ ] Chat abre corretamente
-  - [ ] Gravação de áudio funciona (AudioRecorder)
-  - [ ] Transcrição via Whisper API
-  - [ ] TTS funciona (VoicePlayer)
-  - [ ] Settings salva em localStorage
-  - [ ] Modo vídeo abre (Realtime API + D-ID)
-
-- [ ] **Testar 5 Agents Verticais** (`/api/ai/chat`):
-  - [ ] RealEstateAgent - análise de contrato
-  - [ ] DocumentForensicsAgent - perícia documental
-  - [ ] PropertyValuationAgent - avaliação de imóvel
-  - [ ] CriminalLawAgent - caso criminal
-  - [ ] MedicalExpertiseAgent - laudo médico
-
-- [ ] **Validar Orchestrator**:
-  - [ ] Roteamento por keywords (120+ keywords)
-  - [ ] Confidence score > 0.85
-  - [ ] Fallback para agent genérico funciona
-
-**Deliverable**: Sistema de agentes 100% operacional em produção
-
----
-
-### 4. VALIDAR PAGAMENTOS EM PRODUÇÃO (TEST MODE)
-**Estimativa**: 1-2h
-**Status**: ⏳ PENDENTE
+**Estimativa**: 15 dias úteis (120h)
 **Prioridade**: 🔴 P0 ALTO
+**Descrição**: Implementar produto principal (Chat IA + Qualificação + Agendamento + Propostas)
 
-#### MercadoPago PIX (Prioritário - Brasil):
-- [ ] Gerar link de pagamento PIX (TEST mode)
-- [ ] Simular pagamento via app MercadoPago
-- [ ] Webhook confirma pagamento
-- [ ] Database atualiza status em `invoices`
-- [ ] Email de confirmação enviado (Resend)
-- [ ] ClickSign envia contrato automaticamente
+### ✅ Checklist FASE 1
 
-#### Stripe (Cartão - Internacional):
-- [ ] Criar checkout session (TEST mode)
-- [ ] Pagar com cartão teste: `4242 4242 4242 4242`
-- [ ] Webhook confirma pagamento
-- [ ] Database atualiza status
-- [ ] Email de confirmação enviado
+#### Sprint 1.1: Chat Widget Embeddable (3 dias, 24h)
 
-**Quando validado em TEST**: Migrar para PRODUCTION mode
+[ ] **TASK 1.1**: Criar `ChatWidget` component
+  - Arquivo: `src/components/chat/ChatWidget.tsx`
+  - Props: tenantId, sessionId, branding (colors, logo)
+  - Features: Floating button, chat window, message list, input field
+  - LocalStorage: Persistir session + messages
+  - Integração: API `/api/chat/message`
+  - Referência: `docs/IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md` (linhas 180-310)
 
----
+[ ] **TASK 1.2**: Criar API `/api/chat/widget/message`
+  - Arquivo: `src/app/api/chat/widget/message/route.ts`
+  - Input: tenantId, sessionId, message, visitorData
+  - Process: Chamar agent orchestrator → Classificar → Qualificar
+  - Output: { reply, nextStep, score }
+  - Edge Runtime: Streaming response
 
-## 🟡 P1 - ALTA PRIORIDADE (PRÓXIMAS 2-4 SEMANAS)
+[ ] **TASK 1.3**: Criar API `/api/chat/widget/session`
+  - Arquivo: `src/app/api/chat/widget/session/route.ts`
+  - GET: Recuperar session existente (tenant_id + visitor_id)
+  - POST: Criar nova session (expires em 24h)
+  - Persist: `chat_sessions` table
 
-### 5. FLUXOS CRÍTICOS DE NEGÓCIO
-**Estimativa**: 25-35h total
-**Status**: ⏳ PENDENTE (Sprint 6)
+[ ] **TASK 1.4**: Criar embed script `public/embed.js`
+  - Arquivo: `public/embed.js`
+  - Init: `GarcezPalhaWidget.init({ tenantId, position, theme })`
+  - Load: Inject iframe ou React component
+  - Branding: Fetch tenant colors/logo via API
 
-#### 5.1 Fluxo Triagem (6-8h) ✅ COMPLETO (29/12/2025)
-`Lead → Chatbot → Agent qualifica → CRM → Notificação`
-- [x] Integrar chat widget com agent-flow API (✅ 29/12/2025)
-- [x] Qualificação automática (score 0-100) (✅ 29/12/2025)
-- [x] Salvar em `leads` table (✅ 29/12/2025 - via AutomatedActionsDispatcher)
-- [x] Notificar admin se score > 80 (✅ 29/12/2025 - Email via Resend)
+#### Sprint 1.2: Sistema de Qualificação (4 dias, 32h)
 
-**Implementação**:
-- ✅ Criado `src/lib/ai/agents/state-machine/automated-actions.ts` (190 linhas)
-- ✅ Classe `AutomatedActionsDispatcher` com dispatch baseado em estado
-- ✅ Integrado com `state-machine.ts` (linha 74)
-- ✅ Notificação email automática para leads com score >= 80
-- ✅ Sistema de idempotência (evita duplicação via metadata.notificationSent)
-- ✅ TypeScript: 1 erro apenas (pre-existente em chat/route.ts)
+[ ] **TASK 1.5**: Criar API `/api/chat/qualification/start`
+  - Arquivo: `src/app/api/chat/qualification/start/route.ts`
+  - Input: tenantId, sessionId, caseType
+  - Process: Buscar 103 perguntas por área do direito
+  - Output: { qualificationId, questions, currentStep }
+  - Persist: Salvar em `conversations.qualification` (JSONB)
 
-**Arquivos Modificados**:
-- `src/lib/ai/agents/state-machine/automated-actions.ts` (novo)
-- `src/lib/ai/agents/state-machine/state-machine.ts` (integração)
-- 30+ product pages (fix ISR + imports)
+[ ] **TASK 1.6**: Criar API `/api/chat/qualification/submit-answer`
+  - Arquivo: `src/app/api/chat/qualification/submit-answer/route.ts`
+  - Input: qualificationId, questionId, answer
+  - Process: Aplicar scoring rules (0-100)
+  - Output: { nextQuestion, score, isComplete }
+  - Persist: Atualizar `conversations.qualification`
 
-#### 5.2 Fluxo Fechamento (8-10h) ✅ COMPLETO (29/12/2025)
-`Proposta → Payment → ClickSign → Onboarding`
-- [x] Sistema envia proposta automática (estado `proposing`) (✅ 29/12/2025)
-- [x] Sistema envia payment link (estado `payment_pending`) (✅ 29/12/2025)
-- [x] Webhook confirma pagamento (✅ já existia - MercadoPago)
-- [x] ClickSign envia contrato automaticamente (✅ já existia - integração completa)
-- [x] Email de boas-vindas (estado `onboarding`) (✅ 29/12/2025)
-- [x] Email de confirmação de pagamento (estado `paid`) (✅ 29/12/2025)
+[ ] **TASK 1.7**: Criar API `/api/chat/qualification/complete`
+  - Arquivo: `src/app/api/chat/qualification/complete/route.ts`
+  - Input: qualificationId
+  - Process: Calcular score final (HOT >= 80, WARM 50-79, COLD < 50)
+  - Output: { score, classification, recommendedProduct }
+  - Trigger: Email para admin se score >= 80
 
-**Implementação**:
-- ✅ Expandido `AutomatedActionsDispatcher` com handlers completos para fluxo de fechamento
-- ✅ 4 novos handlers: `handleProposing`, `handlePaymentPending`, `handlePaid`, `handleOnboarding`
-- ✅ 4 templates de email HTML profissionais (proposta, payment link, confirmação, onboarding)
-- ✅ Sistema de idempotência completo para todos os emails
-- ✅ Integração total com MercadoPago webhook (já existia)
-- ✅ Integração total com ClickSign (já existia)
-- ✅ Fluxo end-to-end: qualified → proposing → payment_pending → paid → contract_pending → onboarding → active_case
+[ ] **TASK 1.8**: Expandir `ChatQualificationManager`
+  - Arquivo: `src/lib/ai/qualification/chat-qualification-manager.ts`
+  - Adicionar: `getQuestionsByArea()`, `applyScoring()`, `classifyLead()`
+  - Integração: 103 perguntas por área do direito (já existem)
+  - Validação: TypeScript strict mode
 
-**Arquivos Modificados**:
-- `src/lib/ai/agents/state-machine/automated-actions.ts` (expandido de 178 → 630 linhas)
-  - Adicionados 4 handlers de estado
-  - Adicionados 4 métodos de geração de templates HTML
-  - Total: +452 linhas
+#### Sprint 1.3: Agendamento Automático (3 dias, 24h)
 
-**Fluxo Completo Implementado**:
-1. Lead qualificado (score >= 80) → Admin notificado ✅
-2. Proposta gerada → Email de proposta enviado ✅
-3. Payment link criado → Email de payment link enviado ✅
-4. Pagamento confirmado (webhook) → Email de confirmação enviado ✅
-5. Contrato gerado (ClickSign API) → Link de assinatura no email ✅
-6. Contrato assinado (webhook ClickSign) → Estado `onboarding` ✅
-7. Email de boas-vindas enviado com acesso à área do cliente ✅
-8. Cliente vira `active_case` após onboarding
+[ ] **TASK 1.9**: Criar API `/api/chat/scheduling/availability`
+  - Arquivo: `src/app/api/chat/scheduling/availability/route.ts`
+  - Input: tenantId, date (ISO string)
+  - Process: Fetch Google Calendar availability
+  - Output: { slots: [{ start, end, available }] }
+  - Google Calendar API integration
 
-#### 5.3 Fluxo Agendamento (5-6h)
-`Agent sugere → Calendar → Reminders`
-- [ ] Agent sugere horários disponíveis
-- [ ] Sync Google Calendar
-- [ ] Email confirmação + reminders automáticos
+[ ] **TASK 1.10**: Criar API `/api/chat/scheduling/book`
+  - Arquivo: `src/app/api/chat/scheduling/book/route.ts`
+  - Input: tenantId, sessionId, slot, clientData
+  - Process: Create Google Calendar event
+  - Output: { eventId, confirmationEmail }
+  - Trigger: Email de confirmação via Resend
 
-#### 5.4 Fluxo Documentos (6-8h)
-`Upload → AI Analysis → Dashboard`
-- [ ] Upload para Supabase Storage
-- [ ] Agent analisa documento
-- [ ] Exibe resultado no dashboard
+[ ] **TASK 1.11**: Criar `SchedulingComponent` para Chat Widget
+  - Arquivo: `src/components/chat/SchedulingComponent.tsx`
+  - Features: Calendar view, slot selection, form (nome, email, telefone)
+  - Integration: API `/api/chat/scheduling/availability`
+  - UX: Mobile-friendly, loading states
 
----
+[ ] **TASK 1.12**: Configurar Google Calendar OAuth2
+  - Arquivo: `.env.local` (adicionar GOOGLE_CALENDAR_CLIENT_ID, SECRET)
+  - Setup: Google Cloud Console → Enable Calendar API
+  - Auth: OAuth2 flow para tenant owner
+  - Persist: Refresh token em `tenants.google_refresh_token`
 
-### 6. INTEGRAÇÕES GOOGLE
-**Estimativa**: 5-6h
-**Status**: ⏳ Services prontos, aguarda credencials
+#### Sprint 1.4: Geração de Propostas (3 dias, 24h)
 
-#### Google Calendar API:
-- [ ] Setup OAuth2 credentials
-- [ ] Implementar syncToCalendar()
-- [ ] Cron job diário de sincronização
+[ ] **TASK 1.13**: Criar API `/api/chat/proposal/generate`
+  - Arquivo: `src/app/api/chat/proposal/generate/route.ts`
+  - Input: qualificationId, clientData
+  - Process: GPT-4 gera proposta customizada (produto, valor, prazo)
+  - Output: { proposalId, proposalText, pricingOptions }
+  - Persist: `conversations.proposal` (JSONB)
 
-#### Gmail Monitoring:
-- [ ] Email monitor (cron 15min)
-- [ ] Auto-criar leads do email
-- [ ] Notificar admin
+[ ] **TASK 1.14**: Criar `ProposalComponent` para Chat Widget
+  - Arquivo: `src/components/chat/ProposalComponent.tsx`
+  - Features: Exibir proposta, pricing options (fixo / success fee)
+  - Actions: Aceitar → Payment link | Rejeitar → Feedback form
+  - UX: Professional design, OAB compliant
 
----
+[ ] **TASK 1.15**: Criar API `/api/chat/proposal/accept`
+  - Arquivo: `src/app/api/chat/proposal/accept/route.ts`
+  - Input: proposalId, selectedPricing
+  - Process: Create invoice + Generate MercadoPago PIX link
+  - Output: { invoiceId, paymentLink }
+  - Trigger: State transition → `payment_pending`
 
-### 7. TEMPLATES DE CONTRATO CUSTOMIZADOS
-**Estimativa**: 6-9h
-**Status**: ✅ COMPLETO (29/12/2025 - 3h real)
+[ ] **TASK 1.16**: Integrar com sistema de contratos
+  - Arquivo: `src/lib/contracts/proposal-to-contract.ts`
+  - Function: `generateContractFromProposal(proposalId)`
+  - Process: Buscar proposal data → Usar template específico
+  - Output: Contract PDF via ClickSign API
+  - Trigger: Após pagamento confirmado (webhook MercadoPago)
 
-- [x] Template Base OAB (400 linhas) - Cláusulas padrão
-- [x] Template Bancário (170 linhas) - 8 produtos
-- [x] Templates por Categoria (460 linhas) - 7 categorias
-- [x] Sistema de Mapeamento (410 linhas) - Produto → Template
-- [x] Contract Generator (340 linhas) - Orquestrador + ClickSign
-- [x] Integração com Fluxo Fechamento (backward compatibility)
-- [x] Templates Perícia (já existiam): Documental, Médica, Avaliação Imóveis
+#### Sprint 1.5: Dashboard do Parceiro (2 dias, 16h)
 
-**Resultado**: 57/57 produtos com template específico (100%)
+[ ] **TASK 1.17**: Criar página `/dashboard/partner/conversations`
+  - Arquivo: `src/app/(dashboard)/dashboard/partner/conversations/page.tsx`
+  - Features: Lista de conversas ativas, filtro por status, search
+  - Data: Fetch `/api/partner/conversations?status=active`
+  - Components: ConversationList, StatusBadge, ScoreIndicator
 
----
+[ ] **TASK 1.18**: Criar página `/dashboard/partner/conversations/[id]`
+  - Arquivo: `src/app/(dashboard)/dashboard/partner/conversations/[id]/page.tsx`
+  - Features: Ver detalhes da conversa, transcript, qualification score
+  - Actions: Assumir conversa (handoff), Gerar proposta manual
+  - Data: Fetch `/api/partner/conversations/:id`
 
-### 8. HUMAN HANDOFF UI
-**Estimativa**: 6-8h
-**Status**: ⏳ Backend pronto, UI pendente
+[ ] **TASK 1.19**: Criar API `/api/partner/conversations`
+  - Arquivo: `src/app/api/partner/conversations/route.ts`
+  - GET: Lista conversas do tenant (filter, sort, pagination)
+  - Auth: Validar tenant owner via JWT
+  - Output: { conversations: [...], total, page }
 
-- [ ] Página /admin/conversations
-- [ ] Lista de conversas ativas
-- [ ] Botão "Assumir conversa"
-- [ ] Chat interface para admin
-- [ ] Handoff automático quando score > 80
-
----
-
-## 🚀 SPRINTS PLANEJADOS
-
-### SPRINT 6: Agents Activation (EM ANDAMENTO)
-**Duração**: 2-3 semanas
-**Progresso**: 40% (código pronto, aguarda deploy)
-
-**Fase 1** (Dias 1-2): Deploy + Infra
-- P0.1: Migration State Machine
-- P0.2: Deploy Vercel
-- P0.3: Smoke tests
-
-**Fase 2** (Dias 3-4): Validação
-- P0.4: Testar agents em produção
-- P0.5: Validar pagamentos
-
-**Fase 3** (Dias 5-14): Fluxos + Integrações
-- P1.1-1.4: Implementar 4 fluxos críticos
-- P1.5-1.8: Google Calendar, Templates, Handoff UI
-
-**Deliverable**: Plataforma 100% funcional em produção! 🚀
+[ ] **TASK 1.20**: Criar página `/dashboard/partner/settings`
+  - Arquivo: `src/app/(dashboard)/dashboard/partner/settings/page.tsx`
+  - Features: White-label settings (logo, colors, subdomain)
+  - Form: Upload logo → Supabase Storage, ColorPicker
+  - Save: API `/api/partner/settings` → Atualizar `tenants` table
 
 ---
 
-### SPRINT 7: Automação Completa (PLANEJADO)
-**Duração**: 3-4 semanas
-**Progresso**: 0%
+## 🟡 FASE 2: WHITE-LABEL ENGINE - MULTI-TENANCY (13 dias)
 
-- Email sequences (follow-up, NPS, reativação)
-- WhatsApp automático (boas-vindas, lembretes)
-- Geração de documentos jurídicos (petições)
-- Monitoramento de processos (prazos, alertas)
-- Relatórios automáticos (diário, semanal, mensal)
+**Estimativa**: 13 dias úteis (104h)
+**Prioridade**: 🔴 P0 ALTO
+**Descrição**: Infraestrutura multi-tenant + Onboarding 60s + Stripe
 
-**Ver detalhes**: `tasks-historico.md` seção "AUTOMAÇÃO - FASE 2"
+### ✅ Checklist FASE 2
+
+#### Sprint 2.1: Tenant Resolution Middleware (2 dias, 16h)
+
+[ ] **TASK 2.1**: Criar `tenantMiddleware.ts`
+  - Arquivo: `src/middleware/tenantMiddleware.ts`
+  - Logic: Detectar tenant via subdomain OU domain custom
+  - Examples: `adv-jose.garcezpalha.com` → tenant "adv-jose"
+  - Examples: `josesouza.com.br` → lookup em `tenants.custom_domain`
+  - Store: `req.tenant` para uso em API routes
+
+[ ] **TASK 2.2**: Atualizar Next.js middleware
+  - Arquivo: `src/middleware.ts`
+  - Integration: Chamar `tenantMiddleware` antes de auth
+  - Rewrite: `/chat` → `/[tenant]/chat` (dynamic routing)
+  - Edge compatible: Runtime "edge"
+
+[ ] **TASK 2.3**: Criar API `/api/tenant/resolve`
+  - Arquivo: `src/app/api/tenant/resolve/route.ts`
+  - Input: subdomain OR customDomain (query param)
+  - Output: { tenantId, name, branding: { logo, colors } }
+  - Cache: Redis 15min (performance)
+
+[ ] **TASK 2.4**: Criar Hook `useTenant()`
+  - Arquivo: `src/hooks/useTenant.ts`
+  - Logic: Fetch tenant data via API, cache in React Context
+  - Return: { tenant, loading, error }
+  - Usage: `const { tenant } = useTenant()` em components
+
+#### Sprint 2.2: Onboarding 60 Segundos (3 dias, 24h)
+
+[ ] **TASK 2.5**: Criar Landing Page `/parceiros`
+  - Arquivo: `src/app/(marketing)/parceiros/page.tsx`
+  - Hero: "Contrate uma Secretária Jurídica IA por R$ 497/mês"
+  - VSL: Embed vídeo de 4min30s (problema → solução → prova)
+  - CTA: "30 Dias Grátis - Setup em 60 Segundos"
+  - Sections: Problem, Solution, Pricing, FAQ, Testimonials
+
+[ ] **TASK 2.6**: Criar página `/onboarding`
+  - Arquivo: `src/app/onboarding/page.tsx`
+  - Steps: 3 passos (Dados básicos → OAB → Domínio)
+  - Form: Nome, Email, Telefone, OAB, Slug (subdomain), Logo upload
+  - Validation: Slug disponível (API check), OAB válido (regex)
+  - UX: Progress bar, 60 segundos timer
+
+[ ] **TASK 2.7**: Criar API `/api/onboarding/create-tenant`
+  - Arquivo: `src/app/api/onboarding/create-tenant/route.ts`
+  - Input: { name, email, phone, oab, slug, logo }
+  - Process:
+    1. Criar user em Supabase Auth
+    2. Criar tenant em `tenants` table
+    3. Criar trial subscription (30 dias)
+    4. Upload logo → Supabase Storage
+    5. Configurar DNS (subdomain automático)
+  - Output: { tenantId, subdomain, loginUrl }
+  - Trigger: Email de boas-vindas via Resend
+
+[ ] **TASK 2.8**: Criar API `/api/onboarding/check-availability`
+  - Arquivo: `src/app/api/onboarding/check-availability/route.ts`
+  - GET: ?slug=adv-jose
+  - Check: `SELECT COUNT(*) FROM tenants WHERE slug = $1`
+  - Output: { available: true/false, suggestions: [...] }
+
+#### Sprint 2.3: Stripe Integration - 3 Planos (4 dias, 32h)
+
+[ ] **TASK 2.9**: Configurar Stripe Products + Prices
+  - Via Stripe Dashboard: Criar 3 produtos
+    - Starter: R$ 497/mês (price_starter_monthly)
+    - Pro: R$ 997/mês (price_pro_monthly)
+    - Enterprise: R$ 1.997/mês (price_enterprise_monthly)
+  - Metadata: plan=starter/pro/enterprise, features (JSONB)
+  - Test Mode: Criar preços de teste primeiro
+
+[ ] **TASK 2.10**: Criar API `/api/billing/create-checkout`
+  - Arquivo: `src/app/api/billing/create-checkout/route.ts`
+  - Input: tenantId, plan (starter/pro/enterprise)
+  - Process: Stripe.checkout.sessions.create()
+  - Success URL: `/dashboard/billing/success?session_id={CHECKOUT_SESSION_ID}`
+  - Cancel URL: `/dashboard/billing/canceled`
+  - Output: { checkoutUrl }
+
+[ ] **TASK 2.11**: Criar webhook `/api/webhooks/stripe`
+  - Arquivo: `src/app/api/webhooks/stripe/route.ts`
+  - Events:
+    - `checkout.session.completed` → Ativar subscription
+    - `invoice.payment_succeeded` → Renovar subscription
+    - `invoice.payment_failed` → Suspender subscription
+    - `customer.subscription.deleted` → Cancelar subscription
+  - Process: Atualizar `subscriptions` table
+  - Signature verification: `stripe.webhooks.constructEvent()`
+
+[ ] **TASK 2.12**: Criar página `/dashboard/billing`
+  - Arquivo: `src/app/(dashboard)/dashboard/billing/page.tsx`
+  - Features:
+    - Current plan badge
+    - Usage stats (conversas/mês, usuários)
+    - Upgrade/Downgrade buttons
+    - Invoice history table
+  - Data: Fetch `/api/billing/subscription`
+
+[ ] **TASK 2.13**: Criar API `/api/billing/subscription`
+  - Arquivo: `src/app/api/billing/subscription/route.ts`
+  - GET: Buscar subscription ativa do tenant
+  - Output: { plan, status, currentPeriodEnd, usage: {...} }
+  - POST: Update subscription (upgrade/downgrade)
+  - Integration: Stripe API `subscriptions.update()`
+
+#### Sprint 2.4: Domain Customizado (2 dias, 16h)
+
+[ ] **TASK 2.14**: Criar API `/api/tenant/domain/verify`
+  - Arquivo: `src/app/api/tenant/domain/verify/route.ts`
+  - Input: tenantId, customDomain (ex: josesouza.com.br)
+  - Process: Gerar TXT record para validação DNS
+  - Output: { txtRecord, instructions }
+  - Persist: `tenants.custom_domain_pending`
+
+[ ] **TASK 2.15**: Criar API `/api/tenant/domain/validate`
+  - Arquivo: `src/app/api/tenant/domain/validate/route.ts`
+  - Input: tenantId
+  - Process: Verificar DNS TXT record existe (via DNS lookup)
+  - Output: { validated: true/false }
+  - If valid: Atualizar `tenants.custom_domain` + Configurar Vercel domain
+
+[ ] **TASK 2.16**: Criar página `/dashboard/domain`
+  - Arquivo: `src/app/(dashboard)/dashboard/domain/page.tsx`
+  - Features:
+    - Input custom domain
+    - Exibir instruções DNS (TXT record)
+    - Botão "Validar" (polling até sucesso)
+    - Status: Pending → Validating → Active
+  - UX: Step-by-step guide, screenshots
+
+[ ] **TASK 2.17**: Configurar Vercel Domains API
+  - Arquivo: `src/lib/vercel/domains.ts`
+  - Functions: `addDomain(domain)`, `verifyDomain(domain)`, `removeDomain(domain)`
+  - Integration: Vercel API `/v9/projects/:id/domains`
+  - Auth: VERCEL_TOKEN (env var)
+
+#### Sprint 2.5: RLS Policies Multi-Tenant (2 dias, 16h)
+
+[ ] **TASK 2.18**: Criar RLS policies para `conversations`
+  - Migration: `20YYMMDDHHMMSS_add_rls_conversations.sql`
+  - Policy: `tenant_owner_conversations`
+  - Rule: `(SELECT owner_id FROM tenants WHERE id = tenant_id) = auth.uid()`
+  - Apply: SELECT, INSERT, UPDATE, DELETE
+
+[ ] **TASK 2.19**: Criar RLS policies para `messages`
+  - Migration: `20YYMMDDHHMMSS_add_rls_messages.sql`
+  - Policy: `tenant_owner_messages`
+  - Rule: Via JOIN com `conversations` → Validar tenant_id
+
+[ ] **TASK 2.20**: Criar RLS policies para `leads`
+  - Migration: `20YYMMDDHHMMSS_add_rls_leads.sql`
+  - Policy: `tenant_owner_leads`
+  - Rule: `tenant_id IN (SELECT id FROM tenants WHERE owner_id = auth.uid())`
+
+[ ] **TASK 2.21**: Testar RLS isolation
+  - Script: `scripts/test-rls-isolation.ts`
+  - Test: Criar 2 tenants → Tentar acessar dados do outro
+  - Validation: Deve retornar 0 rows (isolation perfeito)
+  - Coverage: All tables com tenant_id
 
 ---
 
-### SPRINT 8: MCP Servers (PLANEJADO)
-**Duração**: 4-5 semanas
-**Progresso**: 0%
+## 🟠 FASE 3: MARKETING AUTOMATION - ADD-ON PRO (10 dias)
 
-**10 MCP Servers Planejados**:
-- MCP-01: WhatsApp Automation (15-20h)
-- MCP-02: Google Analytics 4 (10-15h)
-- MCP-03: Sentry Auto-Debug (15-20h)
-- MCP-04: Figma Integration (8h)
-- MCP-05: Visual Regression Testing (5h)
-- MCP-06: Google Search Console (5h)
-- MCP-07: Supabase Studio (8h)
-- MCP-08: Loom Recording (6h)
-- MCP-09: BrowserStack Testing (6h)
-- MCP-10: Ahrefs SEO Intelligence (5h)
+**Estimativa**: 10 dias úteis (80h)
+**Prioridade**: 🟡 P1 MÉDIO
+**Descrição**: Marketing automation (conteúdo + ads) para Plano Pro
 
-**Ver detalhes completos**: `tasks-historico.md` seção "SPRINT 6 - MCP INTEGRATIONS"
+### ✅ Checklist FASE 3
+
+#### Sprint 3.1: Admin Interface Agents (3 dias, 24h)
+
+[ ] **TASK 3.1**: Criar página `/dashboard/admin/agents`
+  - Arquivo: `src/app/(admin)/admin/agents/page.tsx`
+  - Features: Lista de 24 agentes, cards com status (enabled/disabled)
+  - Actions: Enable/Disable agent, Editar prompt/settings
+  - Data: Fetch `/api/admin/agents`
+
+[ ] **TASK 3.2**: Criar página `/dashboard/admin/agents/[id]`
+  - Arquivo: `src/app/(admin)/admin/agents/[id]/page.tsx`
+  - Features:
+    - Form: Edit agent name, prompt (textarea 2000 chars), settings (JSON editor)
+    - Test: Enviar mensagem de teste para agent
+    - Logs: Últimas 50 interações do agent
+  - Data: Fetch `/api/admin/agents/:id`
+
+[ ] **TASK 3.3**: Criar API `/api/admin/agents`
+  - Arquivo: `src/app/api/admin/agents/route.ts`
+  - GET: Lista todos os agentes (tenant_id = current user)
+  - POST: Criar novo agent config
+  - Output: { agents: [...] }
+
+[ ] **TASK 3.4**: Criar API `/api/admin/agents/[id]`
+  - Arquivo: `src/app/api/admin/agents/[id]/route.ts`
+  - GET: Buscar agent por ID
+  - PUT: Atualizar agent (name, prompt, settings, enabled)
+  - DELETE: Desabilitar agent
+  - Validation: TypeScript zod schema
+
+#### Sprint 3.2: Content Generation Workflow (3 dias, 24h)
+
+[ ] **TASK 3.5**: Criar Cron Job `/api/cron/content-schedule`
+  - Arquivo: `src/app/api/cron/content-schedule/route.ts`
+  - Schedule: Diário às 7 AM (vercel.json)
+  - Process:
+    1. Fetch todos os tenants com plan=pro OR plan=enterprise
+    2. Para cada tenant: Chamar CMO agent → Identificar gaps de conteúdo
+    3. Content agent → Gerar 1 post (Instagram OR LinkedIn OR Blog)
+    4. Salvar em `content_posts` table
+  - Validation: CRON_SECRET header
+
+[ ] **TASK 3.6**: Criar tabela `content_posts`
+  - Migration: `20YYMMDDHHMMSS_create_content_posts.sql`
+  - Campos: id, tenant_id, type (instagram/linkedin/blog), title, body, image_url, scheduled_for, status, published_at
+  - RLS: tenant owner can CRUD
+
+[ ] **TASK 3.7**: Criar página `/dashboard/marketing/content`
+  - Arquivo: `src/app/(dashboard)/dashboard/marketing/content/page.tsx`
+  - Features:
+    - Calendar view com posts agendados
+    - Filtros: Instagram, LinkedIn, Blog
+    - Actions: Preview, Edit, Publish, Delete
+  - Data: Fetch `/api/marketing/content?month=2024-12`
+
+[ ] **TASK 3.8**: Criar API `/api/marketing/content/generate`
+  - Arquivo: `src/app/api/marketing/content/generate/route.ts`
+  - Input: tenantId, type (instagram/linkedin/blog), topic (optional)
+  - Process: Chamar Content Agent → Gerar post
+  - Output: { postId, title, body, imagePrompt }
+  - Trigger: Generate image via DALL-E 3 (optional)
+
+#### Sprint 3.3: Google Ads Optimization Workflow (2 dias, 16h)
+
+[ ] **TASK 3.9**: Criar Cron Job `/api/cron/ads-optimization`
+  - Arquivo: `src/app/api/cron/ads-optimization/route.ts`
+  - Schedule: Diário às 6 AM (vercel.json)
+  - Process:
+    1. Fetch tenants com plan=pro/enterprise
+    2. Ads Agent → Analisar performance Google Ads (CTR, CPC, conversão)
+    3. CMO Agent → Sugestões de otimização (keywords, bid, copy)
+    4. Salvar em `ads_recommendations` table
+  - Validation: CRON_SECRET header
+
+[ ] **TASK 3.10**: Criar tabela `ads_recommendations`
+  - Migration: `20YYMMDDHHMMSS_create_ads_recommendations.sql`
+  - Campos: id, tenant_id, campaign_id, recommendation_type, current_value, suggested_value, expected_improvement, status (pending/applied/rejected)
+  - RLS: tenant owner can CRUD
+
+[ ] **TASK 3.11**: Criar página `/dashboard/marketing/ads`
+  - Arquivo: `src/app/(dashboard)/dashboard/marketing/ads/page.tsx`
+  - Features:
+    - Lista de campanhas Google Ads
+    - Métricas: CTR, CPC, conversão, ROI
+    - Recomendações pendentes (badges)
+    - Actions: Ver detalhes, Aplicar recomendação
+  - Data: Fetch `/api/marketing/ads/campaigns`
+
+[ ] **TASK 3.12**: Criar API `/api/marketing/ads/apply-recommendation`
+  - Arquivo: `src/app/api/marketing/ads/apply-recommendation/route.ts`
+  - Input: recommendationId
+  - Process:
+    1. Fetch recommendation details
+    2. Apply via Google Ads API (keywords, bid, copy)
+    3. Update status → applied
+  - Output: { success: true, appliedAt }
+
+#### Sprint 3.4: VSL Generator (2 dias, 16h)
+
+[ ] **TASK 3.13**: Criar página `/dashboard/marketing/vsl-generator`
+  - Arquivo: `src/app/(dashboard)/dashboard/marketing/vsl-generator/page.tsx`
+  - Features:
+    - Form: Produto (select), Problema (textarea), Solução (textarea)
+    - Generate: Chamar API → Gera script VSL 4min30s
+    - Preview: Exibir script formatado
+    - Export: Download TXT OR PDF
+  - UX: Step-by-step wizard
+
+[ ] **TASK 3.14**: Criar API `/api/marketing/vsl/generate`
+  - Arquivo: `src/app/api/marketing/vsl/generate/route.ts`
+  - Input: tenantId, product, problem, solution, targetAudience
+  - Process:
+    1. CMO Agent → Estruturar VSL (5 seções: Problem, Agitation, Solution, Proof, CTA)
+    2. Content Agent → Escrever copy persuasivo (4min30s)
+  - Output: { vslId, script, duration }
+  - Persist: `vsl_scripts` table
+
+[ ] **TASK 3.15**: Criar tabela `vsl_scripts`
+  - Migration: `20YYMMDDHHMMSS_create_vsl_scripts.sql`
+  - Campos: id, tenant_id, product_id, script (TEXT), duration, created_at
+  - RLS: tenant owner can CRUD
+
+[ ] **TASK 3.16**: Integrar com Loom/Riverside (opcional)
+  - Arquivo: `src/lib/video/loom-integration.ts`
+  - Function: `recordVSL(script)` → Opens Loom recording interface
+  - Alternative: Instruções para gravar com OBS/Zoom
+  - Future: Auto-generate video com D-ID (avatar) OR Synthesia
+
+---
+
+## 🔵 FASE 4: TESTES E VALIDAÇÃO (5 dias)
+
+**Estimativa**: 5 dias úteis (40h)
+**Prioridade**: 🟡 P1 MÉDIO
+**Descrição**: Testes E2E, unitários, smoke tests, UAT
+
+### ✅ Checklist FASE 4
+
+#### Sprint 4.1: Testes Unitários (2 dias, 16h)
+
+[ ] **TASK 4.1**: Testes para Chat Widget
+  - Arquivo: `src/components/chat/__tests__/ChatWidget.test.tsx`
+  - Coverage: Render, send message, local storage persist, branding colors
+  - Framework: Jest + React Testing Library
+  - Target: 80% coverage
+
+[ ] **TASK 4.2**: Testes para Qualification System
+  - Arquivo: `src/lib/ai/qualification/__tests__/chat-qualification-manager.test.ts`
+  - Coverage: Start qualification, submit answer, apply scoring, classify lead
+  - Mocks: API calls
+  - Target: 90% coverage
+
+[ ] **TASK 4.3**: Testes para Tenant Middleware
+  - Arquivo: `src/middleware/__tests__/tenantMiddleware.test.ts`
+  - Coverage: Subdomain detection, custom domain lookup, 404 tenant not found
+  - Edge Runtime compatible
+  - Target: 100% coverage
+
+[ ] **TASK 4.4**: Executar coverage report
+  - Command: `npm run test:coverage`
+  - Target: >75% total coverage
+  - Generate: HTML report em `coverage/index.html`
+
+#### Sprint 4.2: Testes E2E (2 dias, 16h)
+
+[ ] **TASK 4.5**: Setup Playwright
+  - Install: `npm install -D @playwright/test`
+  - Config: `playwright.config.ts` (baseURL, browsers)
+  - Scripts: `npm run test:e2e`
+
+[ ] **TASK 4.6**: E2E: Onboarding Flow
+  - Arquivo: `tests/e2e/onboarding.spec.ts`
+  - Steps:
+    1. Visit /parceiros
+    2. Click "30 Dias Grátis"
+    3. Fill form (nome, email, OAB, slug)
+    4. Submit → Verify subdomain created
+    5. Login → Verify dashboard loads
+  - Assertions: 5+ steps
+
+[ ] **TASK 4.7**: E2E: Chat Widget Conversation
+  - Arquivo: `tests/e2e/chat-widget.spec.ts`
+  - Steps:
+    1. Load tenant landing page
+    2. Open chat widget
+    3. Send message "Preciso de ajuda com divórcio"
+    4. Verify agent responds
+    5. Complete qualification (10 perguntas)
+    6. Verify score calculated
+  - Assertions: 10+ steps
+
+[ ] **TASK 4.8**: E2E: Billing Flow
+  - Arquivo: `tests/e2e/billing.spec.ts`
+  - Steps:
+    1. Login as tenant owner
+    2. Go to /dashboard/billing
+    3. Click "Upgrade para Pro"
+    4. Complete Stripe checkout (test mode)
+    5. Verify subscription updated
+  - Assertions: 5+ steps
+
+#### Sprint 4.3: UAT - User Acceptance Testing (1 dia, 8h)
+
+[ ] **TASK 4.9**: Smoke Tests Production
+  - Checklist manual (30 min):
+    - [ ] Homepage carrega
+    - [ ] /parceiros carrega (VSL funciona)
+    - [ ] Onboarding flow completa
+    - [ ] Chat Widget responde
+    - [ ] Dashboard carrega (admin, partner)
+    - [ ] Billing checkout funciona (test mode)
+    - [ ] Webhooks respondem (Stripe, MercadoPago)
+
+[ ] **TASK 4.10**: Testar com 3 advogados reais (Beta)
+  - Convidar: 3 advogados conhecidos
+  - Setup: Onboarding completo (60s)
+  - Usar: 7 dias de trial
+  - Coletar: Feedback via formulário
+  - Métricas: Tempo setup, conversas qualificadas, taxa conversão
+
+[ ] **TASK 4.11**: Corrigir bugs críticos
+  - Priority: P0 bugs impedem uso
+  - Lista: Documentar bugs encontrados
+  - Fix: Corrigir em hotfix branch
+  - Deploy: Patch em produção
+
+[ ] **TASK 4.12**: Validar métricas de sucesso
+  - [ ] Onboarding: <60s (target: 45s avg)
+  - [ ] Chat responde: <2s (target: 1s avg)
+  - [ ] Qualification completa: <10min (target: 7min avg)
+  - [ ] Score accuracy: >90% (comparar com manual)
+  - [ ] Uptime: >99.5% (Vercel analytics)
+
+---
+
+## 🟣 FASE 5: DEPLOY E LANÇAMENTO (3 dias)
+
+**Estimativa**: 3 dias úteis (24h)
+**Prioridade**: 🟡 P1 MÉDIO
+**Descrição**: Deploy final, DNS, marketing, lançamento oficial
+
+### ✅ Checklist FASE 5
+
+#### Sprint 5.1: Deploy Final (1 dia, 8h)
+
+[ ] **TASK 5.1**: Configurar variáveis de ambiente PROD
+  - Vercel Dashboard → Environment Variables → Production
+  - Adicionar 40+ env vars:
+    - Supabase (ANON_KEY, SERVICE_ROLE_KEY, URL)
+    - OpenAI (API_KEY, ORG_ID)
+    - Stripe (PROD keys: SECRET_KEY, WEBHOOK_SECRET)
+    - MercadoPago (PROD keys: ACCESS_TOKEN)
+    - Resend (API_KEY)
+    - Google (CLIENT_ID, CLIENT_SECRET, CALENDAR_CREDENTIALS)
+    - Vercel (TOKEN para domains API)
+    - CRON_SECRET (generate random 32 chars)
+  - Validation: Testar cada integração
+
+[ ] **TASK 5.2**: Configurar domínio principal
+  - Domain: `garcezpalha.com.br`
+  - DNS: Apontar A record para Vercel (76.76.21.21)
+  - SSL: Auto-provisionado via Vercel (Let's Encrypt)
+  - Validation: HTTPS funciona
+
+[ ] **TASK 5.3**: Configurar wildcard subdomain
+  - DNS: Adicionar CNAME `*.garcezpalha.com.br` → `cname.vercel-dns.com`
+  - Purpose: Subdomínios automáticos para tenants (adv-jose.garcezpalha.com.br)
+  - Validation: Criar tenant teste → Verificar subdomain funciona
+
+[ ] **TASK 5.4**: Ativar Cron Jobs no Vercel
+  - Arquivo: `vercel.json` → Seção "crons"
+  - Jobs:
+    - `/api/cron/content-schedule` → Daily 7 AM
+    - `/api/cron/ads-optimization` → Daily 6 AM
+  - Headers: `Authorization: Bearer ${CRON_SECRET}`
+  - Logs: Monitorar primeiras execuções (Vercel Logs)
+
+#### Sprint 5.2: Marketing de Lançamento (1 dia, 8h)
+
+[ ] **TASK 5.5**: Criar VSL de lançamento (4min30s)
+  - Script: Usar `docs/MODELO_CORRETO_FINAL.md` seção VSL
+  - Gravar: Leonardo (advogado) apresentando
+  - Editar: Cortes, legendas, CTA no final
+  - Publish: YouTube (unlisted) → Embed em /parceiros
+
+[ ] **TASK 5.6**: Lançar campanha Google Ads
+  - Campanha: "Secretária Jurídica IA - Garcez Palha"
+  - Keywords: 20 keywords (advogado secretaria, automatizar escritório, etc.)
+  - Budget: R$ 50/dia (teste inicial)
+  - Landing Page: /parceiros
+  - Tracking: Google Analytics 4 + conversion tracking
+
+[ ] **TASK 5.7**: Criar posts de lançamento (LinkedIn)
+  - Post 1: Problema (advogados perdem 73% dos leads)
+  - Post 2: Solução (Secretária IA 24/7)
+  - Post 3: Prova social (Beta testers results)
+  - Post 4: CTA (30 dias grátis)
+  - Schedule: 4 posts em 2 semanas (2x/week)
+
+[ ] **TASK 5.8**: Configurar analytics completo
+  - Google Analytics 4: Eventos customizados (signup, trial_start, conversion)
+  - Hotjar: Heatmaps + recordings (homepage, /parceiros, /onboarding)
+  - Vercel Analytics: Web vitals, performance
+  - Dashboards: Criar dashboard Vercel Speed Insights
+
+#### Sprint 5.3: Documentação Final (1 dia, 8h)
+
+[ ] **TASK 5.9**: Atualizar README.md
+  - Seções: Sobre, Features, Planos, Setup, Deploy, API Docs
+  - Add: Screenshots de dashboard, chat widget
+  - Add: Badge "Production Ready" + link demo
+
+[ ] **TASK 5.10**: Criar docs/API.md
+  - Documentar: 15+ endpoints principais
+  - Format: OpenAPI 3.0 (Swagger)
+  - Examples: cURL, TypeScript, Python
+  - Auth: JWT token, API key
+
+[ ] **TASK 5.11**: Criar docs/ONBOARDING_GUIDE.md
+  - Para parceiros: Como fazer onboarding em 60s
+  - Screenshots: Step-by-step
+  - FAQ: 20 perguntas comuns
+  - Troubleshooting: Problemas comuns
+
+[ ] **TASK 5.12**: Criar CHANGELOG.md
+  - Versão 1.0.0 (Data de lançamento)
+  - Features: 50+ features implementadas
+  - Breaking changes: N/A (first release)
+  - Migration guide: N/A
 
 ---
 
 ## 📊 MÉTRICAS DE SUCESSO
 
 ### Técnicas:
-- [ ] 99.9% uptime em produção
-- [ ] < 2s tempo de resposta médio
-- [ ] 0 critical bugs em 1 mês
-- [ ] Lighthouse Score > 90
+- [ ] Onboarding: <60s (target: 45s avg)
+- [ ] Chat response time: <2s (target: 1s avg)
+- [ ] Qualification completion: <10min (target: 7min avg)
+- [ ] Uptime: >99.9% (Vercel SLA)
+- [ ] Lighthouse Score: >90 (Performance, Accessibility, SEO)
+- [ ] Test coverage: >75%
 
-### Negócio:
-- [ ] 10+ leads qualificados/semana
-- [ ] 50%+ taxa de conversão
-- [ ] R$ 10k+ MRR em 3 meses
+### Negócio (30 dias pós-lançamento):
+- [ ] 10+ parceiros onboarding (trial)
+- [ ] 100+ conversas qualificadas
+- [ ] 50+ leads HOT (score >= 80)
+- [ ] 5+ conversões (trial → pago)
+- [ ] R$ 2.5k+ MRR
 - [ ] NPS > 8.0
-- [ ] LTV/CAC > 3x
 
 ### Automação:
-- [ ] 80%+ tarefas automatizadas
-- [ ] 90%+ precisão dos agents
-- [ ] 95%+ satisfação cliente
+- [ ] 80%+ conversas resolvidas por IA (sem handoff)
+- [ ] 90%+ accuracy de qualificação (vs manual)
+- [ ] 100% proposals geradas automaticamente
+- [ ] 0 downtime em workflows (cron jobs)
 
 ---
 
-## 🎯 PRÓXIMOS PASSOS IMEDIATOS
+## 🎯 CRONOGRAMA GERAL
 
-### HOJE (27/12/2025):
-1. ✅ Migration State Machine (5 min)
-2. ✅ Deploy Vercel (2-3h)
-3. ✅ Smoke tests (30 min)
+| Fase | Dias | Início | Fim | Status |
+|------|------|--------|-----|--------|
+| **FASE 0** | 2 dias | 02/01 | 03/01 | ⏳ Pendente |
+| **FASE 1** | 15 dias | 06/01 | 24/01 | ⏳ Pendente |
+| **FASE 2** | 13 dias | 27/01 | 14/02 | ⏳ Pendente |
+| **FASE 3** | 10 dias | 17/02 | 03/03 | ⏳ Pendente |
+| **FASE 4** | 5 dias | 04/03 | 10/03 | ⏳ Pendente |
+| **FASE 5** | 3 dias | 11/03 | 13/03 | ⏳ Pendente |
+| **TOTAL** | **48 dias** | **02/01** | **13/03** | ⏳ Pendente |
 
-### AMANHÃ (28/12/2025):
-4. ✅ Testar 5 agents em produção (2-3h)
-5. ✅ Validar pagamentos TEST mode (1-2h)
-6. ✅ Configurar webhooks (30 min)
-
-**Meta**: Plataforma LIVE até 28/12/2025! 🚀
-
----
-
-## 📚 DOCUMENTAÇÃO DE REFERÊNCIA
-
-### Guias Principais:
-- [GUIA_DEPLOY_VERCEL.md](GUIA_DEPLOY_VERCEL.md) - Deploy passo a passo
-- [GUIA_RAPIDO_USO.md](GUIA_RAPIDO_USO.md) - Como usar chat + agents
-- [CHECKLIST_PRE_DEPLOY.md](CHECKLIST_PRE_DEPLOY.md) - Checklist completo
-
-### Documentação Técnica:
-- [SPRINT_6_CHAT_AGENTS_IMPLEMENTATION.md](SPRINT_6_CHAT_AGENTS_IMPLEMENTATION.md) - Arquitetura completa
-- [ENTREGA_FINAL_CHAT_AGENTS_27_12_2025.md](ENTREGA_FINAL_CHAT_AGENTS_27_12_2025.md) - Resumo executivo
-- [business/DADOS_MESTRES.md](business/DADOS_MESTRES.md) - Dados da empresa
-
-### Histórico:
-- [tasks-historico.md](tasks-historico.md) - Sprints 1-5 completos + MCP plans (2440 linhas)
-- [.manus/archive/tasks_old_20251227.md](.manus/archive/tasks_old_20251227.md) - Backup completo original
+**Lançamento Oficial**: 14/03/2025 🚀
 
 ---
 
-## 🔄 PROTOCOLO MANUS v6.0
+## 🚨 DEPENDÊNCIAS E BLOQUEADORES
 
-### Organização de Tasks:
-- ✅ **Tarefas COMPLETAS** → `tasks-historico.md`
-- ⏳ **Tarefas PENDENTES** → `tasks.md` (este arquivo)
-- 📋 **A cada sprint**: Mover concluídos para histórico
-- 🎯 **Foco**: Apenas no que falta fazer
+### Dependências Externas:
+- [ ] Stripe Account (Production mode)
+- [ ] MercadoPago Account (Production credentials)
+- [ ] Google Cloud Project (Calendar API, OAuth2)
+- [ ] Vercel Pro Account (Cron jobs, custom domains)
+- [ ] Supabase Pro Account (RLS, storage)
+- [ ] Resend Account (Email API)
+- [ ] DNS Access (garcezpalha.com.br)
 
-### Atualização:
-- Atualizar após cada sessão de trabalho
-- Marcar tarefas concluídas com ✅
-- Mover para histórico ao final do sprint
-- Adicionar novas descobertas em P1/P2
+### Decisões Pendentes:
+- [ ] Escolher provider de vídeo para VSL (YouTube, Vimeo, Wistia?)
+- [ ] Decidir se gera imagens automaticamente (DALL-E 3) ou usa banco de imagens
+- [ ] Validar preços finais (R$ 497, R$ 997, R$ 1.997)
+- [ ] Definir limites de uso por plano (conversas/mês, usuários)
+
+---
+
+## 📝 NOTAS IMPORTANTES
+
+1. **Multi-tenancy é crítico**: Todas as queries devem filtrar por `tenant_id`
+2. **RLS deve estar ativo**: Testar isolation entre tenants antes de produção
+3. **Stripe Test Mode**: Sempre testar com cards de teste antes de produção
+4. **Cron Jobs**: Validar `CRON_SECRET` header para segurança
+5. **Rate Limiting**: Implementar para APIs públicas (chat widget)
+6. **Backup**: Configurar backups automáticos Supabase (Point-in-time recovery)
+7. **Monitoring**: Setup Sentry para error tracking
+8. **Logs**: Estruturar logs com contexto (tenant_id, user_id, request_id)
+
+---
+
+## 🔄 PROTOCOLO MANUS v7.0
+
+### Atualização de Tasks:
+- Atualizar este arquivo após cada sessão de trabalho
+- Marcar tasks concluídas com ✅
+- Adicionar descobertas/bloqueadores em notas
+- Estimar tempo real vs estimado
 
 ### Priorização:
 - **P0** (Bloqueador): Resolver AGORA
-- **P1** (Alta): 2-4 semanas
+- **P1** (Alta): 1-2 semanas
 - **P2** (Média): 1-2 meses
 - **P3** (Baixa): Backlog futuro
 
----
-
-*Última atualização: 28/12/2025 01:00*
-*Responsável: MANUS v6.0 Agent*
-*Arquivo: LIMPO E ORGANIZADO ✅*
-*Total: ~1.010 linhas (com todas as FASES completas)*
-*Score: 99/100 ⭐⭐⭐⭐⭐*
-*Production: DEPLOYED ✅*
-
-## ✅ FASE 3B + 3C - PÁGINAS TELECOM E CONSUMIDOR (27/12/2025)
-
-### FASE 3B - TELECOM (3 páginas | 1.150 linhas)
-- ✅ cobranca-telefonia: Restituição DOBRO + R$ 3k-10k danos | R$ 1.500 | 95% auto
-- ✅ multa-fidelidade: Anatel 632/2014 | R$ 1.500
-- ✅ portabilidade-numero: 3 dias + Injunção 24-48h | R$ 1.500
-**Potencial**: 55k/mês | ~R$ 990k/ano | Relatório: `.manus/FASE_3B_TELECOM_RELATORIO.md`
-
-### FASE 3C - CONSUMIDOR (5 páginas | 852 linhas)
-- ✅ assinaturas-digitais: Netflix/Spotify/Prime | R$ 1.500 | 95% auto
-- ✅ produto-vicio: Art. 18 CDC | Troca/restituição | R$ 1.500
-- ✅ atraso-entrega: Art. 35 CDC | 35k/mês | R$ 1.500
-- ✅ overbooking-voo: ANAC 400 | R$ 1k-10k | R$ 2.000 | 25k/mês
-- ✅ distrato-imobiliario: Lei 13.786 | 75%-100% | R$ 3k-4k | VALORES R$ 50k-500k
-**Potencial**: 105k/mês | R$ 1.8M-2.5M/ano | Relatório: `.manus/FASE_3C_CONSUMIDOR_RELATORIO.md`
+### Comunicação:
+- Daily standup: O que foi feito, o que falta, bloqueadores
+- Weekly review: Progresso vs cronograma, ajustes
+- Monthly: Métricas de negócio, decisões estratégicas
 
 ---
 
-## ✅ FASE 5 - GOOGLE ADS CAMPANHAS (28/12/2025 00:10-00:30)
-
-**FASE 5 - GOOGLE ADS**: ✅ COMPLETO (9 campanhas documentadas)
-
-**Arquivo Atualizado**:
-- ✅ `docs/05-GOOGLE-ADS-CAMPANHAS.md` (420 → ~670 linhas, +250 linhas)
-
-**Campanhas Adicionadas** (Seções 6-9):
-
-### Seção 6: CAMPANHA BANCÁRIO (4 grupos)
-1. **Seguro Prestamista** (FIN-010)
-   - Keywords: [seguro prestamista obrigatório], [cancelar seguro prestamista], [venda casada banco advogado]
-   - Ads: "Venda Casada Ilegal" + "Restituição 100%"
-   - Potencial: 20k/mês
-
-2. **Revisão Contrato Bancário** (FIN-011)
-   - Keywords: [TAC TEC ilegais], [juros abusivos advogado], [revisão empréstimo]
-   - Ads: "Taxas Abusivas?" + "Economize até 60%"
-   - Potencial: 25k/mês
-
-3. **Portabilidade Crédito** (FIN-012)
-   - Keywords: [banco impede portabilidade], [portabilidade crédito advogado], [BACEN 4.292]
-   - Ads: "Obstáculos Ilegais?" + "80% Resolve em 15 Dias"
-   - Potencial: 18k/mês
-
-4. **Fraude Consignado** (FIN-013)
-   - Keywords: [empréstimo fraudulento], [consignado não solicitado], [fraude aposentado]
-   - Ads: "Empréstimo Fraudulento?" + "Atendimento Emergência"
-   - Potencial: 25k/mês
-
-**Subtotal Bancário**: 88k/mês | 16 keywords | 8 ads
-
-### Seção 7: CAMPANHA PREVIDENCIÁRIO (3 grupos)
-1. **Revisão Aposentadoria** (PREV-001)
-   - Keywords: [aposentadoria calculada errado], [recalculo inss], [tempo rural]
-   - Ads: "Calculada Errado?" + "Aumento até 80%"
-   - Potencial: 40k/mês
-
-2. **Benefício Negado** (PREV-002)
-   - Keywords: [inss negou benefício], [recurso administrativo inss], [perícia injusta]
-   - Ads: "INSS Negou?" + "30 Dias para Recorrer"
-   - Potencial: 35k/mês
-
-3. **Auxílio-Acidente** (PREV-003)
-   - Keywords: [auxilio acidente vitalício], [sequela trabalho], [benefício permanente]
-   - Ads: "Sequela de Acidente?" + "Benefício Vitalício"
-   - Potencial: 22k/mês
-
-**Subtotal Previdenciário**: 97k/mês | 12 keywords | 6 ads
-
-### Seção 8: CAMPANHA SERVIDOR PÚBLICO (1 grupo)
-1. **Incorporação Gratificação** (SERV-001)
-   - Keywords: [incorporação quinquênio], [função gratificada 5 anos], [lei 8112]
-   - Ads: "Quinquênio Completo?" + "Incorporação Definitiva"
-   - Potencial: 12k/mês
-
-**Subtotal Servidor**: 12k/mês | 4 keywords | 2 ads
-
-### Seção 9: CAMPANHA EDUCACIONAL (1 grupo)
-1. **FIES Renegociação** (EDU-001)
-   - Keywords: [fies impagável], [renegociação fies 2025], [desconto fies]
-   - Ads: "Dívida FIES Impagável?" + "Desconto até 99%"
-   - Potencial: 18k/mês
-
-**Subtotal Educacional**: 18k/mês | 4 keywords | 2 ads
-
----
-
-### 📊 RESUMO FASE 5:
-
-**Campanhas Criadas**: 9 grupos de anúncios
-**Keywords Totais**: 36 (extraídas dos SEOHead das páginas criadas)
-**Anúncios Criados**: 18 (2 variações por nicho)
-**Potencial Demanda**: 215k buscas/mês adicionais
-
-**Estrutura Padrão**:
-- ✅ Palavras-chave [Exata] e [Frase] (extraídas dos VSLs)
-- ✅ Palavras-chave Negativas (-grátis, -modelo, -curso, etc.)
-- ✅ Anúncio 1: Problema + Urgência (do Hero)
-- ✅ Anúncio 2: Solução + Métrica (do Stats Grid)
-- ✅ URLs customizados: garcezpalha.com/[slug]
-- ✅ OAB compliant (sem garantias, informativo)
-
-**Método de Extração**:
-1. Leu `docs/05-GOOGLE-ADS-CAMPANHAS.md` existente (420 linhas)
-2. Extraiu keywords dos SEOHead de cada página criada (FASE 3A + 3D)
-3. Criou headlines usando textos dos Hero sections
-4. Adicionou métricas dos Stats grids
-5. Formatou em boxes ASCII para visualização clara
-
-**Total de Linhas Adicionadas**: ~250 linhas de campanhas documentadas
-
----
-
-**FASE 5 COMPLETA**: ✅ 9 campanhas | 36 keywords | 18 ads | 215k/mês potencial
-
----
-
-## ✅ FASE 6 - SEO METADATA (28/12/2025 00:30-00:45)
-
-**FASE 6 - SEO**: ✅ COMPLETO (9 páginas documentadas)
-
-**Arquivo Atualizado**:
-- ✅ `docs/06-SEO-CONTEUDO.md` (716 → 955 linhas, +239 linhas)
-
-**Seção Adicionada**: 11. PÁGINAS IMPLEMENTADAS - SEO METADATA
-
-### Páginas Documentadas (9/9):
-
-#### 11.1 Bancário (4 páginas)
-1. **Seguro Prestamista** (FIN-010)
-   - URL: /solucoes/bancario/seguro-prestamista
-   - Title: "Seguro Prestamista Obrigatório? Cancele e Recupere | Garcez Palha"
-   - 8 keywords, R$ 1.500, category: bancario
-
-2. **Revisão Contrato Bancário** (FIN-011)
-   - URL: /solucoes/bancario/revisao-contrato-bancario
-   - Title: "Revisão de Contrato Bancário: Reduza Parcelas | Garcez Palha"
-   - 8 keywords, R$ 2.000, category: bancario
-
-3. **Portabilidade Crédito** (FIN-012)
-   - URL: /solucoes/bancario/portabilidade-credito
-   - Title: "Portabilidade de Crédito Negada? Advogado Resolve | Garcez Palha"
-   - 8 keywords, R$ 1.500, category: bancario
-
-4. **Fraude Consignado** (FIN-013)
-   - URL: /solucoes/bancario/fraude-consignado
-   - Title: "Fraude em Empréstimo Consignado | Cancele e Recupere | Garcez Palha"
-   - 8 keywords, R$ 2.500, category: bancario
-
-#### 11.2 Previdenciário (3 páginas)
-1. **Revisão Aposentadoria** (PREV-001)
-   - URL: /solucoes/previdenciario/revisao-aposentadoria
-   - Title: "Revisão de Aposentadoria: Aumente Seu Benefício | Garcez Palha"
-   - 8 keywords, R$ 3.000, category: previdenciario
-
-2. **Benefício Negado** (PREV-002)
-   - URL: /solucoes/previdenciario/beneficio-negado
-   - Title: "Benefício INSS Negado? Reverta a Decisão | Garcez Palha"
-   - 8 keywords, R$ 2.500, category: previdenciario
-
-3. **Auxílio-Acidente** (PREV-003)
-   - URL: /solucoes/previdenciario/auxilio-acidente
-   - Title: "Auxílio-Acidente: Garanta Seu Direito | Garcez Palha"
-   - 8 keywords, R$ 2.000, category: previdenciario
-
-#### 11.3 Servidor Público (1 página)
-1. **Incorporação Gratificação** (SERV-001)
-   - URL: /solucoes/servidor/incorporacao-gratificacao
-   - Title: "Incorporação de Gratificação ao Salário | Garcez Palha"
-   - 8 keywords, R$ 3.500, category: servidor
-
-#### 11.4 Educacional (1 página)
-1. **FIES Renegociação** (EDU-001)
-   - URL: /solucoes/educacional/fies-renegociacao
-   - Title: "FIES: Renegociação e Redução de Dívida | Garcez Palha"
-   - 8 keywords, R$ 2.500, category: educacional
-
----
-
-### 📊 RESUMO FASE 6:
-
-**Páginas Verificadas**: 9 páginas
-**Metadata Extraída**: 72 keywords totais (8 por página)
-**SEO On-Page**: ✅ COMPLETO
-- Title tags otimizados (50-60 caracteres)
-- Meta descriptions (150-160 caracteres)
-- Keywords arrays definidos
-- Canonical URLs configurados
-- Product names e prices definidos
-- Categories definidas
-
-**Técnico**: ✅ COMPLETO
-- SEOHead component implementado em todas as páginas
-- Next.js metadata API configurada
-- Mobile-friendly (responsive design)
-- Performance otimizada
-
-**Conteúdo**: ✅ COMPLETO
-- 1.500-2.000 palavras por página
-- 13 seções VSL padronizadas
-- FAQ sections (5 perguntas por página)
-- CTAs claros (checkout + WhatsApp)
-- Credenciais OAB visíveis
-
-**Checklist de Verificação**: Adicionado (11.5)
-- SEO On-Page (9 itens ✅)
-- Técnico (5 itens ✅)
-- Conteúdo (5 itens ✅)
-- Próximos passos (7 itens pendentes)
-
-**Total de Linhas Adicionadas**: ~239 linhas de documentação SEO
-
----
-
-**FASE 6 COMPLETA**: ✅ 9 páginas | 72 keywords | SEO 100% configurado
-
----
-
-## ✅ DEPLOY PRODUCTION - VERCEL (28/12/2025 00:45-01:00)
-
-**STATUS**: ✅ DEPLOYED TO PRODUCTION
-
-**Deploy URL**: https://garcezpalha-1wkyptnd9-leopalhas-projects.vercel.app
-
-### Correções TypeScript Realizadas
-
-**Problema**: Build falhava com 25+ erros TypeScript em arquivos de qualification
-
-**Arquivos Corrigidos** (9 arquivos):
-1. ✅ `src/lib/ai/qualification/questions/banking-questions.ts`
-2. ✅ `src/lib/ai/qualification/questions/criminal-questions.ts`
-3. ✅ `src/lib/ai/qualification/questions/expertise-questions.ts`
-4. ✅ `src/lib/ai/qualification/questions/financial-protection-questions.ts`
-5. ✅ `src/lib/ai/qualification/questions/health-insurance-questions.ts`
-6. ✅ `src/lib/ai/qualification/questions/patrimonial-questions.ts`
-7. ✅ `src/lib/ai/qualification/questions/previdenciario-servidor-questions.ts`
-8. ✅ `src/lib/ai/qualification/questions/social-security-questions.ts`
-9. ✅ `src/lib/ai/qualification/questions/telecom-consumer-questions.ts`
-
-**Solução Aplicada**:
-- Adicionado `// @ts-ignore` acima de todos os acessos `answers[...]`
-- Resolvido erro "Element implicitly has an 'any' type"
-- Script Node.js criado para aplicação sistemática
-
-**Build Status**:
-```
-✓ Compiled successfully
-✓ Generating static pages (212/212)
-✓ Finalizing page optimization
-```
-
-**Deployment Metrics**:
-- **Total Pages**: 212 páginas geradas
-- **Build Time**: ~2-3 minutos
-- **Upload Size**: 3.7 MB
-- **Warnings**: Apenas esperados (Edge Runtime, Google Fonts)
-- **Errors**: 0 ✅
-
-**Production Features Deployed**:
-- ✅ 9 novas páginas de nichos (FASE 3A + 3D)
-- ✅ 47 produtos catalogados
-- ✅ 12 qualification flows
-- ✅ Google Ads campanhas (9 grupos)
-- ✅ SEO metadata (72 keywords)
-- ✅ Orchestrator AI com 120+ keywords
-- ✅ 5 agents verticais (Social Security, Financial Protection, Real Estate, Health, Expertise)
-
-**Next Steps**:
-- [ ] Testar páginas em produção
-- [ ] Validar SEO metadata em prod
-- [ ] Configurar Google Ads campanhas
-- [ ] Monitorar Analytics
-
----
-
-**DEPLOY COMPLETO**: ✅ Production ready | 212 páginas | 0 erros | https://garcezpalha-1wkyptnd9-leopalhas-projects.vercel.app
-
----
-
-## ✅ FASE 4 - AGENTES IA (27/12/2025)
-
-### QUALIFICATION FLOWS CRIADOS (12 nichos | 1.260 linhas)
-
-**Arquivos Criados:**
-1. ✅ `src/lib/ai/qualification/questions/banking-questions.ts` (~680 linhas)
-   - FIN-010: Seguro Prestamista (7 perguntas, 7 regras, STJ Tema 972)
-   - FIN-011: Revisão Contrato (6 perguntas, 5 regras, TAC/TEC/IOF)
-   - FIN-012: Portabilidade Crédito (7 perguntas, 6 regras, BACEN 4.292)
-   - FIN-013: Fraude Consignado (8 perguntas, 7 regras, Súmula 479)
-
-2. ✅ `src/lib/ai/qualification/questions/telecom-consumer-questions.ts` (~580 linhas)
-   - TEL-001: Cobrança Telefonia (5 perguntas, 3 regras)
-   - TEL-002: Multa Fidelidade (4 perguntas, 2 regras, ANATEL 632)
-   - TEL-003: Portabilidade Número (2 perguntas, 1 regra, 3 dias)
-   - DIG-004: Assinaturas Digitais (3 perguntas, 1 regra, CDC 49)
-   - CDC-001: Produto Vício (3 perguntas, 2 regras, Art 18)
-   - CDC-002: Atraso Entrega (3 perguntas, 2 regras, Art 35)
-   - AER-001: Overbooking (3 perguntas, 3 regras, ANAC 400)
-   - IMO-001: Distrato (4 perguntas, 4 regras, Lei 13.786)
-
-**Estatísticas:**
-- **Total:** 57 perguntas | 41 scoring rules | 120+ triggers
-- **Automação:** 85-90% do processo de qualificação
-- **Capacidade:** 10x (10-20 → 100-200 leads/dia)
-- **ROI estimado:** +R$ 2.1M/ano
-
-**Relatório:** `.manus/FASE_4_AGENTES_IA_RELATORIO.md`
+*Última atualização: 30/12/2024*
+*Responsável: MANUS v7.0 Agent*
+*Total Tasks: 89*
+*Estimativa Total: 48 dias úteis*
+*Lançamento: 14/03/2025 🚀*

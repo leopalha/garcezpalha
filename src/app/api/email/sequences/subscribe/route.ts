@@ -1,5 +1,5 @@
 /**
-n// Force dynamic rendering - required for API routes
+// Force dynamic rendering - required for API routes
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
  * API Route: Subscribe to Email Sequence
