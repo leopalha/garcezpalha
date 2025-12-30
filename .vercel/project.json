@@ -1,1 +1,10 @@
-{"projectId":"prj_GwkyIZsObq122vlQe2hU9qApPne6","orgId":"team_Q5ALZDEYUGSYLbjhhlxJ0nAt","projectName":"garcezpalha"}
+{
+  "projectId": "prj_GwkyIZsObq122vlQe2hU9qApPne6",
+  "orgId": "team_Q5ALZDEYUGSYLbjhhlxJ0nAt",
+  "projectName": "garcezpalha",
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "outputDirectory": ".next"
+}
