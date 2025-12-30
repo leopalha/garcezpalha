@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
+import { inngest } from '@/lib/jobs/email-sequences'
 
 export const runtime = 'edge'
 
@@ -44,6 +45,16 @@ export async function POST(req: NextRequest) {
           email: event.data.to,
           timestamp: event.created_at,
         })
+        // Trigger Inngest event for async processing
+        await inngest.send({
+          name: 'email/event',
+          data: {
+            type: 'email.delivered',
+            email_id: event.data.email_id,
+            email: event.data.to,
+            timestamp: event.created_at,
+          },
+        })
         break
 
       case 'email.delivery_delayed':
@@ -59,6 +70,15 @@ export async function POST(req: NextRequest) {
           email: event.data.to,
           timestamp: event.created_at,
         })
+        await inngest.send({
+          name: 'email/event',
+          data: {
+            type: 'email.complained',
+            email_id: event.data.email_id,
+            email: event.data.to,
+            timestamp: event.created_at,
+          },
+        })
         break
 
       case 'email.bounced':
@@ -68,6 +88,15 @@ export async function POST(req: NextRequest) {
           email_id: event.data.email_id,
           email: event.data.to,
           timestamp: event.created_at,
+        })
+        await inngest.send({
+          name: 'email/event',
+          data: {
+            type: 'email.bounced',
+            email_id: event.data.email_id,
+            email: event.data.to,
+            timestamp: event.created_at,
+          },
         })
         break
 
@@ -79,6 +108,15 @@ export async function POST(req: NextRequest) {
           email: event.data.to,
           timestamp: event.created_at,
         })
+        await inngest.send({
+          name: 'email/event',
+          data: {
+            type: 'email.opened',
+            email_id: event.data.email_id,
+            email: event.data.to,
+            timestamp: event.created_at,
+          },
+        })
         break
 
       case 'email.clicked':
@@ -89,6 +127,16 @@ export async function POST(req: NextRequest) {
           email: event.data.to,
           timestamp: event.created_at,
           link: event.data.link,
+        })
+        await inngest.send({
+          name: 'email/event',
+          data: {
+            type: 'email.clicked',
+            email_id: event.data.email_id,
+            email: event.data.to,
+            timestamp: event.created_at,
+            link: event.data.link,
+          },
         })
         break
 
