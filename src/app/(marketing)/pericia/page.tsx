@@ -1,3 +1,5 @@
+'use client'
+
 import { Metadata } from 'next'
 import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
@@ -5,19 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FileCheck, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Pericia e Documentos | Garcez Palha Advogados',
-  description:
-    'Laudos periciais, grafotecnia, pericia documental e analise tecnica. Prova pericial para processos judiciais e verificacao de autenticidade.',
-  keywords: [
-    'pericia',
-    'laudo pericial',
-    'grafotecnia',
-    'pericia documental',
-    'laudo tecnico',
-    'prova pericial',
-  ],
-}
 
 export default function PericiaPage() {
   const periciaSolutions = getAllSolutions().filter((s) => s.category === 'pericia')

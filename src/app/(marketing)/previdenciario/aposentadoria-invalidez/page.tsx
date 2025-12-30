@@ -1,3 +1,5 @@
+'use client'
+
 
 import { ProductVSL } from '@/components/vsl/ProductVSL'
 import { SEOHead, UrgencyBanner } from '@/components/vsl'

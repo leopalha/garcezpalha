@@ -1,3 +1,5 @@
+'use client'
+
 import { Metadata } from 'next'
 import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
@@ -5,20 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Home, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Direito Imobiliario | Garcez Palha Advogados',
-  description:
-    'Solucoes juridicas em direito imobiliario: compra e venda, usucapiao, inventario, holding familiar, regularizacao e mais.',
-  keywords: [
-    'direito imobiliario',
-    'usucapiao',
-    'holding familiar',
-    'inventario',
-    'regularizacao de imoveis',
-    'avaliacao de imoveis',
-    'compra e venda',
-  ],
-}
 
 export default function PatrimonialPage() {
   const patrimonialSolutions = getAllSolutions().filter((s) => s.category === 'imobiliario')

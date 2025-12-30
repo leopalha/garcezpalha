@@ -1,3 +1,5 @@
+'use client'
+
 import { Metadata } from 'next'
 import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'
@@ -5,21 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Heart, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Direito da Saude | Garcez Palha Advogados',
-  description:
-    'Solucoes juridicas em direito da saude: planos de saude, cirurgias, tratamentos, INSS, BPC/LOAS e pericias medicas.',
-  keywords: [
-    'direito da saude',
-    'direito a saude',
-    'plano de saude negou',
-    'cirurgia bariatrica',
-    'tratamento TEA',
-    'BPC LOAS',
-    'pericia medica',
-    'INSS',
-  ],
-}
 
 export default function SaudePage() {
   const saudeSolutions = getAllSolutions().filter((s) => s.category === 'saude')

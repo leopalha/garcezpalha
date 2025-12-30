@@ -7,19 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Scale, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Direito Criminal | Garcez Palha Advogados',
-  description:
-    'Defesa criminal especializada. Processos criminais, habeas corpus, recursos, direito penal. 364 anos de tradicao.',
-  keywords: [
-    'direito criminal',
-    'defesa criminal',
-    'advogado criminal',
-    'habeas corpus',
-    'processo criminal',
-    'direito penal',
-  ],
-}
 
 export default function CriminalPage() {
   const criminalSolutions = getAllSolutions().filter((s) => s.category === 'criminal')

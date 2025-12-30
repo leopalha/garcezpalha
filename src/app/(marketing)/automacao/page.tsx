@@ -7,19 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Users, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Automacao Juridica | Garcez Palha Advogados',
-  description:
-    'Servicos juridicos automatizados e escaláveis: secretaria remota para escritorios, aposentadoria e beneficios previdenciarios.',
-  keywords: [
-    'secretaria juridica remota',
-    'automacao juridica',
-    'aposentadoria',
-    'INSS',
-    'beneficio previdenciario',
-    'terceirizacao juridica',
-  ],
-}
 
 export default function AutomacaoPage() {
   const automacaoSolutions = getAllSolutions().filter((s) => s.category === 'automacao')
