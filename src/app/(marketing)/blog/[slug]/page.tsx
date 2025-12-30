@@ -27,12 +27,6 @@ interface PageProps {
 }
 
 // Generate static params for all blog posts
-export async function generateStaticParams() {
-  const slugs = getAllPostSlugs()
-  return slugs.map((slug) => ({
-    slug,
-  }))
-}
 
 // Generate metadata for SEO
 

@@ -46,16 +46,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
  * Generate static params for all products
  * This enables static generation at build time
  */
-export async function generateStaticParams() {
-  // Import all products from catalog
-  const { getAllProducts } = await import('@/lib/products/catalog')
-  const products = getAllProducts()
-
-  return products.map((product) => ({
-    category: product.category,
-    slug: product.slug,
-  }))
-}
 
 /**
  * Generate metadata for SEO
