@@ -20,7 +20,6 @@ import {
 } from '@/components/vsl'
 
 // ISR: Revalidate every 1 hour (product pages rarely change)
-export const revalidate = 3600
 
 // Generate metadata for SEO
 
