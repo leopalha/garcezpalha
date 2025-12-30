@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
-  output: undefined, // Ensure dynamic rendering (not 'export')
+  output: 'standalone', // Use standalone mode for serverless deployment
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
