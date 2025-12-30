@@ -1,3 +1,5 @@
+'use client'
+
 import { Metadata } from 'next'
 import { getAllSolutions } from '@/lib/products/checkout-adapter'
 import { Button } from '@/components/ui/button'

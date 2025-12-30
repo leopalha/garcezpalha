@@ -1,3 +1,5 @@
+'use client'
+
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { MDXRemote } from 'next-mdx-remote/rsc'

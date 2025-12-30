@@ -1,3 +1,5 @@
+'use client'
+
 import { notFound } from 'next/navigation'
 import { ProductVSL } from '@/components/vsl'
 import { getProductBySlug } from '@/lib/products/catalog'
