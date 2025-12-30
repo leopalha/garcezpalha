@@ -142,7 +142,38 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 
 ---
 
-### 8️⃣ Plano de Execução Completo (90 Dias)
+### 8️⃣ Modelo Correto Final (LEIA PRIMEIRO!) 🎯
+
+**Arquivo:** [MODELO_CORRETO_FINAL.md](./MODELO_CORRETO_FINAL.md)
+
+**Conteúdo:**
+- **O QUE FOI CORRIGIDO**: Modelo errado vs correto
+- Produto principal: Secretária Jurídica IA (NÃO marketing)
+- 3 planos: Starter / Pro / Enterprise
+- Prioridades de implementação corretas
+- Pitch atualizado (VSL 4min30s)
+- Projeções financeiras corrigidas
+
+**Quando Ler:** **PRIMEIRO** - Entender o que mudou e por quê
+
+---
+
+### 9️⃣ Estrutura de Produtos Detalhada
+
+**Arquivo:** [ESTRUTURA_PRODUTOS.md](./ESTRUTURA_PRODUTOS.md)
+
+**Conteúdo:**
+- 3 planos completos (features, limites, pricing)
+- Comparação lado a lado
+- Pitch por plano
+- Roadmap de lançamento faseado
+- Projeções financeiras (Ano 1: R$ 900k ARR)
+
+**Quando Ler:** SEGUNDO - Entender estrutura de produtos
+
+---
+
+### 🔟 Plano de Execução Completo (90 Dias)
 
 **Arquivo:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md)
 
@@ -151,13 +182,10 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 - 6 Milestones principais
 - Cronograma detalhado semana a semana
 - KPIs e métricas de sucesso
-- Projeção financeira 12 meses (R$ 880k receita, R$ 733k lucro)
+- Projeção financeira 12 meses
 - Análise de riscos e mitigações
-- Checklist pré-lançamento
-- Responsabilidades (você vs sócio)
-- Próximos passos imediatos
 
-**Quando Ler:** ANTES de começar qualquer implementação - É o mapa completo
+**Quando Ler:** TERCEIRO - Roadmap de execução (será atualizado)
 
 ---
 
@@ -165,12 +193,35 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 
 ### Para Executar (Ordem Recomendada)
 
+**🚨 IMPORTANTE: A documentação foi corrigida! Leia nesta ordem:**
+
 1. ✅ **Já Leu:** Análise Estratégica, Ulio.ai, Dual Model, Estado Atual
-2. 📖 **Leia Agora:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md) (atualizado com prioridades corretas)
-3. 🛠️ **PRIMEIRO:** [IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md](./IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md) - Produto core (15 dias)
-4. 🛠️ **SEGUNDO:** [IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./IMPLEMENTACAO_WHITE_LABEL_ENGINE.md) - Multi-tenancy (13 dias)
-5. 🛠️ **TERCEIRO:** [IMPLEMENTACAO_AGENTE_MARKETING.md](./IMPLEMENTACAO_AGENTE_MARKETING.md) - Add-on Pro (10 dias)
-6. 📊 **Sempre:** Métricas e KPIs do Plano de Execução
+
+2. 🎯 **LEIA AGORA (CRÍTICO):** [MODELO_CORRETO_FINAL.md](./MODELO_CORRETO_FINAL.md)
+   - Entenda o que foi corrigido
+   - Modelo errado vs correto
+   - Produto principal é Secretária IA (não marketing!)
+
+3. 📊 **DEPOIS:** [ESTRUTURA_PRODUTOS.md](./ESTRUTURA_PRODUTOS.md)
+   - 3 planos: Starter (R$ 497) / Pro (R$ 997) / Enterprise (R$ 1.997)
+   - Pitch por plano
+   - Projeções financeiras
+
+4. 🛠️ **IMPLEMENTAÇÃO 1:** [IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md](./IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md)
+   - Produto core (15 dias)
+   - Chat Widget, Landing Page, Dashboard
+
+5. 🛠️ **IMPLEMENTAÇÃO 2:** [IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./IMPLEMENTACAO_WHITE_LABEL_ENGINE.md)
+   - Multi-tenancy (13 dias)
+   - Onboarding 60s, Stripe
+
+6. 🛠️ **IMPLEMENTAÇÃO 3:** [IMPLEMENTACAO_AGENTE_MARKETING.md](./IMPLEMENTACAO_AGENTE_MARKETING.md)
+   - Add-on Pro (10 dias)
+   - Marketing automation
+
+7. 📈 **ROADMAP:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md)
+   - 90 dias de execução
+   - Será atualizado com prioridades corretas
 
 ### Para Consultar
 
