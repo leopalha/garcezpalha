@@ -48,86 +48,13 @@ const sourceConfig = {
   referral: { label: 'Indicação', color: 'bg-orange-100 text-orange-800' },
 }
 
-// Mock data fallback when database is not configured
-const mockLeads: Lead[] = [
-  {
-    id: '1',
-    full_name: 'Maria Silva Santos',
-    email: 'maria.silva@email.com',
-    phone: '(21) 99999-1111',
-    company: null,
-    service_interest: 'Direito Imobiliário',
-    source: 'website',
-    status: 'new',
-    assigned_to: null,
-    created_at: new Date(Date.now() - 3600000).toISOString(),
-    updated_at: new Date(Date.now() - 3600000).toISOString(),
-    message: 'Preciso de ajuda com contrato de compra e venda de imóvel',
-  },
-  {
-    id: '2',
-    full_name: 'João Carlos Oliveira',
-    email: 'joao.carlos@email.com',
-    phone: '(21) 98888-2222',
-    company: 'Oliveira Construções',
-    service_interest: 'Perícia Médica',
-    source: 'whatsapp',
-    status: 'contacted',
-    assigned_to: null,
-    created_at: new Date(Date.now() - 7200000).toISOString(),
-    updated_at: new Date(Date.now() - 7200000).toISOString(),
-    message: 'Sofri acidente de trabalho e preciso de perícia',
-  },
-  {
-    id: '3',
-    full_name: 'Ana Paula Costa',
-    email: 'ana.costa@email.com',
-    phone: '(21) 97777-3333',
-    company: null,
-    service_interest: 'Avaliação de Imóveis',
-    source: 'chatbot',
-    status: 'qualified',
-    assigned_to: null,
-    created_at: new Date(Date.now() - 86400000).toISOString(),
-    updated_at: new Date(Date.now() - 86400000).toISOString(),
-    message: 'Preciso avaliar apartamento para inventário',
-  },
-  {
-    id: '4',
-    full_name: 'Carlos Eduardo Lima',
-    email: 'carlos.lima@email.com',
-    phone: '(21) 96666-4444',
-    company: 'Lima Advocacia',
-    service_interest: 'Perícia Documental',
-    source: 'referral',
-    status: 'converted',
-    assigned_to: null,
-    created_at: new Date(Date.now() - 172800000).toISOString(),
-    updated_at: new Date(Date.now() - 172800000).toISOString(),
-    message: 'Indicado pelo Dr. Roberto para análise de assinaturas',
-  },
-  {
-    id: '5',
-    full_name: 'Patricia Almeida',
-    email: 'patricia.almeida@email.com',
-    phone: '(21) 95555-5555',
-    company: null,
-    service_interest: 'Secretária Remota',
-    source: 'website',
-    status: 'new',
-    assigned_to: null,
-    created_at: new Date(Date.now() - 259200000).toISOString(),
-    updated_at: new Date(Date.now() - 259200000).toISOString(),
-    message: 'Interessada no plano premium de automação',
-  },
-]
+// Mock data removed - using real database only
 
 export default function LeadsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
   const [page, setPage] = useState(0)
-  const [useMockData, setUseMockData] = useState(false)
   const pageSize = 20
 
   // Fetch leads from tRPC
@@ -144,7 +71,6 @@ export default function LeadsPage() {
     },
     {
       retry: false,
-      enabled: !useMockData,
     }
   )
 
@@ -155,64 +81,25 @@ export default function LeadsPage() {
     },
   })
 
-  // Handle errors by falling back to mock data
-  useEffect(() => {
-    if (error) {
-      console.log('Database not configured, using mock data')
-      setUseMockData(true)
-    }
-  }, [error])
+  const leads = leadsData?.leads || []
+  const totalLeads = leadsData?.total || 0
 
-  const leads = useMockData ? mockLeads : leadsData?.leads || []
-  const totalLeads = useMockData ? mockLeads.length : leadsData?.total || 0
-
-  // Client-side filtering for mock data
-  const filteredLeads = useMockData
-    ? leads.filter((lead) => {
-        const matchesSearch =
-          lead.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          lead.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          lead.service_interest.toLowerCase().includes(searchQuery.toLowerCase())
-
-        const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
-
-        return matchesSearch && matchesStatus
-      })
-    : leads.filter((lead) => {
-        // Only search filter for real data (status is filtered server-side)
-        if (!searchQuery) return true
-        return (
-          lead.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          lead.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          lead.service_interest.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      })
+  // Client-side search filtering (status is filtered server-side)
+  const filteredLeads = leads.filter((lead) => {
+    if (!searchQuery) return true
+    return (
+      lead.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lead.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lead.service_interest.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  })
 
   const handleStatusChange = (leadId: string, newStatus: Lead['status']) => {
-    if (useMockData) {
-      // Update mock data locally
-      const leadIndex = mockLeads.findIndex((l) => l.id === leadId)
-      if (leadIndex !== -1) {
-        mockLeads[leadIndex].status = newStatus
-        if (selectedLead?.id === leadId) {
-          setSelectedLead({ ...selectedLead, status: newStatus })
-        }
-      }
-    } else {
-      updateStatusMutation.mutate({ id: leadId, status: newStatus })
-    }
+    updateStatusMutation.mutate({ id: leadId, status: newStatus })
   }
 
-  // Count leads by status
-  const statusCounts = useMockData
-    ? Object.keys(statusConfig).reduce(
-        (acc, status) => {
-          acc[status] = mockLeads.filter((l) => l.status === status).length
-          return acc
-        },
-        {} as Record<string, number>
-      )
-    : {}
+  // Count leads by status - now always empty (could be populated from API)
+  const statusCounts = {}
 
   return (
     <div className="space-y-6">
@@ -221,11 +108,6 @@ export default function LeadsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Leads</h2>
           <p className="text-muted-foreground">
             Gerencie seus potenciais clientes
-            {useMockData && (
-              <span className="ml-2 text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded">
-                Modo Demo
-              </span>
-            )}
           </p>
         </div>
         <div className="flex gap-2">
@@ -276,9 +158,7 @@ export default function LeadsPage() {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-5">
         {Object.entries(statusConfig).map(([key, config]) => {
-          const count = useMockData
-            ? statusCounts[key] || 0
-            : filteredLeads.filter((l) => l.status === key).length
+          const count = filteredLeads.filter((l) => l.status === key).length
           return (
             <Card
               key={key}
@@ -300,13 +180,12 @@ export default function LeadsPage() {
           <Card>
             <CardHeader>
               <CardTitle>
-                Lista de Leads ({filteredLeads.length}
-                {!useMockData && ` de ${totalLeads}`})
+                Lista de Leads ({filteredLeads.length} de {totalLeads})
               </CardTitle>
               <CardDescription>Clique em um lead para ver detalhes</CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading && !useMockData ? (
+              {isLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
@@ -382,9 +261,7 @@ export default function LeadsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    disabled={
-                      useMockData ? true : (page + 1) * pageSize >= totalLeads
-                    }
+                    disabled={(page + 1) * pageSize >= totalLeads}
                     onClick={() => setPage((p) => p + 1)}
                   >
                     <ChevronRight className="h-4 w-4" />

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
 
+// Force dynamic rendering - required for API routes
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 /**
  * P2-001: Email Sequences Cron Job
  * GET /api/email/sequences/cron

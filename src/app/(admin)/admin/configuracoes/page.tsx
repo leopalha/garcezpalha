@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +20,7 @@ import {
   Zap,
   Save,
   CheckCircle2,
+  Loader2,
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
@@ -34,15 +35,91 @@ const tabs: { id: SettingsTab; label: string; icon: React.ComponentType<{ classN
   { id: 'appearance', label: 'Aparência', icon: Palette },
 ]
 
+interface UserSettings {
+  id: string
+  user_id: string
+  full_name?: string
+  phone?: string
+  bio?: string
+  notify_new_leads: boolean
+  notify_client_messages: boolean
+  notify_invoices_due: boolean
+  notify_appointments: boolean
+  notify_newsletter: boolean
+  channel_email: boolean
+  channel_push: boolean
+  channel_sms: boolean
+  theme: 'dark' | 'light' | 'auto'
+  accent_color: 'blue' | 'purple' | 'green' | 'orange' | 'red' | 'pink'
+  compact_mode: boolean
+  animations_enabled: boolean
+  sidebar_collapsed: boolean
+  integrations: Record<string, any>
+  created_at: string
+  updated_at: string
+}
+
 export default function ConfiguracoesPage() {
   const { data: session } = useSession()
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile')
   const [saved, setSaved] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [settings, setSettings] = useState<UserSettings | null>(null)
 
-  const handleSave = () => {
-    // In production, this would save via API
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+  // Fetch settings on mount
+  useEffect(() => {
+    fetchSettings()
+  }, [])
+
+  const fetchSettings = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/settings')
+      if (!response.ok) throw new Error('Failed to fetch settings')
+      const data = await response.json()
+      setSettings(data)
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSave = async () => {
+    if (!settings) return
+
+    try {
+      setSaving(true)
+      const response = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+
+      if (!response.ok) throw new Error('Failed to save settings')
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      alert('Erro ao salvar configurações')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
+    if (!settings) return
+    setSettings({ ...settings, [key]: value })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   return (
@@ -109,7 +186,8 @@ export default function ConfiguracoesPage() {
                     <Input
                       id="name"
                       placeholder="Seu nome completo"
-                      defaultValue={session?.user?.name || ''}
+                      value={settings?.full_name || ''}
+                      onChange={(e) => updateSetting('full_name', e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -119,6 +197,7 @@ export default function ConfiguracoesPage() {
                       type="email"
                       placeholder="seu@email.com"
                       defaultValue={session?.user?.email || ''}
+                      disabled
                     />
                   </div>
                 </div>
@@ -126,7 +205,12 @@ export default function ConfiguracoesPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="phone">Telefone</Label>
-                    <Input id="phone" placeholder="(21) 99999-9999" />
+                    <Input
+                      id="phone"
+                      placeholder="(21) 99999-9999"
+                      value={settings?.phone || ''}
+                      onChange={(e) => updateSetting('phone', e.target.value)}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="role">Cargo</Label>
@@ -145,12 +229,23 @@ export default function ConfiguracoesPage() {
                     id="bio"
                     placeholder="Conte um pouco sobre você..."
                     rows={4}
+                    value={settings?.bio || ''}
+                    onChange={(e) => updateSetting('bio', e.target.value)}
                   />
                 </div>
 
-                <Button onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" />
-                  Salvar Alterações
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Salvar Alterações
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -174,7 +269,12 @@ export default function ConfiguracoesPage() {
                         Receber notificação quando um novo lead chegar
                       </p>
                     </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      checked={settings?.notify_new_leads ?? true}
+                      onChange={(e) => updateSetting('notify_new_leads', e.target.checked)}
+                      className="h-4 w-4"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -184,7 +284,12 @@ export default function ConfiguracoesPage() {
                         Notificar sobre novas mensagens de clientes
                       </p>
                     </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      checked={settings?.notify_client_messages ?? true}
+                      onChange={(e) => updateSetting('notify_client_messages', e.target.checked)}
+                      className="h-4 w-4"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -194,7 +299,12 @@ export default function ConfiguracoesPage() {
                         Alertas sobre faturas que estão vencendo
                       </p>
                     </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      checked={settings?.notify_invoices_due ?? true}
+                      onChange={(e) => updateSetting('notify_invoices_due', e.target.checked)}
+                      className="h-4 w-4"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -204,7 +314,12 @@ export default function ConfiguracoesPage() {
                         Lembrete de compromissos agendados
                       </p>
                     </div>
-                    <input type="checkbox" defaultChecked className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      checked={settings?.notify_appointments ?? true}
+                      onChange={(e) => updateSetting('notify_appointments', e.target.checked)}
+                      className="h-4 w-4"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -214,7 +329,12 @@ export default function ConfiguracoesPage() {
                         Receber atualizações e novidades
                       </p>
                     </div>
-                    <input type="checkbox" className="h-4 w-4" />
+                    <input
+                      type="checkbox"
+                      checked={settings?.notify_newsletter ?? false}
+                      onChange={(e) => updateSetting('notify_newsletter', e.target.checked)}
+                      className="h-4 w-4"
+                    />
                   </div>
                 </div>
 
@@ -222,26 +342,50 @@ export default function ConfiguracoesPage() {
                   <Label className="mb-3 block">Canais de Notificação</Label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <input type="checkbox" defaultChecked className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.channel_email ?? true}
+                        onChange={(e) => updateSetting('channel_email', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                       <Mail className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">Email</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <input type="checkbox" defaultChecked className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.channel_push ?? true}
+                        onChange={(e) => updateSetting('channel_push', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                       <Bell className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">Notificações Push</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <input type="checkbox" className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.channel_sms ?? false}
+                        onChange={(e) => updateSetting('channel_sms', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">SMS</span>
                     </div>
                   </div>
                 </div>
 
-                <Button onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" />
-                  Salvar Preferências
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Salvar Preferências
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>
@@ -471,15 +615,30 @@ export default function ConfiguracoesPage() {
                 <div>
                   <Label className="mb-3 block">Tema</Label>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="border-2 border-primary rounded-lg p-4 cursor-pointer">
+                    <div
+                      className={`rounded-lg p-4 cursor-pointer ${
+                        settings?.theme === 'dark' ? 'border-2 border-primary' : 'border hover:border-primary'
+                      }`}
+                      onClick={() => updateSetting('theme', 'dark')}
+                    >
                       <div className="h-20 bg-gradient-to-br from-slate-900 to-slate-700 rounded mb-2"></div>
                       <p className="text-sm font-medium text-center">Escuro</p>
                     </div>
-                    <div className="border rounded-lg p-4 cursor-pointer hover:border-primary">
+                    <div
+                      className={`rounded-lg p-4 cursor-pointer ${
+                        settings?.theme === 'light' ? 'border-2 border-primary' : 'border hover:border-primary'
+                      }`}
+                      onClick={() => updateSetting('theme', 'light')}
+                    >
                       <div className="h-20 bg-gradient-to-br from-white to-slate-100 rounded mb-2 border"></div>
                       <p className="text-sm font-medium text-center">Claro</p>
                     </div>
-                    <div className="border rounded-lg p-4 cursor-pointer hover:border-primary">
+                    <div
+                      className={`rounded-lg p-4 cursor-pointer ${
+                        settings?.theme === 'auto' ? 'border-2 border-primary' : 'border hover:border-primary'
+                      }`}
+                      onClick={() => updateSetting('theme', 'auto')}
+                    >
                       <div className="h-20 bg-gradient-to-br from-slate-900 via-slate-500 to-white rounded mb-2"></div>
                       <p className="text-sm font-medium text-center">Auto</p>
                     </div>
@@ -489,12 +648,15 @@ export default function ConfiguracoesPage() {
                 <div className="border-t pt-4">
                   <Label className="mb-3 block">Cor de Destaque</Label>
                   <div className="grid grid-cols-6 gap-3">
-                    <div className="h-10 bg-blue-600 rounded-lg cursor-pointer border-2 border-primary"></div>
-                    <div className="h-10 bg-purple-600 rounded-lg cursor-pointer hover:border-2"></div>
-                    <div className="h-10 bg-green-600 rounded-lg cursor-pointer hover:border-2"></div>
-                    <div className="h-10 bg-orange-600 rounded-lg cursor-pointer hover:border-2"></div>
-                    <div className="h-10 bg-red-600 rounded-lg cursor-pointer hover:border-2"></div>
-                    <div className="h-10 bg-pink-600 rounded-lg cursor-pointer hover:border-2"></div>
+                    {(['blue', 'purple', 'green', 'orange', 'red', 'pink'] as const).map((color) => (
+                      <div
+                        key={color}
+                        className={`h-10 bg-${color}-600 rounded-lg cursor-pointer ${
+                          settings?.accent_color === color ? 'border-2 border-primary' : 'hover:border-2'
+                        }`}
+                        onClick={() => updateSetting('accent_color', color)}
+                      />
+                    ))}
                   </div>
                 </div>
 
@@ -507,7 +669,12 @@ export default function ConfiguracoesPage() {
                           Reduzir espaçamento entre elementos
                         </p>
                       </div>
-                      <input type="checkbox" className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.compact_mode ?? false}
+                        onChange={(e) => updateSetting('compact_mode', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -517,7 +684,12 @@ export default function ConfiguracoesPage() {
                           Ativar transições e animações
                         </p>
                       </div>
-                      <input type="checkbox" defaultChecked className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.animations_enabled ?? true}
+                        onChange={(e) => updateSetting('animations_enabled', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -527,14 +699,28 @@ export default function ConfiguracoesPage() {
                           Iniciar com sidebar minimizada
                         </p>
                       </div>
-                      <input type="checkbox" className="h-4 w-4" />
+                      <input
+                        type="checkbox"
+                        checked={settings?.sidebar_collapsed ?? false}
+                        onChange={(e) => updateSetting('sidebar_collapsed', e.target.checked)}
+                        className="h-4 w-4"
+                      />
                     </div>
                   </div>
                 </div>
 
-                <Button onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" />
-                  Salvar Preferências
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Salvar Preferências
+                    </>
+                  )}
                 </Button>
               </CardContent>
             </Card>

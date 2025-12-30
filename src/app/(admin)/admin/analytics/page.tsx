@@ -75,93 +75,29 @@ export default function AnalyticsDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
 
-  // Mock data fetchers - replace with actual API calls
+  // Fetch real analytics data from API
   const fetchAnalyticsData = useCallback(async (): Promise<AnalyticsData> => {
-    // Simulating API call to /api/analytics
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    // Mock data based on time range
-    const multiplier = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30
-
-    return {
-      pageViews: {
-        last24h: 1247,
-        last7d: 8934,
-        last30d: 38521,
-      },
-      uniqueVisitors: {
-        last24h: 342,
-        last7d: 2156,
-        last30d: 9847,
-      },
-      conversionRates: {
-        leads: 12.4,
-        payments: 3.2,
-      },
-      topPages: [
-        { path: '/servicos', views: 3421 * (multiplier / 7), uniqueVisitors: 1823 * (multiplier / 7) },
-        { path: '/', views: 2987 * (multiplier / 7), uniqueVisitors: 1654 * (multiplier / 7) },
-        { path: '/contato', views: 1876 * (multiplier / 7), uniqueVisitors: 987 * (multiplier / 7) },
-        { path: '/sobre', views: 1432 * (multiplier / 7), uniqueVisitors: 765 * (multiplier / 7) },
-        { path: '/blog', views: 987 * (multiplier / 7), uniqueVisitors: 534 * (multiplier / 7) },
-      ],
+    const response = await fetch('/api/admin/analytics/overview')
+    if (!response.ok) {
+      throw new Error('Failed to fetch analytics data')
     }
-  }, [timeRange])
+    return response.json()
+  }, [])
 
   const fetchErrorSummary = useCallback(async (): Promise<ErrorSummary> => {
-    // Simulating API call to /api/errors
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    return {
-      total: 23,
-      critical: 2,
-      warning: 8,
-      info: 13,
-      recentErrors: [
-        {
-          id: 'err-001',
-          message: 'Database connection timeout',
-          timestamp: new Date(Date.now() - 1800000).toISOString(),
-          severity: 'critical',
-        },
-        {
-          id: 'err-002',
-          message: 'Payment gateway response slow',
-          timestamp: new Date(Date.now() - 3600000).toISOString(),
-          severity: 'warning',
-        },
-        {
-          id: 'err-003',
-          message: 'Email service rate limit reached',
-          timestamp: new Date(Date.now() - 7200000).toISOString(),
-          severity: 'warning',
-        },
-        {
-          id: 'err-004',
-          message: 'Cache miss rate above threshold',
-          timestamp: new Date(Date.now() - 10800000).toISOString(),
-          severity: 'info',
-        },
-      ],
+    const response = await fetch('/api/admin/analytics/errors')
+    if (!response.ok) {
+      throw new Error('Failed to fetch error summary')
     }
+    return response.json()
   }, [])
 
   const fetchHealthStatus = useCallback(async (): Promise<HealthStatus> => {
-    // Simulating API call to /api/health
-    await new Promise(resolve => setTimeout(resolve, 400))
-
-    return {
-      status: 'healthy',
-      uptime: 99.97,
-      services: [
-        { name: 'API Server', status: 'up', responseTime: 45 },
-        { name: 'Database', status: 'up', responseTime: 12 },
-        { name: 'Cache', status: 'up', responseTime: 3 },
-        { name: 'Email Service', status: 'degraded', responseTime: 890 },
-        { name: 'Payment Gateway', status: 'up', responseTime: 234 },
-      ],
-      lastChecked: new Date().toISOString(),
+    const response = await fetch('/api/admin/analytics/health')
+    if (!response.ok) {
+      throw new Error('Failed to fetch health status')
     }
+    return response.json()
   }, [])
 
   const fetchAllData = useCallback(async () => {

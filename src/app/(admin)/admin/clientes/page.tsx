@@ -46,88 +46,7 @@ type ClientWithProfile = Client & {
   phone: string
 }
 
-const mockClients: ClientWithProfile[] = [
-  {
-    id: '1',
-    user_id: null,
-    lead_id: null,
-    full_name: 'Roberto Mendes',
-    email: 'roberto@mendes.com',
-    phone: '(21) 99999-0001',
-    company_name: 'Mendes Incorporadora',
-    cpf_cnpj: '12.345.678/0001-90',
-    address: 'Av. Rio Branco, 156',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    zip_code: '20040-003',
-    status: 'active',
-    assigned_lawyer: null,
-    total_cases: 3,
-    lifetime_value: 45000,
-    created_at: '2023-06-15T10:00:00Z',
-    updated_at: '2023-06-15T10:00:00Z',
-  },
-  {
-    id: '2',
-    user_id: null,
-    lead_id: null,
-    full_name: 'Fernanda Souza',
-    email: 'fernanda.souza@gmail.com',
-    phone: '(21) 98888-0002',
-    company_name: null,
-    cpf_cnpj: '123.456.789-00',
-    address: 'Rua das Laranjeiras, 400',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    zip_code: '22240-005',
-    status: 'active',
-    assigned_lawyer: null,
-    total_cases: 1,
-    lifetime_value: 12000,
-    created_at: '2023-09-20T14:30:00Z',
-    updated_at: '2023-09-20T14:30:00Z',
-  },
-  {
-    id: '3',
-    user_id: null,
-    lead_id: null,
-    full_name: 'André Carvalho',
-    email: 'andre@carvalho.adv.br',
-    phone: '(21) 97777-0003',
-    company_name: 'Carvalho & Associados',
-    cpf_cnpj: '98.765.432/0001-10',
-    address: 'Rua México, 90',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    zip_code: '20031-141',
-    status: 'active',
-    assigned_lawyer: null,
-    total_cases: 5,
-    lifetime_value: 78000,
-    created_at: '2023-03-10T09:00:00Z',
-    updated_at: '2023-03-10T09:00:00Z',
-  },
-  {
-    id: '4',
-    user_id: null,
-    lead_id: null,
-    full_name: 'Lucia Pereira',
-    email: 'lucia.pereira@email.com',
-    phone: '(21) 96666-0004',
-    company_name: null,
-    cpf_cnpj: '987.654.321-00',
-    address: 'Rua Voluntários da Pátria, 88',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    zip_code: '22270-010',
-    status: 'inactive',
-    assigned_lawyer: null,
-    total_cases: 2,
-    lifetime_value: 25000,
-    created_at: '2023-01-05T11:00:00Z',
-    updated_at: '2023-01-05T11:00:00Z',
-  },
-]
+// Mock data removed - using real database only
 
 const statusColors = {
   active: 'bg-green-100 text-green-800 border-green-200',
@@ -145,7 +64,6 @@ export default function ClientesPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedClient, setSelectedClient] = useState<ClientWithProfile | null>(null)
-  const [useMockData, setUseMockData] = useState(false)
   const [newClientDialogOpen, setNewClientDialogOpen] = useState(false)
   const [editClientDialogOpen, setEditClientDialogOpen] = useState(false)
 
@@ -157,26 +75,16 @@ export default function ClientesPage() {
     refetch,
   } = trpc.clients.list.useQuery(
     { limit: 100, offset: 0 },
-    { retry: false, enabled: !useMockData }
+    { retry: false }
   )
 
-  // Handle errors by falling back to mock data
-  useEffect(() => {
-    if (error) {
-      console.log('Database not configured, using mock data')
-      setUseMockData(true)
-    }
-  }, [error])
-
   // Map database clients to ClientWithProfile (in real app, this would join with profiles)
-  const clients: ClientWithProfile[] = useMockData
-    ? mockClients
-    : (clientsData?.clients || []).map((client) => ({
-        ...client,
-        full_name: client.company_name || 'Cliente',
-        email: 'email@example.com',
-        phone: '(21) 99999-0000',
-      }))
+  const clients: ClientWithProfile[] = (clientsData?.clients || []).map((client) => ({
+    ...client,
+    full_name: client.company_name || 'Cliente',
+    email: 'email@example.com',
+    phone: '(21) 99999-0000',
+  }))
 
   const filteredClients = clients.filter(
     (client) =>
@@ -196,11 +104,6 @@ export default function ClientesPage() {
           <h2 className="text-3xl font-bold tracking-tight">Clientes</h2>
           <p className="text-muted-foreground">
             Gerencie sua base de clientes
-            {useMockData && (
-              <span className="ml-2 text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded">
-                Modo Demo
-              </span>
-            )}
           </p>
         </div>
         <div className="flex gap-2">
@@ -266,7 +169,7 @@ export default function ClientesPage() {
               <CardDescription>{filteredClients.length} clientes encontrados</CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoading && !useMockData ? (
+              {isLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>

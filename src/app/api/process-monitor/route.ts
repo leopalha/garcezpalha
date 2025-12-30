@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+n// Force dynamic rendering - required for API routes
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 import { processMonitor } from '@/lib/process-monitor/monitor-engine'
 import type { ProcessData } from '@/lib/process-monitor/types'
 
