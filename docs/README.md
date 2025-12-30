@@ -9,6 +9,25 @@
 
 Este diretório contém **TODA** a documentação necessária para implementar e escalar a plataforma Garcez Palha nos modelos B2C e B2B2C.
 
+### 🎯 ESTRUTURA DE PRODUTOS
+
+**Garcez Palha Engine** oferece 3 planos:
+
+1. **Plano Starter (R$ 497/mês)** - Secretária Jurídica IA
+   - Chat IA 24/7, qualificação, agendamento, propostas
+   - 100 conversas/mês, 1 usuário
+
+2. **Plano Pro (R$ 997/mês)** - Secretária + Marketing
+   - Tudo do Starter + Marketing Automation
+   - Conteúdo (Instagram/LinkedIn/Blog) + Otimização Google Ads
+   - 500 conversas/mês, 5 usuários
+
+3. **Plano Enterprise (R$ 1.997/mês)** - Solução Completa
+   - Tudo do Pro + API, custom training, SLA 99.9%
+   - Conversas ilimitadas, usuários ilimitados
+
+---
+
 ### 1️⃣ Análise Estratégica
 
 **Arquivo:** [ANALISE_ESTRATEGICA_PROJETOS.md](./ANALISE_ESTRATEGICA_PROJETOS.md)
@@ -71,45 +90,59 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 
 ---
 
-### 5️⃣ Implementação: Agente de Marketing (Piloto Automático)
+### 5️⃣ Implementação: Secretária Jurídica IA (PRODUTO PRINCIPAL) ⭐
+
+**Arquivo:** [IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md](./IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md)
+
+**Conteúdo:**
+- **PRODUTO CORE**: Chat IA jurídico + Qualificação + Agendamento
+- Chat Widget embeddable (código completo)
+- Landing page do parceiro
+- Dashboard do parceiro
+- Sistema de conversas e tracking
+- Planos: Starter (R$ 497) / Pro (R$ 997) / Enterprise (R$ 1.997)
+- Cronograma: 15 dias úteis
+- **Diferencial**: Especializado em direito, não genérico
+
+**Quando Ler:** PRIMEIRO - É o produto principal que gera receita
+
+---
+
+### 6️⃣ Implementação: Agente de Marketing (ADD-ON Plano Pro)
 
 **Arquivo:** [IMPLEMENTACAO_AGENTE_MARKETING.md](./IMPLEMENTACAO_AGENTE_MARKETING.md)
 
 **Conteúdo:**
-- Plano completo para ativar marketing automático
-- Schema de banco de dados (6 novas tabelas)
-- APIs (15+ endpoints)
-- Components React (AgentCard, VSLBuilder, etc.)
-- Admin pages (/admin/agentes/, /admin/workflows, /admin/vsl)
-- Configuração Vercel Cron Jobs
+- **ADD-ON** do Plano Pro (R$ 997/mês)
+- Marketing automation (conteúdo + ads)
+- Admin interface para gerenciar agentes
+- VSL generator
+- Workflows em produção (cron jobs)
 - Cronograma: 10 dias úteis
 - Custo estimado: ~R$ 70/mês OpenAI
 
-**Quando Ler:** Durante implementação Modelo B2C
+**Quando Ler:** SEGUNDO - Após produto core funcionando
 
 ---
 
-### 6️⃣ Implementação: White-Label Engine (B2B2C)
+### 7️⃣ Implementação: White-Label Engine (Infraestrutura Multi-Tenant)
 
 **Arquivo:** [IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./IMPLEMENTACAO_WHITE_LABEL_ENGINE.md)
 
 **Conteúdo:**
-- Plano completo para multi-tenancy
-- Arquitetura RLS (Row-Level Security)
-- Schema de banco (tabela `tenants`, `tenant_members`, + tenant_id em todas)
-- Middleware de tenant resolution
-- Onboarding flow (3 steps em 60 segundos)
-- Stripe integration completa
+- **INFRAESTRUTURA** para todos os planos
+- Multi-tenancy com RLS
+- Onboarding em 60 segundos
+- Stripe integration (3 planos)
 - Branding dinâmico por parceiro
-- Lead Finder (Google Maps scraper)
+- Middleware de tenant resolution
 - Cronograma: 13 dias úteis
-- Projeção: R$ 596k/ano (100 parceiros × R$ 497/mês)
 
-**Quando Ler:** Durante implementação Modelo B2B2C
+**Quando Ler:** TERCEIRO - Infraestrutura que suporta tudo
 
 ---
 
-### 7️⃣ Plano de Execução Completo (90 Dias)
+### 8️⃣ Plano de Execução Completo (90 Dias)
 
 **Arquivo:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md)
 
@@ -133,10 +166,11 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 ### Para Executar (Ordem Recomendada)
 
 1. ✅ **Já Leu:** Análise Estratégica, Ulio.ai, Dual Model, Estado Atual
-2. 📖 **Leia Agora:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md)
-3. 🛠️ **Durante Mês 1:** [IMPLEMENTACAO_AGENTE_MARKETING.md](./IMPLEMENTACAO_AGENTE_MARKETING.md)
-4. 🛠️ **Durante Mês 2:** [IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./IMPLEMENTACAO_WHITE_LABEL_ENGINE.md)
-5. 📊 **Sempre:** Métricas e KPIs do Plano de Execução
+2. 📖 **Leia Agora:** [PLANO_EXECUCAO_COMPLETO.md](./PLANO_EXECUCAO_COMPLETO.md) (atualizado com prioridades corretas)
+3. 🛠️ **PRIMEIRO:** [IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md](./IMPLEMENTACAO_SECRETARIA_JURIDICA_ENGINE.md) - Produto core (15 dias)
+4. 🛠️ **SEGUNDO:** [IMPLEMENTACAO_WHITE_LABEL_ENGINE.md](./IMPLEMENTACAO_WHITE_LABEL_ENGINE.md) - Multi-tenancy (13 dias)
+5. 🛠️ **TERCEIRO:** [IMPLEMENTACAO_AGENTE_MARKETING.md](./IMPLEMENTACAO_AGENTE_MARKETING.md) - Add-on Pro (10 dias)
+6. 📊 **Sempre:** Métricas e KPIs do Plano de Execução
 
 ### Para Consultar
 
@@ -167,9 +201,10 @@ Este diretório contém **TODA** a documentação necessária para implementar e
 
 ### Quanto Tempo para Completar
 
-- **Modelo B2C (Marketing Automático)**: 10 dias úteis
-- **Modelo B2B2C (White-Label Engine)**: 13 dias úteis
-- **Total com testes e ajustes**: ~30 dias
+- **Secretária Jurídica IA (core)**: 15 dias úteis
+- **Infraestrutura Multi-Tenant**: 13 dias úteis
+- **Marketing Automation (add-on)**: 10 dias úteis
+- **Total com testes e ajustes**: ~40 dias
 
 ### Retorno Esperado
 
