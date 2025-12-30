@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
-  output: 'standalone', // Use standalone mode for serverless deployment
+  // Do NOT set output - let Vercel auto-detect
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
