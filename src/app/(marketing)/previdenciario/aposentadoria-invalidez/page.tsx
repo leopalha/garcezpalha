@@ -7,15 +7,6 @@ import { PRODUTO_APOSENTADORIA_INVALIDEZ , getProductBySlug } from '@/lib/produc
 export const revalidate = 3600
 
 // Generate metadata for SEO
-export async function generateMetadata() {
-  const product = getProductBySlug('aposentadoria-invalidez')
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-  }
-}
 
 
 

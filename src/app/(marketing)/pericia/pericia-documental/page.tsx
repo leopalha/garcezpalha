@@ -21,15 +21,6 @@ import {
 export const revalidate = 3600
 
 // Generate metadata for SEO
-export async function generateMetadata() {
-  const product = getProductBySlug('pericia-documental')
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-  }
-}
 
 
 export default function PericiaDocumentalPage() {

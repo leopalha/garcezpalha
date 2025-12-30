@@ -7,15 +7,6 @@ import { PRODUTO_HABEAS_CORPUS , getProductBySlug } from '@/lib/products/catalog
 export const revalidate = 3600
 
 // Generate metadata for SEO
-export async function generateMetadata() {
-  const product = getProductBySlug('habeas-corpus')
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-  }
-}
 
 
 

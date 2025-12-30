@@ -7,15 +7,6 @@ import { PRODUTO_REGULARIZACAO_IMOVEL , getProductBySlug } from '@/lib/products/
 export const revalidate = 3600
 
 // Generate metadata for SEO
-export async function generateMetadata() {
-  const product = getProductBySlug('regularizacao-imovel')
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-  }
-}
 
 
 

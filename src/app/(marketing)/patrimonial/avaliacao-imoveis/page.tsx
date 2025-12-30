@@ -7,15 +7,6 @@ import { PRODUTO_AVALIACAO_IMOVEIS , getProductBySlug } from '@/lib/products/cat
 export const revalidate = 3600
 
 // Generate metadata for SEO
-export async function generateMetadata() {
-  const product = getProductBySlug('avaliacao-imoveis')
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-  }
-}
 
 
 

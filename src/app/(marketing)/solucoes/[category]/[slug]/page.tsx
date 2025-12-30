@@ -60,24 +60,3 @@ export async function generateStaticParams() {
 /**
  * Generate metadata for SEO
  */
-export async function generateMetadata({ params }: ProductPageProps) {
-  const { slug } = await params
-  const product = getProductBySlug(slug)
-
-  if (!product) {
-    return {
-      title: 'Produto não encontrado',
-    }
-  }
-
-  return {
-    title: `${product.name} | Garcez Palha Advogados`,
-    description: product.description,
-    keywords: product.keywords,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      type: 'website',
-    },
-  }
-}
