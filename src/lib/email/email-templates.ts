@@ -367,6 +367,249 @@ class EmailTemplatesService {
   }
 
   /**
+   * Commercial Proposal Email
+   */
+  commercialProposal(data: {
+    name: string
+    service: string
+    description: string
+    value: string
+    paymentTerms: string
+    proposalUrl: string
+    expiresIn: string
+  }): EmailTemplate {
+    return {
+      subject: `📋 Proposta Comercial - ${data.service}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%); padding: 40px 20px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">📋</div>
+            <h2 style="color: #ffffff; margin: 0;">Proposta Comercial</h2>
+            <p style="color: #fef3c7; margin-top: 10px;">Preparamos uma solução personalizada para você</p>
+          </div>
+
+          <div style="padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb;">
+            <p style="font-size: 16px; color: #374151;">Olá <strong>${data.name}</strong>,</p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              Conforme conversamos, segue nossa proposta comercial para <strong>${data.service}</strong>.
+            </p>
+
+            <div style="background: white; padding: 25px; border-radius: 8px; margin: 25px 0; border: 2px solid #e5e7eb;">
+              <h3 style="color: #1f2937; margin-top: 0; border-bottom: 2px solid #991b1b; padding-bottom: 10px;">Detalhes da Proposta</h3>
+
+              <div style="margin: 20px 0;">
+                <p style="margin: 5px 0; color: #6b7280; font-size: 14px;">SERVIÇO</p>
+                <p style="margin: 5px 0 15px 0; color: #1f2937; font-size: 16px; font-weight: bold;">${data.service}</p>
+
+                <p style="margin: 5px 0; color: #6b7280; font-size: 14px;">DESCRIÇÃO</p>
+                <p style="margin: 5px 0 15px 0; color: #374151; font-size: 15px; line-height: 1.6;">${data.description}</p>
+
+                <p style="margin: 5px 0; color: #6b7280; font-size: 14px;">INVESTIMENTO</p>
+                <p style="margin: 5px 0 15px 0; color: #991b1b; font-size: 24px; font-weight: bold;">R$ ${data.value}</p>
+
+                <p style="margin: 5px 0; color: #6b7280; font-size: 14px;">CONDIÇÕES DE PAGAMENTO</p>
+                <p style="margin: 5px 0; color: #374151; font-size: 15px;">${data.paymentTerms}</p>
+              </div>
+            </div>
+
+            <div style="background: #fef3c7; border-left: 4px solid #d97706; padding: 20px; margin: 25px 0;">
+              <p style="margin: 0; color: #92400e;">
+                <strong>⏰ Validade:</strong> Esta proposta é válida por ${data.expiresIn}.
+              </p>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.proposalUrl}" style="background: #991b1b; color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 16px;">
+                📄 Ver Proposta Completa
+              </a>
+            </div>
+
+            <div style="background: #eff6ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <p style="margin: 0 0 10px 0; color: #1e40af; font-weight: bold;">📞 Dúvidas?</p>
+              <p style="margin: 0; color: #1e3a8a; line-height: 1.6;">
+                Estamos à disposição para esclarecer qualquer questão.<br/>
+                Telefone: <strong>(21) 99535-4010</strong><br/>
+                WhatsApp: <a href="https://wa.me/5521995354010" style="color: #2563eb;">Clique aqui para conversar</a>
+              </p>
+            </div>
+
+            <p style="font-size: 16px; color: #374151;">
+              Aguardamos seu retorno!
+            </p>
+          </div>
+
+          ${this.OAB_FOOTER}
+        </div>
+      `,
+      text: `Proposta Comercial - ${data.service}\n\nOlá ${data.name},\n\nSegue nossa proposta:\n\nServiço: ${data.service}\nDescrição: ${data.description}\nInvestimento: R$ ${data.value}\nPagamento: ${data.paymentTerms}\nValidade: ${data.expiresIn}\n\nVer proposta completa: ${data.proposalUrl}\n\nDúvidas? (21) 99535-4010\n\nGarcez Palha`,
+    }
+  }
+
+  /**
+   * Payment Reminder Email
+   */
+  paymentReminder(data: {
+    name: string
+    invoiceNumber: string
+    dueDate: string
+    amount: string
+    service: string
+    paymentLink: string
+    daysOverdue?: number
+  }): EmailTemplate {
+    const isOverdue = data.daysOverdue && data.daysOverdue > 0
+    const urgencyColor = isOverdue ? '#dc2626' : '#f59e0b'
+    const urgencyBg = isOverdue ? '#fef2f2' : '#fef3c7'
+    const title = isOverdue
+      ? `⚠️ Pagamento em Atraso - ${data.daysOverdue} dias`
+      : `🔔 Lembrete de Pagamento`
+
+    return {
+      subject: isOverdue
+        ? `⚠️ Pagamento em Atraso - Fatura ${data.invoiceNumber}`
+        : `🔔 Lembrete: Vencimento em breve - Fatura ${data.invoiceNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: ${urgencyColor}; padding: 30px 20px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">${isOverdue ? '⚠️' : '🔔'}</div>
+            <h2 style="color: #ffffff; margin: 0;">${title}</h2>
+          </div>
+
+          <div style="padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb;">
+            <p style="font-size: 16px; color: #374151;">Olá <strong>${data.name}</strong>,</p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              ${isOverdue
+                ? `Identificamos que o pagamento da fatura abaixo está em atraso há <strong>${data.daysOverdue} dias</strong>.`
+                : 'Este é um lembrete amigável sobre o pagamento da sua fatura que vence em breve.'
+              }
+            </p>
+
+            <div style="background: white; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 4px solid ${urgencyColor};">
+              <h3 style="color: #1f2937; margin-top: 0;">Detalhes da Fatura</h3>
+              <p style="margin: 10px 0;"><strong>Número:</strong> ${data.invoiceNumber}</p>
+              <p style="margin: 10px 0;"><strong>Serviço:</strong> ${data.service}</p>
+              <p style="margin: 10px 0;"><strong>Vencimento:</strong> ${data.dueDate}</p>
+              <p style="margin: 10px 0;"><strong>Valor:</strong> <span style="color: ${urgencyColor}; font-size: 20px; font-weight: bold;">R$ ${data.amount}</span></p>
+            </div>
+
+            ${isOverdue ? `
+              <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 20px; margin: 25px 0;">
+                <p style="margin: 0; color: #991b1b;">
+                  <strong>⚠️ Importante:</strong> Para evitar a inclusão em cadastros de inadimplentes e interrupção dos serviços, regularize seu pagamento o quanto antes.
+                </p>
+              </div>
+            ` : `
+              <div style="background: ${urgencyBg}; border-left: 4px solid #f59e0b; padding: 20px; margin: 25px 0;">
+                <p style="margin: 0; color: #92400e;">
+                  <strong>💡 Dica:</strong> Evite atrasos e mantenha seus serviços ativos realizando o pagamento antes do vencimento.
+                </p>
+              </div>
+            `}
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.paymentLink}" style="background: ${urgencyColor}; color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 16px;">
+                💳 Pagar Agora
+              </a>
+            </div>
+
+            <div style="background: #eff6ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <p style="margin: 0 0 10px 0; color: #1e40af; font-weight: bold;">📞 Precisa de Ajuda?</p>
+              <p style="margin: 0; color: #1e3a8a;">
+                Entre em contato conosco:<br/>
+                Telefone: <strong>(21) 99535-4010</strong><br/>
+                Email: <a href="mailto:contato@garcezpalha.com" style="color: #2563eb;">contato@garcezpalha.com</a>
+              </p>
+            </div>
+
+            <p style="font-size: 14px; color: #6b7280; text-align: center; margin-top: 30px;">
+              Se você já realizou o pagamento, por favor desconsidere este email.
+            </p>
+          </div>
+
+          ${this.OAB_FOOTER}
+        </div>
+      `,
+      text: `${title}\n\nOlá ${data.name},\n\n${isOverdue ? `Pagamento em atraso há ${data.daysOverdue} dias.` : 'Lembrete de pagamento:'}\n\nFatura: ${data.invoiceNumber}\nServiço: ${data.service}\nVencimento: ${data.dueDate}\nValor: R$ ${data.amount}\n\nPagar em: ${data.paymentLink}\n\nDúvidas? (21) 99535-4010\n\nSe já pagou, desconsidere.\n\nGarcez Palha`,
+    }
+  }
+
+  /**
+   * NPS / Feedback Request Email
+   */
+  npsRequest(data: {
+    name: string
+    service: string
+    completionDate: string
+    npsUrl: string
+  }): EmailTemplate {
+    return {
+      subject: `📊 Sua opinião é importante para nós!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%); padding: 40px 20px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 10px;">⭐</div>
+            <h2 style="color: #ffffff; margin: 0;">Como foi sua experiência?</h2>
+            <p style="color: #fef3c7; margin-top: 10px;">Sua opinião nos ajuda a melhorar sempre</p>
+          </div>
+
+          <div style="padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb;">
+            <p style="font-size: 16px; color: #374151;">Olá <strong>${data.name}</strong>,</p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              Agradecemos por confiar na Garcez Palha para <strong>${data.service}</strong>, finalizado em ${data.completionDate}.
+            </p>
+
+            <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+              Sua opinião é extremamente valiosa para nós! Gostaríamos de saber como foi sua experiência com nossos serviços.
+            </p>
+
+            <div style="background: white; padding: 25px; border-radius: 8px; margin: 25px 0; text-align: center; border: 2px dashed #d1d5db;">
+              <p style="font-size: 18px; color: #1f2937; margin: 0 0 20px 0; font-weight: bold;">
+                Em uma escala de 0 a 10, quanto você recomendaria<br/>a Garcez Palha para um amigo ou familiar?
+              </p>
+
+              <div style="margin: 20px 0;">
+                <p style="font-size: 14px; color: #6b7280; margin: 0 0 15px 0;">CLIQUE NA SUA NOTA:</p>
+                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                  ${[0,1,2,3,4,5,6,7,8,9,10].map(n => `
+                    <a href="${data.npsUrl}?score=${n}" style="display: inline-block; width: 45px; height: 45px; line-height: 45px; background: ${n <= 6 ? '#fee2e2' : n <= 8 ? '#fef3c7' : '#d1fae5'}; color: ${n <= 6 ? '#991b1b' : n <= 8 ? '#92400e' : '#065f46'}; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 18px; margin: 3px;">${n}</a>
+                  `).join('')}
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; padding: 0 5px;">
+                  <span style="font-size: 12px; color: #6b7280;">Não recomendo</span>
+                  <span style="font-size: 12px; color: #6b7280;">Recomendo muito</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #eff6ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <p style="margin: 0; color: #1e40af; line-height: 1.6;">
+                <strong>⏱️ Leva apenas 1 minuto!</strong><br/>
+                Além da nota, você poderá deixar um comentário sobre sua experiência.
+              </p>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${data.npsUrl}" style="background: #991b1b; color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 16px;">
+                ⭐ Avaliar Agora
+              </a>
+            </div>
+
+            <p style="font-size: 16px; color: #374151; text-align: center;">
+              Obrigado por nos ajudar a melhorar!
+            </p>
+          </div>
+
+          ${this.OAB_FOOTER}
+        </div>
+      `,
+      text: `Como foi sua experiência?\n\nOlá ${data.name},\n\nAgradecemos por confiar na Garcez Palha para ${data.service}, finalizado em ${data.completionDate}.\n\nDe 0 a 10, quanto você recomendaria a Garcez Palha?\n\nAvalie em: ${data.npsUrl}\n\nLeva apenas 1 minuto!\n\nObrigado por nos ajudar a melhorar!\n\nGarcez Palha\n(21) 99535-4010`,
+    }
+  }
+
+  /**
    * Get default from address
    */
   getFromAddress(): { email: string; name: string } {

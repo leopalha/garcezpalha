@@ -21,7 +21,7 @@ export function SolutionSection({
     'Análise completa do seu caso em até 24 horas',
     'Estratégia jurídica personalizada e eficiente',
     'Acompanhamento em tempo real de todas as etapas',
-    'Resultado garantido ou seu dinheiro de volta',
+    'Transparência total em cada etapa do processo',
   ]
 
   const steps = solutionSteps || defaultSteps
@@ -76,12 +76,12 @@ export function SolutionSection({
                 <div className="text-sm text-gray-600 dark:text-gray-400">Primeira Análise</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">95%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Taxa de Sucesso</div>
+                <div className="text-3xl font-bold text-green-600">2.500+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Clientes Atendidos</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">100%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Satisfação</div>
+                <div className="text-3xl font-bold text-green-600">95%+</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Taxa de Satisfação</div>
               </div>
             </div>
             {onCTA && (

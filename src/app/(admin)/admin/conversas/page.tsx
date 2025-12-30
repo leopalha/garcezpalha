@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   Search,
   MessageSquare,
@@ -15,134 +17,201 @@ import {
   Loader2,
   RefreshCw,
   Send,
+  AlertTriangle,
+  User,
+  Bot,
+  UserCog,
 } from 'lucide-react'
 
+// Types from Supabase schema
+type ConversationState =
+  | 'greeting'
+  | 'identifying'
+  | 'classifying'
+  | 'qualifying'
+  | 'qualified'
+  | 'rejected'
+  | 'proposing'
+  | 'payment_pending'
+  | 'paid'
+  | 'contract_pending'
+  | 'onboarding'
+  | 'active_case'
+  | 'escalated'
+  | 'abandoned'
+
 type Conversation = {
-  id: string
-  contact_name: string
-  contact_email: string
-  contact_phone: string
-  channel: 'whatsapp' | 'email' | 'telegram' | 'website'
-  status: 'open' | 'in_progress' | 'resolved' | 'closed'
-  last_message: string
+  conversation_id: string
+  channel: 'whatsapp' | 'telegram' | 'website'
+  status: {
+    state: ConversationState
+    updated_at: string
+    escalation_reason?: string
+  }
+  lead: {
+    full_name: string
+    email: string
+    phone: string
+  }
+  classification?: {
+    area: string
+    product: string
+  }
+  qualification?: {
+    score: number
+    status: string
+  }
+  metadata?: {
+    human_takeover?: boolean
+    taken_over_at?: string
+    taken_over_by?: string
+  }
   last_message_at: string
-  assigned_to: string | null
   created_at: string
 }
 
-type Message = {
-  id: string
-  sender: string
-  text: string
-  timestamp: string
-  is_user: boolean
-}
-
 const channelConfig = {
-  whatsapp: { label: 'WhatsApp', color: 'bg-green-100 text-green-800' },
-  email: { label: 'Email', color: 'bg-blue-100 text-blue-800' },
-  telegram: { label: 'Telegram', color: 'bg-sky-100 text-sky-800' },
-  website: { label: 'Website', color: 'bg-slate-200 text-slate-800' },
+  whatsapp: { label: 'WhatsApp', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' },
+  telegram: { label: 'Telegram', color: 'bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-100' },
+  website: { label: 'Website', color: 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-100' },
 }
 
-const statusConfig = {
-  open: { label: 'Aberta', color: 'bg-red-100 text-red-800 border-red-200', icon: XCircle },
-  in_progress: { label: 'Em Andamento', color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: Clock },
-  resolved: { label: 'Resolvida', color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle2 },
-  closed: { label: 'Fechada', color: 'bg-slate-200 text-slate-800 border-slate-300', icon: CheckCircle2 },
-}
-
-// Mock data
-const mockConversations: Conversation[] = [
-  {
-    id: '1',
-    contact_name: 'Maria Silva',
-    contact_email: 'maria@email.com',
-    contact_phone: '(21) 99999-1111',
-    channel: 'whatsapp',
-    status: 'open',
-    last_message: 'Preciso de ajuda com meu processo',
-    last_message_at: new Date(Date.now() - 600000).toISOString(),
-    assigned_to: null,
-    created_at: new Date(Date.now() - 3600000).toISOString(),
-  },
-  {
-    id: '2',
-    contact_name: 'João Santos',
-    contact_email: 'joao@email.com',
-    contact_phone: '(21) 98888-2222',
-    channel: 'email',
-    status: 'in_progress',
-    last_message: 'Quando podemos agendar a consulta?',
-    last_message_at: new Date(Date.now() - 1800000).toISOString(),
-    assigned_to: 'Dr. Garcez',
-    created_at: new Date(Date.now() - 7200000).toISOString(),
-  },
-  {
-    id: '3',
-    contact_name: 'Ana Costa',
-    contact_email: 'ana@email.com',
-    contact_phone: '(21) 97777-3333',
-    channel: 'telegram',
-    status: 'resolved',
-    last_message: 'Obrigada pela ajuda!',
-    last_message_at: new Date(Date.now() - 86400000).toISOString(),
-    assigned_to: 'Dr. Palha',
-    created_at: new Date(Date.now() - 172800000).toISOString(),
-  },
-]
-
-const mockMessages: Record<string, Message[]> = {
-  '1': [
-    { id: '1', sender: 'Maria Silva', text: 'Olá, preciso de ajuda', timestamp: new Date(Date.now() - 3600000).toISOString(), is_user: true },
-    { id: '2', sender: 'Garcez Palha', text: 'Olá! Como podemos ajudar?', timestamp: new Date(Date.now() - 3000000).toISOString(), is_user: false },
-    { id: '3', sender: 'Maria Silva', text: 'Preciso de ajuda com meu processo', timestamp: new Date(Date.now() - 600000).toISOString(), is_user: true },
-  ],
-  '2': [
-    { id: '1', sender: 'João Santos', text: 'Bom dia', timestamp: new Date(Date.now() - 7200000).toISOString(), is_user: true },
-    { id: '2', sender: 'Garcez Palha', text: 'Bom dia! Em que posso ajudar?', timestamp: new Date(Date.now() - 7000000).toISOString(), is_user: false },
-    { id: '3', sender: 'João Santos', text: 'Quando podemos agendar a consulta?', timestamp: new Date(Date.now() - 1800000).toISOString(), is_user: true },
-  ],
-  '3': [
-    { id: '1', sender: 'Ana Costa', text: 'Preciso de informações sobre perícia', timestamp: new Date(Date.now() - 172800000).toISOString(), is_user: true },
-    { id: '2', sender: 'Garcez Palha', text: 'Claro, posso te explicar', timestamp: new Date(Date.now() - 172000000).toISOString(), is_user: false },
-    { id: '3', sender: 'Ana Costa', text: 'Obrigada pela ajuda!', timestamp: new Date(Date.now() - 86400000).toISOString(), is_user: true },
-  ],
+const stateConfig: Record<ConversationState, { label: string; color: string; icon: any; priority: number }> = {
+  escalated: { label: 'Escalada (Atenção!)', color: 'bg-red-100 text-red-800 border-red-200', icon: AlertTriangle, priority: 1 },
+  qualified: { label: 'Qualificada', color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle2, priority: 2 },
+  payment_pending: { label: 'Aguardando Pagamento', color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: Clock, priority: 3 },
+  contract_pending: { label: 'Aguardando Contrato', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: Clock, priority: 4 },
+  onboarding: { label: 'Onboarding', color: 'bg-purple-100 text-purple-800 border-purple-200', icon: User, priority: 5 },
+  active_case: { label: 'Caso Ativo', color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle2, priority: 6 },
+  qualifying: { label: 'Qualificando', color: 'bg-blue-100 text-blue-800 border-blue-200', icon: Bot, priority: 7 },
+  proposing: { label: 'Proposta Enviada', color: 'bg-indigo-100 text-indigo-800 border-indigo-200', icon: Mail, priority: 8 },
+  paid: { label: 'Pago', color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle2, priority: 9 },
+  rejected: { label: 'Rejeitada', color: 'bg-red-100 text-red-800 border-red-200', icon: XCircle, priority: 10 },
+  abandoned: { label: 'Abandonada', color: 'bg-gray-100 text-gray-800 border-gray-200', icon: XCircle, priority: 11 },
+  greeting: { label: 'Saudação', color: 'bg-slate-100 text-slate-800 border-slate-200', icon: Bot, priority: 12 },
+  identifying: { label: 'Identificando', color: 'bg-slate-100 text-slate-800 border-slate-200', icon: Bot, priority: 13 },
+  classifying: { label: 'Classificando', color: 'bg-slate-100 text-slate-800 border-slate-200', icon: Bot, priority: 14 },
 }
 
 export default function ConversasPage() {
+  const [conversations, setConversations] = useState<Conversation[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [stateFilter, setStateFilter] = useState<string>('all')
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
   const [messageText, setMessageText] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isTakingOver, setIsTakingOver] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const conversations = mockConversations
+  // Fetch conversations
+  useEffect(() => {
+    fetchConversations()
+  }, [stateFilter])
 
-  const filteredConversations = conversations.filter((conv) => {
-    const matchesSearch =
-      conv.contact_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      conv.contact_email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      conv.last_message.toLowerCase().includes(searchQuery.toLowerCase())
+  const fetchConversations = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
 
-    const matchesStatus = statusFilter === 'all' || conv.status === statusFilter
+      const params = new URLSearchParams()
+      if (stateFilter !== 'all') {
+        params.append('state', stateFilter)
+      }
+      params.append('limit', '100')
 
-    return matchesSearch && matchesStatus
-  })
+      const response = await fetch(`/api/admin/conversations?${params}`)
 
-  const handleSendMessage = () => {
-    if (!messageText.trim() || !selectedConversation) return
+      if (!response.ok) {
+        throw new Error('Failed to fetch conversations')
+      }
 
-    // In production, this would send via API
-    console.log('Sending message:', messageText)
-    setMessageText('')
+      const data = await response.json()
+      setConversations(data.conversations || [])
+    } catch (err) {
+      console.error('Error fetching conversations:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load conversations')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const statusCounts = {
-    open: conversations.filter((c) => c.status === 'open').length,
-    in_progress: conversations.filter((c) => c.status === 'in_progress').length,
-    resolved: conversations.filter((c) => c.status === 'resolved').length,
-    closed: conversations.filter((c) => c.status === 'closed').length,
+  const handleTakeover = async (conversationId: string) => {
+    try {
+      setIsTakingOver(true)
+      setError(null)
+
+      const response = await fetch(`/api/admin/conversations/${conversationId}/takeover`, {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to take over conversation')
+      }
+
+      // Refresh conversations
+      await fetchConversations()
+
+      // Update selected conversation
+      if (selectedConversation?.conversation_id === conversationId) {
+        const updated = conversations.find((c) => c.conversation_id === conversationId)
+        if (updated) {
+          setSelectedConversation(updated)
+        }
+      }
+
+      alert('Conversa assumida com sucesso! Agora você pode responder manualmente.')
+    } catch (err) {
+      console.error('Error taking over conversation:', err)
+      setError(err instanceof Error ? err.message : 'Failed to take over conversation')
+    } finally {
+      setIsTakingOver(false)
+    }
+  }
+
+  const handleSendMessage = async () => {
+    if (!messageText.trim() || !selectedConversation) return
+
+    try {
+      // TODO: Implement send message via API
+      console.log('Sending message:', messageText)
+      setMessageText('')
+
+      // In production, call /api/admin/conversations/[id]/messages
+    } catch (err) {
+      console.error('Error sending message:', err)
+      setError(err instanceof Error ? err.message : 'Failed to send message')
+    }
+  }
+
+  const filteredConversations = conversations
+    .filter((conv) => {
+      const matchesSearch =
+        conv.lead.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        conv.lead.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        conv.classification?.product?.toLowerCase().includes(searchQuery.toLowerCase())
+
+      return matchesSearch
+    })
+    .sort((a, b) => {
+      // Sort by priority (escalated first)
+      const aPriority = stateConfig[a.status.state]?.priority || 99
+      const bPriority = stateConfig[b.status.state]?.priority || 99
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority
+      }
+
+      // Then by last message time
+      return new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime()
+    })
+
+  // Count conversations by state
+  const stateCounts = {
+    escalated: conversations.filter((c) => c.status.state === 'escalated').length,
+    qualified: conversations.filter((c) => c.status.state === 'qualified').length,
+    active: conversations.filter((c) => ['payment_pending', 'contract_pending', 'onboarding', 'active_case'].includes(c.status.state)).length,
+    total: conversations.length,
   }
 
   return (
@@ -151,42 +220,80 @@ export default function ConversasPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Conversas</h2>
           <p className="text-muted-foreground">
-            Gerencie todas as conversas com clientes
-            <span className="ml-2 text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded">
-              Modo Demo
-            </span>
+            Gerencie conversas escaladas e assumidas manualmente
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="icon">
-            <RefreshCw className="h-4 w-4" />
+          <Button variant="outline" size="icon" onClick={fetchConversations} disabled={isLoading}>
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        {Object.entries(statusConfig).map(([key, config]) => {
-          const Icon = config.icon
-          return (
-            <Card
-              key={key}
-              className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => setStatusFilter(key)}
-            >
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-2xl font-bold">{statusCounts[key as keyof typeof statusCounts]}</div>
-                    <p className="text-xs text-muted-foreground">{config.label}</p>
-                  </div>
-                  <Icon className="h-8 w-8 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
+        <Card
+          className="cursor-pointer hover:shadow-md transition-shadow border-red-200 bg-red-50/50"
+          onClick={() => setStateFilter('escalated')}
+        >
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold text-red-600">{stateCounts.escalated}</div>
+                <p className="text-xs text-red-700 font-medium">Escaladas (Urgente)</p>
+              </div>
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card
+          className="cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => setStateFilter('qualified')}
+        >
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">{stateCounts.qualified}</div>
+                <p className="text-xs text-muted-foreground">Qualificadas</p>
+              </div>
+              <CheckCircle2 className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStateFilter('all')}>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">{stateCounts.active}</div>
+                <p className="text-xs text-muted-foreground">Ativas (Fluxo)</p>
+              </div>
+              <Clock className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStateFilter('all')}>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">{stateCounts.total}</div>
+                <p className="text-xs text-muted-foreground">Total</p>
+              </div>
+              <MessageSquare className="h-8 w-8 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       {/* Filters */}
       <Card>
@@ -195,22 +302,23 @@ export default function ConversasPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome, email ou mensagem..."
+                placeholder="Buscar por nome, email ou produto..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
               />
             </div>
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              value={stateFilter}
+              onChange={(e) => setStateFilter(e.target.value)}
               className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
             >
-              <option value="all">Todos os Status</option>
-              <option value="open">Aberta</option>
-              <option value="in_progress">Em Andamento</option>
-              <option value="resolved">Resolvida</option>
-              <option value="closed">Fechada</option>
+              <option value="all">Todos os Estados</option>
+              <option value="escalated">⚠️ Escaladas (Urgente)</option>
+              <option value="qualified">✅ Qualificadas</option>
+              <option value="payment_pending">⏰ Aguardando Pagamento</option>
+              <option value="onboarding">👤 Onboarding</option>
+              <option value="active_case">📁 Casos Ativos</option>
             </select>
           </div>
         </CardContent>
@@ -225,81 +333,141 @@ export default function ConversasPage() {
               <CardDescription>Clique para ver detalhes</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {filteredConversations.map((conv) => (
-                  <div
-                    key={conv.id}
-                    onClick={() => setSelectedConversation(conv)}
-                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                      selectedConversation?.id === conv.id
-                        ? 'border-primary bg-primary/5'
-                        : 'hover:bg-muted'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="font-medium">{conv.contact_name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(conv.last_message_at).toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </p>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                  {filteredConversations.map((conv) => (
+                    <div
+                      key={conv.conversation_id}
+                      onClick={() => setSelectedConversation(conv)}
+                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                        selectedConversation?.conversation_id === conv.conversation_id
+                          ? 'border-primary bg-primary/5'
+                          : 'hover:bg-muted'
+                      } ${conv.status.state === 'escalated' ? 'border-red-300 bg-red-50/30' : ''}`}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="font-medium">{conv.lead.full_name || 'Lead sem nome'}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(conv.last_message_at).toLocaleString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </p>
+                        </div>
+                        {conv.status.state === 'escalated' && (
+                          <AlertTriangle className="h-5 w-5 text-red-600" />
+                        )}
                       </div>
-                      <span
-                        className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium ${
-                          statusConfig[conv.status].color
-                        }`}
-                      >
-                        {statusConfig[conv.status].label}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{conv.last_message}</p>
-                    <div className="mt-2">
-                      <span className={`px-2 py-0.5 rounded text-xs ${channelConfig[conv.channel].color}`}>
-                        {channelConfig[conv.channel].label}
-                      </span>
-                    </div>
-                  </div>
-                ))}
 
-                {filteredConversations.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p>Nenhuma conversa encontrada</p>
-                  </div>
-                )}
-              </div>
+                      <div className="space-y-2">
+                        <Badge
+                          className={`${stateConfig[conv.status.state]?.color || 'bg-gray-100 text-gray-800'}`}
+                        >
+                          {stateConfig[conv.status.state]?.label || conv.status.state}
+                        </Badge>
+
+                        {conv.classification?.product && (
+                          <p className="text-sm text-muted-foreground">
+                            {conv.classification.product}
+                          </p>
+                        )}
+
+                        {conv.qualification?.score !== undefined && (
+                          <p className="text-xs text-muted-foreground">
+                            Score: {conv.qualification.score}/100
+                          </p>
+                        )}
+
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs ${channelConfig[conv.channel].color}`}>
+                          {channelConfig[conv.channel].label}
+                        </span>
+
+                        {conv.metadata?.human_takeover && (
+                          <Badge variant="outline" className="text-xs">
+                            <UserCog className="h-3 w-3 mr-1" />
+                            Assumida
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  {filteredConversations.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <MessageSquare className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <p>Nenhuma conversa encontrada</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
         {/* Conversation Detail */}
         <div className="lg:col-span-2">
-          <Card className="h-[600px] flex flex-col">
+          <Card className="h-[700px] flex flex-col">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex-1">
                   <CardTitle>
-                    {selectedConversation ? selectedConversation.contact_name : 'Selecione uma conversa'}
+                    {selectedConversation ? selectedConversation.lead.full_name || 'Lead sem nome' : 'Selecione uma conversa'}
                   </CardTitle>
                   <CardDescription>
                     {selectedConversation && (
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <Badge className={stateConfig[selectedConversation.status.state]?.color}>
+                          {stateConfig[selectedConversation.status.state]?.label}
+                        </Badge>
                         <span className={`px-2 py-0.5 rounded text-xs ${channelConfig[selectedConversation.channel].color}`}>
                           {channelConfig[selectedConversation.channel].label}
                         </span>
-                        <span className="text-xs">{selectedConversation.contact_email}</span>
+                        <span className="text-xs">{selectedConversation.lead.email}</span>
+                        {selectedConversation.metadata?.human_takeover && (
+                          <Badge variant="outline">
+                            <UserCog className="h-3 w-3 mr-1" />
+                            Assumida em{' '}
+                            {new Date(selectedConversation.metadata.taken_over_at || '').toLocaleString('pt-BR')}
+                          </Badge>
+                        )}
                       </div>
                     )}
                   </CardDescription>
                 </div>
                 {selectedConversation && (
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    {!selectedConversation.metadata?.human_takeover && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => handleTakeover(selectedConversation.conversation_id)}
+                        disabled={isTakingOver}
+                      >
+                        {isTakingOver ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Assumindo...
+                          </>
+                        ) : (
+                          <>
+                            <UserCog className="h-4 w-4 mr-2" />
+                            Assumir Conversa
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" disabled>
                       <Phone className="h-4 w-4 mr-2" />
                       Ligar
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" disabled>
                       <Mail className="h-4 w-4 mr-2" />
                       Email
                     </Button>
@@ -310,49 +478,80 @@ export default function ConversasPage() {
             <CardContent className="flex-1 flex flex-col">
               {selectedConversation ? (
                 <>
-                  {/* Messages */}
-                  <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                    {(mockMessages[selectedConversation.id] || []).map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.is_user ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[70%] rounded-lg p-3 ${
-                            msg.is_user
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted'
-                          }`}
-                        >
-                          <p className="text-sm">{msg.text}</p>
-                          <p className={`text-xs mt-1 ${msg.is_user ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                            {new Date(msg.timestamp).toLocaleTimeString('pt-BR', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                  {/* Info Section */}
+                  {selectedConversation.status.state === 'escalated' && (
+                    <Alert className="mb-4 border-red-300 bg-red-50">
+                      <AlertTriangle className="h-4 w-4 text-red-600" />
+                      <AlertDescription className="text-red-800">
+                        <strong>Conversa Escalada:</strong>{' '}
+                        {selectedConversation.status.escalation_reason ||
+                          'Esta conversa precisa de atenção manual'}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {/* Conversation Details */}
+                  <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-muted mb-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground">Produto</p>
+                      <p className="text-sm font-medium">
+                        {selectedConversation.classification?.product || 'Não classificado'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Score</p>
+                      <p className="text-sm font-medium">
+                        {selectedConversation.qualification?.score || 'N/A'}/100
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Telefone</p>
+                      <p className="text-sm font-medium">{selectedConversation.lead.phone || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Criada em</p>
+                      <p className="text-sm font-medium">
+                        {new Date(selectedConversation.created_at).toLocaleString('pt-BR')}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Messages Area */}
+                  <div className="flex-1 overflow-y-auto space-y-4 mb-4 p-4 bg-muted/30 rounded-lg">
+                    <div className="text-center text-sm text-muted-foreground py-4">
+                      <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p>Histórico de mensagens será carregado aqui</p>
+                      <p className="text-xs mt-1">Em desenvolvimento</p>
+                    </div>
                   </div>
 
                   {/* Message Input */}
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Digite sua mensagem..."
-                      value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault()
-                          handleSendMessage()
-                        }
-                      }}
-                    />
-                    <Button onClick={handleSendMessage} disabled={!messageText.trim()}>
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  {selectedConversation.metadata?.human_takeover ? (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Digite sua mensagem..."
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault()
+                            handleSendMessage()
+                          }
+                        }}
+                      />
+                      <Button onClick={handleSendMessage} disabled={!messageText.trim()}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Alert>
+                      <Bot className="h-4 w-4" />
+                      <AlertDescription>
+                        Esta conversa está sendo gerenciada pelo agente IA. Clique em "Assumir Conversa" para responder
+                        manualmente.
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </>
               ) : (
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">

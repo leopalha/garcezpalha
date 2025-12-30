@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { router, protectedProcedure, publicProcedure } from '../init'
 import { TRPCError } from '@trpc/server'
+import { getCached, invalidateCachePattern, REDIS_KEYS, TTL_STRATEGY } from '@/lib/redis'
 
 const productPackageSchema = z.object({
   id: z.string().uuid().optional(),
@@ -42,24 +43,35 @@ export const productsRouter = router({
     .query(async ({ ctx, input }) => {
       const { supabase } = ctx
 
-      let query = supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('name')
+      // Use Redis cache
+      const cacheKey = input?.category
+        ? REDIS_KEYS.productsByCategory(input.category)
+        : REDIS_KEYS.products()
 
-      if (input?.category) {
-        query = query.eq('category', input.category)
-      }
+      return await getCached(
+        cacheKey,
+        async () => {
+          let query = supabase
+            .from('products')
+            .select('*')
+            .eq('is_active', true)
+            .order('name')
 
-      const { data, error } = await query
+          if (input?.category) {
+            query = query.eq('category', input.category)
+          }
 
-      if (error) throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: error.message,
-      })
+          const { data, error } = await query
 
-      return data
+          if (error) throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: error.message,
+          })
+
+          return data
+        },
+        { ttl: TTL_STRATEGY.products } // 1 hour
+      )
     }),
 
   // Público - buscar produto por slug
@@ -68,19 +80,26 @@ export const productsRouter = router({
     .query(async ({ ctx, input }) => {
       const { supabase } = ctx
 
-      const { data: product, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('slug', input.slug)
-        .eq('is_active', true)
-        .single()
+      // Use Redis cache
+      return await getCached(
+        REDIS_KEYS.productBySlug(input.slug),
+        async () => {
+          const { data: product, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('slug', input.slug)
+            .eq('is_active', true)
+            .single()
 
-      if (error || !product) throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Produto não encontrado',
-      })
+          if (error || !product) throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Produto não encontrado',
+          })
 
-      return product
+          return product
+        },
+        { ttl: TTL_STRATEGY.products } // 1 hour
+      )
     }),
 
   // Público - buscar pacotes de um produto
@@ -89,19 +108,26 @@ export const productsRouter = router({
     .query(async ({ ctx, input }) => {
       const { supabase } = ctx
 
-      const { data, error } = await supabase
-        .from('product_packages')
-        .select('*')
-        .eq('product_id', input.productId)
-        .eq('is_active', true)
-        .order('order_index')
+      // Use Redis cache
+      return await getCached(
+        REDIS_KEYS.productPackages(input.productId),
+        async () => {
+          const { data, error } = await supabase
+            .from('product_packages')
+            .select('*')
+            .eq('product_id', input.productId)
+            .eq('is_active', true)
+            .order('order_index')
 
-      if (error) throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: error.message,
-      })
+          if (error) throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: error.message,
+          })
 
-      return data
+          return data
+        },
+        { ttl: TTL_STRATEGY.products } // 1 hour
+      )
     }),
 
   // Admin - listar todos (incluindo inativos)
@@ -139,6 +165,10 @@ export const productsRouter = router({
         message: error.message,
       })
 
+      // Invalidate product cache
+      await invalidateCachePattern('products:*')
+      await invalidateCachePattern('product:*')
+
       return data
     }),
 
@@ -163,6 +193,10 @@ export const productsRouter = router({
         message: error.message,
       })
 
+      // Invalidate product cache
+      await invalidateCachePattern('products:*')
+      await invalidateCachePattern('product:*')
+
       return data
     }),
 
@@ -181,6 +215,10 @@ export const productsRouter = router({
         code: 'INTERNAL_SERVER_ERROR',
         message: error.message,
       })
+
+      // Invalidate product cache
+      await invalidateCachePattern('products:*')
+      await invalidateCachePattern('product:*')
 
       return { success: true }
     }),
@@ -208,6 +246,9 @@ export const productsRouter = router({
         message: error.message,
       })
 
+      // Invalidate package cache for this product
+      await invalidateCachePattern(`product:${input.product_id}:packages`)
+
       return data
     }),
 
@@ -232,6 +273,9 @@ export const productsRouter = router({
         message: error.message,
       })
 
+      // Invalidate all package caches (don't know which product this belongs to)
+      await invalidateCachePattern('product:*:packages')
+
       return data
     }),
 
@@ -250,6 +294,9 @@ export const productsRouter = router({
         code: 'INTERNAL_SERVER_ERROR',
         message: error.message,
       })
+
+      // Invalidate all package caches (don't know which product this belongs to)
+      await invalidateCachePattern('product:*:packages')
 
       return { success: true }
     }),

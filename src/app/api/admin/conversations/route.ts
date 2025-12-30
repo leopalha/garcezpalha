@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+// Cache conversations for 1 minute (real-time updates needed)
+export const revalidate = 60
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()

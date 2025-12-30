@@ -65,8 +65,8 @@ export default function LogoPage() {
 
   const downloadImage = () => {
     const link = document.createElement('a')
-    link.href = '/brasao-garcez-palha.png'
-    link.download = 'brasao-garcez-palha.png'
+    link.href = '/brasao-garcez-palha.webp'
+    link.download = 'brasao-garcez-palha.webp'
     link.click()
   }
 
@@ -109,14 +109,17 @@ export default function LogoPage() {
               {/* Brasão Imagem */}
               <div className="flex-1 flex justify-center">
                 <div className="bg-white p-8 rounded-xl shadow-inner">
-                  <Image
-                    src="/brasao-garcez-palha.png"
-                    alt="Brasão Heráldico da Família Garcez Palha"
-                    width={500}
-                    height={500}
-                    className="w-full h-auto max-w-[500px]"
-                    priority
-                  />
+                  <picture>
+                    <source srcSet="/brasao-garcez-palha.webp" type="image/webp" />
+                    <Image
+                      src="/brasao-garcez-palha-optimized.png"
+                      alt="Brasão Heráldico da Família Garcez Palha"
+                      width={500}
+                      height={500}
+                      className="w-full h-auto max-w-[500px]"
+                      priority
+                    />
+                  </picture>
                 </div>
               </div>
 
@@ -176,7 +179,7 @@ export default function LogoPage() {
                   className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3"
                 >
                   <Download className="w-5 h-5" />
-                  Baixar Brasão (PNG)
+                  Baixar Brasão (WebP)
                 </button>
 
                 <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">

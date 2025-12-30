@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { MessageCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import dynamic from 'next/dynamic'
 
 // Types
 import type { UnifiedChatAssistantProps, Message, AgentState, QualificationData } from '@/types/chat'
@@ -23,7 +24,12 @@ import { ChatHeader } from './components/ChatHeader'
 import { MessageBubble } from './components/MessageBubble'
 import { ChatInput } from './components/ChatInput'
 import { QualificationProgress } from './components/QualificationProgress'
-import { RealtimeVoiceAssistant } from './RealtimeVoiceAssistant'
+
+// Lazy load heavy components (code splitting)
+const RealtimeVoiceAssistant = dynamic(
+  () => import('./RealtimeVoiceAssistant').then((mod) => ({ default: mod.RealtimeVoiceAssistant })),
+  { ssr: false }
+)
 
 // Utils & Hooks
 import { generateConversationId, sendMessage, getDefaultModeConfig } from '@/lib/chat'

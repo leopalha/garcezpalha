@@ -2,7 +2,25 @@
 
 import { ProductVSL } from '@/components/vsl/ProductVSL'
 import { SEOHead, UrgencyBanner } from '@/components/vsl'
-import { PRODUTO_AVALIACAO_IMOVEIS } from '@/lib/products/catalog'
+import { PRODUTO_AVALIACAO_IMOVEIS , getProductBySlug } from '@/lib/products/catalog'
+
+// ISR: Revalidate every 1 hour (product pages rarely change)
+export const revalidate = 3600
+
+// Generate metadata for SEO
+export async function generateMetadata() {
+  const product = getProductBySlug('avaliacao-imoveis')
+  if (!product) return {}
+
+  return {
+    title: `${product.name} | Garcez Palha Advogados`,
+    description: product.description,
+  }
+}
+
+
+
+
 
 export default function AvaliacaoImoveisPage() {
   return (

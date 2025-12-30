@@ -1,0 +1,29 @@
+
+> garcezpalha-platform@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local, .env.production
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/3) ...
+ ✓ Generating static pages (3/3)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                         Size     First Load JS
+─ ○ /api/test-email                 0 B                0 B
++ First Load JS shared by all       0 B
+
+Route (pages)                       Size     First Load JS
+─ ○ /404                            180 B          80.2 kB
++ First Load JS shared by all       80 kB
+  ├ chunks/288-6015cc87fc37ed99.js  78.3 kB
+  └ other shared chunks (total)     1.76 kB
+
+○  (Static)  prerendered as static content
+

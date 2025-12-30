@@ -5,6 +5,9 @@ node_modules/
 .n8n/
 .claude/settings.local.json
 
+# TypeScript
+*.tsbuildinfo
+
 # Auto Claude data directory
 .auto-claude/
 

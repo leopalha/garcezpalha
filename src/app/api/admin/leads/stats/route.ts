@@ -7,6 +7,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getLeadStatistics } from '@/lib/leads/lead-database'
 
+// Cache stats for 5 minutes (300 seconds)
+export const revalidate = 300
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()

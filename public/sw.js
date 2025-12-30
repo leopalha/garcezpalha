@@ -1,5 +1,15 @@
 // Service Worker for Garcez Palha PWA
-const CACHE_NAME = 'garcezpalha-v1'
+// Version: 1.1.0 - Enhanced with advanced caching strategies
+// Updated by: MANUS v7.0 (29/12/2025)
+
+const CACHE_VERSION = 'v1-1'
+const CACHE_NAMES = {
+  static: `garcez-palha-static-${CACHE_VERSION}`,
+  images: `garcez-palha-images-${CACHE_VERSION}`,
+  api: `garcez-palha-api-${CACHE_VERSION}`,
+  runtime: `garcez-palha-runtime-${CACHE_VERSION}`,
+}
+
 const OFFLINE_URL = '/offline.html'
 
 // Assets to cache on install
@@ -7,14 +17,14 @@ const PRECACHE_ASSETS = [
   '/',
   '/offline.html',
   '/manifest.json',
-  '/images/logo.png',
-  '/images/og-image.jpg',
 ]
 
 // Install event - cache core assets
 self.addEventListener('install', (event) => {
+  console.log('[SW] Installing Service Worker v' + CACHE_VERSION)
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAMES.static).then((cache) => {
       console.log('[SW] Precaching core assets')
       return cache.addAll(PRECACHE_ASSETS)
     })
@@ -25,11 +35,13 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean old caches
 self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating Service Worker v' + CACHE_VERSION)
+
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => !Object.values(CACHE_NAMES).includes(name))
           .map((name) => {
             console.log('[SW] Deleting old cache:', name)
             return caches.delete(name)
@@ -38,64 +50,126 @@ self.addEventListener('activate', (event) => {
     })
   )
   // Take control immediately
-  self.clients.claim()
+  return self.clients.claim()
 })
 
-// Fetch event - network first, cache fallback strategy
+// Fetch event - Advanced cache strategies
 self.addEventListener('fetch', (event) => {
   const { request } = event
+  const url = new URL(request.url)
 
   // Skip non-GET requests
   if (request.method !== 'GET') {
     return
   }
 
-  // Skip API routes (always fetch fresh)
-  if (request.url.includes('/api/')) {
+  // Skip non-http(s) requests
+  if (!url.protocol.startsWith('http')) {
     return
   }
 
-  // Skip chrome-extension and other non-http(s) requests
-  if (!request.url.startsWith('http')) {
+  // Network Only: Auth & Payments
+  if (url.pathname.startsWith('/api/auth') ||
+      url.pathname.startsWith('/api/payment') ||
+      url.pathname.startsWith('/api/webhooks')) {
+    event.respondWith(networkOnly(request))
     return
   }
 
-  event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Clone the response
-        const responseClone = response.clone()
+  // Network First: API calls
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(networkFirst(request))
+    return
+  }
 
-        // Cache successful responses
-        if (response.status === 200) {
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone)
-          })
-        }
+  // Stale While Revalidate: Images
+  if (/\.(png|jpg|jpeg|webp|svg|ico)$/.test(url.pathname)) {
+    event.respondWith(staleWhileRevalidate(request))
+    return
+  }
 
-        return response
-      })
-      .catch(() => {
-        // Network failed, try cache
-        return caches.match(request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse
-          }
+  // Cache First: Static assets
+  if (url.pathname.startsWith('/_next/static/') ||
+      url.pathname.startsWith('/fonts/') ||
+      url.pathname.startsWith('/icons/')) {
+    event.respondWith(cacheFirst(request))
+    return
+  }
 
-          // If it's a navigation request, show offline page
-          if (request.mode === 'navigate') {
-            return caches.match(OFFLINE_URL)
-          }
-
-          // Return a basic offline response for other requests
-          return new Response('Offline', {
-            status: 503,
-            statusText: 'Service Unavailable',
-          })
-        })
-      })
-  )
+  // Default: Network First for HTML pages
+  event.respondWith(networkFirst(request))
 })
+
+// Cache Strategy: Network Only
+async function networkOnly(request) {
+  return fetch(request)
+}
+
+// Cache Strategy: Network First
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request)
+
+    if (response && response.status === 200) {
+      const cache = await caches.open(CACHE_NAMES.api)
+      cache.put(request, response.clone())
+    }
+
+    return response
+  } catch (error) {
+    console.log('[SW] Network failed, trying cache:', request.url)
+
+    const cached = await caches.match(request)
+
+    if (cached) {
+      return cached
+    }
+
+    if (request.mode === 'navigate') {
+      return caches.match(OFFLINE_URL)
+    }
+
+    throw error
+  }
+}
+
+// Cache Strategy: Cache First
+async function cacheFirst(request) {
+  const cached = await caches.match(request)
+
+  if (cached) {
+    return cached
+  }
+
+  try {
+    const response = await fetch(request)
+
+    if (response && response.status === 200) {
+      const cache = await caches.open(CACHE_NAMES.static)
+      cache.put(request, response.clone())
+    }
+
+    return response
+  } catch (error) {
+    console.log('[SW] Cache and network failed:', request.url)
+    throw error
+  }
+}
+
+// Cache Strategy: Stale While Revalidate
+async function staleWhileRevalidate(request) {
+  const cached = await caches.match(request)
+
+  const fetchPromise = fetch(request).then(async (response) => {
+    if (response && response.status === 200) {
+      const cache = await caches.open(CACHE_NAMES.images)
+      cache.put(request, response.clone())
+    }
+    return response
+  }).catch(() => null)
+
+  return cached || fetchPromise
+}
 
 // Background sync for form submissions
 self.addEventListener('sync', (event) => {
@@ -150,4 +224,15 @@ self.addEventListener('notificationclick', (event) => {
   }
 })
 
-console.log('[SW] Service Worker loaded')
+// Message Event (for communication with app)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+
+  if (event.data && event.data.type === 'CLIENTS_CLAIM') {
+    self.clients.claim()
+  }
+})
+
+console.log('[SW] Service Worker v' + CACHE_VERSION + ' loaded successfully')

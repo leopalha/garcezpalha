@@ -170,10 +170,22 @@ async function enviarConfirmacaoAgendamento(params: {
   time: string
   location: string
 }): Promise<void> {
-  // TODO: Integrar com Resend
-  console.log('[Agendamento] 📧 Confirmação enviada para:', params.leadEmail)
-  console.log(`Data: ${formatDate(params.date)} às ${params.time}`)
-  console.log(`Local: ${params.location}`)
+  const { emailService } = await import('@/lib/email/email-service')
+
+  console.log('[Agendamento] 📧 Enviando confirmação para:', params.leadEmail)
+
+  const formattedDate = formatDate(params.date)
+
+  await emailService.sendAppointmentConfirmation({
+    to: params.leadEmail,
+    name: params.leadName,
+    date: formattedDate,
+    time: params.time,
+    service: params.serviceType,
+    location: params.location,
+  })
+
+  console.log('[Agendamento] ✅ Confirmação enviada com sucesso')
 }
 
 /**

@@ -180,8 +180,8 @@ Execute novamente - o script usa `upsert` e não duplica dados
 ## 📊 O que Será Criado
 
 ### Tabelas
-- ✅ `products` (22 produtos)
-- ✅ `product_packages` (11 pacotes)
+- ✅ `products` (57 produtos)
+- ✅ `product_packages` (múltiplos pacotes por produto)
 
 ### Índices
 - ✅ `idx_products_category`

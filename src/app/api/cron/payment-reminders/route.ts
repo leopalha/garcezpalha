@@ -125,37 +125,18 @@ Garcez Palha - Consultoria Jurídica & Pericial
             }
           }
 
-          // Send email reminder
+          // Send email reminder using the new paymentReminder template
           if (lead.email) {
-            const emailSent = await emailService.sendCustomEmail({
+            const emailSent = await emailService.sendPaymentReminder({
               to: lead.email,
-              subject: `${urgencyEmoji} ${urgencyText} de Pagamento - Garcez Palha`,
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                  <div style="background: #1a365d; color: white; padding: 20px; text-align: center;">
-                    <h1 style="margin: 0; font-size: 24px;">Garcez Palha</h1>
-                  </div>
-                  <div style="padding: 30px; background: #f7f8fa;">
-                    <h2 style="color: #1a365d;">${urgencyEmoji} ${urgencyText} de Pagamento</h2>
-                    <p>Olá <strong>${lead.name}</strong>,</p>
-                    <p>Identificamos que você ainda não finalizou o pagamento:</p>
-                    <div style="background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #c9a227;">
-                      <p style="margin: 0 0 10px;"><strong>Serviço:</strong> ${payment.description}</p>
-                      <p style="margin: 0; font-size: 24px; color: #c9a227;"><strong>${formattedAmount}</strong></p>
-                    </div>
-                    <p style="text-align: center;">
-                      <a href="${payment.payment_url}" style="display: inline-block; background: #c9a227; color: white; text-decoration: none; padding: 15px 30px; border-radius: 6px; font-weight: bold; font-size: 16px;">Realizar Pagamento</a>
-                    </p>
-                    <p style="font-size: 14px; color: #666; margin-top: 20px;">Se você já efetuou o pagamento, por favor desconsidere esta mensagem.</p>
-                  </div>
-                  <div style="background: #1a365d; color: white; padding: 15px; text-align: center; font-size: 12px;">
-                    <p style="margin: 0;">Garcez Palha - Consultoria Jurídica & Pericial</p>
-                    <p style="margin: 5px 0 0;">📞 (21) 99535-4010 | contato@garcezpalha.com</p>
-                  </div>
-                </div>
-              `,
-              text: `${urgencyText} de Pagamento\n\nOlá ${lead.name},\n\nIdentificamos que você ainda não finalizou o pagamento:\n\nServiço: ${payment.description}\nValor: ${formattedAmount}\n\nLink: ${payment.payment_url}\n\nGarcez Palha - (21) 99535-4010`,
-              tags: ['payment-reminder', 'invoice'],
+              name: lead.name,
+              invoiceNumber: `PL-${payment.id}`,
+              dueDate: createdAt.toLocaleDateString('pt-BR'),
+              amount: formattedAmount,
+              service: payment.description,
+              paymentLink: payment.payment_url,
+              daysOverdue: daysSinceCreation >= 1 ? daysSinceCreation : undefined,
+              invoiceId: payment.id,
             })
 
             if (emailSent) {

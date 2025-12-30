@@ -73,6 +73,7 @@ async function handleChat(request: NextRequest) {
     // Production mode - use Agent Orchestrator with specialized agents
     try {
       const { getOrchestrator } = await import('@/lib/ai/agents')
+      const { getCacheKey, getCachedResponse, setCachedResponse } = await import('@/lib/ai/cache')
 
       const orchestrator = getOrchestrator()
 
@@ -88,6 +89,36 @@ async function handleChat(request: NextRequest) {
       const conversationHistory: Array<{ role: 'user' | 'assistant' | 'system'; content: string }> =
         historyData || []
 
+      // Try cache first
+      const messagesForCache = [...conversationHistory, { role: 'user' as const, content: message }]
+      const cacheKey = getCacheKey(messagesForCache, 'chat-general')
+      const cachedReply = getCachedResponse(cacheKey)
+
+      if (cachedReply) {
+        // Store user message in database
+        await supabaseAdmin.from('chat_messages').insert({
+          thread_id: currentThreadId,
+          role: 'user',
+          content: message,
+        })
+
+        // Store cached response in database
+        await supabaseAdmin.from('chat_messages').insert({
+          thread_id: currentThreadId,
+          role: 'assistant',
+          content: cachedReply,
+          agent_used: 'cache',
+        })
+
+        return NextResponse.json({
+          reply: cachedReply,
+          threadId: currentThreadId,
+          agentUsed: 'cache',
+          cached: true,
+          mode: 'production',
+        })
+      }
+
       // Store user message in database
       await supabaseAdmin.from('chat_messages').insert({
         thread_id: currentThreadId,
@@ -98,6 +129,9 @@ async function handleChat(request: NextRequest) {
       const result = await orchestrator.process(message, conversationHistory, {
         sessionData: { threadId: currentThreadId }
       })
+
+      // Cache the response
+      setCachedResponse(cacheKey, result.content)
 
       // Store assistant response in database
       await supabaseAdmin.from('chat_messages').insert({

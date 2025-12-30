@@ -43,32 +43,56 @@ Sistema completo de inteligência jurídica que combina **364 anos de tradição
 ```bash
 Node.js 18+
 npm ou yarn
-Conta Supabase
-Chaves API (OpenAI, MercadoPago, Stripe)
+Conta Supabase (https://supabase.com)
+Chaves API:
+  - OpenAI (obrigatório) - https://platform.openai.com/api-keys
+  - MercadoPago (opcional) - https://www.mercadopago.com.br/developers
+  - Stripe (opcional) - https://dashboard.stripe.com/apikeys
 ```
 
 ### Instalação
 
 ```bash
-# Clone o repositório
+# 1. Clone o repositório
 git clone https://github.com/garcezpalha/platform.git
 cd platform
 
-# Instale dependências
+# 2. Instale dependências
 npm install
 
-# Configure variáveis de ambiente
+# 3. Configure variáveis de ambiente
 cp .env.example .env.local
-# Edite .env.local com suas credenciais
 
-# Execute migrations
-supabase db push
+# 4. Edite .env.local com suas credenciais OBRIGATÓRIAS:
+#    - NEXT_PUBLIC_SUPABASE_URL
+#    - NEXT_PUBLIC_SUPABASE_ANON_KEY
+#    - SUPABASE_SERVICE_ROLE_KEY
+#    - NEXTAUTH_SECRET (gere com: openssl rand -base64 32)
+#    - OPENAI_API_KEY
+#    - NEXT_PUBLIC_OPENAI_API_KEY
 
-# Inicie o servidor de desenvolvimento
+# 5. Execute migrations do Supabase
+npx supabase db push
+
+# 6. Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
 Acesse: http://localhost:3000
+
+### Verificação de Segurança
+
+O projeto inclui **pre-commit hook** que bloqueia commits com API keys:
+
+```bash
+# Teste o pre-commit hook (deve bloquear)
+echo 'API_KEY=sk-FAKE_KEY_TEST' > test.txt
+git add test.txt && git commit -m "test"
+# ❌ COMMIT BLOQUEADO! (funcionando corretamente)
+
+# Limpe o teste
+rm test.txt && git reset HEAD test.txt
+```
 
 ---
 
@@ -89,12 +113,51 @@ Acesse: http://localhost:3000
 - **Real-time:** Supabase Realtime (WebSockets)
 
 ### Integrações
-- **IA:** OpenAI GPT-4
+- **IA:** OpenAI GPT-4 (23 agentes especializados + 58 produtos)
 - **Email:** Resend
 - **WhatsApp:** WhatsApp Cloud API
 - **Pagamentos:** MercadoPago + Stripe
 - **Documentos:** docx (DOCX export)
 - **Calendar:** Google Calendar API
+
+### Sistema de Agentes IA (23 agentes)
+
+O projeto utiliza **23 agentes especializados** que trabalham de forma orquestrada:
+
+#### Agentes Legais (9):
+- `RealEstateAgent` - Direito imobiliário (6 produtos)
+- `FinancialProtectionAgent` - Proteção financeira (11 produtos)
+- `SocialSecurityAgent` - Previdenciário (7 produtos)
+- `CriminalLawAgent` - Direito criminal (4 produtos)
+- `HealthInsuranceAgent` - Planos de saúde (3 produtos)
+- `DocumentForensicsAgent` - Perícia documental (3 produtos)
+- `PropertyValuationAgent` - Avaliação de imóveis
+- `MedicalExpertiseAgent` - Perícia médica
+- `BaseAgent` - Classe base
+
+#### Agentes Executivos (4):
+- `CEOAgent` - Decisões estratégicas
+- `CMOAgent` - Marketing e campanhas
+- `COOAgent` - Operações
+- `CFOAgent` - Financeiro
+
+#### Agentes de Marketing (6):
+- `ContentAgent` - Blog e newsletters
+- `SocialAgent` - Redes sociais
+- `AdsAgent` - Google Ads e Meta Ads
+- `SEOAgent` - Keywords e otimização
+- `VideoAgent` - Scripts e edição
+- `DesignAgent` - Templates e branding
+
+#### Agentes de Operações (2):
+- `QAAgent` - Compliance OAB e qualidade
+- `AdminAgent` - Triagem e agendamento
+
+#### Agentes de Inteligência (2):
+- `PricingAgent` - Precificação dinâmica
+- `MarketIntelAgent` - Análise de mercado
+
+**Ver documentação completa:** `.manus/reports/SISTEMA_AGENTES_IA_DOCUMENTACAO.md`
 
 ### Deploy
 - **Hosting:** Vercel
@@ -309,7 +372,7 @@ supabase db dump     # Backup database
 ### ✅ Qualificação de Leads
 
 - Detecção automática de agente (9 agentes especializados)
-- 22 produtos mapeados
+- 58 produtos mapeados (com suporte dinâmico)
 - Perguntas dinâmicas por produto
 - Score multi-dimensional (urgência 40%, probabilidade 35%, complexidade 25%)
 - Categorização automática (hot/warm/cold/unqualified)
@@ -318,7 +381,7 @@ supabase db dump     # Backup database
 ### ✅ Conversão Automática
 
 - Payment links (MercadoPago + Stripe)
-- Propostas profissionais (22 produtos)
+- Propostas profissionais (58 produtos)
 - Descontos por categoria (0%, 5%, 10%)
 - Parcelamento inteligente (1x, 3x, 6x)
 - Expiração automática
@@ -560,6 +623,12 @@ Proprietary - © 2025 Garcez Palha Advogados
 ## 🏆 Estatísticas do Projeto
 
 ```
+Score MANUS: 100/100 (Ciclo 1 completo - Production Ready)
+Páginas Implementadas: 99 (dinâmicas + estáticas)
+Produtos/Serviços: 58 (com 23 agentes especializados)
+Agentes IA: 23 (9 legais + 4 executivos + 6 marketing + 2 ops + 2 inteligência)
+Cron Jobs: 9 (automação em produção)
+
 Código Total: ~14,530 linhas TypeScript/React
 SQL Total: ~1,200 linhas (migrations)
 Arquivos: 70+ criados
@@ -639,6 +708,6 @@ Templates Jurídicos: 9
 
 ---
 
-*README.md v1.0*
-*Última atualização: 2024-12-23*
-*Status: ✅ Sistema G4 100% Completo*
+*README.md v1.1*
+*Última atualização: 2025-12-29*
+*Status: ✅ Sistema G4 100% Completo + Stats Sincronizadas*

@@ -20,47 +20,116 @@
 
 ## ÍNDICE GERAL
 
+### PARTE 0 - ATIVAÇÃO
+| # | Arquivo | Descrição |
+|---|---------|-----------|
+| 00 | [00-ACTIVATION-PROMPT.md](./00-ACTIVATION-PROMPT.md) | Prompt de ativação para agentes/devs |
+| 00 | **00-INDICE-GERAL.md** | Este arquivo (índice completo) |
+
 ### PARTE 1 - FUNDAÇÃO
 | # | Arquivo | Descrição |
 |---|---------|-----------|
 | 01 | [01-POSICIONAMENTO-MARCA.md](./01-POSICIONAMENTO-MARCA.md) | Identidade, narrativa, diferenciação |
 | 02 | [02-ARQUITETURA-PLATAFORMA.md](./02-ARQUITETURA-PLATAFORMA.md) | Estrutura técnica e fluxos |
-| 03 | [03-CATALOGO-PRODUTOS.md](./03-CATALOGO-PRODUTOS.md) | Todos os produtos e serviços |
+| 03 | [03-PRD.md](./03-PRD.md) | **Product Requirements Document** 🎯 |
+| 04 | [04-USER-FLOWS.md](./04-USER-FLOWS.md) | **Fluxos de usuário** (Mermaid) 🎯 |
+| 05 | [05-CATALOGO-PRODUTOS.md](./05-CATALOGO-PRODUTOS.md) | **57 produtos completos** ✅ (v3.0) |
 
 ### PARTE 2 - AQUISIÇÃO
 | # | Arquivo | Descrição |
 |---|---------|-----------|
-| 04 | [04-LANDING-PAGE-PRINCIPAL.md](./04-LANDING-PAGE-PRINCIPAL.md) | Wireframe e copy da página principal |
-| 05 | [05-GOOGLE-ADS-CAMPANHAS.md](./05-GOOGLE-ADS-CAMPANHAS.md) | Campanhas por categoria |
-| 06 | [06-SEO-CONTEUDO.md](./06-SEO-CONTEUDO.md) | Estratégia de conteúdo orgânico |
+| 06 | [06-LANDING-PAGE-PRINCIPAL.md](./06-LANDING-PAGE-PRINCIPAL.md) | Wireframe e copy da página principal |
+| 07 | [07-GOOGLE-ADS-CAMPANHAS.md](./07-GOOGLE-ADS-CAMPANHAS.md) | Campanhas por categoria |
+| 08 | [08-SEO-CONTEUDO.md](./08-SEO-CONTEUDO.md) | Estratégia de conteúdo orgânico |
 
 ### PARTE 3 - CONVERSÃO
 | # | Arquivo | Descrição |
 |---|---------|-----------|
-| 07 | [07-IA-TRIAGEM-UNIVERSAL.md](./07-IA-TRIAGEM-UNIVERSAL.md) | O cérebro da operação |
-| 08 | [08-FLUXOS-QUALIFICACAO.md](./08-FLUXOS-QUALIFICACAO.md) | Qualificação por área |
-| 09 | [09-PRECIFICACAO-DINAMICA.md](./09-PRECIFICACAO-DINAMICA.md) | Tabelas e regras de preço |
+| 09 | [09-IA-TRIAGEM-UNIVERSAL.md](./09-IA-TRIAGEM-UNIVERSAL.md) | O cérebro da operação |
+| 10 | [10-FLUXOS-QUALIFICACAO.md](./10-FLUXOS-QUALIFICACAO.md) | Qualificação por área |
+| 11 | [11-PRECIFICACAO-DINAMICA.md](./11-PRECIFICACAO-DINAMICA.md) | Tabelas e regras de preço |
 
 ### PARTE 4 - FECHAMENTO
 | # | Arquivo | Descrição |
 |---|---------|-----------|
-| 10 | [10-PROPOSTAS-CONTRATOS.md](./10-PROPOSTAS-CONTRATOS.md) | Modelos de proposta e contrato |
-| 11 | [11-PAGAMENTOS-AUTOMACAO.md](./11-PAGAMENTOS-AUTOMACAO.md) | Fluxo de cobrança |
-| 12 | [12-ONBOARDING-CLIENTE.md](./12-ONBOARDING-CLIENTE.md) | Jornada pós-fechamento |
+| 12 | [12-PROPOSTAS-CONTRATOS.md](./12-PROPOSTAS-CONTRATOS.md) | Modelos de proposta e contrato |
+| 13 | [13-PAGAMENTOS-AUTOMACAO.md](./13-PAGAMENTOS-AUTOMACAO.md) | Fluxo de cobrança |
+| 14 | [14-ONBOARDING-CLIENTE.md](./14-ONBOARDING-CLIENTE.md) | Jornada pós-fechamento |
 
 ### PARTE 5 - PRODUÇÃO
 | # | Arquivo | Descrição |
 |---|---------|-----------|
-| 13 | [13-TEMPLATES-PETICOES.md](./13-TEMPLATES-PETICOES.md) | Modelos por área |
-| 14 | [14-IA-PRODUCAO-JURIDICA.md](./14-IA-PRODUCAO-JURIDICA.md) | Automação de documentos |
-| 15 | [15-PROTOCOLOS-ACOMPANHAMENTO.md](./15-PROTOCOLOS-ACOMPANHAMENTO.md) | Sistemas e monitoramento |
+| 15 | [15-TEMPLATES-PETICOES.md](./15-TEMPLATES-PETICOES.md) | Modelos por área |
+| 16 | [16-IA-PRODUCAO-JURIDICA.md](./16-IA-PRODUCAO-JURIDICA.md) | Automação de documentos |
+| 17 | [17-PROTOCOLOS-ACOMPANHAMENTO.md](./17-PROTOCOLOS-ACOMPANHAMENTO.md) | Sistemas e monitoramento |
 
 ### PARTE 6 - ESCALA
 | # | Arquivo | Descrição |
 |---|---------|-----------|
-| 16 | [16-METRICAS-KPIS.md](./16-METRICAS-KPIS.md) | Indicadores de performance |
-| 17 | [17-STACK-TECNOLOGICA.md](./17-STACK-TECNOLOGICA.md) | Ferramentas e integrações |
-| 18 | [18-ROADMAP-IMPLEMENTACAO.md](./18-ROADMAP-IMPLEMENTACAO.md) | Cronograma de execução |
+| 18 | [18-METRICAS-KPIS.md](./18-METRICAS-KPIS.md) | Indicadores de performance |
+| 19 | [19-STACK-TECNOLOGICA.md](./19-STACK-TECNOLOGICA.md) | Ferramentas e integrações |
+| 20 | [20-AGENTES-IA-COMPLETO.md](./20-AGENTES-IA-COMPLETO.md) | **23 agentes especializados** ✅ |
+| 21 | [21-ROADMAP-IMPLEMENTACAO.md](./21-ROADMAP-IMPLEMENTACAO.md) | Cronograma de execução |
+
+---
+
+## 📁 PASTAS TEMÁTICAS
+
+### 📚 reference/
+**Documentação Técnica de Referência**
+
+- INTEGRACOES.md - Mapa de integrações externas
+- DEPLOY-GUIDE.md - Guia completo de deploy
+- TESTES.md - Estratégia de testes
+- BUSINESS-MODEL.md - Modelo de negócios
+- DATABASE-SCHEMA.md - Esquema do banco de dados
+- QUALIFICATION-SYSTEM.md - Sistema de qualificação
+- NEXT-PHASE-PLAN.md - Plano de próximas fases
+- DEV-BRIEF.md - Guia para desenvolvedores
+- INDEX.md - Índice antigo (histórico)
+
+### 🎬 vsl/
+**Templates e Exemplos de Video Sales Letters**
+
+- VSL_NICHOS_EMERGENTES_2026.md - VSLs para nichos emergentes
+- VSL_NICHOS_NOVOS_SUSTENTACAO.md - VSLs sustentação
+- VSL_NOVOS_NICHOS_PARTE1.md - Parte 1
+- VSL_NOVOS_NICHOS_PARTE2.md - Parte 2
+- VSL_PAGINAS_VENDA_GARCEZPALHA.md - Páginas de venda
+- desbloqueio-conta-estrutura-completa.md - Exemplo completo
+
+### 🔬 research/
+**Análises de Mercado e Nichos**
+
+- NICHOS_EMERGENTES_2026_2027.md - Nichos emergentes
+- NICHOS_SUSTENTACAO_LISTA_COMPLETA.md - Lista completa de sustentação
+- ALINHAMENTO_NICHOS_VINICIUS_NUNES.md - Alinhamento estratégico
+- GAP_ANALYSIS_AGENTES_CHAT.md - Gap analysis agentes/chat
+
+### 📊 reports/
+**Relatórios Técnicos e de Status**
+
+- AUDIT-LATEST.md - Última auditoria de APIs/infra
+- SECURITY-FIXES-2024-12-29.md - Correções de segurança
+- RELATORIO_SEGURANCA_AUTENTICACAO.md - Relatório de auth
+- MCP_SERVERS_REPORT.md - Relatório MCP servers
+- MCP_USAGE_GUIDE.md - Guia de uso MCP
+- API_KEYS_UPDATE_REPORT.md - Atualização de API keys
+- API-CONVERSATIONS-COMPARISON.md - Comparação de conversas
+- API_DOCUMENTATION.md - Documentação técnica
+
+### ⚡ quick-reference/
+**Guias Rápidos e Especificações**
+
+- PRODUCTS-QUICK-START.md - Início rápido produtos
+- PRODUCTS-SYSTEM.md - Sistema de produtos
+- SUPABASE-CLIENTS-GUIDE.md - Guia Supabase
+- CHAT-WIDGET-SPEC.md - Especificação widget chat
+- AGENT-BEHAVIOR-SPEC.md - Comportamento de agentes
+- FOLLOW-UP-AUTOMATION.md - Automação de follow-up
+- POLITICA-SLA.md - Política de SLA
+- CRONOGRAMA-EXECUCAO-GARCEZPALHA.md - Cronograma
+- IMPLEMENTATION-COMPLETE.md - Implementações completas
 
 ---
 

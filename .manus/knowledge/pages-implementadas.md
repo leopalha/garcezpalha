@@ -681,7 +681,8 @@ describe('Product Page', () => {
 
 | Aspecto | Valor |
 |---------|-------|
-| **Total de páginas estáticas** | 57 |
+| **Total de páginas estáticas** | 57 (produtos dinâmicos) |
+| **Total de arquivos page.tsx** | 99 (incluindo admin, auth, dashboard) |
 | **Categorias** | 11 |
 | **Tempo de build** | ~30s |
 | **Performance Score** | 95+ |
@@ -689,7 +690,8 @@ describe('Product Page', () => {
 | **Acessibilidade** | WCAG AA |
 | **Responsividade** | Mobile-first |
 | **Framework** | Next.js 14 App Router |
-| **Tipo de Rendering** | Static Site Generation |
+| **Tipo de Rendering** | Static Site Generation (SSG) |
+| **Geração de Rotas** | generateStaticParams() com 57 produtos |
 
 ---
 

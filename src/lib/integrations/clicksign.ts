@@ -313,6 +313,9 @@ export function getClickSignClient(): ClickSignClient {
 /**
  * Generate contract for conversation
  * Called when payment is confirmed and state transitions to 'contract_pending'
+ *
+ * @deprecated Use generateContractForConversation from contract-generator.ts instead
+ * This function is kept for backward compatibility only
  */
 export async function generateContractForConversation(params: {
   conversationId: string
@@ -320,9 +323,13 @@ export async function generateContractForConversation(params: {
   clientEmail: string
   clientPhone?: string
   clientCPF?: string
+  clientAddress?: string
   productName: string
+  productSlug?: string
   amount: number
   paymentProvider: string
+  paymentMethod?: string
+  specificData?: any
 }): Promise<{ documentKey: string; signUrl: string }> {
   const clicksign = getClickSignClient()
 
@@ -334,6 +341,39 @@ export async function generateContractForConversation(params: {
   console.log('[ClickSign] Generating contract for conversation:', params.conversationId)
 
   try {
+    // Se temos productSlug, usa o novo sistema de templates customizados
+    if (params.productSlug) {
+      // Importa dynamicamente para evitar dependência circular
+      const { generateContractForConversation: newGenerator } = await import(
+        '../contracts/contract-generator'
+      )
+
+      const result = await newGenerator({
+        conversationId: params.conversationId,
+        productSlug: params.productSlug,
+        clientName: params.clientName,
+        clientEmail: params.clientEmail,
+        clientCPF: params.clientCPF || '',
+        clientPhone: params.clientPhone || '',
+        clientAddress: params.clientAddress || 'Endereço a ser informado',
+        amount: params.amount,
+        paymentMethod: params.paymentMethod || params.paymentProvider,
+        specificData: params.specificData,
+      })
+
+      if (!result.success) {
+        throw new Error(result.errors?.join(', ') || 'Contract generation failed')
+      }
+
+      return {
+        documentKey: result.documentKey,
+        signUrl: result.signUrl,
+      }
+    }
+
+    // Fallback: Sistema antigo (template genérico do ClickSign)
+    console.warn('[ClickSign] Using legacy template system (no productSlug provided)')
+
     // 1. Create document from template
     const document = await clicksign.createDocumentFromTemplate({
       templateKey: process.env.CLICKSIGN_CONTRACT_TEMPLATE_KEY || 'default-template',

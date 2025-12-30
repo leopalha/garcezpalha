@@ -61,7 +61,7 @@ Migração completa da plataforma Garcez Palha para o **Modelo G4**, transforman
 
 **Componentes principais:**
 - ✅ Types system (13 interfaces TypeScript)
-- ✅ Agent-Product Mapping (22 produtos → 9 agentes)
+- ✅ Agent-Product Mapping (57 produtos → 9 agentes)
 - ✅ Score Calculator (urgência 40%, probabilidade 35%, complexidade 25%)
 - ✅ Question Engine (perguntas dinâmicas com condicionais)
 - ✅ Lead Qualifier (orquestrador principal)
@@ -84,7 +84,7 @@ Migração completa da plataforma Garcez Palha para o **Modelo G4**, transforman
 - ✅ Payment Link Generator (MercadoPago + Stripe)
 - ✅ WhatsApp Message Templates (todas etapas do funil)
 - ✅ Follow-up Scheduler (WhatsApp, Email, SMS)
-- ✅ Proposal Generator (22 produtos, 8 seções profissionais)
+- ✅ Proposal Generator (57 produtos, 8 seções profissionais)
 
 **Features:**
 - Descontos automáticos por categoria (0%, 5%, 10%)
@@ -302,7 +302,7 @@ O sistema G4 agora é capaz de:
 - ✅ Parcelamento inteligente
 
 ### 4. Propostas Profissionais
-- ✅ 22 produtos com preços base
+- ✅ 57 produtos com preços base
 - ✅ 8 seções profissionais
 - ✅ Cálculo de ROI
 - ✅ Formatos: WhatsApp, HTML, PDF

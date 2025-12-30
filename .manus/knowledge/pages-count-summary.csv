@@ -1,0 +1,49 @@
+Categoria,Subcategoria,Quantidade,Tipo,Notas
+Marketing,Solucoes - Estáticas,1,page.tsx,src/app/(marketing)/solucoes/page.tsx
+Marketing,Solucoes - Dinâmicas,57,page.tsx (gerados),generateStaticParams() com 57 produtos
+Marketing,Aeronautico,1,page.tsx,
+Marketing,Automacao,2,page.tsx,
+Marketing,Blog,2,page.tsx,home + [slug]
+Marketing,Criminal,9,page.tsx,9 subcategorias
+Marketing,Financeiro,5,page.tsx,
+Marketing,Patrimonial,7,page.tsx,
+Marketing,Pericia,4,page.tsx,
+Marketing,Previdenciario,4,page.tsx,
+Marketing,Saude,5,page.tsx,
+Marketing,Demo,1,page.tsx,
+Marketing,Root Pages,8,page.tsx,"home, contato, equipe, historia, docs, parcerias, privacidade, termos"
+Admin,Dashboard,1,page.tsx,
+Admin,Módulos,14,page.tsx,"leads, clientes, agendamentos, documentos, processos, prazos, usuarios, configuracoes, conversas, faturas, produtos, analytics (2), leads/qualificados"
+Admin,WhatsApp,2,page.tsx,
+Auth,Login,1,page.tsx,
+Auth,Cadastro,1,page.tsx,
+Auth,Recuperar-senha,1,page.tsx,
+Auth,Parceiro Cadastro,1,page.tsx,
+Dashboard,Dashboard,1,page.tsx,
+Dashboard,Processos,2,page.tsx,"com [id] dinâmico"
+Dashboard,Documentos,1,page.tsx,
+Dashboard,Pagamentos,1,page.tsx,
+Dashboard,Prazos,1,page.tsx,
+Dashboard,Configuracoes,1,page.tsx,
+Dashboard,Admin Conversations,2,page.tsx,"com [id] dinâmico"
+Partner,Dashboard,1,page.tsx,
+Partner,Comissoes,1,page.tsx,
+Partner,Indicacoes,1,page.tsx,
+Partner,Link,1,page.tsx,
+Partner,Configuracoes,1,page.tsx,
+Checkout,Main,1,page.tsx,
+Checkout,Success,1,page.tsx,
+Checkout,Cancel,1,page.tsx,
+Public,NPS,1,page.tsx,"com [conversationId] dinâmico"
+Misc,Solutions Legacy,1,page.tsx,
+Misc,Telegram Test,1,page.tsx,
+Misc,WhatsApp Cloud Test,1,page.tsx,
+Misc,WhatsApp Setup,1,page.tsx,
+Misc,Exemplo Checkout Modal,1,page.tsx,
+Misc,Unauthorized,1,page.tsx,
+Misc,Signup,1,page.tsx,em (marketing)
+Misc,Forgot Password,1,page.tsx,em (marketing)
+Misc,Reset Password,1,page.tsx,em (marketing)
+TOTAL,Páginas Dinâmicas,99,page.tsx,
+TOTAL,Rotas API,106,route.ts,
+TOTAL,Build Status,PASSED,compile,npm run build - OK

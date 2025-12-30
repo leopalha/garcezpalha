@@ -12,17 +12,17 @@ import {
   ESCALATION_RULES,
 } from './types'
 import { StateBehaviorRegistry } from './behaviors'
-// import { AutomatedActionsDispatcher } from './automated-actions'
+import { AutomatedActionsDispatcher } from './automated-actions'
 import { createClient } from '@/lib/supabase/client'
 
 export class AgentStateMachine {
   private behaviors: StateBehaviorRegistry
-  // private actionsDispatcher: AutomatedActionsDispatcher
+  private actionsDispatcher: AutomatedActionsDispatcher
   private supabase = createClient()
 
   constructor() {
     this.behaviors = new StateBehaviorRegistry()
-    // this.actionsDispatcher = new AutomatedActionsDispatcher()
+    this.actionsDispatcher = new AutomatedActionsDispatcher()
   }
 
   /**
@@ -70,9 +70,8 @@ export class AgentStateMachine {
     // Save updated conversation
     await this.saveConversation(data)
 
-    // Trigger automated actions
-    // TODO: Implement AutomatedActionsDispatcher
-    // await this.actionsDispatcher.dispatch(data)
+    // Trigger automated actions (save leads, send notifications)
+    await this.actionsDispatcher.dispatch(data)
 
     return {
       response: result.response,

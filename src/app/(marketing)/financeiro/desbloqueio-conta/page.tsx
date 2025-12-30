@@ -2,6 +2,22 @@ import { notFound } from 'next/navigation'
 import { ProductVSL } from '@/components/vsl'
 import { getProductBySlug } from '@/lib/products/catalog'
 
+// ISR: Revalidate every 1 hour (product pages rarely change)
+export const revalidate = 3600
+
+// Generate metadata for SEO
+export async function generateMetadata() {
+  const product = getProductBySlug('desbloqueio-conta')
+  if (!product) return {}
+
+  return {
+    title: `${product.name} | Garcez Palha Advogados`,
+    description: product.description,
+  }
+}
+
+
+
 export default function DesbloqueioContaPage() {
   const product = getProductBySlug('desbloqueio-conta')
 

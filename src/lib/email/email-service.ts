@@ -331,6 +331,96 @@ class EmailService {
       metadata: { userId: params.userId },
     })
   }
+
+  /**
+   * Send commercial proposal
+   */
+  async sendCommercialProposal(params: {
+    to: string
+    name: string
+    service: string
+    description: string
+    value: string
+    paymentTerms: string
+    proposalUrl: string
+    expiresIn: string
+    proposalId?: string
+  }): Promise<boolean> {
+    const template = emailTemplates.commercialProposal({
+      name: params.name,
+      service: params.service,
+      description: params.description,
+      value: params.value,
+      paymentTerms: params.paymentTerms,
+      proposalUrl: params.proposalUrl,
+      expiresIn: params.expiresIn,
+    })
+
+    return this.sendEmail({
+      to: params.to,
+      template,
+      tags: ['proposal', 'commercial'],
+      metadata: { proposalId: params.proposalId },
+    })
+  }
+
+  /**
+   * Send payment reminder
+   */
+  async sendPaymentReminder(params: {
+    to: string
+    name: string
+    invoiceNumber: string
+    dueDate: string
+    amount: string
+    service: string
+    paymentLink: string
+    daysOverdue?: number
+    invoiceId?: string
+  }): Promise<boolean> {
+    const template = emailTemplates.paymentReminder({
+      name: params.name,
+      invoiceNumber: params.invoiceNumber,
+      dueDate: params.dueDate,
+      amount: params.amount,
+      service: params.service,
+      paymentLink: params.paymentLink,
+      daysOverdue: params.daysOverdue,
+    })
+
+    return this.sendEmail({
+      to: params.to,
+      template,
+      tags: params.daysOverdue && params.daysOverdue > 0 ? ['payment', 'reminder', 'overdue'] : ['payment', 'reminder'],
+      metadata: { invoiceId: params.invoiceId, daysOverdue: params.daysOverdue },
+    })
+  }
+
+  /**
+   * Send NPS feedback request
+   */
+  async sendNPSRequest(params: {
+    to: string
+    name: string
+    service: string
+    completionDate: string
+    npsUrl: string
+    serviceId?: string
+  }): Promise<boolean> {
+    const template = emailTemplates.npsRequest({
+      name: params.name,
+      service: params.service,
+      completionDate: params.completionDate,
+      npsUrl: params.npsUrl,
+    })
+
+    return this.sendEmail({
+      to: params.to,
+      template,
+      tags: ['nps', 'feedback'],
+      metadata: { serviceId: params.serviceId },
+    })
+  }
 }
 
 // Export singleton

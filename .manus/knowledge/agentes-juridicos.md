@@ -1,4 +1,4 @@
-# Agentes Jurídicos IA - Sistema Multi-Agente
+# AI-powered Legal Agents - Sistema Multi-Agente
 
 **Versão**: 1.0
 **Atualização**: 29/12/2025

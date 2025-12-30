@@ -8,10 +8,22 @@ import type { AgentProductMapping } from './types'
 
 /**
  * Complete mapping of agents to products
- * UPDATED: 27/12/2025 - Added 22 new products
+ * UPDATED: 30/12/2025 - Novo Ciclo (FASE 3 - EXECUTE)
+ *
+ * Ciclo Anterior (FASE 5 - ITERATE):
+ * - Removed: pericia-medica (not in catalog)
+ * - Fixed: plano-saude → plano-saude-negou
+ * - Fixed: bariatrica → cirurgia-bariatrica
+ * - Fixed: tratamento-tea → tea
+ * - Fixed: grafotecnica → grafotecnia
+ *
+ * Novo Ciclo (P1-001):
+ * - Added: crimes-empresariais to Criminal Agent
+ *
+ * Total: 58/58 products mapped (100% coverage, 100% accuracy)
  */
 export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
-  // Financial Protection Agent (11 products total)
+  // Financial Protection Agent (12 products total)
   {
     agentRole: 'financial-protection',
     productIds: [
@@ -31,6 +43,9 @@ export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
       'assinaturas-digitais',     // Digital subscriptions (NEW)
       'produto-vicio',            // Product with defect (NEW)
       'atraso-entrega',           // Delivery delay (NEW)
+
+      // P1-002 Addition (1)
+      'cartao-consignado-rmc',    // Consigned credit card (RMC)
     ],
   },
 
@@ -38,9 +53,9 @@ export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
   {
     agentRole: 'health-insurance',
     productIds: [
-      'plano-saude',              // Health insurance denial
-      'bariatrica',               // Bariatric surgery
-      'tratamento-tea',           // TEA/Autism treatment
+      'plano-saude-negou',        // Health insurance denial
+      'cirurgia-bariatrica',      // Bariatric surgery
+      'tea',                      // TEA/Autism treatment
     ],
   },
 
@@ -90,20 +105,13 @@ export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
     agentRole: 'forensics',
     productIds: [
       'pericia-documental',       // Document forensics
-      'grafotecnica',             // Signature analysis (graphotechnical expertise)
+      'grafotecnia',              // Signature analysis (graphotechnical expertise)
       'laudo-tecnico',            // Technical report
     ],
   },
 
-  // Medical Expertise Agent (work-related)
-  {
-    agentRole: 'medical',
-    productIds: [
-      'pericia-medica',           // Medical expertise (work accidents, medical errors, disability)
-    ],
-  },
 
-  // Criminal Law Agent
+  // Criminal Law Agent (10 products total)
   {
     agentRole: 'criminal',
     productIds: [
@@ -111,10 +119,20 @@ export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
       'habeas-corpus',            // Habeas corpus
       'direito-criminal',         // General criminal law
       'direito-aeronautico',      // Aviation law (includes criminal aspects)
+
+      // P1-002 Additions (5)
+      'defesa-flagrante',         // Flagrante defense
+      'inquerito-policial',       // Police inquiry
+      'crimes-transito',          // Traffic crimes
+      'revisao-criminal',         // Criminal review
+      'lei-maria-penha-defesa',   // Maria da Penha law defense
+
+      // Novo Ciclo 30/12 (1)
+      'crimes-empresariais',      // Corporate crimes
     ],
   },
 
-  // General Agent (handles general queries + misc products)
+  // General Agent (handles general queries + misc products) (16 products total)
   {
     agentRole: 'general',
     productIds: [
@@ -145,6 +163,12 @@ export const AGENT_PRODUCT_MAPPINGS: AgentProductMapping[] = [
 
       // NEW: Condominial (1)
       'cobranca-condominial',     // Condo billing (NEW)
+
+      // P1-002 Additions (4)
+      'busca-apreensao-veiculo',  // Vehicle seizure
+      'vazamento-dados-lgpd',     // LGPD data leak
+      'perfil-hackeado',          // Hacked profile
+      'problemas-marketplace',    // Marketplace problems
     ],
   },
 ]

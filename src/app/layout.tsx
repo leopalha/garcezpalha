@@ -9,6 +9,7 @@ import { AuthProvider } from '@/lib/auth/provider'
 import { ReferralTracker } from '@/components/referral-tracker'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
 import { BetaBanner } from '@/components/beta-banner'
+import { PWAProvider } from '@/components/pwa-provider'
 import { Suspense } from 'react'
 import './globals.css'
 
@@ -100,18 +101,11 @@ export const metadata: Metadata = {
   category: 'Legal Services',
   icons: {
     icon: [
-      {
-        url: '/icon.png',
-        type: 'image/png',
-        sizes: '32x32',
-      },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      {
-        url: '/apple-icon.png',
-        type: 'image/png',
-        sizes: '180x180',
-      },
+      { url: '/icons/apple-touch-icon.png', sizes: '192x192', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
   },
@@ -120,6 +114,7 @@ export const metadata: Metadata = {
     title: 'Garcez Palha',
     statusBarStyle: 'black-translucent',
   },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
@@ -132,19 +127,21 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} ${cormorant.variable} ${jetbrains.variable} font-sans antialiased`}
       >
-        <AuthProvider>
-          <TRPCProvider>
+        <PWAProvider>
+          <AuthProvider>
+            <TRPCProvider>
               <BetaBanner />
-            <ThemeProvider>
-              <Suspense fallback={null}>
-                <AnalyticsProvider>
-                  <ReferralTracker />
-                  {children}
-                </AnalyticsProvider>
-              </Suspense>
-            </ThemeProvider>
-          </TRPCProvider>
-        </AuthProvider>
+              <ThemeProvider>
+                <Suspense fallback={null}>
+                  <AnalyticsProvider>
+                    <ReferralTracker />
+                    {children}
+                  </AnalyticsProvider>
+                </Suspense>
+              </ThemeProvider>
+            </TRPCProvider>
+          </AuthProvider>
+        </PWAProvider>
       </body>
     </html>
   )

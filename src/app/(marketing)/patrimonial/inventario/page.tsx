@@ -7,6 +7,7 @@ import {
   Check, Shield, Clock, Award, ArrowRight, AlertTriangle,
   TrendingUp, Users, Star, Zap, FileText, Briefcase, Scale
 } from 'lucide-react'
+import { getProductBySlug } from '@/lib/products/catalog'
 import {
   AgitationSection,
   SolutionSection,
@@ -16,6 +17,21 @@ import {
   UrgencyBanner,
   SEOHead,
 } from '@/components/vsl'
+
+// ISR: Revalidate every 1 hour (product pages rarely change)
+export const revalidate = 3600
+
+// Generate metadata for SEO
+export async function generateMetadata() {
+  const product = getProductBySlug('inventario')
+  if (!product) return {}
+
+  return {
+    title: `${product.name} | Garcez Palha Advogados`,
+    description: product.description,
+  }
+}
+
 
 export default function InventarioPage() {
   const router = useRouter()

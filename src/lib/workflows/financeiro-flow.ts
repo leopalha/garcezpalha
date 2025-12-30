@@ -277,35 +277,25 @@ async function enviarComprovanteEmail(params: {
   serviceDescription: string
   invoiceUrl?: string
 }): Promise<void> {
-  // TODO: Integrar com Resend
+  const { emailService } = await import('@/lib/email/email-service')
 
   console.log('[Financeiro] 📧 Enviando comprovante para:', params.clientEmail)
 
-  const emailTemplate = `
-    Olá ${params.clientName},
+  const formattedAmount = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(params.amount)
 
-    Confirmamos o recebimento do seu pagamento!
+  await emailService.sendPaymentConfirmation({
+    to: params.clientEmail,
+    name: params.clientName,
+    amount: formattedAmount,
+    service: params.serviceDescription,
+    paymentMethod: 'Stripe/MercadoPago',
+    transactionId: params.invoiceNumber,
+  })
 
-    Nota Fiscal: ${params.invoiceNumber}
-    Valor: R$ ${params.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-    Serviço: ${params.serviceDescription}
-
-    ${params.invoiceUrl ? `Você pode baixar a nota fiscal em: ${params.invoiceUrl}` : ''}
-
-    Obrigado por confiar na Garcez & Palha Advogados!
-
-    Atenciosamente,
-    Equipe Garcez & Palha
-  `
-
-  console.log('[Financeiro] Email template:', emailTemplate)
-
-  // await resend.emails.send({
-  //   to: params.clientEmail,
-  //   subject: `Comprovante de Pagamento - NF ${params.invoiceNumber}`,
-  //   html: emailTemplate,
-  //   attachments: params.invoiceUrl ? [{ path: params.invoiceUrl }] : []
-  // })
+  console.log('[Financeiro] ✅ Comprovante enviado com sucesso')
 }
 
 /**

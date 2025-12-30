@@ -6,13 +6,19 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Paperclip, Send, X, FileText, Image as ImageIcon } from 'lucide-react'
-import { AudioRecorder } from '../AudioRecorder'
 import type { ChatFeatures } from '@/types/chat'
 import { cn } from '@/lib/utils'
 import { getFileType, formatFileSize } from '@/lib/chat'
+
+// Lazy load AudioRecorder (code splitting)
+const AudioRecorder = dynamic(
+  () => import('../AudioRecorder').then((mod) => ({ default: mod.AudioRecorder })),
+  { ssr: false }
+)
 
 interface ChatInputProps {
   value: string

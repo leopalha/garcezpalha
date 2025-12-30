@@ -9,6 +9,9 @@ import { listLeads } from '@/lib/leads/lead-database'
 import type { LeadCategory } from '@/lib/ai/qualification/types'
 import type { LeadStatus } from '@/lib/leads/lead-database'
 
+// Cache leads list for 5 minutes
+export const revalidate = 300
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()

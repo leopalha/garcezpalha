@@ -12,22 +12,16 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: 'portrait-primary',
     icons: [
       {
-        src: '/brasao-garcez-palha.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/brasao-garcez-palha.png',
-        sizes: '512x512',
-        type: 'image/png',
+        src: '/logo-garcez-palha.svg',
+        sizes: 'any',
+        type: 'image/svg+xml',
         purpose: 'any',
       },
       {
         src: '/icons/icon.svg',
         sizes: 'any',
         type: 'image/svg+xml',
-        purpose: 'any',
+        purpose: 'maskable',
       },
     ],
     categories: ['business', 'legal', 'productivity'],

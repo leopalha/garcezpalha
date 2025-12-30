@@ -3,12 +3,17 @@ import { ProductVSL } from '@/components/vsl'
 import { getProductBySlug } from '@/lib/products/catalog'
 import { getVSLConfig } from '@/lib/products/vsl-config'
 
+// ISR: Revalidate pages every 1 hour
+export const revalidate = 3600
+
 interface ProductPageProps {
   params: Promise<{
     category: string
     slug: string
   }>
 }
+
+
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
