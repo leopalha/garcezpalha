@@ -29,6 +29,11 @@ export {
   type LeadNotificationProps,
 } from './lead-notification'
 
+// New Templates (P1-014)
+export { generateContractSignedEmail } from './contract-signed-template'
+export { generatePaymentReminderEmail } from './payment-reminder-template'
+export { generateNPSFeedbackEmail } from './nps-feedback-template'
+
 // Email Sequences (P2-001)
 export { welcomeSequenceTemplates } from './welcome-sequence'
 

@@ -134,6 +134,18 @@ export interface EscalationRule {
 
 export const ESCALATION_RULES: EscalationRule[] = [
   {
+    condition: (data) => {
+      // Auto-escalate high-score leads (>= 80) when in qualified state
+      return (
+        data.status.state === 'qualified' &&
+        data.qualification?.status === 'complete' &&
+        data.qualification.score >= 80
+      )
+    },
+    reason: 'Lead altamente qualificado (Score >= 80) - prioridade máxima',
+    priority: 'high',
+  },
+  {
     condition: (data) => data.qualification.flags.includes('complex_case'),
     reason: 'Caso muito complexo, requer análise humana',
     priority: 'high',

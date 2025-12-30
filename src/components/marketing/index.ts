@@ -1,6 +1,7 @@
 // Marketing Components
 // Componentes de marketing para páginas públicas
 
+export { DualHero } from './dual-hero'
 export { HeroSection } from './HeroSection'
 export { ProductsCatalog } from './ProductsCatalog'
 export { Services } from './Services'

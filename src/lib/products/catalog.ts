@@ -3411,11 +3411,124 @@ export const PRODUTO_PROBLEMAS_MARKETPLACE: Product = {
 }
 
 // ============================================================================
-// CATÁLOGO COMPLETO (56 PRODUTOS)
+// CATEGORIA Z: AUTOMAÇÃO/GESTÃO JURÍDICA (1 produto B2B)
+// ============================================================================
+
+export const PRODUTO_PLATAFORMA_GESTAO_JURIDICA: Product = {
+  id: 'plataforma-gestao-juridica',
+  name: 'Plataforma de Gestão Jurídica',
+  slug: 'plataforma-gestao-juridica',
+  category: 'automacao',
+  description: 'Sistema completo de gestão para advogados: Secretária IA 24/7, CRM, Marketing, Financeiro e Documentos. Automatize seu escritório e capture mais clientes.',
+  price: { basic: 49700, complete: 99700, premium: 199700 }, // R$ 497, R$ 997, R$ 1.997
+  successFee: 0,
+  timeline: 'Ativação imediata',
+  documents: [],
+  keywords: [
+    'plataforma gestão jurídica',
+    'secretária ia advogado',
+    'automação escritório advocacia',
+    'crm jurídico',
+    'marketing para advogados',
+    'captação leads advogado',
+    'gestão processos jurídicos',
+    'software advocacia',
+    'tecnologia jurídica',
+    'lawtech',
+  ],
+  priority: 10,
+  automation: 100,
+  demandPerMonth: 5000,
+  features: [
+    'Secretária IA 24/7 que qualifica leads automaticamente',
+    'CRM completo para gestão de clientes e processos',
+    'Marketing Automation (conteúdo, anúncios, analytics)',
+    'Geração automática de propostas e documentos',
+    'Dashboard com métricas em tempo real',
+    'WhatsApp Business integrado',
+    'Agendamento automático de consultas',
+    'Sistema de pagamentos online',
+    'Controle de prazos processuais',
+    'Templates de documentos jurídicos',
+  ],
+  crossSell: [],
+  isActive: true,
+  packages: [
+    {
+      id: 'plataforma-starter',
+      name: 'Starter',
+      description: 'Ideal para advogados solo',
+      price: 49700, // R$ 497/mês
+      features: [
+        '✅ Secretária IA 24/7 (100 conversas/mês)',
+        '✅ Qualificação automática de leads',
+        '✅ Agendamento automático',
+        '✅ CRM básico (clientes + processos)',
+        '✅ Propostas com IA',
+        '✅ Templates de documentos',
+        '✅ Dashboard de métricas',
+        '✅ 1 usuário',
+        '✅ Suporte por email',
+        '✅ 30 dias grátis',
+      ],
+      highlighted: false,
+      icon: 'Zap',
+    },
+    {
+      id: 'plataforma-pro',
+      name: 'Pro',
+      description: 'Para escritórios em crescimento',
+      price: 99700, // R$ 997/mês
+      features: [
+        '✅ Tudo do Starter',
+        '✅ 500 conversas/mês',
+        '🎯 Marketing Automation',
+        '   • Criação de conteúdo (Instagram, LinkedIn)',
+        '   • Calendário editorial mensal',
+        '   • Otimização de anúncios Google Ads',
+        '   • Analytics de performance',
+        '✅ WhatsApp Business integrado',
+        '✅ CRM avançado (pipeline, automações)',
+        '✅ 5 usuários',
+        '✅ Notificações Telegram',
+        '✅ Relatórios semanais',
+        '✅ Suporte prioritário (WhatsApp)',
+      ],
+      highlighted: true,
+      icon: 'TrendingUp',
+    },
+    {
+      id: 'plataforma-enterprise',
+      name: 'Enterprise',
+      description: 'Solução enterprise completa',
+      price: 199700, // R$ 1.997/mês
+      features: [
+        '✅ Tudo do Pro',
+        '✅ Conversas ilimitadas',
+        '✅ Usuários ilimitados',
+        '🏢 White-Label (sua marca)',
+        '   • Logo e cores personalizadas',
+        '   • Domínio próprio',
+        '   • Sem marca Garcez Palha',
+        '✅ API para integrações customizadas',
+        '✅ Treinamento de IA com seus casos',
+        '✅ Customização de workflows',
+        '✅ Onboarding assistido (call + setup)',
+        '✅ Suporte dedicado (WhatsApp + call mensal)',
+        '✅ SLA uptime 99.9%',
+      ],
+      highlighted: false,
+      icon: 'Crown',
+    },
+  ],
+}
+
+// ============================================================================
+// CATÁLOGO COMPLETO (57 PRODUTOS)
 // ============================================================================
 
 /**
- * Catálogo completo: 22 novos + 23 legados + 11 criminais/digitais = 56 produtos
+ * Catálogo completo: 22 novos + 23 legados + 11 criminais/digitais + 1 automação = 57 produtos
  */
 export const ALL_PRODUCTS: Product[] = [
   // 22 NOVOS
@@ -3457,6 +3570,9 @@ export const ALL_PRODUCTS: Product[] = [
   PRODUTO_HABEAS_CORPUS,
   PRODUTO_DEFESA_FLAGRANTE,
   PRODUTO_INQUERITO_POLICIAL,
+
+  // 1 AUTOMAÇÃO/GESTÃO (B2B para advogados)
+  PRODUTO_PLATAFORMA_GESTAO_JURIDICA,
   PRODUTO_CRIMES_TRANSITO,
   PRODUTO_LEI_MARIA_PENHA,
   PRODUTO_CRIMES_EMPRESARIAIS,

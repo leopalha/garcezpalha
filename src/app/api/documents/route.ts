@@ -10,25 +10,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
+    const { searchParams } = new URL(request.url)
+    const leadId = searchParams.get('leadId')
+
     const supabase = getSupabaseAdmin()
 
-    // TODO: Create client_documents table in Supabase
-    // Temporarily return empty array until table is created
-    // const { data: documents, error } = await supabase
-    //   .from('client_documents')
-    //   .select('*')
-    //   .eq('user_id', token.id)
-    //   .order('created_at', { ascending: false })
+    let query = supabase.from('client_documents').select('*').order('created_at', { ascending: false })
 
-    // if (error) {
-    //   console.error('Database error:', error)
-    //   return NextResponse.json(
-    //     { error: 'Erro ao buscar documentos' },
-    //     { status: 500 }
-    //   )
-    // }
+    // Filter by leadId if provided (for admin viewing lead's documents)
+    if (leadId) {
+      query = query.eq('process_id', leadId)
+    } else {
+      // Otherwise, filter by user_id (for client viewing own documents)
+      query = query.eq('user_id', token.id)
+    }
 
-    return NextResponse.json({ documents: [] })
+    const { data: documents, error } = await query
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json(
+        { error: 'Erro ao buscar documentos' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ documents: documents || [] })
   } catch (error) {
     console.error('Documents fetch error:', error)
     return NextResponse.json(

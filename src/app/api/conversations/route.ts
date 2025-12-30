@@ -1,74 +1,130 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import { getToken } from 'next-auth/jwt'
-
-/**
- * Database type definitions
- */
-interface Conversation {
-  id: string
-  user_id?: string | null
-  product_id?: string | null
-  session_id?: string | null
-  status?: string | null
-  mode?: string | null
-  started_at?: string
-  updated_at?: string
-  total_messages?: number | null
-}
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 /**
  * GET /api/conversations
- * Lista todas as conversas ativas com leads
+ *
+ * List conversations with filters
+ *
+ * Query params:
+ * - status: 'active' | 'bot' | 'waiting_human' | 'human' | 'resolved' | 'closed'
+ * - needsAttention: boolean
+ * - limit: number (default: 50, max: 100)
+ * - offset: number (default: 0)
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-    if (!token || token.role !== 'admin') {
+    const supabase = createRouteHandlerClient({ cookies })
+
+    // Check authentication
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const supabase = getSupabaseAdmin()
+    // Parse query params
+    const { searchParams } = new URL(request.url)
+    const status = searchParams.get('status')
+    const needsAttention = searchParams.get('needsAttention')
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
+    const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Fetch conversations with messages
-    const { data: conversations, error } = await supabase
-      .from('realtime_conversations')
-      .select('*')
-      .in('status', ['active', 'human_takeover'])
-      .order('updated_at', { ascending: false })
+    // Build query
+    let query = supabase
+      .from('conversations')
+      .select(
+        `
+        id,
+        lead_id,
+        status,
+        qualification_score,
+        needs_attention,
+        last_message_at,
+        created_at,
+        channel,
+        leads (
+          id,
+          full_name,
+          email,
+          phone,
+          service_interest
+        )
+      `,
+        { count: 'exact' }
+      )
+      .order('last_message_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+
+    // Apply filters
+    if (status) {
+      query = query.eq('status', status)
+    }
+
+    if (needsAttention === 'true') {
+      query = query.eq('needs_attention', true)
+    }
+
+    const { data: conversations, error, count } = await query
 
     if (error) {
-      console.error('Database error:', error)
+      console.error('Error fetching conversations:', error)
       return NextResponse.json({ error: 'Erro ao buscar conversas' }, { status: 500 })
     }
 
-    // Fetch messages for each conversation
+    // Fetch last message for each conversation
     const conversationsWithMessages = await Promise.all(
-      (conversations || []).map(async (conv: Conversation) => {
-        const { data: messages } = await supabase
-          .from('realtime_messages')
-          .select('*')
+      (conversations || []).map(async (conv: any) => {
+        const { data: lastMessage } = await supabase
+          .from('messages')
+          .select('content, created_at')
           .eq('conversation_id', conv.id)
-          .order('created_at', { ascending: true })
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single()
+
+        const { data: messageCount } = await supabase
+          .from('messages')
+          .select('id', { count: 'exact', head: true })
+          .eq('conversation_id', conv.id)
+
+        // Map status to state for frontend compatibility
+        let state = conv.status
+        if (conv.status === 'waiting_human') {
+          state = 'escalated'
+        } else if (conv.status === 'human') {
+          state = 'admin_active'
+        } else if (conv.status === 'bot') {
+          state = conv.qualification_score >= 80 ? 'qualified' : 'classifying'
+        }
 
         return {
           id: conv.id,
-          user_id: conv.user_id,
-          product_id: conv.product_id,
-          session_id: conv.session_id,
-          status: conv.status,
-          mode: conv.mode,
-          started_at: conv.started_at,
-          updated_at: conv.updated_at,
-          total_messages: conv.total_messages || 0,
-          messages: messages || [],
+          lead_id: conv.lead_id,
+          lead_name: conv.leads?.full_name || 'Lead sem nome',
+          lead_email: conv.leads?.email || '',
+          lead_phone: conv.leads?.phone || '',
+          state,
+          qualification_score: conv.qualification_score || 0,
+          last_message: lastMessage?.content || '',
+          last_message_at: lastMessage?.created_at || conv.created_at,
+          created_at: conv.created_at,
+          message_count: messageCount?.count || 0,
+          channel: conv.channel,
+          needs_attention: conv.needs_attention,
         }
       })
     )
 
-    return NextResponse.json({ conversations: conversationsWithMessages })
+    return NextResponse.json({
+      conversations: conversationsWithMessages,
+      total: count || 0,
+    })
   } catch (error) {
-    console.error('Conversations fetch error:', error)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    console.error('Error in GET /api/conversations:', error)
+    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
   }
 }

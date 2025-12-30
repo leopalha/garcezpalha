@@ -2,7 +2,7 @@
 
 import { Metadata } from 'next'
 import {
-  HeroSection,
+  DualHero,
   ProductsCatalog,
   HowItWorks,
   WhyChooseUs,
@@ -17,7 +17,7 @@ import { Timeline } from './components/timeline'
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
+      <DualHero />
       <ProductsCatalog />
       <HowItWorks />
       <WhyChooseUs />

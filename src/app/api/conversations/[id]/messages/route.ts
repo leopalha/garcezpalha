@@ -1,58 +1,103 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
-import { getToken } from 'next-auth/jwt'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 /**
  * POST /api/conversations/[id]/messages
- * Admin envia mensagem na conversa
+ *
+ * Send admin message in conversation
+ *
+ * Body:
+ * {
+ *   content: string
+ * }
  */
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-    if (!token || token.role !== 'admin') {
+    const supabase = createRouteHandlerClient({ cookies })
+
+    // Check authentication
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const { content } = await request.json()
+    const conversationId = params.id
+    const body = await request.json()
+    const { content } = body
+
     if (!content || typeof content !== 'string') {
-      return NextResponse.json({ error: 'Mensagem inv\u00e1lida' }, { status: 400 })
+      return NextResponse.json({ error: 'Mensagem inválida' }, { status: 400 })
     }
 
-    const conversationId = params.id
-    const supabase = getSupabaseAdmin()
+    // Verify conversation exists
+    const { data: conversation, error: convError } = await supabase
+      .from('conversations')
+      .select('id, status')
+      .eq('id', conversationId)
+      .single()
 
-    // Insert message
+    if (convError || !conversation) {
+      return NextResponse.json(
+        { error: 'Conversa não encontrada' },
+        { status: 404 }
+      )
+    }
+
+    // Insert admin message
     const { data: message, error: messageError } = await supabase
-      .from('realtime_messages')
+      .from('messages')
       .insert({
         conversation_id: conversationId,
-        role: 'agent',
+        sender_type: 'agent',
+        sender_id: user.id,
         content,
-        metadata: { sender_id: token.id as string },
       })
       .select()
       .single()
 
     if (messageError) {
-      console.error('Message insert error:', messageError)
-      return NextResponse.json({ error: 'Erro ao enviar mensagem' }, { status: 500 })
+      console.error('Error inserting message:', messageError)
+      return NextResponse.json(
+        { error: 'Erro ao enviar mensagem' },
+        { status: 500 }
+      )
     }
 
-    // Update conversation updated_at
+    // Update conversation last_message_at
     await supabase
-      .from('realtime_conversations')
-      .update({ updated_at: new Date().toISOString() })
+      .from('conversations')
+      .update({
+        last_message_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', conversationId)
 
-    // TODO: Send message via WhatsApp/Email to lead
-    // This would integrate with WhatsApp API or email service
+    // Transform message to expected format
+    const transformedMessage = {
+      id: message.id,
+      role: 'admin',
+      content: message.content,
+      created_at: message.created_at,
+      sender_type: message.sender_type,
+    }
 
-    return NextResponse.json({ success: true, message })
+    // TODO: Send message via WhatsApp/Email to lead
+    // This would integrate with WhatsApp Business API or email service
+    // For now, message is only stored in database
+
+    return NextResponse.json({
+      success: true,
+      message: transformedMessage,
+    })
   } catch (error) {
-    console.error('Send message error:', error)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    console.error('Error in POST /api/conversations/[id]/messages:', error)
+    return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
   }
 }

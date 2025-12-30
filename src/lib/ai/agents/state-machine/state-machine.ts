@@ -167,6 +167,18 @@ export class AgentStateMachine {
 
     await this.saveConversation(data)
 
+    // Update conversation in database to mark as needing attention
+    if (data.conversation_id) {
+      await this.supabase
+        .from('conversations')
+        .update({
+          status: 'waiting_human',
+          needs_attention: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', data.conversation_id)
+    }
+
     // Notify admin (could send email, WhatsApp, etc.)
     await this.notifyHumanAgent(data, reason)
 

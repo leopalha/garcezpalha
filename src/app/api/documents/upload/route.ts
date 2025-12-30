@@ -79,7 +79,6 @@ export async function POST(request: NextRequest) {
       .getPublicUrl(storagePath)
 
     // Save document metadata to database
-    // Note: client_documents table must be created via migration 014_client_documents.sql
     const documentData = {
       user_id: token.id as string,
       file_name: file.name,
@@ -92,31 +91,34 @@ export async function POST(request: NextRequest) {
       description: description || null,
     }
 
-    // TODO: Create client_documents table in Supabase
-    // Temporarily return success with mock data
-    // const { data: docData, error: dbError } = await supabase
-    //   .from('client_documents')
-    //   .insert(documentData as never)
-    //   .select()
-    //   .single()
+    const { data: docData, error: dbError } = await supabase
+      .from('client_documents')
+      .insert(documentData as never)
+      .select()
+      .single()
 
-    // if (dbError) {
-    //   console.error('Database error:', dbError)
-    //   // Try to delete the uploaded file if DB insert fails
-    //   await supabase.storage.from('client-documents').remove([storagePath])
-    //   return NextResponse.json(
-    //     { error: 'Erro ao salvar documento no banco de dados' },
-    //     { status: 500 }
-    //   )
-    // }
+    if (dbError) {
+      console.error('Database error:', dbError)
+      // Try to delete the uploaded file if DB insert fails
+      await supabase.storage.from('client-documents').remove([storagePath])
+      return NextResponse.json(
+        { error: 'Erro ao salvar documento no banco de dados' },
+        { status: 500 }
+      )
+    }
+
+    // Trigger AI analysis asynchronously (don't wait for it)
+    if (file.type.includes('image') || file.type === 'application/pdf') {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/documents/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documentId: docData.id }),
+      }).catch((error) => console.error('Error triggering AI analysis:', error))
+    }
 
     return NextResponse.json({
       success: true,
-      document: {
-        ...documentData,
-        id: 'temp-id',
-        created_at: new Date().toISOString(),
-      },
+      document: docData,
     })
   } catch (error) {
     console.error('Document upload error:', error)

@@ -4,13 +4,13 @@ import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { AdminPageHeader } from '@/components/admin/AdminPageHeader'
 import {
   Eye,
   Users,
   TrendingUp,
   AlertCircle,
   Activity,
-  RefreshCw,
   Download,
   Clock,
 } from 'lucide-react'
@@ -223,47 +223,36 @@ export default function AnalyticsDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
-          <p className="text-muted-foreground">
-            Monitor de performance e saúde do sistema
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Time Range Selector */}
-          <div className="flex gap-1 bg-muted p-1 rounded-lg">
-            {(['24h', '7d', '30d'] as TimeRange[]).map((range) => (
-              <Button
-                key={range}
-                variant={timeRange === range ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setTimeRange(range)}
-              >
-                {range}
-              </Button>
-            ))}
+      {/* Header com Breadcrumbs */}
+      <AdminPageHeader
+        title="Analytics Dashboard"
+        description="Monitor de performance e saúde do sistema"
+        onRefresh={handleRefresh}
+        refreshing={isRefreshing}
+        action={
+          <div className="flex items-center gap-2">
+            {/* Time Range Selector */}
+            <div className="flex gap-1 bg-muted p-1 rounded-lg">
+              {(['24h', '7d', '30d'] as TimeRange[]).map((range) => (
+                <Button
+                  key={range}
+                  variant={timeRange === range ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setTimeRange(range)}
+                >
+                  {range}
+                </Button>
+              ))}
+            </div>
+
+            {/* Export Button */}
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              <Download className="h-4 w-4 mr-2" />
+              Exportar
+            </Button>
           </div>
-
-          {/* Refresh Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
-
-          {/* Export Button */}
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Exportar
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Last Refresh Info */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
