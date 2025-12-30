@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // CRITICAL: Do NOT use static export - we need API routes and serverless functions
+  output: undefined, // Ensure dynamic rendering (not 'export')
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
