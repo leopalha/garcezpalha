@@ -4,9 +4,12 @@ import Groq from 'groq-sdk'
 
 export const dynamic = 'force-dynamic'
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-})
+// Initialize Groq client lazily to avoid build-time issues
+function getGroqClient() {
+  return new Groq({
+    apiKey: process.env.GROQ_API_KEY || 'dummy-key-for-build',
+  })
+}
 
 // Default configs for agents (fallback if not in DB)
 const DEFAULT_CONFIGS: Record<string, any> = {
@@ -132,6 +135,7 @@ export async function POST(
     })
 
     // Call Groq API
+    const groq = getGroqClient()
     const completion = await groq.chat.completions.create({
       model: agentConfig.model,
       messages,

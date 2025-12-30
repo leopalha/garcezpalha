@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader'
 import { TemplateEditor } from '@/components/admin/TemplateEditor'
 import { Card, CardContent } from '@/components/ui/card'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/components/ui/use-toast'
 import { Loader2 } from 'lucide-react'
 
 // Template metadata (same as in templates/page.tsx)
