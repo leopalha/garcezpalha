@@ -109,8 +109,8 @@ async function handler(request: NextRequest) {
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: lineItems,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/checkout?plan=${planId}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?plan=${planId}`,
       metadata: {
         user_id: session.user.id,
         plan_id: planId,

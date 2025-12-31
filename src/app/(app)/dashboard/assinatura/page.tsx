@@ -574,7 +574,7 @@ export default function AssinaturaPage() {
                     </Button>
                   ) : (
                     <Button className="w-full" asChild>
-                      <Link href={`/app/checkout?plan=${plan.id}&cycle=${billingCycle}`}>
+                      <Link href={`/checkout?plan=${plan.id}&cycle=${billingCycle}`}>
                         {plan.id === 'enterprise' ? 'Falar com Vendas' : 'Fazer Upgrade'}
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Link>

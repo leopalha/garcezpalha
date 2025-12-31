@@ -401,7 +401,7 @@ export default function PrecosPage() {
                         size="lg"
                         asChild
                       >
-                        <Link href={`/app/checkout?plan=${key}`}>
+                        <Link href={`/checkout?plan=${key}`}>
                           Começar Teste Grátis
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
@@ -529,7 +529,7 @@ export default function PrecosPage() {
               Teste 30 dias grátis. Sem cartão. Sem compromisso.
             </p>
 
-            <Link href="/app/checkout?plan=pro">
+            <Link href="/checkout?plan=pro">
               <Button size="lg" className="text-lg px-12 py-8 bg-white text-blue-900 hover:bg-blue-50">
                 Criar Minha Plataforma Grátis
                 <ArrowRight className="ml-2 h-5 w-5" />
