@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
+import { wrapWithDisclaimer } from '@/lib/ai/disclaimer'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -58,8 +59,11 @@ async function handleChat(request: NextRequest) {
         response = demoResponses.horário
       }
 
+      // Add OAB disclaimer to demo responses (P1-009)
+      const responseWithDisclaimer = wrapWithDisclaimer(response, { mode: 'chat' })
+
       return NextResponse.json({
-        reply: response,
+        reply: responseWithDisclaimer,
         threadId: threadId || `demo-thread-${Date.now()}`,
         suggestions: [
           'Quais serviços vocês oferecem?',
