@@ -194,7 +194,7 @@ A: ${faq.answer}
 
     // Chamar OpenAI
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o', // Updated from deprecated gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,
@@ -222,7 +222,7 @@ A: ${faq.answer}
   } catch (error) {
     console.error('Erro no assistente:', error)
     return NextResponse.json(
-      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
