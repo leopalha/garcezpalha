@@ -519,7 +519,7 @@ END $$;
 
 DO $$
 DECLARE
-  table_name text;
+  tbl_name text;
   rls_status boolean;
   policy_count int;
   has_tenant_id boolean;
@@ -528,27 +528,27 @@ BEGIN
   RAISE NOTICE 'VERIFICAÇÃO MULTI-TENANT';
   RAISE NOTICE '==============================================';
 
-  FOR table_name IN
+  FOR tbl_name IN
     SELECT unnest(ARRAY['leads', 'conversations', 'qualified_leads', 'products', 'contracts', 'messages', 'users'])
   LOOP
-    IF EXISTS (SELECT FROM pg_tables WHERE tablename = table_name) THEN
+    IF EXISTS (SELECT FROM pg_tables WHERE tablename = tbl_name) THEN
       -- Verificar RLS
       SELECT relrowsecurity INTO rls_status
       FROM pg_class
-      WHERE relname = table_name;
+      WHERE relname = tbl_name;
 
       -- Contar policies
       SELECT COUNT(*) INTO policy_count
       FROM pg_policies
-      WHERE tablename = table_name;
+      WHERE tablename = tbl_name;
 
       -- Verificar coluna tenant_id
       SELECT EXISTS (
-        SELECT FROM information_schema.columns
-        WHERE table_name = table_name AND column_name = 'tenant_id'
+        SELECT FROM information_schema.columns c
+        WHERE c.table_name = tbl_name AND c.column_name = 'tenant_id'
       ) INTO has_tenant_id;
 
-      RAISE NOTICE '📊 %:', table_name;
+      RAISE NOTICE '📊 %:', tbl_name;
 
       IF rls_status THEN
         RAISE NOTICE '  ✅ RLS ENABLED - % policies', policy_count;
@@ -559,7 +559,7 @@ BEGIN
       IF has_tenant_id THEN
         RAISE NOTICE '  ✅ tenant_id column exists';
       ELSE
-        IF table_name = 'messages' THEN
+        IF tbl_name = 'messages' THEN
           RAISE NOTICE '  ⏭️  tenant_id not needed (uses conversations)';
         ELSE
           RAISE WARNING '  ❌ tenant_id column missing';
@@ -567,7 +567,7 @@ BEGIN
       END IF;
 
     ELSE
-      RAISE NOTICE '⏭️  % - Tabela não existe', table_name;
+      RAISE NOTICE '⏭️  % - Tabela não existe', tbl_name;
     END IF;
   END LOOP;
 
