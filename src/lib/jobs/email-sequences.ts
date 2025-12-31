@@ -71,7 +71,7 @@ export const triggerWelcomeSequence = inngest.createFunction(
           source: event.data.source || 'website',
           produto: event.data.produto || 'geral',
         },
-      })
+      } as any)
     })
 
     return {
@@ -166,10 +166,10 @@ export const generateSequenceReport = inngest.createFunction(
             name: 'Sequência de Boas-Vindas',
             ...stats,
             performance: {
-              openRate: `${((stats.totalOpened / stats.totalSent) * 100).toFixed(1)}%`,
-              clickRate: `${((stats.totalClicked / stats.totalSent) * 100).toFixed(1)}%`,
-              bounceRate: `${((stats.totalBounced / stats.totalSent) * 100).toFixed(1)}%`,
-              complaintRate: `${((stats.totalComplaints / stats.totalSent) * 100).toFixed(1)}%`,
+              openRate: `${(((stats as any).totalOpened / (stats as any).totalSent) * 100).toFixed(1)}%`,
+              clickRate: `${(((stats as any).totalClicked / (stats as any).totalSent) * 100).toFixed(1)}%`,
+              bounceRate: `${(((stats as any).totalBounced / (stats as any).totalSent) * 100).toFixed(1)}%`,
+              complaintRate: `${(((stats as any).totalComplaints / (stats as any).totalSent) * 100).toFixed(1)}%`,
             },
           },
         ],

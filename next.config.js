@@ -9,6 +9,13 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
+    // Optimize package imports for faster dev
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      'lucide-react',
+      'recharts',
+      '@supabase/supabase-js',
+    ],
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -30,7 +37,14 @@ const nextConfig = {
     ],
   },
   // Webpack optimization for code splitting
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    // Faster source maps in development
+    if (dev && !isServer) {
+      config.devtool = 'eval-cheap-module-source-map'
+      // Minimize webpack stats output
+      config.stats = 'minimal'
+    }
+
     // Split chunks for better caching (removed usedExports to fix conflict with cacheUnaffected)
     if (!isServer) {
       config.optimization.splitChunks = {
