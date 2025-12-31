@@ -251,7 +251,7 @@ export class AutomatedActionsDispatcher {
 
     console.log('[AutomatedActions] Payment confirmed:', {
       conversationId: data.conversation_id,
-      paymentProvider: data.proposal?.payment_provider,
+      paymentProvider: (data.proposal as any)?.payment_provider,
     })
 
     try {
@@ -345,9 +345,10 @@ export class AutomatedActionsDispatcher {
     }
 
     try {
-      const leadName = data.lead?.full_name || 'Lead sem nome'
-      const leadEmail = data.lead?.email || 'Email não fornecido'
-      const leadPhone = data.lead?.phone || 'Telefone não fornecido'
+      const lead = (data as any).lead
+      const leadName = lead?.full_name || 'Lead sem nome'
+      const leadEmail = lead?.email || 'Email não fornecido'
+      const leadPhone = lead?.phone || 'Telefone não fornecido'
       const productName = data.classification?.product || data.classification?.area || 'Produto não identificado'
       const escalationReason = data.status.escalation_reason || 'Motivo não especificado'
 
@@ -591,7 +592,7 @@ export class AutomatedActionsDispatcher {
     productName: string,
     data: ConversationData
   ): string {
-    const contractUrl = data.proposal?.clicksign_sign_url || '#'
+    const contractUrl = (data.proposal as any)?.clicksign_sign_url || '#'
 
     return `
 <!DOCTYPE html>
