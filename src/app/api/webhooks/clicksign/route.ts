@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import crypto from 'crypto'
 
 // ClickSign webhook event types
@@ -43,7 +44,7 @@ function verifySignature(payload: string, signature: string, secret: string): bo
   return calculatedSignature === signature
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const webhookSecret = process.env.CLICKSIGN_WEBHOOK_SECRET
 
@@ -393,6 +394,9 @@ async function handleDocumentRefused(payload: ClickSignWebhookPayload) {
     console.error('[ClickSign] Error notifying admin about refusal:', error)
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(handler, { type: 'webhook', limit: 100 })
 
 export const runtime = 'nodejs'
 export const maxDuration = 30

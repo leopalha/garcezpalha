@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
+import { withRateLimit } from '@/lib/rate-limit'
 import { processStripePaymentWebhook } from '@/lib/workflows/financeiro-flow'
 
 // Supabase admin client
@@ -22,7 +23,7 @@ function getStripe(): Stripe | null {
   })
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   const stripe = getStripe()
 
   if (!stripe) {
@@ -361,3 +362,6 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   // Mark subscription as cancelled
   // await cancelSubscription(subscription.id)
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(handler, { type: 'webhook', limit: 100 })
