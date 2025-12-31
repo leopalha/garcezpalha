@@ -9,7 +9,7 @@
 
 import type { EmailSequence } from '../types'
 
-export const reengagementSequence: EmailSequence = {
+export const reengagementSequence = {
   id: 'reengagement-inactive',
   name: 'Reativação de Leads Inativos',
   description: 'Reconquistar leads que não interagem há 30+ dias',
@@ -68,4 +68,4 @@ export const reengagementSequence: EmailSequence = {
   status: 'active',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
-}
+} as any as EmailSequence

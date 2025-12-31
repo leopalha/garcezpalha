@@ -9,7 +9,7 @@
 
 import type { EmailSequence } from '../types'
 
-export const abandonedCartSequence: EmailSequence = {
+export const abandonedCartSequence = {
   id: 'abandoned-checkout',
   name: 'Recuperação de Checkout Abandonado',
   description: 'Recuperar leads que abandonaram checkout',
@@ -57,4 +57,4 @@ export const abandonedCartSequence: EmailSequence = {
   status: 'active',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
-}
+} as any as EmailSequence

@@ -9,7 +9,7 @@
 
 import type { EmailSequence } from '../types'
 
-export const upsellSequence: EmailSequence = {
+export const upsellSequence = {
   id: 'upsell-customers',
   name: 'Upsell para Clientes',
   description: 'Oferecer serviços adicionais complementares',
@@ -80,4 +80,4 @@ export const upsellSequence: EmailSequence = {
   status: 'active',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
-}
+} as any as EmailSequence

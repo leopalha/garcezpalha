@@ -9,7 +9,7 @@
 
 import type { EmailSequence } from '../types'
 
-export const nurtureSequence: EmailSequence = {
+export const nurtureSequence = {
   id: 'nurture-leads',
   name: 'Nutrição de Leads',
   description: 'Conteúdo educativo para leads não qualificados',
@@ -90,4 +90,4 @@ export const nurtureSequence: EmailSequence = {
   status: 'active',
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
-}
+} as any as EmailSequence
