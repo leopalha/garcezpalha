@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const result = await stateMachine.processMessage(conversationId, message)
 
     return NextResponse.json({
-      response: result.response,
+      message: result.response, // Changed from 'response' to 'message' for frontend compatibility
       state: result.data.status.state,
       classification: result.data.classification,
       qualification: result.data.qualification,
