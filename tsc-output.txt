@@ -1,0 +1,36 @@
+src/app/(admin)/admin/automations/email-sequences/analytics/page.tsx(405,66): error TS18048: 'percent' is possibly 'undefined'.
+src/app/(admin)/admin/leads/[id]/page.tsx(142,73): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ new: string; contacted: string; qualified: string; converted: string; lost: string; }'.
+src/app/(marketing)/automacao/plataforma-gestao-juridica/page.tsx(388,44): error TS2339: Property 'recommended' does not exist on type '{ name: string; price: number; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; features: string[]; } | { ...; } | { ...; }'.
+  Property 'recommended' does not exist on type '{ name: string; price: number; description: string; icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>; features: string[]; }'.
+src/app/api/admin/conversations/[id]/messages/route.ts(137,34): error TS2345: Argument of type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ messages: any[]; }>>' is not assignable to parameter of type '(request: NextRequest) => Promise<NextResponse<unknown>>'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/app/api/admin/conversations/[id]/messages/route.ts(138,35): error TS2345: Argument of type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; }> | NextResponse<...>>' is not assignable to parameter of type '(request: NextRequest) => Promise<NextResponse<unknown>>'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/app/api/admin/conversations/[id]/route.ts(45,34): error TS2345: Argument of type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ conversation: any; }>>' is not assignable to parameter of type '(request: NextRequest) => Promise<NextResponse<unknown>>'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/app/api/admin/conversations/[id]/takeover/route.ts(89,35): error TS2345: Argument of type '(request: NextRequest, { params }: { params: { id: string; }; }) => Promise<NextResponse<{ error: string; }> | NextResponse<{ success: boolean; message: string; }>>' is not assignable to parameter of type '(request: NextRequest) => Promise<NextResponse<unknown>>'.
+  Target signature provides too few arguments. Expected 2 or more, but got 1.
+src/app/api/app/products/[id]/route.ts(120,38): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(callbackfn: (previousValue: { amount: number; created_at: string | null; }, currentValue: { amount: number; created_at: string | null; }, currentIndex: number, array: { amount: number; created_at: string | null; }[]) => { ...; }, initialValue: { ...; }): { ...; } | undefined', gave the following error.
+    Argument of type '(sum: number, p: PaymentFromDB) => number' is not assignable to parameter of type '(previousValue: { amount: number; created_at: string | null; }, currentValue: { amount: number; created_at: string | null; }, currentIndex: number, array: { amount: number; created_at: string | null; }[]) => { ...; }'.
+      Types of parameters 'sum' and 'previousValue' are incompatible.
+        Type '{ amount: number; created_at: string | null; }' is not assignable to type 'number'.
+  Overload 2 of 3, '(callbackfn: (previousValue: number, currentValue: { amount: number; created_at: string | null; }, currentIndex: number, array: { amount: number; created_at: string | null; }[]) => number, initialValue: number): number | undefined', gave the following error.
+    Argument of type '(sum: number, p: PaymentFromDB) => number' is not assignable to parameter of type '(previousValue: number, currentValue: { amount: number; created_at: string | null; }, currentIndex: number, array: { amount: number; created_at: string | null; }[]) => number'.
+      Types of parameters 'p' and 'currentValue' are incompatible.
+        Type '{ amount: number; created_at: string | null; }' is not assignable to type 'PaymentFromDB'.
+          Types of property 'created_at' are incompatible.
+            Type 'string | null' is not assignable to type 'string'.
+              Type 'null' is not assignable to type 'string'.
+src/app/api/documents/sign/route.ts(111,29): error TS2345: Argument of type 'Buffer<ArrayBufferLike> | undefined' is not assignable to parameter of type 'BodyInit | null | undefined'.
+  Type 'Buffer<ArrayBufferLike>' is not assignable to type 'BodyInit | null | undefined'.
+    Type 'Buffer<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
+src/lib/contracts/contract-generator.ts(173,9): error TS1117: An object literal cannot have multiple properties with the same name.
+src/lib/products/catalog.ts(3423,43): error TS2353: Object literal may only specify known properties, and 'premium' does not exist in type 'ProductPrice'.
+src/lib/products/catalog.ts(3439,3): error TS2322: Type '10' is not assignable to type '1 | 2 | 3 | 5 | 4'.
+src/lib/reports/__tests__/report-generator.test.ts(458,58): error TS2339: Property 'reduce' does not exist on type '{}'.
+src/lib/reports/__tests__/report-generator.test.ts(488,54): error TS2339: Property 'toFixed' does not exist on type '{}'.
+src/lib/whatsapp/automation/engine.ts(250,60): error TS18048: 'step.delaySeconds' is possibly 'undefined'.
+vitest.config.ts(23,7): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Object literal may only specify known properties, and 'all' does not exist in type '{ provider: "v8"; } & CoverageV8Options'.

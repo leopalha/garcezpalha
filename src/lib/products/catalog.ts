@@ -3436,7 +3436,7 @@ export const PRODUTO_PLATAFORMA_GESTAO_JURIDICA: Product = {
     'tecnologia jurídica',
     'lawtech',
   ],
-  priority: 10,
+  priority: 5,
   automation: 100,
   demandPerMonth: 5000,
   features: [

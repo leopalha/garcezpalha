@@ -1,0 +1,36 @@
+{
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/.swc/**": true,
+    "**/coverage/**": true,
+    "**/.vercel/**": true,
+    "**/.npm-cache/**": true,
+    "**/.yarn-cache/**": true
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.guides.bracketPairs": false,
+  "editor.inlayHints.enabled": "off",
+  "explorer.compactFolders": false,
+  "search.useIgnoreFiles": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.swc": true,
+    "**/coverage": true,
+    "**/.vercel": true,
+    "**/.npm-cache": true,
+    "**/.yarn-cache": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true
+  }
+}

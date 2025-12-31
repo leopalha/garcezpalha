@@ -1,0 +1,33 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.4.2
+2 info using node@v22.14.0
+3 silly config load:file:C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:D:\garcezpalha\.npmrc
+5 silly config load:file:C:\Users\aurum\.npmrc
+6 silly config load:file:C:\Users\aurum\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm config set cache-max 1000000
+8 verbose argv "config" "set" "cache-max" "1000000"
+9 verbose logfile logs-max:10 dir:d:\garcezpalha\.npm-cache\_logs\2025-12-31T21_52_59_928Z-
+10 verbose logfile d:\garcezpalha\.npm-cache\_logs\2025-12-31T21_52_59_928Z-debug-0.log
+11 silly logfile done cleaning log files
+12 info config set "cache-max" "1000000"
+13 verbose stack Error: The `cache-max` option is deprecated, and can not be set in this way
+13 verbose stack       This option has been deprecated in favor of `--prefer-online`
+13 verbose stack     
+13 verbose stack     at Config.set (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\commands\config.js:178:15)
+13 verbose stack     at Config.exec (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\commands\config.js:139:20)
+13 verbose stack     at C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\npm.js:256:63
+13 verbose stack     at Object.start (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\node_modules\proc-log\lib\index.js:101:21)
+13 verbose stack     at #exec (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\npm.js:255:17)
+13 verbose stack     at async Npm.exec (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\npm.js:208:9)
+13 verbose stack     at async module.exports (C:\Users\aurum\AppData\Roaming\npm\node_modules\npm\lib\cli\entry.js:67:5)
+14 error The `cache-max` option is deprecated, and can not be set in this way
+14 error       This option has been deprecated in favor of `--prefer-online`
+14 error     
+15 verbose cwd D:\garcezpalha
+16 verbose os Windows_NT 10.0.26220
+17 verbose node v22.14.0
+18 verbose npm  v11.4.2
+19 verbose exit 1
+20 verbose code 1
+21 error A complete log of this run can be found in: d:\garcezpalha\.npm-cache\_logs\2025-12-31T21_52_59_928Z-debug-0.log

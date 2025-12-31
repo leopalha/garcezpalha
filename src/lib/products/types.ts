@@ -30,6 +30,7 @@ export type ProductCategory =
 export interface ProductPrice {
   basic: number // Valor base
   complete?: number // Valor completo (se houver)
+  premium?: number // Valor premium (se houver)
 }
 
 /**
