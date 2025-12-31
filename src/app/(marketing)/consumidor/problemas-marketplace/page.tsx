@@ -34,7 +34,7 @@ export default function ProblemasMarketplacePage() {
       ]}
       urgencyMessage="🛒 PROBLEMA EM MARKETPLACE? Reembolso + Indenização garantidos"
       guaranteeTitle="Marketplace Responde Solidariamente"
-      guaranteeDescription="CDC determina que marketplace (OLX, Mercado Livre, Shopee) responde junto com vendedor. Não aceite \"não somos responsáveis\"."
+      guaranteeDescription="CDC determina que marketplace (OLX, Mercado Livre, Shopee) responde junto com vendedor. Não aceite 'não somos responsáveis'."
       stats={{
         years: 5,
         cases: 820,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,26 +23,40 @@ import {
   ExternalLink,
   Database,
   Cloud,
+  Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
+import { useToast } from '@/components/ui/use-toast'
 
-interface UserSettings {
-  name: string
-  email: string
-  phone: string
-  timezone: string
-  language: string
-}
-
-interface NotificationSettings {
-  emailNewLead: boolean
-  emailQualifiedLead: boolean
-  emailPaymentReceived: boolean
-  emailDeadline: boolean
-  pushNewLead: boolean
-  pushQualifiedLead: boolean
-  dailyDigest: boolean
+interface APISettings {
+  profile: {
+    name: string
+    email: string
+    phone: string
+    avatar: string
+    bio: string
+    oab: string
+    specialization: string
+  }
+  notifications: {
+    emailNewLeads: boolean
+    emailConversations: boolean
+    emailPayments: boolean
+    whatsappNotifications: boolean
+    desktopNotifications: boolean
+    weeklyReport: boolean
+  }
+  integrations: {
+    googleCalendarConnected: boolean
+    gmailConnected: boolean
+    whatsappConnected: boolean
+    stripeConnected: boolean
+  }
+  security: {
+    twoFactorEnabled: boolean
+    lastPasswordChange: string
+  }
 }
 
 interface IntegrationStatus {
@@ -50,71 +64,137 @@ interface IntegrationStatus {
   icon: React.ElementType
   connected: boolean
   description: string
+  key: keyof APISettings['integrations']
 }
 
 export default function ConfiguracoesPage() {
   const { data: session } = useSession()
+  const { toast } = useToast()
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
+  const [settings, setSettings] = useState<APISettings | null>(null)
 
-  const [userSettings, setUserSettings] = useState<UserSettings>({
-    name: session?.user?.name || 'Dr. Silva',
-    email: session?.user?.email || 'silva@email.com',
-    phone: '(11) 98765-4321',
-    timezone: 'America/Sao_Paulo',
-    language: 'pt-BR',
-  })
+  useEffect(() => {
+    fetchSettings()
+  }, [])
 
-  const [notifications, setNotifications] = useState<NotificationSettings>({
-    emailNewLead: true,
-    emailQualifiedLead: true,
-    emailPaymentReceived: true,
-    emailDeadline: true,
-    pushNewLead: false,
-    pushQualifiedLead: true,
-    dailyDigest: true,
-  })
+  async function fetchSettings() {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/app/settings')
+      if (!res.ok) throw new Error('Failed to fetch settings')
+      const data = await res.json()
+      setSettings(data)
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+      toast({
+        title: 'Erro ao carregar configurações',
+        description: 'Não foi possível carregar suas configurações.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const integrations: IntegrationStatus[] = [
     {
       name: 'Google Calendar',
       icon: Database,
-      connected: true,
+      connected: settings?.integrations.googleCalendarConnected || false,
       description: 'Sincronização de agendamentos',
+      key: 'googleCalendarConnected',
     },
     {
-      name: 'MercadoPago',
-      icon: CreditCard,
-      connected: true,
-      description: 'Processamento de pagamentos',
+      name: 'Gmail',
+      icon: Mail,
+      connected: settings?.integrations.gmailConnected || false,
+      description: 'Envio de emails',
+      key: 'gmailConnected',
     },
     {
       name: 'WhatsApp Business',
       icon: Mail,
-      connected: false,
+      connected: settings?.integrations.whatsappConnected || false,
       description: 'Envio de mensagens automáticas',
+      key: 'whatsappConnected',
     },
     {
-      name: 'Supabase',
-      icon: Cloud,
-      connected: true,
-      description: 'Banco de dados e storage',
+      name: 'Stripe/MercadoPago',
+      icon: CreditCard,
+      connected: settings?.integrations.stripeConnected || false,
+      description: 'Processamento de pagamentos',
+      key: 'stripeConnected',
     },
   ]
 
-  const updateUserSettings = (key: keyof UserSettings, value: string) => {
-    setUserSettings((prev) => ({ ...prev, [key]: value }))
+  const updateProfile = (key: keyof APISettings['profile'], value: string) => {
+    if (!settings) return
+    setSettings({
+      ...settings,
+      profile: { ...settings.profile, [key]: value },
+    })
     setHasChanges(true)
   }
 
-  const updateNotification = (key: keyof NotificationSettings, value: boolean) => {
-    setNotifications((prev) => ({ ...prev, [key]: value }))
+  const updateNotification = (key: keyof APISettings['notifications'], value: boolean) => {
+    if (!settings) return
+    setSettings({
+      ...settings,
+      notifications: { ...settings.notifications, [key]: value },
+    })
     setHasChanges(true)
   }
 
-  const handleSave = () => {
-    // Here you would save to your backend
-    console.log('Saving settings:', { userSettings, notifications })
-    setHasChanges(false)
+  const handleSave = async () => {
+    if (!settings) return
+
+    try {
+      setSaving(true)
+      const res = await fetch('/api/app/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+
+      if (!res.ok) throw new Error('Failed to save settings')
+
+      const updated = await res.json()
+      setSettings(updated)
+      setHasChanges(false)
+
+      toast({
+        title: 'Configurações salvas',
+        description: 'Suas configurações foram atualizadas com sucesso.',
+      })
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      toast({
+        title: 'Erro ao salvar',
+        description: 'Não foi possível salvar as configurações.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (!settings) {
+    return (
+      <div className="text-center py-12">
+        <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <p className="text-muted-foreground">Não foi possível carregar as configurações</p>
+      </div>
+    )
   }
 
   return (
@@ -130,9 +210,13 @@ export default function ConfiguracoesPage() {
             Gerencie suas preferências e integrações
           </p>
         </div>
-        <Button onClick={handleSave} disabled={!hasChanges}>
-          <Save className="h-4 w-4 mr-2" />
-          Salvar Alterações
+        <Button onClick={handleSave} disabled={!hasChanges || saving}>
+          {saving ? (
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4 mr-2" />
+          )}
+          {saving ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
       </div>
 
@@ -160,8 +244,8 @@ export default function ConfiguracoesPage() {
               <Label htmlFor="name">Nome Completo</Label>
               <Input
                 id="name"
-                value={userSettings.name}
-                onChange={(e) => updateUserSettings('name', e.target.value)}
+                value={settings.profile.name}
+                onChange={(e) => updateProfile('name', e.target.value)}
               />
             </div>
 
@@ -170,8 +254,9 @@ export default function ConfiguracoesPage() {
               <Input
                 id="email"
                 type="email"
-                value={userSettings.email}
-                onChange={(e) => updateUserSettings('email', e.target.value)}
+                value={settings.profile.email}
+                disabled
+                className="bg-muted"
               />
             </div>
           </div>
@@ -181,24 +266,31 @@ export default function ConfiguracoesPage() {
               <Label htmlFor="phone">Telefone</Label>
               <Input
                 id="phone"
-                value={userSettings.phone}
-                onChange={(e) => updateUserSettings('phone', e.target.value)}
+                value={settings.profile.phone}
+                onChange={(e) => updateProfile('phone', e.target.value)}
+                placeholder="(11) 98765-4321"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="timezone">Fuso Horário</Label>
-              <select
-                id="timezone"
-                value={userSettings.timezone}
-                onChange={(e) => updateUserSettings('timezone', e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="America/Sao_Paulo">Brasília (GMT-3)</option>
-                <option value="America/Manaus">Manaus (GMT-4)</option>
-                <option value="America/Rio_Branco">Rio Branco (GMT-5)</option>
-              </select>
+              <Label htmlFor="oab">OAB</Label>
+              <Input
+                id="oab"
+                value={settings.profile.oab}
+                onChange={(e) => updateProfile('oab', e.target.value)}
+                placeholder="OAB/SP 123456"
+              />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="specialization">Especialização</Label>
+            <Input
+              id="specialization"
+              value={settings.profile.specialization}
+              onChange={(e) => updateProfile('specialization', e.target.value)}
+              placeholder="Direito Civil, Família, Trabalhista..."
+            />
           </div>
         </CardContent>
       </Card>
@@ -218,8 +310,8 @@ export default function ConfiguracoesPage() {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="email-new-lead" className="text-base cursor-pointer">
-                    Email - Novo Lead
+                  <Label htmlFor="email-new-leads" className="text-base cursor-pointer">
+                    Email - Novos Leads
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -227,28 +319,28 @@ export default function ConfiguracoesPage() {
                 </p>
               </div>
               <Switch
-                id="email-new-lead"
-                checked={notifications.emailNewLead}
-                onCheckedChange={(v) => updateNotification('emailNewLead', v)}
+                id="email-new-leads"
+                checked={settings.notifications.emailNewLeads}
+                onCheckedChange={(v) => updateNotification('emailNewLeads', v)}
               />
             </div>
 
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="email-qualified" className="text-base cursor-pointer">
-                    Email - Lead Qualificado
+                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                  <Label htmlFor="email-conversations" className="text-base cursor-pointer">
+                    Email - Conversas
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Notificação quando um lead atinge score alto (≥80%)
+                  Notificações de novas conversas com leads
                 </p>
               </div>
               <Switch
-                id="email-qualified"
-                checked={notifications.emailQualifiedLead}
-                onCheckedChange={(v) => updateNotification('emailQualifiedLead', v)}
+                id="email-conversations"
+                checked={settings.notifications.emailConversations}
+                onCheckedChange={(v) => updateNotification('emailConversations', v)}
               />
             </div>
 
@@ -256,8 +348,8 @@ export default function ConfiguracoesPage() {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="email-payment" className="text-base cursor-pointer">
-                    Email - Pagamento Recebido
+                  <Label htmlFor="email-payments" className="text-base cursor-pointer">
+                    Email - Pagamentos
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -265,28 +357,9 @@ export default function ConfiguracoesPage() {
                 </p>
               </div>
               <Switch
-                id="email-payment"
-                checked={notifications.emailPaymentReceived}
-                onCheckedChange={(v) => updateNotification('emailPaymentReceived', v)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="email-deadline" className="text-base cursor-pointer">
-                    Email - Prazos Vencendo
-                  </Label>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Alertas de prazos processuais próximos
-                </p>
-              </div>
-              <Switch
-                id="email-deadline"
-                checked={notifications.emailDeadline}
-                onCheckedChange={(v) => updateNotification('emailDeadline', v)}
+                id="email-payments"
+                checked={settings.notifications.emailPayments}
+                onCheckedChange={(v) => updateNotification('emailPayments', v)}
               />
             </div>
 
@@ -294,18 +367,37 @@ export default function ConfiguracoesPage() {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Bell className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="push-qualified" className="text-base cursor-pointer">
-                    Push - Lead Qualificado
+                  <Label htmlFor="whatsapp-notifications" className="text-base cursor-pointer">
+                    WhatsApp - Notificações
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Notificação push no navegador para leads quentes
+                  Receber notificações via WhatsApp
                 </p>
               </div>
               <Switch
-                id="push-qualified"
-                checked={notifications.pushQualifiedLead}
-                onCheckedChange={(v) => updateNotification('pushQualifiedLead', v)}
+                id="whatsapp-notifications"
+                checked={settings.notifications.whatsappNotifications}
+                onCheckedChange={(v) => updateNotification('whatsappNotifications', v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Bell className="h-4 w-4 text-muted-foreground" />
+                  <Label htmlFor="desktop-notifications" className="text-base cursor-pointer">
+                    Desktop - Notificações Push
+                  </Label>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Notificação push no navegador
+                </p>
+              </div>
+              <Switch
+                id="desktop-notifications"
+                checked={settings.notifications.desktopNotifications}
+                onCheckedChange={(v) => updateNotification('desktopNotifications', v)}
               />
             </div>
 
@@ -313,18 +405,18 @@ export default function ConfiguracoesPage() {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="daily-digest" className="text-base cursor-pointer">
-                    Resumo Diário
+                  <Label htmlFor="weekly-report" className="text-base cursor-pointer">
+                    Relatório Semanal
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Receba um email com o resumo do dia às 18h
+                  Receba um email com o resumo semanal
                 </p>
               </div>
               <Switch
-                id="daily-digest"
-                checked={notifications.dailyDigest}
-                onCheckedChange={(v) => updateNotification('dailyDigest', v)}
+                id="weekly-report"
+                checked={settings.notifications.weeklyReport}
+                onCheckedChange={(v) => updateNotification('weeklyReport', v)}
               />
             </div>
           </div>
@@ -413,7 +505,9 @@ export default function ConfiguracoesPage() {
               <div>
                 <p className="font-medium">Alterar Senha</p>
                 <p className="text-sm text-muted-foreground">
-                  Última alteração: 30 dias atrás
+                  Última alteração: {settings.security.lastPasswordChange
+                    ? new Date(settings.security.lastPasswordChange).toLocaleDateString('pt-BR')
+                    : 'Nunca'}
                 </p>
               </div>
             </div>
@@ -430,12 +524,14 @@ export default function ConfiguracoesPage() {
               <div>
                 <p className="font-medium">Autenticação em Dois Fatores (2FA)</p>
                 <p className="text-sm text-muted-foreground">
-                  Adicione uma camada extra de segurança
+                  {settings.security.twoFactorEnabled
+                    ? 'Ativado - Sua conta está protegida'
+                    : 'Adicione uma camada extra de segurança'}
                 </p>
               </div>
             </div>
             <Button variant="outline" size="sm">
-              Ativar
+              {settings.security.twoFactorEnabled ? 'Desativar' : 'Ativar'}
             </Button>
           </div>
 
