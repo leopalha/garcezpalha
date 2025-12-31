@@ -103,7 +103,8 @@ export class EmailSequenceEngine {
       return
     }
 
-    const { step_id, should_send, scheduled_for } = nextStepData
+    const nextStepAny = nextStepData as any
+    const { step_id, should_send, scheduled_for } = nextStepAny
 
     if (!should_send) {
       console.log('[EmailSequenceEngine] Condition not met for step:', step_id)
@@ -127,7 +128,7 @@ export class EmailSequenceEngine {
         step_id: step_id,
         lead_id: subscription.lead_id,
         to_email: subscription.lead.email,
-        subject: nextStepData.subject,
+        subject: nextStepAny.subject,
         scheduled_for,
       })
 
@@ -404,16 +405,18 @@ export class EmailSequenceEngine {
       .eq('sequence_id', sequenceId)
       .eq('status', 'completed')
 
-    // Email stats
+    // Email stats - get subscription IDs first
+    const { data: subscriptionIds } = await supabase
+      .from('email_sequence_subscriptions')
+      .select('id')
+      .eq('sequence_id', sequenceId)
+
+    const ids = (subscriptionIds || []).map((s: any) => s.id)
+
     const { data: sends } = await supabase
       .from('email_sequence_sends')
       .select('*')
-      .in('subscription_id',
-        supabase
-          .from('email_sequence_subscriptions')
-          .select('id')
-          .eq('sequence_id', sequenceId)
-      )
+      .in('subscription_id', ids)
 
     const totalEmailsSent = sends?.filter(s => s.sent_at).length || 0
     const totalOpens = sends?.filter(s => s.opened_at).length || 0

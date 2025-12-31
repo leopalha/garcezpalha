@@ -34,6 +34,7 @@ const RealtimeVoiceAssistant = dynamic(
 // Utils & Hooks
 import { generateConversationId, sendMessage, getDefaultModeConfig } from '@/lib/chat'
 import { useChatSettings } from './ChatSettings'
+import { useAnalytics } from '@/hooks/use-analytics'
 
 export function ChatAssistant({
   productId,
@@ -68,6 +69,9 @@ export function ChatAssistant({
 
   // Settings
   const settingsData = useChatSettings()
+
+  // Analytics
+  const { trackChat } = useAnalytics()
 
   // Convert ChatSettingsData to ChatSettings
   const settings = useMemo(() => {
@@ -117,6 +121,22 @@ export function ChatAssistant({
       onConversationStart(conversationId)
     }
   }, [mode, isOpen, conversationId, onConversationStart])
+
+  // Track chat session (when chat is opened)
+  useEffect(() => {
+    if (isOpen) {
+      const sessionStart = Date.now()
+
+      return () => {
+        const sessionDuration = Date.now() - sessionStart
+        trackChat({
+          messageCount: messages.length,
+          sessionDuration,
+          assistantUsed: mode,
+        })
+      }
+    }
+  }, [isOpen, messages.length, mode, trackChat])
 
   // Notify qualification complete (agent-flow)
   useEffect(() => {

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { formatPhone, formatCpfCnpj } from '@/lib/formatting/br-formats'
 import Link from 'next/link'
+import { useAnalytics } from '@/hooks/use-analytics'
 
 // Tipos dos planos
 type PlanId = 'starter' | 'pro' | 'enterprise'
@@ -132,6 +133,7 @@ export default function AppCheckoutPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
+  const { trackCheckout } = useAnalytics()
 
   // Get plan from URL
   const planIdFromUrl = searchParams?.get('plan') as PlanId | null
@@ -216,8 +218,25 @@ export default function AppCheckoutPage() {
         })
         return
       }
+      // Track checkout start
+      trackCheckout({
+        step: 1,
+        planId: selectedPlan.id,
+        planName: selectedPlan.name,
+        planPrice: selectedPlan.price,
+        totalSteps: 4,
+      })
       setStep('addons')
     } else if (step === 'addons') {
+      // Track addons selection
+      trackCheckout({
+        step: 2,
+        planId: selectedPlan?.id,
+        planName: selectedPlan?.name,
+        planPrice: selectedPlan?.price,
+        addons: selectedAddons,
+        totalSteps: 4,
+      })
       setStep('details')
     } else if (step === 'details') {
       // Validate required fields
@@ -237,6 +256,15 @@ export default function AppCheckoutPage() {
         })
         return
       }
+      // Track details completion
+      trackCheckout({
+        step: 3,
+        planId: selectedPlan?.id,
+        planName: selectedPlan?.name,
+        planPrice: selectedPlan?.price,
+        addons: selectedAddons,
+        totalSteps: 4,
+      })
       setStep('payment')
     }
   }
@@ -254,6 +282,17 @@ export default function AppCheckoutPage() {
       if (!selectedPlan) {
         throw new Error('Nenhum plano selecionado')
       }
+
+      // Track checkout completion attempt
+      trackCheckout({
+        step: 4,
+        planId: selectedPlan.id,
+        planName: selectedPlan.name,
+        planPrice: selectedPlan.price,
+        addons: selectedAddons,
+        paymentMethod: formData.paymentMethod,
+        totalSteps: 4,
+      })
 
       // Map plan IDs to Stripe Price IDs (from .env.local)
       const stripePriceIds: Record<PlanId, string> = {
