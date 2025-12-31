@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,9 +20,9 @@ import {
   ExternalLink,
   DollarSign,
   MessageSquare,
+  Loader2,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,124 +30,77 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/use-toast'
 
-// Mock products data
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Usucapião Extraordinária',
-    category: 'Imobiliário',
-    status: 'active',
-    price: 3500,
-    questions: 12,
-    leads: 45,
-    conversion: 28.5,
-    revenue: 12500,
-    views: 234,
-    lastUpdated: '2024-01-15',
-    hasLandingPage: true,
-    hasVSL: true,
-  },
-  {
-    id: '2',
-    name: 'Regularização de Imóvel',
-    category: 'Imobiliário',
-    status: 'active',
-    price: 2800,
-    questions: 10,
-    leads: 38,
-    conversion: 21.2,
-    revenue: 9800,
-    views: 189,
-    lastUpdated: '2024-01-14',
-    hasLandingPage: true,
-    hasVSL: false,
-  },
-  {
-    id: '3',
-    name: 'Holding Familiar',
-    category: 'Imobiliário',
-    status: 'draft',
-    price: 5000,
-    questions: 8,
-    leads: 0,
-    conversion: 0,
-    revenue: 0,
-    views: 0,
-    lastUpdated: '2024-01-13',
-    hasLandingPage: false,
-    hasVSL: false,
-  },
-  {
-    id: '4',
-    name: 'Regularização de Inventário',
-    category: 'Família',
-    status: 'active',
-    price: 4200,
-    questions: 15,
-    leads: 28,
-    conversion: 32.1,
-    revenue: 8900,
-    views: 156,
-    lastUpdated: '2024-01-12',
-    hasLandingPage: true,
-    hasVSL: true,
-  },
-  {
-    id: '5',
-    name: 'Planejamento Sucessório',
-    category: 'Família',
-    status: 'paused',
-    price: 6000,
-    questions: 18,
-    leads: 12,
-    conversion: 25.0,
-    revenue: 3000,
-    views: 87,
-    lastUpdated: '2024-01-10',
-    hasLandingPage: true,
-    hasVSL: false,
-  },
-  {
-    id: '6',
-    name: 'Divórcio Consensual',
-    category: 'Família',
-    status: 'active',
-    price: 2500,
-    questions: 14,
-    leads: 52,
-    conversion: 19.2,
-    revenue: 10000,
-    views: 312,
-    lastUpdated: '2024-01-11',
-    hasLandingPage: true,
-    hasVSL: true,
-  },
-]
+interface Product {
+  id: string
+  name: string
+  category: string
+  status: string
+  price: number
+  questions: any[]
+  stats: {
+    leads: number
+    conversionRate: number
+    revenue: number
+  }
+  created_at: string
+  updated_at: string
+}
+
 
 const statusConfig = {
-  active: { label: 'Ativo', color: 'bg-green-100 text-green-700 border-green-200' },
+  published: { label: 'Ativo', color: 'bg-green-100 text-green-700 border-green-200' },
   draft: { label: 'Rascunho', color: 'bg-gray-100 text-gray-700 border-gray-200' },
-  paused: { label: 'Pausado', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+  archived: { label: 'Arquivado', color: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
 }
 
 export default function ProductsPage() {
+  const { toast } = useToast()
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'draft' | 'paused'>('all')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft' | 'archived'>('all')
 
-  const filteredProducts = mockProducts.filter((product) => {
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  async function fetchProducts() {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/app/products')
+      if (!res.ok) throw new Error('Failed to fetch products')
+      const data = await res.json()
+      setProducts(data.products || [])
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      toast({
+        title: 'Erro ao carregar produtos',
+        description: 'Não foi possível carregar a lista de produtos.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+      product.category?.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = filterStatus === 'all' || product.status === filterStatus
     return matchesSearch && matchesStatus
   })
 
   const stats = {
-    total: mockProducts.length,
-    active: mockProducts.filter(p => p.status === 'active').length,
-    draft: mockProducts.filter(p => p.status === 'draft').length,
-    totalLeads: mockProducts.reduce((sum, p) => sum + p.leads, 0),
-    totalRevenue: mockProducts.reduce((sum, p) => sum + p.revenue, 0),
+    total: products.length,
+    published: products.filter(p => p.status === 'published').length,
+    draft: products.filter(p => p.status === 'draft').length,
+    totalLeads: products.reduce((sum, p) => sum + (p.stats?.leads || 0), 0),
+    totalRevenue: products.reduce((sum, p) => sum + (p.stats?.revenue || 0), 0),
+    averageConversion: products.filter(p => p.status === 'published').length > 0
+      ? products.filter(p => p.status === 'published').reduce((sum, p) => sum + (p.stats?.conversionRate || 0), 0) / products.filter(p => p.status === 'published').length
+      : 0
   }
 
   return (
@@ -175,9 +129,9 @@ export default function ProductsPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-2xl font-bold">{loading ? '...' : stats.total}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.active} ativos, {stats.draft} rascunhos
+              {stats.published} ativos, {stats.draft} rascunhos
             </p>
           </CardContent>
         </Card>
@@ -188,7 +142,7 @@ export default function ProductsPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLeads}</div>
+            <div className="text-2xl font-bold">{loading ? '...' : stats.totalLeads}</div>
             <p className="text-xs text-green-600">
               De todos os produtos
             </p>
@@ -202,7 +156,7 @@ export default function ProductsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              R$ {stats.totalRevenue.toLocaleString('pt-BR')}
+              {loading ? '...' : `R$ ${stats.totalRevenue.toLocaleString('pt-BR')}`}
             </div>
             <p className="text-xs text-muted-foreground">
               Últimos 30 dias
@@ -217,7 +171,7 @@ export default function ProductsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {(mockProducts.reduce((sum, p) => sum + p.conversion, 0) / mockProducts.filter(p => p.status === 'active').length).toFixed(1)}%
+              {loading ? '...' : `${stats.averageConversion.toFixed(1)}%`}
             </div>
             <p className="text-xs text-muted-foreground">
               Produtos ativos
@@ -250,9 +204,9 @@ export default function ProductsPage() {
                 Todos
               </Button>
               <Button
-                variant={filterStatus === 'active' ? 'default' : 'outline'}
+                variant={filterStatus === 'published' ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setFilterStatus('active')}
+                onClick={() => setFilterStatus('published')}
               >
                 Ativos
               </Button>
@@ -267,17 +221,30 @@ export default function ProductsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {filteredProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Nenhum produto encontrado</p>
-                <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
-                  Limpar filtros
-                </Button>
-              </div>
-            ) : (
-              filteredProducts.map((product) => (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">
+                    {products.length === 0 ? 'Nenhum produto criado ainda' : 'Nenhum produto encontrado'}
+                  </p>
+                  {products.length === 0 ? (
+                    <Button asChild className="mt-4">
+                      <Link href="/app/dashboard/produtos/novo">Criar Primeiro Produto</Link>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
+                      Limpar filtros
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                filteredProducts.map((product) => (
                 <Card key={product.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="pt-6">
                     <div className="flex items-start gap-4">
@@ -300,11 +267,11 @@ export default function ProductsPage() {
                               </Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span>{product.category}</span>
+                              <span>{product.category || 'Sem categoria'}</span>
                               <span>•</span>
-                              <span>R$ {product.price.toLocaleString('pt-BR')}</span>
+                              <span>R$ {product.price?.toLocaleString('pt-BR') || '0'}</span>
                               <span>•</span>
-                              <span>{product.questions} perguntas</span>
+                              <span>{product.questions?.length || 0} perguntas</span>
                             </div>
                           </div>
 
@@ -332,12 +299,10 @@ export default function ProductsPage() {
                                 <Copy className="h-4 w-4 mr-2" />
                                 Duplicar
                               </DropdownMenuItem>
-                              {product.hasLandingPage && (
-                                <DropdownMenuItem>
-                                  <ExternalLink className="h-4 w-4 mr-2" />
-                                  Abrir Landing Page
-                                </DropdownMenuItem>
-                              )}
+                              <DropdownMenuItem>
+                                <ExternalLink className="h-4 w-4 mr-2" />
+                                Abrir Landing Page
+                              </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem className="text-destructive">
                                 <Trash2 className="h-4 w-4 mr-2" />
@@ -348,47 +313,32 @@ export default function ProductsPage() {
                         </div>
 
                         {/* Metrics */}
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 pt-4 border-t">
-                          <div>
-                            <p className="text-xs text-muted-foreground mb-1">Visualizações</p>
-                            <p className="text-sm font-semibold flex items-center gap-1">
-                              <Eye className="h-3 w-3" />
-                              {product.views}
-                            </p>
-                          </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t">
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Leads</p>
                             <p className="text-sm font-semibold flex items-center gap-1">
                               <Users className="h-3 w-3" />
-                              {product.leads}
+                              {product.stats?.leads || 0}
                             </p>
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Conversão</p>
                             <p className="text-sm font-semibold flex items-center gap-1">
                               <TrendingUp className="h-3 w-3" />
-                              {product.conversion}%
+                              {product.stats?.conversionRate?.toFixed(1) || 0}%
                             </p>
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Receita</p>
                             <p className="text-sm font-semibold text-green-600">
-                              R$ {product.revenue.toLocaleString('pt-BR')}
+                              R$ {product.stats?.revenue?.toLocaleString('pt-BR') || '0'}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs text-muted-foreground mb-1">Recursos</p>
-                            <div className="flex items-center gap-1">
-                              {product.hasLandingPage && (
-                                <FileText className="h-3 w-3 text-blue-600" title="Landing Page" />
-                              )}
-                              {product.hasVSL && (
-                                <MessageSquare className="h-3 w-3 text-purple-600" title="VSL" />
-                              )}
-                              {!product.hasLandingPage && !product.hasVSL && (
-                                <span className="text-xs text-muted-foreground">-</span>
-                              )}
-                            </div>
+                            <p className="text-xs text-muted-foreground mb-1">Criado em</p>
+                            <p className="text-sm font-semibold">
+                              {new Date(product.created_at).toLocaleDateString('pt-BR')}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -396,8 +346,9 @@ export default function ProductsPage() {
                   </CardContent>
                 </Card>
               ))
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
