@@ -17,6 +17,27 @@ const createPaymentSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Authentication check
+    const supabase = await createClient()
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Get user to validate tenant_id
+    const { data: user } = await supabase
+      .from('users')
+      .select('id, tenant_id')
+      .eq('id', session.user.id)
+      .single()
+
+    if (!user || !user.tenant_id) {
+      return NextResponse.json({ error: 'User or tenant not found' }, { status: 404 })
+    }
+
     if (!isMercadoPagoConfigured() || !paymentClient) {
       return NextResponse.json(
         { error: 'MercadoPago não está configurado' },
@@ -58,11 +79,12 @@ export async function POST(request: NextRequest) {
     const qrCode = pixData.qr_code
     const qrCodeBase64 = pixData.qr_code_base64
 
-    // Save order to database
-    const supabase = await createClient()
+    // Save order to database with tenant isolation
     const { data: order, error: dbError } = await supabase
       .from('checkout_orders')
       .insert({
+        tenant_id: user.tenant_id,
+        user_id: session.user.id,
         service_id: data.serviceId,
         service_name: data.serviceName,
         customer_name: data.customerName,

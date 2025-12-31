@@ -141,7 +141,7 @@ export class BenefitCalculator {
       elegivel = requisitos.every((r) => r.cumprido)
 
       if (!elegivel) {
-        const anosQueF altam = Math.max(
+        const anosQueFaltam = Math.max(
           idadeMinima - benefitData.idade,
           tempoMinimoAnos - tempoAnos
         )
@@ -149,8 +149,8 @@ export class BenefitCalculator {
           elegivel: false,
           requisitos,
           tempoFaltante: {
-            anos: Math.floor(anosQueF altam),
-            meses: Math.round((anosQueF altam % 1) * 12),
+            anos: Math.floor(anosQueFaltam),
+            meses: Math.round((anosQueFaltam % 1) * 12),
           },
         }
       }
@@ -333,7 +333,7 @@ export class BenefitCalculator {
     const simulacoes: BenefitCalculation['simulacoes'] = []
 
     if (!elegibilidade.elegivel && elegibilidade.tempoFaltante) {
-      const anosQueF altam = elegibilidade.tempoFaltante.anos
+      const anosQueFaltam = elegibilidade.tempoFaltante.anos
 
       simulacoes.push({
         cenario: 'Aposentadoria imediata (se elegível)',
@@ -343,11 +343,11 @@ export class BenefitCalculator {
       })
 
       simulacoes.push({
-        cenario: `Aposentadoria em ${anosQueF altam} anos`,
-        idadeAposentadoria: benefitData.idade + anosQueF altam,
+        cenario: `Aposentadoria em ${anosQueFaltam} anos`,
+        idadeAposentadoria: benefitData.idade + anosQueFaltam,
         valorEstimado: this.calcularValor(tipoBeneficio, {
           ...benefitData,
-          tempoContribuicao: benefitData.tempoContribuicao + anosQueF altam * 12,
+          tempoContribuicao: benefitData.tempoContribuicao + anosQueFaltam * 12,
         }).valorEstimado,
         observacoes: 'Cumprindo requisitos mínimos',
       })

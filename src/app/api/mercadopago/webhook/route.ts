@@ -1,6 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
+import crypto from 'crypto'
+
+/**
+ * Verify MercadoPago webhook signature
+ * Docs: https://www.mercadopago.com.br/developers/pt/docs/your-integrations/notifications/webhooks
+ */
+function verifyMercadoPagoSignature(
+  xSignature: string | null,
+  xRequestId: string | null,
+  dataId: string,
+  secret: string
+): boolean {
+  if (!xSignature || !xRequestId) {
+    return false
+  }
+
+  // Extract ts and hash from x-signature header
+  // Format: "ts=1234567890,v1=hash"
+  const parts = xSignature.split(',')
+  const tsPart = parts.find((p) => p.startsWith('ts='))
+  const hashPart = parts.find((p) => p.startsWith('v1='))
+
+  if (!tsPart || !hashPart) {
+    return false
+  }
+
+  const ts = tsPart.replace('ts=', '')
+  const receivedHash = hashPart.replace('v1=', '')
+
+  // Create manifest: id:{data.id};request-id:{x-request-id};ts:{ts};
+  const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`
+
+  // Generate HMAC SHA256
+  const hmac = crypto.createHmac('sha256', secret)
+  hmac.update(manifest)
+  const calculatedHash = hmac.digest('hex')
+
+  return calculatedHash === receivedHash
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,6 +48,23 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+
+    // Verify webhook signature
+    const xSignature = request.headers.get('x-signature')
+    const xRequestId = request.headers.get('x-request-id')
+    const dataId = body.data?.id
+
+    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET
+
+    if (webhookSecret && dataId) {
+      const isValid = verifyMercadoPagoSignature(xSignature, xRequestId, dataId, webhookSecret)
+      if (!isValid) {
+        console.error('MercadoPago webhook signature verification failed')
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+      }
+    } else if (!webhookSecret) {
+      console.warn('MERCADOPAGO_WEBHOOK_SECRET not configured - skipping signature verification')
+    }
 
     // MercadoPago sends different notification types
     // We're interested in 'payment' notifications

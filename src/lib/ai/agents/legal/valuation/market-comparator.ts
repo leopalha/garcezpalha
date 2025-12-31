@@ -19,7 +19,7 @@ export interface MarketComparison {
   comparativoPrecos: {
     imovelAvaliado: number
     mediaBairro: number
-    mediaC idade: number
+    mediaCidade: number
     desvioPercentual: number
     classificacao: 'abaixo-mercado' | 'no-mercado' | 'acima-mercado'
   }
@@ -73,7 +73,7 @@ export class MarketComparator {
   ): MarketComparison['comparativoPrecos'] {
     const valorM2Imovel = marketData.valorImovel / marketData.areaTotal
     const mediaBairro = analiseRegional.valorM2Medio
-    const mediaC idade = mediaBairro * 0.95
+    const mediaCidade = mediaBairro * 0.95
 
     const desvioPercentual = ((valorM2Imovel - mediaBairro) / mediaBairro) * 100
 
@@ -85,7 +85,7 @@ export class MarketComparator {
     return {
       imovelAvaliado: Math.round(valorM2Imovel),
       mediaBairro: Math.round(mediaBairro),
-      mediaC idade: Math.round(mediaC idade),
+      mediaCidade: Math.round(mediaCidade),
       desvioPercentual: Math.round(desvioPercentual * 10) / 10,
       classificacao,
     }
