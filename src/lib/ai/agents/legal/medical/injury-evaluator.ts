@@ -184,7 +184,7 @@ export class InjuryEvaluator {
       },
       deformidade: {
         presente: temDeformidade,
-        visivel: temDeformidade && partesAfetadas.some((p) => p.includes('rosto') || p.includes('face')),
+        visivel: temDeformidade && partesAfetadas.some((p: string) => p.includes('rosto') || p.includes('face')),
         permanente: temDeformidade,
       },
     }

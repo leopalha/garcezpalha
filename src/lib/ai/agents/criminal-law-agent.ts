@@ -116,7 +116,7 @@ export class CriminalLawAgent {
     factors: {
       culpabilidade: 'baixa' | 'media' | 'alta'
       antecedentes: 'bons' | 'ruins'
-      condutaSocial: 'boa' | 'regular' | 'ma'
+      condutaSocial: 'boa' | 'ruim'
       personalidade: 'favoravel' | 'desfavoravel'
       motivos: 'favoraveis' | 'desfavoraveis'
       circunstancias: 'favoraveis' | 'desfavoraveis'

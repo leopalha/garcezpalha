@@ -37,8 +37,8 @@ interface ConversionEvent {
 declare global {
   interface Window {
     gtag?: (
-      command: string, // 'event' | 'config' | 'set' | 'js'
-      eventNameOrDate: string | Date,
+      command: 'set' | 'config' | 'event' | 'js',
+      targetId: string | Date,
       params?: Record<string, unknown>
     ) => void
     dataLayer?: unknown[]

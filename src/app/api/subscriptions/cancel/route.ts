@@ -5,7 +5,7 @@ import Stripe from 'stripe'
 export const dynamic = 'force-dynamic'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2024-11-20.acacia' as any,
 })
 
 /**
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Subscription will be canceled at period end',
       cancel_at: new Date(
-        canceledSubscription.current_period_end * 1000
+        (canceledSubscription as any).current_period_end * 1000
       ).toISOString(),
     })
   } catch (error) {
