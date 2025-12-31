@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch last message for each conversation
     const conversationsWithMessages = await Promise.all(
-      (conversations || []).map(async (conv: any) => {
+      ((conversations as any) || []).map(async (conv: any) => {
         const { data: lastMessage } = await supabase
           .from('messages')
           .select('content, created_at')
