@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
@@ -7,7 +8,7 @@ export const dynamic = 'force-dynamic'
  * GET /api/subscriptions/current
  * Retorna a assinatura ativa do usuário logado
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const supabase = await createClient()
 
@@ -82,3 +83,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })

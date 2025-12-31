@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 
 // Supabase admin client
@@ -7,7 +8,7 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const orderId = searchParams.get('order_id')
   const sessionId = searchParams.get('session_id')
@@ -49,3 +50,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 50 })
