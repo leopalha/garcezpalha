@@ -752,22 +752,276 @@ Ver detalhamento completo em: `.manus/reports/TASK_PLAN_MISSING_IMPLEMENTATIONS.
 
 ---
 
+---
+
+## 🔍 MANUS AUDIT 31/12/2024 - GAPS IDENTIFICADOS
+
+**Auditoria Completa:** 4 agentes paralelos + testes automatizados
+**Score Sistema:** 74/100 (Production Ready com Gaps)
+**Relatório Completo:** `.manus/reports/MANUS_AUDIT_MASTER_31DEC2024.md`
+
+---
+
+### 🔴 SPRINT SECURITY - P0 BLOCKERS (11h) - CRÍTICO
+
+**Objetivo:** Eliminar vulnerabilidades de segurança antes de escalar
+
+#### [SECURITY-001] MercadoPago Authentication
+- **Prioridade:** P0 | **Esforço:** 1h | **Status:** ⏳ PENDENTE
+- **Problema:** POST `/api/mercadopago/create-payment` sem autenticação
+- **Impacto:** Qualquer pessoa pode criar pagamentos
+- **Fix:** Adicionar `await supabase.auth.getSession()` + validação tenant_id
+- **Arquivo:** `src/app/api/mercadopago/create-payment/route.ts`
+
+#### [SECURITY-002] Webhook Signature Verification
+- **Prioridade:** P0 | **Esforço:** 2h | **Status:** ⏳ PENDENTE
+- **Problema:** Webhooks MercadoPago sem verificação de assinatura
+- **Impacto:** Vulnerável a spoofing de webhooks
+- **Fix:** Implementar X-Signature header verification
+- **Arquivos:** `src/app/api/mercadopago/webhook/route.ts`, WhatsApp webhooks
+
+#### [SECURITY-003] WhatsApp Webhook Deduplication
+- **Prioridade:** P0 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
+- **Problema:** 4 rotas de webhook WhatsApp podem processar mesmo evento
+- **Impacto:** Mensagens duplicadas enviadas aos usuários
+- **Fix:** Consolidar em 1-2 rotas + cache de message_id (Redis)
+- **Arquivos:** Consolidar webhooks WhatsApp duplicados
+
+#### [SECURITY-004] TypeScript Compilation Errors
+- **Prioridade:** P0 | **Esforço:** 1h | **Status:** ⏳ PENDENTE
+- **Problema:** 15 erros de compilação TypeScript
+- **Impacto:** Build pode falhar em produção
+- **Fix:** Corrigir template literals e syntax errors
+- **Arquivos:**
+  - `src/lib/ai/agents/legal/social-security/benefit-calculator.ts` (9 erros)
+  - `src/lib/ai/agents/legal/valuation/market-comparator.ts` (6 erros)
+
+#### [SECURITY-005] RLS Policies Incomplete
+- **Prioridade:** P0 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
+- **Problema:** Row Level Security incompleta em tabelas críticas
+- **Impacto:** Dados podem vazar entre tenants (multi-tenancy)
+- **Fix:** Implementar RLS policies completas + testes
+- **Tabelas:** leads, conversations, products, contracts
+- **Deliverable:** Migration com policies + testes de isolamento
+
+---
+
+### 🟠 SPRINT CODE QUALITY - P1 ALTA PRIORIDADE (60h)
+
+**Objetivo:** Elevar code quality para production-grade
+
+#### [QUALITY-001] Remove Console.logs
+- **Prioridade:** P1 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
+- **Problema:** 555 console.logs expondo dados sensíveis
+- **Impacto:** Performance + segurança (logs em produção)
+- **Fix:** Substituir por logger estruturado (Winston/Pino)
+- **Escopo:** Todo o projeto (manter apenas error logging em APIs)
+
+#### [QUALITY-002] Input Validation (Zod)
+- **Prioridade:** P1 | **Esforço:** 8h | **Status:** ⏳ PENDENTE
+- **Problema:** 80+ APIs sem validação de input
+- **Impacto:** Vulnerável a injection attacks, bad data
+- **Fix:** Implementar Zod schemas em todas rotas
+- **Escopo:** 116 APIs identificadas sem validação
+
+#### [QUALITY-003] Type Safety (Remove `any`)
+- **Prioridade:** P1 | **Esforço:** 6h | **Status:** ⏳ PENDENTE
+- **Problema:** 50+ usos explícitos de `any`
+- **Impacto:** Perda de type safety, bugs em runtime
+- **Fix:** Criar interfaces apropriadas
+- **Arquivos:** Identificar com `grep -r "any" src/`
+
+#### [QUALITY-004] Error Handling Improvements
+- **Prioridade:** P1 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
+- **Problema:** 20+ try-catch apenas logam, não recuperam
+- **Impacto:** Falhas silenciosas, UX ruim
+- **Fix:** Implementar retry logic + fallbacks + user feedback
+- **Padrão:** Exponential backoff para APIs externas
+
+#### [QUALITY-005] Accessibility (a11y)
+- **Prioridade:** P1 | **Esforço:** 6h | **Status:** ⏳ PENDENTE
+- **Problema:** Apenas 7 instâncias de aria-* no projeto inteiro
+- **Impacto:** Site inacessível para screen readers
+- **Fix:** Adicionar aria-label, role, aria-modal em todos componentes interativos
+- **Ferramentas:** axe-core, eslint-plugin-jsx-a11y
+
+#### [QUALITY-006] Critical TODOs
+- **Prioridade:** P1 | **Esforço:** 24h | **Status:** ⏳ PENDENTE
+- **Problema:** 12 TODOs críticos bloqueando features core
+- **Impacto:** Features incompletas (email, PDF, payments)
+- **Lista:**
+  1. Email integration (triagem-flow.ts:213)
+  2. WhatsApp processing (automation/engine.ts:235-238)
+  3. PDF generation (financeiro-flow.ts:230-231)
+  4. Payment processing (fechamento-flow.ts:143,147,200,204)
+  5. Process monitor APIs (monitor-engine.ts:104,217,231,248)
+  6. ... (outros 7 TODOs)
+
+#### [QUALITY-007] Integration Tests
+- **Prioridade:** P1 | **Esforço:** 8h | **Status:** ⏳ PENDENTE
+- **Problema:** 0 testes de integração para webhooks/payments
+- **Impacto:** Bugs em produção em fluxos críticos
+- **Fix:** Implementar testes E2E
+- **Escopo:** Stripe, MercadoPago, ClickSign webhooks + payment flows
+
+---
+
+### 🟡 SPRINT UX & PERFORMANCE - P2 MÉDIA PRIORIDADE (24.5h)
+
+**Objetivo:** Polir UX e melhorar performance
+
+#### [UX-001] Dashboard Mock Data Verification
+- **Prioridade:** P2 | **Esforço:** 5h | **Status:** ⏳ PENDENTE
+- **Problema:** `/api/app/dashboard/stats` pode ter mock data
+- **Fix:** Investigar (2h) + implementar queries reais (3h)
+- **Arquivo:** `src/app/api/app/dashboard/stats/route.ts`
+
+#### [PERF-001] N+1 Queries Optimization
+- **Prioridade:** P2 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
+- **Problema:** Queries N+1 em páginas admin
+- **Impacto:** Performance ruim com muitos dados
+- **Fix:** Otimizar com joins, eager loading
+- **Ferramentas:** Supabase query analyzer
+
+#### [INFRA-001] Rate Limiting
+- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
+- **Problema:** Rate limiting não implementado
+- **Impacto:** Vulnerável a abuse/DDoS
+- **Fix:** Adicionar Upstash Redis rate limiting
+- **Escopo:** Todas APIs públicas + webhooks
+
+#### [CLEANUP-003] Deprecated Components
+- **Prioridade:** P2 | **Esforço:** 30min | **Status:** ⏳ PENDENTE
+- **Problema:** 2 componentes deprecated não removidos (~32KB)
+- **Fix:** Deletar arquivos
+- **Arquivos:** `AgentFlowChatWidget.deprecated.tsx` (2 arquivos)
+
+#### [REFACTOR-001] Hero Components Consolidation
+- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
+- **Problema:** 3 variações de Hero component duplicadas
+- **Impacto:** Manutenção difícil, inconsistências
+- **Fix:** Consolidar em 1 componente parametrizado
+- **Arquivos:** Identificar Hero components duplicados
+
+#### [PERF-002] Lazy Loading
+- **Prioridade:** P2 | **Esforço:** 2h | **Status:** ⏳ PENDENTE
+- **Problema:** 5 componentes grandes sem lazy loading
+- **Impacto:** Bundle size grande, LCP ruim
+- **Fix:** Implementar `dynamic()` em modals/dialogs
+- **Ferramentas:** next/dynamic
+
+#### [DOCS-008] SLA Documentation
+- **Prioridade:** P2 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
+- **Problema:** SLA documentation completamente faltando
+- **Impacto:** Cliente não sabe o que esperar
+- **Fix:** Criar `SLA_AGREEMENT.md` com SLAs de resposta
+- **Conteúdo:** Response times, uptime guarantees, support tiers
+
+#### [INFRA-002] Backup Automation
+- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
+- **Problema:** Supabase backups não automatizados
+- **Impacto:** Risco de perda de dados
+- **Fix:** Implementar cron backup + retention policy
+- **Ferramentas:** Supabase CLI + Vercel Cron
+
+---
+
+## 📊 RESUMO AUDITORIA
+
+| Sprint | Tasks | Esforço | Prioridade | Status |
+|--------|-------|---------|------------|--------|
+| **SECURITY (P0)** | 5 | 11h | 🔴 Crítico | ⏳ Pendente |
+| **CODE QUALITY (P1)** | 7 | 60h | 🟠 Alta | ⏳ Pendente |
+| **UX & PERF (P2)** | 8 | 24.5h | 🟡 Média | ⏳ Pendente |
+| **TOTAL AUDITORIA** | **20** | **95.5h** | - | - |
+
+---
+
+## 🎯 PLANO DE EXECUÇÃO RECOMENDADO
+
+### ⚡ ESTA SEMANA: SPRINT SECURITY (11h) - BLOCKER
+**Objetivo:** Sistema seguro para escalar
+
+**Tasks:**
+1. ✅ SECURITY-001: MercadoPago auth (1h)
+2. ✅ SECURITY-002: Webhook signatures (2h)
+3. ✅ SECURITY-003: WhatsApp dedup (3h)
+4. ✅ SECURITY-004: Fix TS errors (1h)
+5. ✅ SECURITY-005: RLS policies (4h)
+
+**Deliverable:** Sistema sem vulnerabilidades críticas
+
+---
+
+### SEMANAS 2-3: SPRINT CODE QUALITY (60h)
+**Objetivo:** Código production-grade
+
+**Tasks:**
+6. ✅ QUALITY-001: Console.logs (4h)
+7. ✅ QUALITY-002: Zod validation (8h)
+8. ✅ QUALITY-003: Type safety (6h)
+9. ✅ QUALITY-004: Error handling (4h)
+10. ✅ QUALITY-005: Accessibility (6h)
+11. ✅ QUALITY-006: Critical TODOs (24h)
+12. ✅ QUALITY-007: Integration tests (8h)
+
+**Deliverable:** Codebase com qualidade alta + testado
+
+---
+
+### SEMANA 4: SPRINT UX & PERFORMANCE (24.5h)
+**Objetivo:** Sistema polido e otimizado
+
+**Tasks:**
+13. ✅ UX-001: Dashboard real data (5h)
+14. ✅ PERF-001: N+1 queries (4h)
+15. ✅ INFRA-001: Rate limiting (3h)
+16. ✅ CLEANUP-003: Deprecated (30min)
+17. ✅ REFACTOR-001: Hero consolidation (3h)
+18. ✅ PERF-002: Lazy loading (2h)
+19. ✅ DOCS-008: SLA docs (4h)
+20. ✅ INFRA-002: Backups (3h)
+
+**Deliverable:** Sistema otimizado + documentado
+
+---
+
+### Timeline Total: 4 semanas (95.5h)
+
+**Após completar:**
+- Code Quality Score: 65/100 → 85/100 (+20)
+- Production Readiness: 70% → 95% (+25%)
+- Security Issues: 5 críticos → 0 (-5)
+- Type Safety: 45/100 → 90/100 (+45)
+- Documentation: 70/100 → 95/100 (+25)
+- Test Coverage: ~15% → 60% (+45%)
+
+---
+
 ## ✅ CONCLUSÃO
 
 **Status Atual:**
 - ✅ P1/P2/P3 anteriores 100% completos
-- ✅ Score 100/100
-- ✅ Production ready
+- ✅ Score 100/100 (features)
+- 🟡 Score 74/100 (code quality + segurança)
+- ✅ Production ready (com ressalvas de segurança)
+- 🔍 Auditoria MANUS completa: 20 gaps identificados
 - 🆕 52 novas tasks geradas para Q1 2025
 
-**Próximo Passo:**
+**Próximo Passo IMEDIATO:**
+**SPRINT SECURITY (11h)** - Eliminar 5 vulnerabilidades P0 antes de escalar
+
+**Depois:**
 Executar SPRINT 2-3 (Dashboard B2B APIs) para launch do produto B2B.
 
 **Recomendação:**
-Priorizar Dashboard + Payments para monetização imediata.
+1. Completar SPRINT SECURITY esta semana
+2. Priorizar Dashboard + Payments para monetização imediata
+3. Intercalar Code Quality com features novas
 
 ---
 
-**Gerado por:** MANUS v7.0 Task Generation
-**Data:** 30/12/2025
-**Próxima atualização:** Após Sprint 1
+**Gerado por:** MANUS v7.0 Comprehensive Audit
+**Data Auditoria:** 31/12/2024
+**Data Atualização:** 31/12/2024
+**Próxima auditoria:** Após Sprint 2 (2 semanas)
