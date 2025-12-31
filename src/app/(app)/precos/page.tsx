@@ -364,7 +364,7 @@ export default function PrecosPage() {
                               <TrendingUp className="w-4 h-4 text-blue-600" />
                               Marketing Automation
                             </p>
-                            {plan.features.marketingDetail?.map((item, i) => (
+                            {'marketingDetail' in plan.features && plan.features.marketingDetail?.map((item: string, i: number) => (
                               <p key={i} className="text-xs text-muted-foreground pl-6">
                                 • {item}
                               </p>
