@@ -8,7 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,7 +53,7 @@ interface Product {
 // GET: Lista produtos
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -76,7 +75,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const tenantId = userData.tenant_id
+    const tenantId = (userData as any).tenant_id
 
     // Query params para filtros
     const { searchParams } = new URL(request.url)
@@ -162,7 +161,7 @@ export async function GET(request: NextRequest) {
 // POST: Criar produto
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -184,7 +183,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const tenantId = userData.tenant_id
+    const tenantId = (userData as any).tenant_id
 
     // Parse body
     const body = await request.json()
@@ -219,7 +218,7 @@ export async function POST(request: NextRequest) {
         proposal_template: body.proposal_template || '',
         landing_page_config: body.landing_page_config || {},
         status: body.status || 'draft',
-      })
+      } as any)
       .select()
       .single()
 

@@ -15,8 +15,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = getSupabaseAdmin()
 
-    // @ts-expect-error - client_documents table not in schema yet
-    let query = supabase.from('client_documents').select('*').order('created_at', { ascending: false })
+    let query = (supabase as any).from('client_documents').select('*').order('created_at', { ascending: false })
 
     // Filter by leadId if provided (for admin viewing lead's documents)
     if (leadId) {
@@ -64,8 +63,7 @@ export async function DELETE(request: NextRequest) {
     const supabase = getSupabaseAdmin()
 
     // Fetch document from database
-    // @ts-expect-error - client_documents table not in schema yet
-    const { data: document, error: fetchError } = await supabase
+    const { data: document, error: fetchError } = await (supabase as any)
       .from('client_documents')
       .select('*')
       .eq('id', documentId)
@@ -83,8 +81,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete from database
-    // @ts-expect-error - client_documents table not in schema yet
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await (supabase as any)
       .from('client_documents')
       .delete()
       .eq('id', documentId)
