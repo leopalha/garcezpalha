@@ -83,7 +83,7 @@ export async function GET(
     } else if (conversation.status === 'human') {
       state = 'admin_active'
     } else if (conversation.status === 'bot') {
-      state = conversation.qualification_score >= 80 ? 'qualified' : 'classifying'
+      state = (conversation.qualification_score || 0) >= 80 ? 'qualified' : 'classifying'
     }
 
     // Transform messages to expected format
@@ -96,12 +96,13 @@ export async function GET(
       sender_type: msg.sender_type,
     }))
 
+    const leads = (conversation as any).leads
     const response = {
       id: conversation.id,
       lead_id: conversation.lead_id,
-      lead_name: conversation.leads?.full_name || 'Lead sem nome',
-      lead_email: conversation.leads?.email || '',
-      lead_phone: conversation.leads?.phone || '',
+      lead_name: leads?.full_name || 'Lead sem nome',
+      lead_email: leads?.email || '',
+      lead_phone: leads?.phone || '',
       state,
       qualification_score: conversation.qualification_score || 0,
       created_at: conversation.created_at,
@@ -135,7 +136,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Check authentication
     const {
