@@ -408,7 +408,7 @@ BEGIN
     CREATE POLICY "Users can view messages from their tenant conversations"
     ON messages FOR SELECT
     USING (
-      conversation_id IN (
+      conversation_id::uuid IN (
         SELECT id FROM conversations
         WHERE tenant_id IN (
           SELECT tenant_id FROM users WHERE id = auth.uid()
@@ -419,7 +419,7 @@ BEGIN
     CREATE POLICY "Users can insert messages in their tenant conversations"
     ON messages FOR INSERT
     WITH CHECK (
-      conversation_id IN (
+      conversation_id::uuid IN (
         SELECT id FROM conversations
         WHERE tenant_id IN (
           SELECT tenant_id FROM users WHERE id = auth.uid()
@@ -430,7 +430,7 @@ BEGIN
     CREATE POLICY "Users can update messages in their tenant conversations"
     ON messages FOR UPDATE
     USING (
-      conversation_id IN (
+      conversation_id::uuid IN (
         SELECT id FROM conversations
         WHERE tenant_id IN (
           SELECT tenant_id FROM users WHERE id = auth.uid()
@@ -438,7 +438,7 @@ BEGIN
       )
     )
     WITH CHECK (
-      conversation_id IN (
+      conversation_id::uuid IN (
         SELECT id FROM conversations
         WHERE tenant_id IN (
           SELECT tenant_id FROM users WHERE id = auth.uid()
@@ -449,7 +449,7 @@ BEGIN
     CREATE POLICY "Users can delete messages in their tenant conversations"
     ON messages FOR DELETE
     USING (
-      conversation_id IN (
+      conversation_id::uuid IN (
         SELECT id FROM conversations
         WHERE tenant_id IN (
           SELECT tenant_id FROM users WHERE id = auth.uid()
