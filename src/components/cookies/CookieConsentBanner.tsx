@@ -87,7 +87,7 @@ export function CookieConsentBanner() {
   const enableAnalytics = () => {
     // Enable GA4
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+      ;(window.gtag as any)('consent', 'update', {
         analytics_storage: 'granted',
       })
     }
@@ -99,7 +99,7 @@ export function CookieConsentBanner() {
   const disableAnalytics = () => {
     // Disable GA4
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+      ;(window.gtag as any)('consent', 'update', {
         analytics_storage: 'denied',
       })
     }
@@ -109,7 +109,7 @@ export function CookieConsentBanner() {
 
   const enableMarketing = () => {
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+      ;(window.gtag as any)('consent', 'update', {
         ad_storage: 'granted',
         ad_user_data: 'granted',
         ad_personalization: 'granted',
@@ -121,7 +121,7 @@ export function CookieConsentBanner() {
 
   const disableMarketing = () => {
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
+      ;(window.gtag as any)('consent', 'update', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
