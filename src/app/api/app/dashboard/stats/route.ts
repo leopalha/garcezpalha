@@ -8,7 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
@@ -72,7 +71,7 @@ interface DashboardStats {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // 1. Verificar autenticação
     const {
@@ -95,10 +94,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const tenantId = userData.tenant_id
+    const tenantId = (userData as any).tenant_id
 
     // 3. Buscar stats de produtos
-    const { data: products, error: productsError } = await supabase
+    const { data: products, error: productsError } = await (supabase as any)
       .from('products')
       .select('id, status')
       .eq('tenant_id', tenantId)
@@ -117,7 +116,7 @@ export async function GET(request: NextRequest) {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const { data: leads, error: leadsError } = await supabase
+    const { data: leads, error: leadsError } = await (supabase as any)
       .from('leads')
       .select('id, status, created_at')
       .eq('tenant_id', tenantId)
@@ -143,7 +142,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 5. Buscar stats do Agent IA
-    const { data: conversations, error: conversationsError } = await supabase
+    const { data: conversations, error: conversationsError } = await (supabase as any)
       .from('conversations')
       .select('id, status, created_at, updated_at, satisfaction_rating')
       .eq('tenant_id', tenantId)
@@ -208,7 +207,7 @@ export async function GET(request: NextRequest) {
     const firstDayTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1)
 
     // Buscar pagamentos confirmados
-    const { data: payments, error: paymentsError } = await supabase
+    const { data: payments, error: paymentsError } = await (supabase as any)
       .from('payments')
       .select('amount, status, created_at')
       .eq('tenant_id', tenantId)

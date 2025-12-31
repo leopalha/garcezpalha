@@ -8,7 +8,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,7 +44,7 @@ interface UserSettings {
 // GET: Buscar settings
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -68,8 +67,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
+    const userAny = user as any
+
     // Buscar settings
-    const { data: settings, error: settingsError } = await supabase
+    const { data: settings, error: settingsError } = await (supabase as any)
       .from('user_settings')
       .select('*')
       .eq('user_id', session.user.id)
@@ -100,7 +101,7 @@ export async function GET(request: NextRequest) {
         },
       }
 
-      const { data: newSettings } = await supabase
+      const { data: newSettings } = await (supabase as any)
         .from('user_settings')
         .insert(defaultSettings)
         .select()
@@ -109,6 +110,8 @@ export async function GET(request: NextRequest) {
       userSettings = newSettings
     }
 
+    const settingsAny = userSettings as any
+
     // Montar response
     const response: UserSettings = {
       profile: {
@@ -116,13 +119,13 @@ export async function GET(request: NextRequest) {
         email: session.user.email || '',
         phone: user.phone || '',
         avatar: user.avatar_url || '',
-        bio: user.bio || '',
-        oab: user.oab_number || '',
-        specialization: user.specialization || '',
+        bio: userAny.bio || '',
+        oab: userAny.oab_number || '',
+        specialization: userAny.specialization || '',
       },
-      notifications: userSettings?.notifications || {},
-      integrations: userSettings?.integrations || {},
-      security: userSettings?.security || {},
+      notifications: settingsAny?.notifications || {},
+      integrations: settingsAny?.integrations || {},
+      security: settingsAny?.security || {},
     }
 
     return NextResponse.json(response)
@@ -138,7 +141,7 @@ export async function GET(request: NextRequest) {
 // PATCH: Atualizar settings
 export async function PATCH(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -198,7 +201,7 @@ export async function PATCH(request: NextRequest) {
       settingsUpdate.updated_at = new Date().toISOString()
 
       // Verificar se existe settings
-      const { data: existing } = await supabase
+      const { data: existing } = await (supabase as any)
         .from('user_settings')
         .select('id')
         .eq('user_id', session.user.id)
@@ -206,7 +209,7 @@ export async function PATCH(request: NextRequest) {
 
       if (existing) {
         // Update
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('user_settings')
           .update(settingsUpdate)
           .eq('user_id', session.user.id)
@@ -217,7 +220,7 @@ export async function PATCH(request: NextRequest) {
         }
       } else {
         // Insert
-        const { error } = await supabase.from('user_settings').insert({
+        const { error } = await (supabase as any).from('user_settings').insert({
           user_id: session.user.id,
           ...settingsUpdate,
         })
