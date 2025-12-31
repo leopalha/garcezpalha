@@ -1,3 +1,6 @@
+// Sentry configuration
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
@@ -246,4 +249,34 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+// Sentry webpack plugin options
+const sentryWebpackPluginOptions = {
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options
+
+  // Suppresses source map uploading logs during build
+  silent: true,
+  org: process.env.SENTRY_ORG || 'garcezpalha',
+  project: process.env.SENTRY_PROJECT || 'garcezpalha-platform',
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers
+  // Note: This can increase server load significantly if you get lots of traffic.
+  tunnelRoute: '/monitoring',
+
+  // Hides source maps from generated client bundles
+  hideSourceMaps: true,
+
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+
+  // Enables automatic instrumentation of Vercel Cron Monitors
+  automaticVercelMonitors: true,
+}
+
+// Make sure adding Sentry options is the last code to run before exporting
+module.exports = process.env.SENTRY_DSN
+  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+  : nextConfig
