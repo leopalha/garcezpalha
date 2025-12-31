@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const tenantId = userData.tenant_id
+    const tenantId = (userData as any).tenant_id
 
     // Query params
     const { searchParams } = new URL(request.url)
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
 
     // Aplicar filtros
     if (status) {
-      query = query.eq('status', status)
+      query = query.eq('status', status as any)
     }
 
     if (source) {
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
 
     // Enriquecer dados com conversas e pagamentos
     const clients: Client[] = await Promise.all(
-      (leads || []).map(async (lead: LeadFromDB) => {
+      (leads || []).map(async (lead: any) => {
         // Buscar conversas do lead
         const { data: conversations } = await supabase
           .from('conversations')
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
       .eq('status', 'succeeded')
 
     const totalRevenue =
-      allPayments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
+      allPayments?.reduce((sum: number, p: any) => sum + (p.amount || 0), 0) || 0
 
     const stats = {
       total,
