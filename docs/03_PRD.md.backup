@@ -2,9 +2,9 @@
 
 Documento de requisitos do produto Garcez Palha.
 
-**Versao**: 5.0
-**Data**: 2024-12-31
-**Status**: PRODUCTION READY - B2B + MARKETING + MONETIZATION COMPLETE
+**Versao**: 4.0
+**Data**: 2024-12-23
+**Status**: POS-IMPLEMENTACAO COMPLETA
 
 ---
 
@@ -12,27 +12,24 @@ Documento de requisitos do produto Garcez Palha.
 
 ### 1.1 Visao
 
-Construir uma **plataforma SaaS B2B** de automacao juridica **compliant com OAB** que digitaliza o legado de 364 anos da familia Garcez Palha, permitindo que advogados criem e vendam seus proprios produtos juridicos automatizados com IA.
+Construir uma plataforma de automacao juridica **compliant com OAB** que digitaliza o legado de 364 anos da familia Garcez Palha, combinando expertise juridica tradicional com tecnologia moderna de IA.
 
 ### 1.2 Missao
 
-Automatizar o ciclo de vida completo desde marketing ate monetizacao, mantendo:
+Automatizar o ciclo de vida do cliente desde o contato inicial ate assinatura de contrato e pagamento, mantendo:
 - **Compliance OAB** em todas as etapas
-- **Plataforma B2B** para advogados (white-label)
-- **Marketing Automation** integrado
-- **Stripe Subscriptions** para monetizacao
-- **Agent IA marketplace** com 8 especializacoes
+- **Identidade premium** (364 anos de tradicao)
+- **Supervisao humana** para decisoes juridicas
+- **Tecnologia proprietaria** (nao SaaS generico)
 
 ### 1.3 Propostas de Valor
 
-1. **Plataforma B2B SaaS** - Dashboard completo para advogados criarem produtos
-2. **IA Compliant OAB** - Chatbot com disclaimers obrigatorios
-3. **Marketing Automation** - Email sequences, A/B testing, analytics avancado
-4. **Monetizacao Stripe** - Subscriptions (3 planos), invoices, customer portal
-5. **White-label Completo** - Logo, cores, dominio personalizado
-6. **Agent IA Configuravel** - 8 especializacoes prontas para uso
-7. **Checkout B2B** - 3 planos (Starter/Pro/Enterprise) com addons
-8. **Analytics Real-Time** - Conversao, revenue, leads, errors
+1. **IA Compliant OAB** - Chatbot com disclaimers obrigatorios
+2. **Automacao Completa** - Lead -> Qualificacao -> Consulta -> Contrato -> Pagamento
+3. **Agentes Especializados** - 9 agentes IA para diferentes areas do direito
+4. **Ecossistema de Parceiros** - Rede de indicacoes com validacao OAB/CNPJ
+5. **Posicionamento Premium** - Tradicao familiar como diferencial
+6. **Producao Juridica Automatizada** - Geracao de documentos com IA
 
 ---
 
@@ -45,17 +42,10 @@ Automatizar o ciclo de vida completo desde marketing ate monetizacao, mantendo:
 | Website Marketing | COMPLETO | 26+ paginas (6 categorias + 20 produtos) |
 | Dashboard Admin | COMPLETO | Gestao de leads, clientes, documentos, metricas |
 | Dashboard Executivo | COMPLETO | MRR, CAC, LTV, conversao, KPIs |
-| Dashboard B2B (Advogados) | COMPLETO | 14 paginas - produtos, conversas, clientes, analytics |
-| Checkout B2B | COMPLETO | 3 planos (Starter/Pro/Enterprise) + addons |
-| White-label | COMPLETO | Logo, cores, dominio, identidade visual |
-| Agent IA Config | COMPLETO | 8 especializacoes + playground + templates |
-| Landing Pages | COMPLETO | Builder + analytics + SEO |
 | Portal Parceiro | COMPLETO | Tracking de indicacoes e comissoes |
 | Dashboard Cliente | COMPLETO | Processos, documentos, prazos, pagamentos |
-| Marketing Automation | COMPLETO | Campanhas, A/B testing, email sequences, analytics |
-| Subscription Management | COMPLETO | Stripe subscriptions, customer portal, usage tracking |
 | Autenticacao | COMPLETO | RBAC (admin, lawyer, partner, client) |
-| Pagamentos | COMPLETO | Stripe Subscriptions + MercadoPago PIX + Payment Links |
+| Pagamentos | COMPLETO | Stripe + MercadoPago PIX + Payment Links |
 | Chatbot IA | COMPLETO | 9 agentes especializados + orchestrator |
 | Qualificacao de Leads | COMPLETO | Score automatico + follow-up |
 | Producao Juridica | COMPLETO | 9 templates + geracao IA + DOCX |
@@ -171,55 +161,12 @@ Automatizar o ciclo de vida completo desde marketing ate monetizacao, mantendo:
 - [x] FR-706: Workflow: pending -> in_review -> approved/rejected
 - [x] FR-707: Interface admin para revisao
 
-### 3.10 Monitoramento (FR-800)
+### 3.10 Monitoramento (FR-800) - NOVO
 
 - [x] FR-801: Urgency Classifier (critical, high, medium, low)
 - [x] FR-802: Notification Service (WhatsApp + Email)
 - [x] FR-803: Templates de movimentacao processual
 - [x] FR-804: Alertas de prazos urgentes
-
-### 3.11 Dashboard B2B para Advogados (FR-250) - NOVO
-
-- [x] FR-251: Dashboard principal com KPIs (leads, conversoes, revenue, produtos)
-- [x] FR-252: Wizard de criacao de produtos (5 steps)
-- [x] FR-253: Gestao de produtos juridicos (lista, edit, delete)
-- [x] FR-254: Conversas IA com filtros (HOT, WARM, COLD, ALL)
-- [x] FR-255: Gestao de clientes (lista, detalhes, historico)
-- [x] FR-256: Analytics avancado (metricas, graficos, tendencias)
-- [x] FR-257: Configuracao Agent IA (8 especializacoes + playground)
-- [x] FR-258: Gestao de assinatura (planos, usage tracking, billing)
-- [x] FR-259: Landing Pages management (lista, analytics, builder)
-- [x] FR-260: White-label (logo, cores, dominio, preview)
-- [x] FR-261: Configuracoes (perfil, integracao, billing, notificacoes)
-- [x] FR-262: Checkout B2B (3 planos + addons + payment)
-
-### 3.12 Marketing Automation (FR-280) - NOVO
-
-- [x] FR-281: Campaign Builder (nome, tipo, objetivo, segmentos)
-- [x] FR-282: Email Sequence Editor (subject, body, delay, triggers)
-- [x] FR-283: A/B Testing System (variants, split %, winner selection)
-- [x] FR-284: Campaign Analytics (open rate, click rate, conversions)
-- [x] FR-285: Lead Segmentation (dinamico por tags, score, status)
-- [x] FR-286: Campaign List (filtros, busca, status)
-- [x] FR-287: Campaign Performance Dashboard (graficos, metricas, trends)
-- [x] FR-288: Email Template Library (pre-built + custom)
-- [x] FR-289: Trigger Automation (eventos, condicoes, acoes)
-- [x] FR-290: Campaign Scheduler (envio imediato ou agendado)
-
-### 3.13 Subscription & Monetization (FR-290) - NOVO
-
-- [x] FR-291: Stripe Checkout Session (3 planos + addons)
-- [x] FR-292: Subscription Webhook Handler (9+ eventos)
-- [x] FR-293: Customer Portal Integration (self-service)
-- [x] FR-294: Usage Tracking (produtos, leads, conversas, emails)
-- [x] FR-295: Plan Limits Enforcement (starter/pro/enterprise)
-- [x] FR-296: Invoice Management (lista, PDF download)
-- [x] FR-297: Subscription Cancellation (at period end)
-- [x] FR-298: Subscription Reactivation (undo cancellation)
-- [x] FR-299: Billing History (faturas pagas, pendentes, failed)
-- [x] FR-300: Payment Method Management (via Stripe Portal)
-- [x] FR-301: Subscription Status Display (active, past_due, canceled)
-- [x] FR-302: Current Period Tracking (start, end, renewal date)
 
 ---
 
@@ -298,42 +245,22 @@ substituem consulta juridica formal. OAB/RJ 219.390.
 
 ### 6.2 Estrutura do Banco de Dados
 
-**Tabelas Principais (35+)**:
+**Tabelas Existentes (20+)**:
+- users, profiles, services, contracts, appointments
+- conversations, messages, leads, referrals
+- invoices, commissions, process_alerts, deadlines
 
-**Core**:
-- users, profiles, tenants, roles
-
-**Leads & Clientes**:
-- leads, qualification_sessions, lead_interactions, clients
-
-**Servicos & Produtos**:
-- services, products, contracts, appointments
-
-**Comunicacao**:
-- conversations, messages, follow_up_messages
-
-**Documentos**:
-- generated_documents, review_queue, document_templates, document_revisions
-
-**Financeiro**:
-- invoices, payment_links, proposals, commissions, referrals
-
-**Monitoramento**:
-- process_alerts, deadlines
-
-**Marketing (Novas)**:
-- marketing_campaigns
-- campaign_emails
-- ab_tests
-- campaign_analytics
-- email_templates
-
-**Subscriptions (Novas)**:
-- subscriptions
-- subscription_items
-- invoices (expandida)
-- usage_tracking
-- plan_limits
+**Novas Tabelas (10)**:
+- leads (qualificados)
+- qualification_sessions
+- payment_links
+- proposals
+- follow_up_messages
+- lead_interactions
+- generated_documents
+- review_queue
+- document_templates
+- document_revisions
 
 ---
 
@@ -412,32 +339,6 @@ substituem consulta juridica formal. OAB/RJ 219.390.
 - [x] Renomear isG4 -> isProductized
 - [x] Build validado sem erros
 
-### Sprint 3: Marketing Automation (COMPLETO)
-- [x] Campaign Management System
-- [x] Email Sequence Builder
-- [x] A/B Testing Framework
-- [x] Campaign Analytics Dashboard
-- [x] Lead Segmentation Engine
-- [x] Email Template Library
-- [x] Campaign Scheduler
-- [x] Performance Metrics Tracking
-- [x] Database migrations (5 tabelas)
-- [x] 8 APIs RESTful
-- [x] 6 paginas completas
-
-### Sprint 4: Monetization (COMPLETO)
-- [x] Stripe Subscriptions Integration
-- [x] Subscription Webhook Handler (9+ eventos)
-- [x] Customer Portal Integration
-- [x] Usage Tracking System
-- [x] Plan Limits Enforcement
-- [x] Invoice Management
-- [x] Subscription Cancellation/Reactivation
-- [x] Billing History
-- [x] Database migrations (5 tabelas)
-- [x] 4 APIs RESTful
-- [x] Subscription Management Page (refactor completo)
-
 ### Fase 8: Expansao (FUTURO)
 - App mobile
 - Video consultas
@@ -480,7 +381,6 @@ substituem consulta juridica formal. OAB/RJ 219.390.
 
 | Versao | Data | Mudancas |
 |--------|------|----------|
-| 5.0 | 2024-12-31 | Sprint 3 (Marketing Automation) + Sprint 4 (Monetization/Subscriptions) |
 | 4.1 | 2024-12-23 | Refatoracao G4 completa, nomenclatura limpa |
 | 4.0 | 2024-12-23 | Adicao de Qualificacao, Producao Juridica, Monitoramento, Metricas |
 | 3.0 | 2024-11-19 | Agentes IA especializados |
