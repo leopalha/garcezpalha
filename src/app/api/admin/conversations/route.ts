@@ -4,12 +4,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 
 // Cache conversations for 1 minute (real-time updates needed)
 export const revalidate = 60
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const supabase = await createClient()
 
@@ -74,6 +75,9 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
