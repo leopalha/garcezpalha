@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 import crypto from 'crypto'
+
+const resendVerificationSchema = z.object({
+  email: z.string().email('Email inválido').toLowerCase(),
+})
 
 /**
  * GET - Verify email with token from URL
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const token = searchParams.get('token')
@@ -80,16 +87,9 @@ export async function GET(request: NextRequest) {
 /**
  * POST - Resend verification email
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
-    const { email } = await request.json()
-
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email é obrigatório' },
-        { status: 400 }
-      )
-    }
+    const { email } = (request as any).validatedData
 
     const supabase = await createClient()
 
@@ -154,3 +154,10 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting to both endpoints
+export const GET = withRateLimit(getHandler, { type: 'auth', limit: 10 })
+export const POST = withRateLimit(
+  withValidation(resendVerificationSchema, postHandler, { sanitize: true }),
+  { type: 'auth', limit: 3 }
+)

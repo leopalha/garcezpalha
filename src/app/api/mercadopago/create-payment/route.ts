@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 
 const createPaymentSchema = z.object({
   serviceId: z.string(),
@@ -15,7 +17,7 @@ const createPaymentSchema = z.object({
   urgency: z.enum(['normal', 'urgent']).default('normal'),
 })
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     // Authentication check
     const supabase = await createClient()
@@ -45,8 +47,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const data = createPaymentSchema.parse(body)
+    const data = (request as any).validatedData
 
     // Create PIX payment
     const payment = await paymentClient.create({
@@ -119,23 +120,18 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('MercadoPago payment creation error:', error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Dados inválidos',
-          details: error.issues,
-        },
-        { status: 400 }
-      )
-    }
-
     return NextResponse.json(
       {
         error: 'Erro ao criar pagamento PIX',
-        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Erro desconhecido',
+        message: error instanceof Error ? error.message : 'Erro desconhecido',
       },
       { status: 500 }
     )
   }
 }
+
+// Apply validation and rate limiting
+export const POST = withRateLimit(
+  withValidation(createPaymentSchema, handler, { sanitize: true }),
+  { type: 'checkout', limit: 10 }
+)

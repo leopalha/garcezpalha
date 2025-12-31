@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 import crypto from 'crypto'
+
+const mercadoPagoWebhookSchema = z.object({
+  type: z.string(),
+  data: z
+    .object({
+      id: z.union([z.string(), z.number()]),
+    })
+    .optional(),
+})
 
 /**
  * Verify MercadoPago webhook signature
@@ -41,13 +53,13 @@ function verifyMercadoPagoSignature(
   return calculatedHash === receivedHash
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     if (!isMercadoPagoConfigured() || !paymentClient) {
       return NextResponse.json({ error: 'MercadoPago not configured' }, { status: 500 })
     }
 
-    const body = await request.json()
+    const body = (request as any).validatedData
 
     // Verify webhook signature
     const xSignature = request.headers.get('x-signature')
@@ -141,3 +153,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation and rate limiting for webhook
+export const POST = withRateLimit(
+  withValidation(mercadoPagoWebhookSchema, handler),
+  { type: 'webhook', limit: 100 }
+)

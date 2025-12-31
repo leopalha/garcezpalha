@@ -2,18 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
 import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 import crypto from 'crypto'
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email('Email inválido').toLowerCase(),
+})
 
 async function handler(request: NextRequest) {
   try {
-    const { email } = await request.json()
-
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email é obrigatório' },
-        { status: 400 }
-      )
-    }
+    const { email } = (request as any).validatedData
 
     const supabase = await createClient()
 
@@ -79,5 +78,8 @@ async function handler(request: NextRequest) {
   }
 }
 
-// Apply rate limiting: 3 forgot password attempts per 15 minutes
-export const POST = withRateLimit(handler, { type: 'auth', limit: 3 })
+// Apply validation and rate limiting: 3 forgot password attempts per 15 minutes
+export const POST = withRateLimit(
+  withValidation(forgotPasswordSchema, handler, { sanitize: true }),
+  { type: 'auth', limit: 3 }
+)

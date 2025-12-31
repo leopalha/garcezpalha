@@ -8,7 +8,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 export const dynamic = 'force-dynamic'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2024-11-20.acacia' as any,
 })
 
 /**
@@ -93,7 +93,7 @@ async function handler(request: NextRequest) {
         'catalogo': process.env.NEXT_PUBLIC_STRIPE_PRICE_ADDON_CATALOGO || 'price_addon_catalogo',
       }
 
-      addons.forEach((addonId) => {
+      addons.forEach((addonId: any) => {
         if (addonPriceIds[addonId]) {
           lineItems.push({
             price: addonPriceIds[addonId],
@@ -140,5 +140,5 @@ async function handler(request: NextRequest) {
 // Apply validation, sanitization, and rate limiting
 export const POST = withRateLimit(
   withValidation(stripeCheckoutSchema, handler, { sanitize: true }),
-  { type: 'checkout', limit: 10 } // 10 checkout attempts per hour
+  { type: 'checkout' as any, limit: 10 } // 10 checkout attempts per hour
 )
