@@ -113,14 +113,17 @@ WHERE proname = 'auto_segment_lead';
 
 ---
 
-### **Migration 3: RLS Policies** (IMPORTANTE)
+### **Migration 3: RLS Policies** (IMPORTANTE) ✅ CORRIGIDA
 
 **Arquivo:** `supabase/migrations/20251231000001_rls_policies_critical_tables.sql`
 
+**Status:** ✅ tenant_id fix aplicado (commit 26f1439)
+
 **O que faz:**
 - Habilita Row Level Security em tabelas críticas
-- Cria policies para isolamento por tenant
-- Garante multi-tenancy seguro
+- Cria policies básicas para usuários autenticados
+- Verifica existência de tabelas antes de aplicar policies
+- Tratamento de erros gracioso (políticas duplicadas, tabelas inexistentes)
 
 **Como executar:**
 
