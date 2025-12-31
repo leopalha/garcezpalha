@@ -9,13 +9,28 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
+// Database types
+interface LeadFromDB {
+  status: string
+  created_at: string
+}
+
+interface PaymentFromDB {
+  amount: number
+  created_at: string
+}
+
+interface UserData {
+  tenant_id: string
+}
+
 // Helper: Verificar ownership do produto
 async function verifyProductOwnership(
-  supabase: any,
+  supabase: SupabaseClient,
   productId: string,
   userId: string
 ) {
@@ -30,17 +45,19 @@ async function verifyProductOwnership(
     return { authorized: false, tenantId: null }
   }
 
+  const typedUserData = userData as UserData
+
   // Verificar se produto pertence ao tenant
   const { data: product } = await supabase
     .from('products')
     .select('id')
     .eq('id', productId)
-    .eq('tenant_id', userData.tenant_id)
+    .eq('tenant_id', typedUserData.tenant_id)
     .single()
 
   return {
     authorized: !!product,
-    tenantId: userData.tenant_id,
+    tenantId: typedUserData.tenant_id,
   }
 }
 
@@ -50,7 +67,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -92,7 +109,7 @@ export async function GET(
 
     const totalLeads = leads?.length || 0
     const convertedLeads =
-      leads?.filter((l) => l.status === 'converted').length || 0
+      leads?.filter((l: LeadFromDB) => l.status === 'converted').length || 0
 
     const { data: payments } = await supabase
       .from('payments')
@@ -100,15 +117,15 @@ export async function GET(
       .eq('product_id', params.id)
       .eq('status', 'succeeded')
 
-    const revenue = payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+    const revenue = payments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
 
     // Leads por status
     const leadsByStatus = {
-      new: leads?.filter((l) => l.status === 'new').length || 0,
-      contacted: leads?.filter((l) => l.status === 'contacted').length || 0,
-      qualified: leads?.filter((l) => l.status === 'qualified').length || 0,
+      new: leads?.filter((l: LeadFromDB) => l.status === 'new').length || 0,
+      contacted: leads?.filter((l: LeadFromDB) => l.status === 'contacted').length || 0,
+      qualified: leads?.filter((l: LeadFromDB) => l.status === 'qualified').length || 0,
       converted: convertedLeads,
-      lost: leads?.filter((l) => l.status === 'lost').length || 0,
+      lost: leads?.filter((l: LeadFromDB) => l.status === 'lost').length || 0,
     }
 
     // Timeline de leads (últimos 30 dias)
@@ -116,7 +133,7 @@ export async function GET(
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const recentLeads = leads?.filter(
-      (l) => new Date(l.created_at) >= thirtyDaysAgo
+      (l: LeadFromDB) => new Date(l.created_at) >= thirtyDaysAgo
     )
 
     const timeline = Array.from({ length: 30 }, (_, i) => {
@@ -126,7 +143,7 @@ export async function GET(
 
       const count =
         recentLeads?.filter(
-          (l) => l.created_at.split('T')[0] === dateStr
+          (l: LeadFromDB) => l.created_at.split('T')[0] === dateStr
         ).length || 0
 
       return { date: dateStr, count }
@@ -161,7 +178,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -196,9 +213,9 @@ export async function PATCH(
       'proposal_template',
       'landing_page_config',
       'status',
-    ]
+    ] as const
 
-    const updateData: any = {}
+    const updateData: Record<string, unknown> = {}
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
@@ -247,7 +264,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {

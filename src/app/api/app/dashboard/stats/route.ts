@@ -12,6 +12,36 @@ import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
+// Database types
+type ProductStatus = 'published' | 'draft'
+type LeadStatus = 'new' | 'qualified' | 'converted'
+type ConversationStatus = 'bot' | 'human' | 'waiting_human' | 'completed'
+
+interface Product {
+  id: string
+  status: ProductStatus
+}
+
+interface Lead {
+  id: string
+  status: LeadStatus
+  created_at: string
+}
+
+interface Conversation {
+  id: string
+  status: ConversationStatus
+  created_at: string
+  updated_at: string
+  satisfaction_rating: number | null
+}
+
+interface Payment {
+  amount: number
+  status: string
+  created_at: string
+}
+
 interface DashboardStats {
   products: {
     total: number
@@ -79,8 +109,8 @@ export async function GET(request: NextRequest) {
 
     const productsStats = {
       total: products?.length || 0,
-      published: products?.filter((p) => p.status === 'published').length || 0,
-      draft: products?.filter((p) => p.status === 'draft').length || 0,
+      published: products?.filter((p: Product) => p.status === 'published').length || 0,
+      draft: products?.filter((p: Product) => p.status === 'draft').length || 0,
     }
 
     // 4. Buscar stats de leads (últimos 30 dias)
@@ -98,11 +128,11 @@ export async function GET(request: NextRequest) {
     }
 
     const totalLeads = leads?.length || 0
-    const newLeads = leads?.filter((l) => l.status === 'new').length || 0
+    const newLeads = leads?.filter((l: Lead) => l.status === 'new').length || 0
     const qualifiedLeads =
-      leads?.filter((l) => l.status === 'qualified').length || 0
+      leads?.filter((l: Lead) => l.status === 'qualified').length || 0
     const convertedLeads =
-      leads?.filter((l) => l.status === 'converted').length || 0
+      leads?.filter((l: Lead) => l.status === 'converted').length || 0
 
     const leadsStats = {
       total: totalLeads,
@@ -126,13 +156,13 @@ export async function GET(request: NextRequest) {
     const totalConversations = conversations?.length || 0
     const activeConversations =
       conversations?.filter(
-        (c) => c.status === 'bot' || c.status === 'human' || c.status === 'waiting_human'
+        (c: Conversation) => c.status === 'bot' || c.status === 'human' || c.status === 'waiting_human'
       ).length || 0
 
     // Calcular tempo médio de resposta (usando created_at - updated_at como proxy)
     const responseTimes = conversations
-      ?.filter((c) => c.updated_at && c.created_at)
-      .map((c) => {
+      ?.filter((c: Conversation) => c.updated_at && c.created_at)
+      .map((c: Conversation) => {
         const start = new Date(c.created_at).getTime()
         const end = new Date(c.updated_at).getTime()
         return (end - start) / 1000 // segundos
@@ -140,22 +170,22 @@ export async function GET(request: NextRequest) {
 
     const averageResponseTime =
       responseTimes.length > 0
-        ? responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length
+        ? responseTimes.reduce((a: number, b: number) => a + b, 0) / responseTimes.length
         : 0
 
     // Calcular satisfação média
     const ratings = conversations
-      ?.filter((c) => c.satisfaction_rating !== null)
-      .map((c) => c.satisfaction_rating) || []
+      ?.filter((c: Conversation) => c.satisfaction_rating !== null)
+      .map((c: Conversation) => c.satisfaction_rating as number) || []
 
     const satisfactionScore =
       ratings.length > 0
-        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length
         : 0
 
     // Taxa de escalação (% conversas escaladas para humano)
     const escalatedConversations =
-      conversations?.filter((c) => c.status === 'waiting_human' || c.status === 'human')
+      conversations?.filter((c: Conversation) => c.status === 'waiting_human' || c.status === 'human')
         .length || 0
 
     const escalationRate =
@@ -190,21 +220,21 @@ export async function GET(request: NextRequest) {
     }
 
     const totalRevenue =
-      payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+      payments?.reduce((sum: number, p: Payment) => sum + (p.amount || 0), 0) || 0
 
     const thisMonthRevenue =
       payments
-        ?.filter((p) => new Date(p.created_at) >= firstDayThisMonth)
-        .reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+        ?.filter((p: Payment) => new Date(p.created_at) >= firstDayThisMonth)
+        .reduce((sum: number, p: Payment) => sum + (p.amount || 0), 0) || 0
 
     const lastMonthRevenue =
       payments
         ?.filter(
-          (p) =>
+          (p: Payment) =>
             new Date(p.created_at) >= firstDayLastMonth &&
             new Date(p.created_at) < firstDayThisMonth
         )
-        .reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+        .reduce((sum: number, p: Payment) => sum + (p.amount || 0), 0) || 0
 
     const revenueGrowth =
       lastMonthRevenue > 0

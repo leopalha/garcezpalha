@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 import { sendEmail } from '@/lib/email/send'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 
@@ -20,7 +19,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // 1. Fetch proposal and lead data
     const { data: proposal, error: proposalError } = await supabase
@@ -45,16 +44,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Lead não encontrado' }, { status: 404 })
     }
 
+    // Cast to any for missing schema fields
+    const leadAny = lead as any
+    const proposalAny = proposal as any
+
     // 2. Send email with proposal
     await sendEmail({
-      to: lead.email,
-      subject: `Proposta Comercial - ${lead.service_interest}`,
+      to: leadAny.email || '',
+      subject: `Proposta Comercial - ${leadAny.service_interest}`,
       html: generateProposalEmailHTML({
-        clientName: lead.full_name,
-        proposalText: proposal.proposal_text,
+        clientName: leadAny.full_name,
+        proposalText: proposalAny.proposal_text,
         pricing: {
-          fixed: proposal.pricing_fixed,
-          successFee: proposal.pricing_success_fee,
+          fixed: proposalAny.pricing_fixed,
+          successFee: proposalAny.pricing_success_fee,
         },
       }),
     })
@@ -62,14 +65,14 @@ export async function POST(request: NextRequest) {
     // 3. Create MercadoPago payment link (PIX)
     const payment = new Payment(mercadopago)
 
-    const paymentData = {
-      transaction_amount: proposal.pricing_fixed,
-      description: `${lead.service_interest} - ${lead.full_name}`,
+    const paymentData: any = {
+      transaction_amount: proposalAny.pricing_fixed,
+      description: `${leadAny.service_interest} - ${leadAny.full_name}`,
       payment_method_id: 'pix',
       payer: {
-        email: lead.email,
-        first_name: lead.full_name.split(' ')[0],
-        last_name: lead.full_name.split(' ').slice(1).join(' ') || lead.full_name,
+        email: leadAny.email,
+        first_name: leadAny.full_name.split(' ')[0],
+        last_name: leadAny.full_name.split(' ').slice(1).join(' ') || leadAny.full_name,
       },
       external_reference: proposalId,
       notification_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhooks/mercadopago`,
@@ -93,10 +96,10 @@ export async function POST(request: NextRequest) {
     const { error: paymentDbError } = await supabase.from('payments').insert({
       proposal_id: proposalId,
       lead_id: leadId,
-      amount: proposal.pricing_fixed,
+      amount: proposalAny.pricing_fixed,
       payment_method: 'pix',
       payment_provider: 'mercadopago',
-      payment_provider_id: paymentResponse.id?.toString(),
+      payment_provider_id: paymentResponse.id?.toString() || '',
       pix_qr_code: pixQrCode,
       pix_qr_code_base64: pixQrCodeBase64,
       payment_url: paymentLink,
@@ -110,13 +113,13 @@ export async function POST(request: NextRequest) {
 
     // 5. Send email with payment link
     await sendEmail({
-      to: lead.email,
+      to: leadAny.email || '',
       subject: 'Link para Pagamento - Garcez Palha Advocacia',
       html: generatePaymentEmailHTML({
-        clientName: lead.full_name,
-        amount: proposal.pricing_fixed,
+        clientName: leadAny.full_name,
+        amount: proposalAny.pricing_fixed,
         pixQrCode,
-        pixQrCodeBase64,
+        pixQrCodeBase64: pixQrCodeBase64 || '',
         paymentLink,
       }),
     })

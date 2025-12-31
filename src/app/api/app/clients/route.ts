@@ -8,9 +8,32 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
+
+// Database types
+interface LeadFromDB {
+  id: string
+  name: string | null
+  email: string | null
+  phone: string | null
+  score: number | null
+  status: string
+  source: string | null
+  product_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+interface PaymentFromDB {
+  amount: number
+  lead_id?: string
+}
+
+interface LeadStats {
+  id: string
+  status: string
+}
 
 interface Client {
   id: string
@@ -29,7 +52,7 @@ interface Client {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Autenticação
     const {
@@ -41,13 +64,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Buscar tenant_id
-    const { data: userData } = await supabase
+    const { data: userData, error: userError } = await supabase
       .from('users')
       .select('tenant_id')
       .eq('id', session.user.id)
       .single()
 
-    if (!userData) {
+    if (userError || !userData) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
@@ -113,7 +136,7 @@ export async function GET(request: NextRequest) {
 
     // Enriquecer dados com conversas e pagamentos
     const clients: Client[] = await Promise.all(
-      (leads || []).map(async (lead) => {
+      (leads || []).map(async (lead: LeadFromDB) => {
         // Buscar conversas do lead
         const { data: conversations } = await supabase
           .from('conversations')
@@ -130,7 +153,7 @@ export async function GET(request: NextRequest) {
           .eq('status', 'succeeded')
 
         const totalValue =
-          payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+          payments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
 
         // Buscar produto nome
         let productName = '-'
@@ -169,9 +192,9 @@ export async function GET(request: NextRequest) {
 
     const total = allLeads?.length || 0
     const qualified =
-      allLeads?.filter((l) => l.status === 'qualified').length || 0
+      allLeads?.filter((l: LeadStats) => l.status === 'qualified').length || 0
     const converted =
-      allLeads?.filter((l) => l.status === 'converted').length || 0
+      allLeads?.filter((l: LeadStats) => l.status === 'converted').length || 0
 
     const { data: allPayments } = await supabase
       .from('payments')
@@ -180,7 +203,7 @@ export async function GET(request: NextRequest) {
       .eq('status', 'succeeded')
 
     const totalRevenue =
-      allPayments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+      allPayments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
 
     const stats = {
       total,

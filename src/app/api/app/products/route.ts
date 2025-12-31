@@ -12,6 +12,30 @@ import { cookies } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
+// Database types
+interface LeadFromDB {
+  status: string
+}
+
+interface PaymentFromDB {
+  amount: number
+}
+
+interface LandingPageConfig {
+  hero?: unknown
+  features?: unknown[]
+  faq?: unknown[]
+  [key: string]: unknown
+}
+
+interface QualificationQuestion {
+  id?: string
+  question: string
+  type: string
+  options?: string[]
+  [key: string]: unknown
+}
+
 interface Product {
   id: string
   tenant_id: string
@@ -19,9 +43,9 @@ interface Product {
   category: string
   price: number
   description: string
-  questions: any[] // Array de perguntas de qualificação
+  questions: QualificationQuestion[]
   proposal_template: string
-  landing_page_config: any
+  landing_page_config: LandingPageConfig
   status: 'draft' | 'published' | 'archived'
   created_at: string
   updated_at: string
@@ -106,7 +130,7 @@ export async function GET(request: NextRequest) {
           .eq('product_id', product.id)
           .eq('status', 'succeeded')
 
-        const revenue = payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0
+        const revenue = payments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
 
         return {
           ...product,
