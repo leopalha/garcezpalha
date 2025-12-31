@@ -33,7 +33,12 @@ interface Product {
 
 export async function POST(request: NextRequest) {
   try {
-    const { productId, message, history } = await request.json()
+    // Parse FormData (supports file uploads)
+    const formData = await request.formData()
+    const productId = formData.get('productId') as string
+    const message = formData.get('message') as string
+    const historyJson = formData.get('history') as string
+    const files = formData.getAll('files') as File[]
 
     if (!productId || !message) {
       return NextResponse.json(
@@ -41,6 +46,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Parse history
+    const history = historyJson ? JSON.parse(historyJson) : []
 
     // Se for productId genérico (não UUID), usar contexto geral
     let product: Product | null = null
