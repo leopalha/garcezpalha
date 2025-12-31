@@ -38,12 +38,13 @@ const PLANS: Record<PlanId, Plan> = {
   starter: {
     id: 'starter',
     name: 'Starter',
-    price: 49700, // R$ 497
+    price: 29700, // R$ 297
     billingPeriod: 'monthly',
     features: [
-      '1 Agent IA Especializado (ou Genérico)',
-      'Até 10 produtos',
-      '100 conversas IA/mês',
+      '1 nicho especializado',
+      'Até 3 produtos',
+      '100 leads/mês',
+      '500 conversas IA/mês',
       'CRM básico',
       'Landing pages ilimitadas',
       'Suporte por email',
@@ -52,13 +53,14 @@ const PLANS: Record<PlanId, Plan> = {
   pro: {
     id: 'pro',
     name: 'Pro',
-    price: 99700, // R$ 997
+    price: 69700, // R$ 697
     billingPeriod: 'monthly',
     badge: 'Mais Popular',
     features: [
-      '3 Agents IA Especializados + Genérico',
-      'Produtos ilimitados',
-      '500 conversas IA/mês',
+      '3 nichos especializados',
+      'Até 10 produtos',
+      '500 leads/mês',
+      '2.000 conversas IA/mês',
       'CRM avançado + automações',
       'Marketing automation',
       'Landing pages + VSL',
@@ -73,9 +75,10 @@ const PLANS: Record<PlanId, Plan> = {
     billingPeriod: 'monthly',
     badge: 'Completo',
     features: [
-      'Todos os nichos + Agent Genérico',
-      'Tudo ilimitado',
-      '2.000 conversas IA/mês',
+      'Nichos ilimitados',
+      'Produtos ilimitados',
+      'Leads ilimitados',
+      'Conversas ilimitadas',
       'Multi-usuário (até 5)',
       'API access',
       'White-label completo',
@@ -99,13 +102,13 @@ const ADDONS: Addon[] = [
     id: 'nicho-extra',
     name: 'Nicho Extra',
     price: 9700, // R$ 97/mês
-    description: 'Agent IA especializado adicional',
+    description: 'Adiciona 1 nicho especializado adicional ao seu plano',
   },
   {
     id: 'catalogo',
-    name: 'Catálogo Garcez Palha',
-    price: 29700, // R$ 297/mês
-    description: '57 produtos prontos para clonar',
+    name: 'Catálogo Premium',
+    price: 19700, // R$ 197/mês
+    description: '47 nichos jurídicos pré-configurados com IA especializada',
   },
 ]
 
@@ -252,13 +255,11 @@ export default function AppCheckoutPage() {
         throw new Error('Nenhum plano selecionado')
       }
 
-      // Map plan IDs to Stripe Price IDs
-      // NOTE: These should be created in Stripe Dashboard and set as env vars
-      // For now, using test price IDs - replace with real ones
+      // Map plan IDs to Stripe Price IDs (from .env.local)
       const stripePriceIds: Record<PlanId, string> = {
-        starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || 'price_starter_monthly',
-        pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || 'price_pro_monthly',
-        enterprise: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE || 'price_enterprise_monthly',
+        starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER_MONTHLY || 'price_1SkGT0B3FKITuv4SVDtbgb41',
+        pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_MONTHLY || 'price_1SkGT4B3FKITuv4SDIg4FKsv',
+        enterprise: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE_MONTHLY || 'price_1SkGT6B3FKITuv4SL5Oc4fGR',
       }
 
       const priceId = stripePriceIds[selectedPlan.id]
