@@ -109,7 +109,7 @@ export default function CheckoutSuccessPage() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild className="flex-1" size="lg">
-                <Link href="/app/onboarding">
+                <Link href="/dashboard/onboarding">
                   Começar Configuração
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>

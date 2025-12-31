@@ -2,8 +2,8 @@
  * User Settings API
  * P4-005: Salvar configurações do usuário
  *
- * GET /api/app/settings - Buscar settings atuais
- * PATCH /api/app/settings - Atualizar settings
+ * GET /api/dashboard/configuracoes/seguranca - Buscar settings atuais
+ * PATCH /api/dashboard/configuracoes/seguranca - Atualizar settings
  */
 
 import { NextRequest, NextResponse } from 'next/server'

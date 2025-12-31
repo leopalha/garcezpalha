@@ -83,7 +83,7 @@ export default function ConfiguracoesPage() {
   async function fetchSettings() {
     try {
       setLoading(true)
-      const res = await fetch('/api/app/settings')
+      const res = await fetch('/api/dashboard/configuracoes/seguranca')
       if (!res.ok) throw new Error('Failed to fetch settings')
       const data = await res.json()
       setSettings(data)
@@ -153,7 +153,7 @@ export default function ConfiguracoesPage() {
 
     try {
       setSaving(true)
-      const res = await fetch('/api/app/settings', {
+      const res = await fetch('/api/dashboard/configuracoes/seguranca', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings),
