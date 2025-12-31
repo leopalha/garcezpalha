@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const supabase = getSupabaseAdmin()
 
     // 1. Fetch document from database
-    const { data: document, error: docError } = await supabase
+    const { data: document, error: docError } = await (supabase as any)
       .from('client_documents')
       .select('*')
       .eq('id', documentId)
@@ -52,32 +52,34 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const docAny = document as any
+
     // 2. Check if already analyzed
-    if (document.ai_analyzed) {
+    if (docAny.ai_analyzed) {
       return NextResponse.json({
         success: true,
-        analysis: document.ai_analysis,
+        analysis: docAny.ai_analysis,
         cached: true,
       })
     }
 
     // 3. Analyze document with AI
-    console.log(`[AI] Analyzing document: ${document.file_name}`)
+    console.log(`[AI] Analyzing document: ${docAny.file_name}`)
 
     const analysis = await analyzeDocument(
-      document.public_url,
-      document.file_type,
-      document.file_name
+      docAny.public_url,
+      docAny.file_type,
+      docAny.file_name
     )
 
     // 4. Save analysis to database
-    const { error: updateError } = await supabase
+    const { error: updateError } = await (supabase as any)
       .from('client_documents')
       .update({
         ai_analyzed: true,
         ai_analysis: analysis,
         ai_analyzed_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', documentId)
 
     if (updateError) {
@@ -85,7 +87,7 @@ export async function POST(request: NextRequest) {
       // Don't fail the request, analysis was successful
     }
 
-    console.log(`[AI] Document analyzed successfully: ${document.file_name}`)
+    console.log(`[AI] Document analyzed successfully: ${docAny.file_name}`)
 
     return NextResponse.json({
       success: true,
