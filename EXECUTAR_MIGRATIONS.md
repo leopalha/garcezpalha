@@ -25,15 +25,18 @@ Executar 3 migrations pendentes que criarão as tabelas necessárias para:
 
 ## 📝 MIGRATIONS A EXECUTAR (EM ORDEM)
 
-### **Migration 1: A/B Testing System** (CRÍTICA)
+### **Migration 1: A/B Testing System** (CRÍTICA) ✅ CORRIGIDA
 
 **Arquivo:** `supabase/migrations/20251230000002_ab_testing_system.sql`
+
+**Status:** ✅ UUID fix aplicado (commit fc8a1ae)
 
 **O que faz:**
 - Cria tabela `ab_tests` (testes A/B)
 - Cria tabela `ab_test_variants` (variantes)
 - Cria tabela `ab_test_assignments` (atribuições de leads)
 - Adiciona índices e RLS policies
+- Cria teste de exemplo com UUIDs corretos
 
 **Como executar:**
 
