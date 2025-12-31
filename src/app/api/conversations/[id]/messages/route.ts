@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 
 /**
  * POST /api/conversations/[id]/messages
@@ -17,7 +16,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Check authentication
     const {

@@ -220,23 +220,24 @@ export default function AppCheckoutPage() {
       }
       // Track checkout start
       trackCheckout({
-        step: 1,
-        planId: selectedPlan.id,
-        planName: selectedPlan.name,
-        planPrice: selectedPlan.price,
-        totalSteps: 4,
+        step: 'initiate',
+        productId: selectedPlan.id,
+        amount: selectedPlan.price / 100,
       })
       setStep('addons')
     } else if (step === 'addons') {
-      // Track addons selection
-      trackCheckout({
-        step: 2,
-        planId: selectedPlan?.id,
-        planName: selectedPlan?.name,
-        planPrice: selectedPlan?.price,
-        addons: selectedAddons,
-        totalSteps: 4,
-      })
+      // Track addons selection (payment step)
+      if (selectedPlan) {
+        const addonsTotal = selectedAddons.reduce((sum, addonId) => {
+          const addon = ADDONS.find(a => a.id === addonId)
+          return sum + (addon?.price || 0)
+        }, 0)
+        trackCheckout({
+          step: 'payment',
+          productId: selectedPlan.id,
+          amount: (selectedPlan.price + addonsTotal) / 100,
+        })
+      }
       setStep('details')
     } else if (step === 'details') {
       // Validate required fields
@@ -256,15 +257,7 @@ export default function AppCheckoutPage() {
         })
         return
       }
-      // Track details completion
-      trackCheckout({
-        step: 3,
-        planId: selectedPlan?.id,
-        planName: selectedPlan?.name,
-        planPrice: selectedPlan?.price,
-        addons: selectedAddons,
-        totalSteps: 4,
-      })
+      // Details completion - don't track as separate step
       setStep('payment')
     }
   }
@@ -284,14 +277,15 @@ export default function AppCheckoutPage() {
       }
 
       // Track checkout completion attempt
+      const addonsTotal = selectedAddons.reduce((sum, addonId) => {
+        const addon = ADDONS.find(a => a.id === addonId)
+        return sum + (addon?.price || 0)
+      }, 0)
       trackCheckout({
-        step: 4,
-        planId: selectedPlan.id,
-        planName: selectedPlan.name,
-        planPrice: selectedPlan.price,
-        addons: selectedAddons,
+        step: 'complete',
+        productId: selectedPlan.id,
+        amount: (selectedPlan.price + addonsTotal) / 100,
         paymentMethod: formData.paymentMethod,
-        totalSteps: 4,
       })
 
       // Map plan IDs to Stripe Price IDs (from .env.local)

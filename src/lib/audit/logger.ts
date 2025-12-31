@@ -15,6 +15,8 @@ export type AuditEventType =
   | 'auth.password_reset'
   | 'auth.2fa_enabled'
   | 'auth.2fa_disabled'
+  | 'auth.2fa_failed'
+  | 'auth.2fa_verified'
   // Data Access (LGPD)
   | 'data.read'
   | 'data.create'
@@ -40,6 +42,13 @@ export type AuditEventType =
   // System
   | 'system.error'
   | 'system.api_call'
+  | 'api'
+  | 'auth'
+  | 'contact'
+  | 'chat'
+  | 'webhook'
+  | 'cron'
+  | 'checkout'
 
 export interface AuditLogEntry {
   event_type: AuditEventType

@@ -99,7 +99,7 @@ export const paginationSchema = z.object({
 
 export const searchSchema = z.object({
   q: z.string().min(1).max(200).optional(),
-  filters: z.record(z.any()).optional(),
+  filters: z.record(z.string(), z.any()).optional(),
   ...paginationSchema.shape,
 })
 
@@ -120,7 +120,7 @@ export const imageUploadSchema = fileUploadSchema.extend({
 // ==================== METADATA ====================
 
 export const metadataSchema = z
-  .record(z.union([z.string(), z.number(), z.boolean(), z.null()]))
+  .record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()]))
   .optional()
 
 // ==================== TIMESTAMPS ====================
