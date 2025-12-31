@@ -91,12 +91,15 @@ Este documento é a **FONTE ÚNICA DE VERDADE** para todos os dados da empresa.
 **GitHub**: @leopalha
 **Função**: Responsável Técnico e Fundador
 
-#### Equipe Especializada
+**Áreas de Atuação:**
+- Direito Imobiliário
+- Perícia Grafotécnica
+- Avaliação de Imóveis (CRECI)
+- Direito do Consumidor
+- Direito Digital
+- Todas as áreas oferecidas pela plataforma
 
-| Profissional | Área de Especialização | Registro |
-|--------------|------------------------|----------|
-| **Dra. Ana Maria Garcez** | Direito de Família e Sucessões | TBD - Aguardando número de registro OAB |
-| **Dr. Ricardo Palha** | Direito do Trabalho | TBD - Aguardando número de registro OAB |
+**Observação**: Atualmente operação solo. Equipe será expandida conforme crescimento da base de clientes.
 
 ---
 
@@ -1019,9 +1022,8 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - ✅ **Google Analytics 4**: Implementado com dashboard funcional em `/admin/analytics`
 - ✅ **Sentry**: Integração preparada, documentada em MCP Server, pronto para deploy
 
-**Campos Marcados como TBD com Justificativa (11):**
+**Campos Marcados como TBD com Justificativa (9):**
 - 📋 **Inscrição OAB Sociedade**: Aguardando informação oficial
-- 📋 **Registros Profissionais** (Ana Maria e Ricardo): Aguardando números de registro OAB
 - 📋 **CSAT**: Requer coleta de feedback estruturada (não há dados históricos)
 - 📋 **Taxa de Churn**: Requer 3-6 meses de dados históricos (plataforma recente)
 - 📋 **Redes Sociais** (LinkedIn, Instagram, Facebook, YouTube): Canais em setup/planejados
@@ -1043,10 +1045,9 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 **Próximas Ações:**
 1. [x] Confirmar CNPJ com cliente ✅ Completo: 54.185.007/0001-54
 2. [ ] Obter número de Inscrição OAB Sociedade
-3. [ ] Coletar registros profissionais (Ana Maria e Ricardo)
-4. [ ] Implementar coleta de CSAT (via surveys pós-atendimento)
-5. [ ] Ativar Sentry em produção
-6. [ ] Iniciar setup dos canais de redes sociais
+3. [ ] Implementar coleta de CSAT (via surveys pós-atendimento)
+4. [ ] Ativar Sentry em produção
+5. [ ] Iniciar setup dos canais de redes sociais
 
 **Score Após Auditoria:**
 - Score anterior: 95/100
@@ -1068,9 +1069,14 @@ Confirmação oficial do CNPJ junto ao cliente Leonardo Mendonça Palha da Silva
 - ✅ Compliance fiscal 100% ativo
 - ✅ Documentação oficial pronta para contratos
 
+**Equipe Atualizada:**
+- ✅ Confirmado operação solo (apenas Dr. Leonardo)
+- ✅ Removidos registros pendentes de Ana Maria e Ricardo
+- ✅ Campos TBD reduzidos: 11 → 9
+
 **Campos Restantes TBD:**
-- 11 campos aguardando validação (redução de 12 → 11)
-- Prioridade: Inscrição OAB Sociedade + registros profissionais equipe
+- 9 campos aguardando validação
+- Prioridade: Inscrição OAB Sociedade
 
 **Score Atualizado:**
 - Score anterior: 98/100
