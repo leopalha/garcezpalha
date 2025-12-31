@@ -126,7 +126,17 @@ export default function ABTestDetailPage() {
         .limit(100)
 
       if (assignmentsError) throw assignmentsError
-      setAssignments(assignmentsData || [])
+
+      // Transform Supabase array response to expected format
+      const transformedAssignments = (assignmentsData || []).map((assignment: any) => ({
+        id: assignment.id,
+        assigned_at: assignment.assigned_at,
+        events: assignment.events,
+        lead: Array.isArray(assignment.lead) ? assignment.lead[0] : assignment.lead,
+        variant: Array.isArray(assignment.variant) ? assignment.variant[0] : assignment.variant,
+      }))
+
+      setAssignments(transformedAssignments)
     } catch (error) {
       console.error('Error loading test details:', error)
     } finally {

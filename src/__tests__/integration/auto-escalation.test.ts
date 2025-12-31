@@ -125,7 +125,7 @@ describe('Auto-Escalation Logic', () => {
   })
 
   it('should NOT trigger escalation if qualification is incomplete', () => {
-    const mockData: Partial<ConversationData> = {
+    const mockData = createMockConversation({
       status: {
         state: 'qualified',
         updated_at: new Date(),
@@ -137,10 +137,10 @@ describe('Auto-Escalation Logic', () => {
         total_questions: 10,
         flags: [],
       },
-    } as ConversationData
+    })
 
     const highScoreRule = ESCALATION_RULES[0]
-    const shouldEscalate = highScoreRule.condition(mockData as ConversationData)
+    const shouldEscalate = highScoreRule.condition(mockData)
 
     expect(shouldEscalate).toBe(false)
   })
