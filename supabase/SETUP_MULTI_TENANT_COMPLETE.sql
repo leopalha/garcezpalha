@@ -57,7 +57,10 @@ CREATE TRIGGER tenants_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_tenants_updated_at();
 
-RAISE NOTICE '✅ Tabela TENANTS criada/verificada';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Tabela TENANTS criada/verificada';
+END $$;
 
 -- =====================================================
 -- PASSO 2: Adicionar coluna TENANT_ID nas tabelas
