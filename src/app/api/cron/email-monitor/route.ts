@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { gmailMonitor } from '@/lib/email/gmail-monitor'
 
 /**
@@ -8,7 +9,7 @@ import { gmailMonitor } from '@/lib/email/gmail-monitor'
  *
  * Vercel Cron: 0,15,30,45 * * * * (every 15 minutes)
  */
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     // Verify cron secret
     const authHeader = request.headers.get('authorization')
@@ -52,3 +53,6 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(handler, { type: 'cron', limit: 100 })

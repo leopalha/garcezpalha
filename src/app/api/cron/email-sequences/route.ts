@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { emailSequences } from '@/lib/email/sequences'
 
 /**
@@ -14,7 +15,7 @@ import { emailSequences } from '@/lib/email/sequences'
  *
  * Protected by Vercel Cron Secret
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     // Verify cron secret (security)
     const authHeader = request.headers.get('authorization')
@@ -42,11 +43,11 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Sequences] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    console.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST - Manual trigger (for testing)
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     console.log('[Email Sequences] Manual trigger')
 
@@ -72,13 +73,17 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Sequences] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    console.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
-        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
+        message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'cron', limit: 100 })
+export const POST = withRateLimit(postHandler, { type: 'cron', limit: 10 })
