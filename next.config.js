@@ -16,6 +16,18 @@ const nextConfig = {
       'recharts',
       '@supabase/supabase-js',
     ],
+    // Turbopack optimizations for high-memory machines (32GB)
+    turbo: {
+      // Enable parallel builds
+      resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    },
+    // Cache compiled modules more aggressively
+    cacheHandlers: {
+      // Increase cache size for 32GB RAM
+      memory: {
+        maxSize: 2048, // 2GB cache
+      },
+    },
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbo",
     "dev:webpack": "next dev",
-    "dev:fast": "set NODE_OPTIONS=--max-old-space-size=4096 && next dev --turbo",
+    "dev:fast": "set NODE_OPTIONS=--max-old-space-size=8192 && next dev --turbo",
+    "dev:ultra": "set NODE_OPTIONS=--max-old-space-size=16384 && next dev --turbo",
     "dev:clean": "npm run clean && npm run dev",
     "build": "next build",
     "start": "next start",
