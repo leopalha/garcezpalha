@@ -250,7 +250,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('[API /admin/analytics/leads] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

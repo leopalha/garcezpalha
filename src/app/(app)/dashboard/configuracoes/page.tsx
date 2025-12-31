@@ -24,6 +24,7 @@ import {
   Database,
   Cloud,
   Loader2,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSession } from 'next-auth/react'

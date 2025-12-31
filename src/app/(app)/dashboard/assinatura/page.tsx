@@ -518,7 +518,7 @@ export default function AssinaturaPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => {
             const price = billingCycle === 'monthly' ? plan.price : plan.yearlyPrice / 12
-            const isCurrentPlan = plan.id === mockCurrentPlan.id
+            const isCurrentPlan = subscription && plan.id === subscription.plan_id
 
             return (
               <Card

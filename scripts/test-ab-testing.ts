@@ -9,6 +9,7 @@
  * - Declaração de vencedor
  */
 
+import 'dotenv/config'
 import { abTestManager } from '../src/lib/email/ab-testing/ab-test-manager'
 
 async function testABSystem() {

@@ -301,34 +301,16 @@ export default function AppDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
+        {/* Recent Activity - Temporarily disabled */}
         <Card>
           <CardHeader>
             <CardTitle>Atividade Recente</CardTitle>
             <CardDescription>Últimas atualizações da plataforma</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {dashboardData.recentActivity.map((activity) => {
-                const Icon = activity.icon
-                return (
-                  <div
-                    key={activity.id}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{activity.message}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
+            <div className="text-center py-8 text-muted-foreground">
+              <Clock className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>Em breve você verá suas atividades recentes aqui</p>
             </div>
           </CardContent>
         </Card>
@@ -336,8 +318,8 @@ export default function AppDashboard() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="cursor-pointer hover:shadow-md transition-shadow group" asChild>
-          <Link href="/app/dashboard/produtos/novo">
+        <Link href="/app/dashboard/produtos/novo">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <Package className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
               <p className="font-semibold mb-1">Criar Novo Produto</p>
@@ -345,11 +327,11 @@ export default function AppDashboard() {
                 Configure perguntas, propostas e landing page
               </p>
             </CardContent>
-          </Link>
-        </Card>
+          </Card>
+        </Link>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow group" asChild>
-          <Link href="/app/dashboard/landing-pages">
+        <Link href="/app/dashboard/landing-pages">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <FileText className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
               <p className="font-semibold mb-1">Gerenciar Landing Pages</p>
@@ -357,11 +339,11 @@ export default function AppDashboard() {
                 Edite páginas de captura e VSLs
               </p>
             </CardContent>
-          </Link>
-        </Card>
+          </Card>
+        </Link>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow group" asChild>
-          <Link href="/app/dashboard/agent">
+        <Link href="/app/dashboard/agent">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <Sparkles className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
               <p className="font-semibold mb-1">Configurar Agent IA</p>
@@ -369,8 +351,8 @@ export default function AppDashboard() {
                 Personalize o comportamento do assistente
               </p>
             </CardContent>
-          </Link>
-        </Card>
+          </Card>
+        </Link>
       </div>
     </div>
   )
