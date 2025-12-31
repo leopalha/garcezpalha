@@ -1,5 +1,23 @@
 -- Security Dashboard Helper Functions
 -- P1-012: Security Audit Dashboard
+-- REQUIRES: audit_logs table (from 20241231_audit_logs.sql)
+
+-- Verify audit_logs table exists with required columns
+DO $$
+BEGIN
+  -- Check if audit_logs table exists
+  IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'audit_logs') THEN
+    RAISE EXCEPTION 'Table audit_logs does not exist. Please run 20241231_audit_logs.sql migration first.';
+  END IF;
+
+  -- Check if user_id column exists
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'audit_logs' AND column_name = 'user_id'
+  ) THEN
+    RAISE EXCEPTION 'Column audit_logs.user_id does not exist. Please run 20241231_audit_logs.sql migration first.';
+  END IF;
+END $$;
 
 -- Function to get top users with failed attempts
 CREATE OR REPLACE FUNCTION get_top_failed_users(
