@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { getChatQualificationManager, handleChatWithQualification } from '@/lib/ai/chat-qualification-integration'
 import { createClient } from '@/lib/supabase/server'
 import { loggers, createTimer } from '@/lib/utils/logger'
@@ -20,7 +21,7 @@ const logger = loggers.qualification
  * - source: Message source (whatsapp, telegram, website, phone)
  * - clientInfo: Optional client information (name, phone, email, etc.)
  */
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   const timer = createTimer('POST /api/chat/qualify')
 
   try {
@@ -130,7 +131,7 @@ export async function POST(request: NextRequest) {
  * GET /api/chat/qualify?sessionId=xxx
  * Get qualification session status
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   const timer = createTimer('GET /api/chat/qualify')
 
   try {
@@ -194,7 +195,7 @@ export async function GET(request: NextRequest) {
  * DELETE /api/chat/qualify?sessionId=xxx
  * Cancel qualification session
  */
-export async function DELETE(request: NextRequest) {
+async function deleteHandler(request: NextRequest) {
   const timer = createTimer('DELETE /api/chat/qualify')
 
   try {
@@ -275,3 +276,8 @@ async function logQualificationInteraction(params: {
     console.error('[logQualificationInteraction] Error:', error)
   }
 }
+
+// Apply rate limiting to all endpoints
+export const POST = withRateLimit(postHandler, { type: 'chat', limit: 20 })
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 50 })
+export const DELETE = withRateLimit(deleteHandler, { type: 'api', limit: 10 })

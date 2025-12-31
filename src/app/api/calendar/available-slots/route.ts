@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { google } from 'googleapis'
 
 const calendar = google.calendar('v3')
@@ -20,7 +21,7 @@ const calendar = google.calendar('v3')
  *   ...
  * ]
  */
-export async function GET(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const daysAhead = parseInt(searchParams.get('daysAhead') || '7')
@@ -144,3 +145,6 @@ function generateAvailableSlots(
 
   return available
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(handler, { type: 'api', limit: 50 })
