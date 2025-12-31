@@ -147,9 +147,9 @@ export const ReengagementEmail = ({
             </Section>
 
             {/* Benefits (apenas para special-offer) */}
-            {content.benefits && (
+            {(content as any).benefits && (
               <Section style={benefitsBox}>
-                {content.benefits.map((benefit, index) => (
+                {(content as any).benefits.map((benefit: any, index: number) => (
                   <Text key={index} style={benefitItem}>
                     {benefit}
                   </Text>
@@ -158,9 +158,9 @@ export const ReengagementEmail = ({
             )}
 
             {/* Questions (apenas para feedback) */}
-            {content.questions && (
+            {(content as any).questions && (
               <Section style={questionsBox}>
-                {content.questions.map((question, index) => (
+                {(content as any).questions.map((question: any, index: number) => (
                   <Text key={index} style={questionItem}>
                     {question}
                   </Text>
