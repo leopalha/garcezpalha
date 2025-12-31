@@ -86,10 +86,10 @@ export class DefenseStrategist {
     evidences: Evidence[]
   ): string {
     // Estratégia 1: Negativa de autoria
-    const probasAutoria = evidences.filter(
+    const provasAutoria = evidences.filter(
       (e) => e.descricao.toLowerCase().includes('autoria') && !e.favoravel
     )
-    if (provasAutoria.length === 0 || probasAutoria.every((e) => e.confiabilidade === 'baixa')) {
+    if (provasAutoria.length === 0 || provasAutoria.every((e) => e.confiabilidade === 'baixa')) {
       return 'Negativa de Autoria'
     }
 

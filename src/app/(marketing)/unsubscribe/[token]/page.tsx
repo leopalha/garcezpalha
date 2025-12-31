@@ -39,7 +39,7 @@ export default async function UnsubscribePage({
   }
 
   // Buscar subscription no banco
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: subscription, error } = await supabase
     .from('email_sequence_subscriptions')
     .select(`
