@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     const formData = await request.formData()
     const audioFile = formData.get('audio') as File | null
@@ -75,6 +76,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting (30 req/window to control OpenAI API costs)
+export const POST = withRateLimit(postHandler, { type: 'api', limit: 30 })
 
 // Config for Next.js 14 App Router
 export const runtime = 'nodejs'
