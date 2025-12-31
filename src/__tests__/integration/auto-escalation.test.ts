@@ -8,6 +8,39 @@ import { describe, it, expect } from 'vitest'
 import { ESCALATION_RULES } from '@/lib/ai/agents/state-machine/types'
 import type { ConversationData } from '@/lib/ai/agents/state-machine/types'
 
+// Helper to create complete mock data
+function createMockConversation(overrides: Partial<ConversationData> = {}): ConversationData {
+  return {
+    conversation_id: 'test-conv-123',
+    channel: 'website' as const,
+    client: {
+      name: 'João Silva',
+      email: 'joao@example.com',
+      phone: '+5511999999999',
+    },
+    classification: {
+      area: 'real-estate',
+      agent_assigned: 'real-estate-agent',
+      confidence: 0.95,
+    },
+    qualification: {
+      status: 'complete',
+      score: 50,
+      questions_answered: 10,
+      total_questions: 10,
+      flags: [],
+    },
+    proposal: {},
+    status: {
+      state: 'qualified',
+      updated_at: new Date(),
+    },
+    created_at: new Date(),
+    last_message_at: new Date(),
+    ...overrides,
+  }
+}
+
 describe('Auto-Escalation Logic', () => {
   it('should have escalation rule for high-score leads (>= 80)', () => {
     // Verify the rule exists
@@ -20,11 +53,7 @@ describe('Auto-Escalation Logic', () => {
   })
 
   it('should trigger escalation for lead with score 80', () => {
-    const mockData: Partial<ConversationData> = {
-      status: {
-        state: 'qualified',
-        updated_at: new Date(),
-      },
+    const mockData = createMockConversation({
       qualification: {
         status: 'complete',
         score: 80,
@@ -32,20 +61,16 @@ describe('Auto-Escalation Logic', () => {
         total_questions: 10,
         flags: [],
       },
-    } as ConversationData
+    })
 
     const highScoreRule = ESCALATION_RULES[0] // First rule is high score
-    const shouldEscalate = highScoreRule.condition(mockData as ConversationData)
+    const shouldEscalate = highScoreRule.condition(mockData)
 
     expect(shouldEscalate).toBe(true)
   })
 
   it('should trigger escalation for lead with score 95', () => {
-    const mockData: Partial<ConversationData> = {
-      status: {
-        state: 'qualified',
-        updated_at: new Date(),
-      },
+    const mockData = createMockConversation({
       qualification: {
         status: 'complete',
         score: 95,
@@ -53,20 +78,16 @@ describe('Auto-Escalation Logic', () => {
         total_questions: 10,
         flags: [],
       },
-    } as ConversationData
+    })
 
     const highScoreRule = ESCALATION_RULES[0]
-    const shouldEscalate = highScoreRule.condition(mockData as ConversationData)
+    const shouldEscalate = highScoreRule.condition(mockData)
 
     expect(shouldEscalate).toBe(true)
   })
 
   it('should NOT trigger escalation for lead with score 79', () => {
-    const mockData: Partial<ConversationData> = {
-      status: {
-        state: 'qualified',
-        updated_at: new Date(),
-      },
+    const mockData = createMockConversation({
       qualification: {
         status: 'complete',
         score: 79,
@@ -74,16 +95,16 @@ describe('Auto-Escalation Logic', () => {
         total_questions: 10,
         flags: [],
       },
-    } as ConversationData
+    })
 
     const highScoreRule = ESCALATION_RULES[0]
-    const shouldEscalate = highScoreRule.condition(mockData as ConversationData)
+    const shouldEscalate = highScoreRule.condition(mockData)
 
     expect(shouldEscalate).toBe(false)
   })
 
   it('should NOT trigger escalation for score 80+ if status is not qualified', () => {
-    const mockData: Partial<ConversationData> = {
+    const mockData = createMockConversation({
       status: {
         state: 'classifying', // Wrong state
         updated_at: new Date(),
@@ -95,10 +116,10 @@ describe('Auto-Escalation Logic', () => {
         total_questions: 10,
         flags: [],
       },
-    } as ConversationData
+    })
 
     const highScoreRule = ESCALATION_RULES[0]
-    const shouldEscalate = highScoreRule.condition(mockData as ConversationData)
+    const shouldEscalate = highScoreRule.condition(mockData)
 
     expect(shouldEscalate).toBe(false)
   })
