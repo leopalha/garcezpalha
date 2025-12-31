@@ -106,6 +106,7 @@
     "groq-sdk": "^0.37.0",
     "inngest": "^3.48.1",
     "ioredis": "^5.8.2",
+    "isomorphic-dompurify": "^2.35.0",
     "lru-cache": "^10.4.3",
     "lucide-react": "^0.553.0",
     "mercadopago": "^2.10.0",

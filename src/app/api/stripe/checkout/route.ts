@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import Stripe from 'stripe'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { stripeCheckoutSchema } from '@/lib/validations/payments'
+import { withRateLimit } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
@@ -8,25 +11,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-11-20.acacia',
 })
 
-interface CheckoutBody {
-  priceId: string
-  planId: 'starter' | 'pro' | 'enterprise'
-  billingCycle: 'monthly' | 'yearly'
-  customerDetails?: {
-    name: string
-    email: string
-    phone: string
-    taxId: string
-    companyName: string
-  }
-  addons?: string[]
-}
-
 /**
  * POST /api/stripe/checkout
  * Cria uma Stripe Checkout Session para assinatura
+ *
+ * SECURITY:
+ * - Zod validation (P1-010)
+ * - Rate limiting: 10 checkout attempts per hour
+ * - Authentication required
+ * - Input sanitization
  */
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const supabase = await createClient()
 
@@ -39,15 +34,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body: CheckoutBody = await request.json()
-    const { priceId, planId, billingCycle, customerDetails, addons } = body
-
-    if (!priceId || !planId) {
-      return NextResponse.json(
-        { error: 'Missing priceId or planId' },
-        { status: 400 }
-      )
-    }
+    const { priceId, planId, billingCycle, customerDetails, addons } = (request as any).validatedData
 
     // Get user details
     const { data: user } = await supabase
@@ -149,3 +136,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation, sanitization, and rate limiting
+export const POST = withRateLimit(
+  withValidation(stripeCheckoutSchema, handler, { sanitize: true }),
+  { type: 'checkout', limit: 10 } // 10 checkout attempts per hour
+)

@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Save proposal to database
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     const { data: proposal, error: dbError } = await supabase
       .from('proposals')
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         pricing_success_fee: pricing.successFee || null,
         status: 'draft',
         created_at: new Date().toISOString(),
-      })
+      } as any)
       .select()
       .single()
 
