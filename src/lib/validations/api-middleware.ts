@@ -51,7 +51,7 @@ export function withValidation<T extends z.ZodTypeAny>(
           {
             success: false,
             error: 'Dados inválidos',
-            details: error.errors.map((err) => ({
+            details: (error as any).errors.map((err: any) => ({
               path: err.path.join('.'),
               message: err.message,
             })),
@@ -123,7 +123,7 @@ export function withQueryValidation<T extends z.ZodTypeAny>(
           {
             success: false,
             error: 'Parâmetros inválidos',
-            details: error.errors.map((err) => ({
+            details: (error as any).errors.map((err: any) => ({
               path: err.path.join('.'),
               message: err.message,
             })),
