@@ -204,11 +204,15 @@ export class EmailSequenceEngine {
     const templateId = step.template_id
     const template = await this.getTemplate(templateId)
 
+    // Gerar token de unsubscribe (base64 do subscription ID + email para verificação)
+    const unsubscribeToken = Buffer.from(subscription.id).toString('base64')
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL}/unsubscribe/${unsubscribeToken}?email=${encodeURIComponent(lead.email)}`
+
     const variables = {
       firstName: metadata.firstName || lead.name || '',
       lastName: metadata.lastName || '',
       email: lead.email,
-      unsubscribeLink: `${process.env.NEXT_PUBLIC_APP_URL}/unsubscribe/${subscription.id}`,
+      unsubscribeLink: unsubscribeUrl,
       ...metadata,
     }
 

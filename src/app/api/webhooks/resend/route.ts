@@ -16,18 +16,28 @@ export async function POST(req: NextRequest) {
 
     if (!signature && process.env.NODE_ENV === 'production') {
       return NextResponse.json(
-        { error: 'Invalid signature' },
+        { error: 'Missing signature' },
         { status: 401 }
       )
     }
 
-    // TODO: Implementar validação de assinatura real
-    // const isValid = verifyResendSignature(signature, await req.text())
-    // if (!isValid) {
-    //   return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
-    // }
+    // Clonar request para poder ler body duas vezes
+    const clonedReq = req.clone()
+    const rawBody = await clonedReq.text()
 
-    const event = await req.json()
+    // Validar assinatura HMAC
+    if (signature && process.env.RESEND_WEBHOOK_SECRET) {
+      const isValid = await verifyResendSignature(signature, rawBody)
+      if (!isValid) {
+        console.error('[Resend Webhook] Invalid signature')
+        return NextResponse.json(
+          { error: 'Invalid signature' },
+          { status: 401 }
+        )
+      }
+    }
+
+    const event = JSON.parse(rawBody)
 
     console.log('[Resend Webhook] Event received:', event.type, event.data?.email_id)
 
@@ -154,14 +164,44 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Função auxiliar para verificar assinatura (implementar conforme doc Resend)
-function verifyResendSignature(signature: string, body: string): boolean {
-  // TODO: Implementar verificação HMAC conforme documentação Resend
-  // const secret = process.env.RESEND_WEBHOOK_SECRET
-  // const hmac = crypto.createHmac('sha256', secret)
-  // hmac.update(body)
-  // const expectedSignature = hmac.digest('hex')
-  // return signature === expectedSignature
+/**
+ * Verifica assinatura HMAC SHA-256 do webhook Resend
+ * Resend envia header 'resend-signature' com HMAC do body
+ */
+async function verifyResendSignature(signature: string, body: string): Promise<boolean> {
+  const secret = process.env.RESEND_WEBHOOK_SECRET
 
-  return true // Placeholder
+  if (!secret) {
+    console.warn('[Resend Webhook] RESEND_WEBHOOK_SECRET not configured')
+    return true // Em desenvolvimento, aceitar sem validação
+  }
+
+  try {
+    // Converter secret para Uint8Array
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(secret)
+
+    // Importar chave para uso com Web Crypto API (Edge Runtime)
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+
+    // Gerar HMAC do body
+    const bodyData = encoder.encode(body)
+    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, bodyData)
+
+    // Converter para hex
+    const hashArray = Array.from(new Uint8Array(signatureBuffer))
+    const expectedSignature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+    // Comparar com signature recebida (case-insensitive)
+    return signature.toLowerCase() === expectedSignature.toLowerCase()
+  } catch (error) {
+    console.error('[Resend Webhook] Error verifying signature:', error)
+    return false
+  }
 }
