@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import Stripe from 'stripe'
 
 export const dynamic = 'force-dynamic'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2024-11-20.acacia' as any,
 })
 
 /**
  * POST /api/stripe/portal
  * Cria uma sessão do Stripe Customer Portal
  */
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const supabase = await createClient()
 
@@ -56,3 +57,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(handler, { type: 'api', limit: 20 })

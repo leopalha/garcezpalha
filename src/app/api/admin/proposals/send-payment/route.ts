@@ -2,22 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
 import { sendEmail } from '@/lib/email/send'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 
 const mercadopago = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
 })
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const { proposalId, leadId } = body
+const sendPaymentSchema = z.object({
+  proposalId: z.string().uuid('proposalId deve ser um UUID válido'),
+  leadId: z.string().uuid('leadId deve ser um UUID válido'),
+})
 
-    if (!proposalId || !leadId) {
-      return NextResponse.json(
-        { error: 'proposalId e leadId são obrigatórios' },
-        { status: 400 }
-      )
-    }
+async function handler(request: NextRequest) {
+  try {
+    const { proposalId, leadId } = (request as any).validatedData
 
     const supabase = createRouteHandlerClient()
 
@@ -166,6 +166,12 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation and rate limiting (admin endpoint, critical payment operation)
+export const POST = withRateLimit(
+  withValidation(sendPaymentSchema, handler, { sanitize: true }),
+  { type: 'api', limit: 5 }
+)
 
 function generateProposalEmailHTML(data: {
   clientName: string
