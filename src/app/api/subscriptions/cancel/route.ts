@@ -64,10 +64,10 @@ export async function POST(request: NextRequest) {
         canceledSubscription.current_period_end * 1000
       ).toISOString(),
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error canceling subscription:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to cancel subscription' },
+      { error: (error as any).message || 'Failed to cancel subscription' },
       { status: 500 }
     )
   }
@@ -124,10 +124,10 @@ export async function DELETE(request: NextRequest) {
       success: true,
       message: 'Subscription reactivated successfully',
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error reactivating subscription:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to reactivate subscription' },
+      { error: (error as any).message || 'Failed to reactivate subscription' },
       { status: 500 }
     )
   }
