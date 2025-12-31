@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
+import { withRateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
 
 const signupSchema = z.object({
@@ -13,7 +14,7 @@ const signupSchema = z.object({
   document: z.string().optional(), // CPF/CNPJ
 })
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json()
     
@@ -116,3 +117,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting: 5 signup attempts per 15 minutes
+export const POST = withRateLimit(handler, { type: 'auth', limit: 5 })

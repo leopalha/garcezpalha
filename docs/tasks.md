@@ -1,1186 +1,784 @@
 # 📋 GARCEZ PALHA - ROADMAP Q1 2025
 
-**Versão**: 3.0 - MANUS v7.0 ATIVADO
-**Última Atualização**: 31/12/2024 - 01:30
+**Versão**: 4.0 - MANUS v7.0 BASELINE COMPLETO
+**Última Atualização**: 31/12/2024 - 23:45
 **Metodologia**: MANUS v7.0 Multi-Dimensional Quality Assurance
-**Score Atual (v6.0)**: 100/100 Features ⭐⭐⭐⭐⭐
-**Score Atual (v7.0)**: 51/100 Production Readiness 🔴
-**Status**: ✅ P1/P2/P3 100% + Stripe 100% | ⚠️ Código com bloqueadores
+**Score Atual (v7.0)**: 73.9/100 Production Readiness 🟡 **MVP READY**
+**Status**: ✅ P1/P2/P3 100% | 🟡 MANUS v7.0 FASE 1 (ANALYZE) COMPLETA
 
 ---
 
-## 🚀 MANUS v7.0 - ATIVADO EM 31/12/2024
+## 🚀 MANUS v7.0 - AUDITORIA BASELINE COMPLETA
 
-### 📊 SCORES BASELINE (7 Dimensões)
+### 📊 SCORES FINAIS (7 Dimensões)
 
 ```
-D1 (Documentação):    100/100 ████████████ ✅ EXCELENTE
-D2 (Código):           62/100 ██████▒▒▒▒▒▒ ⚠️ CRÍTICO
-D3 (Testes):           45/100 ████▒▒▒▒▒▒▒▒ ❌ BAIXO
-D4 (UX/UI):            ?/100  ?????????? ⏳ PENDENTE
-D5 (Segurança):        ?/100  ?????????? ⏳ PENDENTE
-D6 (Performance):      ?/100  ?????????? ⏳ PENDENTE
-D7 (Validação Real):    0/100 ▒▒▒▒▒▒▒▒▒▒▒▒ ❌ ZERO
+D1 (Documentação):     100/100 ████████████ ✅ EXCELENTE
+D2 (Código):            82/100 ████████▒▒▒▒ 🟡 BOM
+D3 (Testes):            68/100 ██████▒▒▒▒▒▒ 🟡 ADEQUADO
+D4 (UX/UI):             78/100 ███████▒▒▒▒▒ 🟡 BOM
+D5 (Segurança):         68/100 ██████▒▒▒▒▒▒ 🟡 ADEQUADO
+D6 (Performance):       72/100 ███████▒▒▒▒▒ 🟡 BOM
+D7 (Validação Real):    28/100 ██▒▒▒▒▒▒▒▒▒▒ 🔴 CRÍTICO
 
-SCORE GLOBAL: ~51/100 🔴 NÃO PRONTO PARA PRODUÇÃO
+SCORE GLOBAL: 73.9/100 🟡 MVP READY
 META: 90/100 (PRODUCTION READY)
-GAP: 39 pontos
+GAP: 16.1 pontos
+ESFORÇO: 160h (8 semanas)
 ```
 
-**Ver relatório completo**: `d:\.manus\reports\MANUS_V7_AUDIT_BASELINE.md`
+**Classificação Atual:** 🟡 **MVP READY** (70-79/100)
+- ✅ Pronto para lançar com versão beta
+- ⚠️ Requer correções P0 antes de produção em escala
+- 🎯 Meta: PRODUCTION READY (90/100) em 8 semanas
+
+**Ver relatório completo**: `.manus/reports/MANUS_V7_AUDIT_BASELINE.md`
 
 ---
 
-## 🔴 BLOQUEADORES CRÍTICOS (P0) - RESOLVER AGORA
+## 🚨 BLOQUEADORES CRÍTICOS (P0) - RESOLVER IMEDIATO
 
-### P0-001: Build Falhando ❌
-- **Status**: Em progresso (clean + rebuild rodando)
-- **Erro**: `pages-manifest.json` not found
-- **Esforço**: 2h
-- **Bloqueador**: Sim - impede deploy
+**Total P0:** 11 vulnerabilidades | **Esforço:** 47h (6 dias)
 
-### P0-002: 33 Erros TypeScript ❌
-- **Status**: Identificado
-- **Breakdown**:
-  - 12 erros em testes (auto-escalation, AB testing)
-  - 8 erros em páginas admin
-  - 7 erros em páginas dashboard
-  - 4 erros em API routes
-  - 2 erros em páginas marketing
-- **Esforço**: 8-12h
-- **Bloqueador**: Sim - build não passa
+### SEGURANÇA (D5)
 
-### P0-003: Testes com Erros de Tipo ❌
-- **Status**: Identificado
-- **Erro**: 12 erros de type casting em integration tests
-- **Esforço**: 4h
-- **Bloqueador**: Parcial - testes não rodam
-
-### P0-004: Missing Imports ❌
-- **Status**: Identificado
-- **Erros**: `RefreshCw`, `MessageSquare`, `dashboardData` não encontrados
-- **Esforço**: 1h
-- **Bloqueador**: Sim - páginas quebradas
-
-**TOTAL P0**: 15-19 horas de correções críticas
-
----
-
-## 📅 SPRINT 0: CORREÇÕES CRÍTICAS (SEMANA 1 - 32h)
-
-**Objetivo**: Resolver P0, atingir build passando, TypeScript limpo
-
-**Meta de Score**:
-- D2 (Código): 62 → 85 (+23 pontos)
-- D3 (Testes): 45 → 65 (+20 pontos)
-- **Score Global**: 51 → 78 (MVP BASIC)
-
-### DIA 1-2: Build + TypeScript (16h)
-
-#### [MANUS-V7-P0-001] Fix Build Process
-- **Prioridade**: P0 | **Esforço**: 2h | **Status**: ⏳ EM PROGRESSO
-- Limpar `.next` ✅ (rodando)
-- Recompilar projeto
-- Validar build passa sem erros
-- **Deliverable**: `npm run build` success
-
-#### [MANUS-V7-P0-002] Fix TypeScript Errors (33 total)
-- **Prioridade**: P0 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
-- **Fase 1** (4h): Testes de integração (12 erros)
-  - `auto-escalation.test.ts`: 5 type casts
-  - `scripts/test-ab-testing.ts`: 6 erros
-  - `conversation-status-mapping.test.ts`: verificar
-- **Fase 2** (4h): Páginas Admin (8 erros)
-  - `analytics/page.tsx`: RefreshCw import
-  - `ab-tests/[id]/page.tsx`: Assignment[] types
-  - `leads/[id]/page.tsx`: implicit any
-- **Fase 3** (2h): Páginas Dashboard (7 erros)
-  - `assinatura/page.tsx`: mockCurrentPlan
-  - `configuracoes/page.tsx`: MessageSquare import
-  - `dashboard/page.tsx`: dashboardData, asChild props
-- **Fase 4** (2h): API Routes + Marketing (6 erros)
-  - `proposals/*/route.ts`: createRouteHandlerClient
-  - `app/clients/route.ts`: implicit any
-  - `precos/page.tsx`: marketingDetail
-- **Deliverable**: `npx tsc --noEmit` com zero erros
-
-#### [MANUS-V7-P0-004] Fix Missing Imports
-- **Prioridade**: P0 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
-- Adicionar `RefreshCw` de lucide-react
-- Adicionar `MessageSquare` de lucide-react
-- Corrigir `dashboardData` undefined
-- **Deliverable**: Todas as páginas carregam sem erro
-
-### DIA 3-4: Testes + Validação (16h)
-
-#### [MANUS-V7-P0-003] Fix Integration Test Errors
+#### [P0-D5-001] CSRF Não Implementado
 - **Prioridade**: P0 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
-- Corrigir 12 type casts em `auto-escalation.test.ts`
-- Criar interfaces apropriadas para `ConversationData`
-- Validar testes passam: `npm test`
-- **Deliverable**: Testes passando sem erros
+- **Impacto**: 148 APIs vulneráveis a CSRF attacks
+- **Fix**: Implementar CSRF tokens em todas POST/PUT/DELETE
+- **Biblioteca**: `csrf` ou `csurf`
+- **Deliverable**: Middleware CSRF ativo
 
-#### [MANUS-V7-001] Implementar Jest Config
-- **Prioridade**: P1 | **Esforço**: 2h | **Status**: ⏳ PENDENTE
-- Criar `jest.config.js`
-- Setup `@testing-library/react`
-- Configurar coverage thresholds
-- **Deliverable**: `npm test` roda todos os testes
+#### [P0-D5-002] Password Migration Não Executada
+- **Prioridade**: P0 | **Esforço**: 30min | **Status**: ⏳ PENDENTE
+- **Impacto**: Passwords hardcoded ainda no DB
+- **Fix**: `npx ts-node scripts/hash-passwords.ts`
+- **Deliverable**: Todos passwords bcrypt hashed
 
-#### [MANUS-V7-002] Medir Test Coverage
-- **Prioridade**: P1 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
-- Executar `npm run test:coverage`
-- Gerar relatório HTML
-- Identificar gaps críticos
-- **Deliverable**: Relatório de coverage (meta: 30%+ atual)
+#### [P0-D5-003] API Keys Rotação Necessária
+- **Prioridade**: P0 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
+- **Impacto**: Keys podem ter vazado no histórico Git
+- **Fix**: Rotacionar OpenAI, Supabase, Stripe, MercadoPago
+- **Deliverable**: Novas keys em Vercel env vars
 
-#### [MANUS-V7-003] Adicionar Testes Faltantes
+#### [P0-D5-004] .env Não no .gitignore
+- **Prioridade**: P0 | **Esforço**: 5min | **Status**: ⏳ PENDENTE
+- **Impacto**: Risco de commit acidental de secrets
+- **Fix**: Adicionar `.env` ao `.gitignore`
+- **Deliverable**: `.env` ignorado pelo Git
+
+### VALIDAÇÃO REAL (D7)
+
+#### [P0-D7-001] Google Analytics NÃO Configurado
+- **Prioridade**: P0 | **Esforço**: 30min | **Status**: ⏳ PENDENTE
+- **Impacto**: ZERO dados reais de usuários (BLOQUEADOR)
+- **Fix**: Criar GA4 property + adicionar `NEXT_PUBLIC_GA4_ID`
+- **Deliverable**: GA4 rastreando page views
+
+#### [P0-D7-002] Processo Alpha/Beta Inexistente
+- **Prioridade**: P0 | **Esforço**: 8h | **Status**: ⏳ PENDENTE
+- **Impacto**: Impossível validar produto com usuários reais
+- **Fix**: Documentar processo + criar beta signup form
+- **Deliverable**: Processo de beta testing documentado
+
+#### [P0-D7-003] Métricas Críticas Não Rastreadas
+- **Prioridade**: P0 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
+- **Impacto**: Sem dados de onboarding, chat, checkout
+- **Fix**: Implementar tracking de 7 métricas
+- **Métricas**: Onboarding completion, chat usage, checkout initiation, payment completion, bounce rate, session duration, return visitors
+- **Deliverable**: Dashboard de métricas funcionando
+
+### UX/UI (D4)
+
+#### [P0-D4-001] Aria-labels Críticos Faltando
+- **Prioridade**: P0 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- **Impacto**: Apenas 10 aria-labels (precisa 200+)
+- **Fix**: Adicionar aria-labels em navbar, chat, forms
+- **Deliverable**: Acessibilidade WCAG 2.1 básica
+
+#### [P0-D4-002] Keyboard Navigation Ausente
+- **Prioridade**: P0 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- **Impacto**: Mega menu inacessível por teclado
+- **Fix**: Implementar onKeyDown, tabIndex, foco visível
+- **Deliverable**: Navegação completa por teclado
+
+### PERFORMANCE (D6)
+
+#### [P0-D6-001] Bundle Size 138MB Não Otimizado
+- **Prioridade**: P0 | **Esforço**: 8h | **Status**: ⏳ PENDENTE
+- **Impacto**: Largest chunk 1.7MB, build lento
+- **Fix**: Bundle analyzer + code splitting + production build
+- **Meta**: Reduzir para <50MB
+- **Deliverable**: Bundle otimizado
+
+#### [P0-D6-002] Zero SSG/ISR Implementado
+- **Prioridade**: P0 | **Esforço**: 6h | **Status**: ⏳ PENDENTE
+- **Impacto**: Todas páginas renderizadas dinamicamente
+- **Fix**: Implementar `generateStaticParams` e ISR em blog
+- **Deliverable**: 50%+ páginas estáticas
+
+---
+
+## 📅 ROADMAP PRODUCTION READY (8 Semanas)
+
+### FASE 1 - BLOQUEADORES (Semana 1) - 16h
+
+**Objetivo**: Eliminar bloqueadores de lançamento
+
+**Sprint Security P0 (8h):**
+- [ ] P0-D5-002: Executar password migration (30min)
+- [ ] P0-D5-004: Adicionar .env ao .gitignore (5min)
+- [ ] P0-D5-001: Implementar CSRF protection (4h)
+- [ ] P0-D5-003: Rotacionar API keys (1h)
+- [ ] P1-D5-001: Rate limiting em auth APIs (2h)
+
+**Sprint Analytics P0 (8h):**
+- [ ] P0-D7-001: Configurar GA4 (30min)
+- [ ] Install Vercel Analytics (15min)
+- [ ] P0-D7-003: Tracking de métricas críticas (6h)
+- [ ] Testar eventos em produção (1h)
+
+**Deliverable**: Sistema seguro e observável
+**Score Projetado**: 73.9 → 78 (+4.1 pontos)
+
+---
+
+### FASE 2 - VALIDATION INFRASTRUCTURE (Semana 2-3) - 40h
+
+**Objetivo**: Infraestrutura completa de validação
+
+**Sprint D7-1: Analytics Completo (16h)**
+- [ ] Onboarding completion tracking (2h)
+- [ ] Chat IA usage metrics (2h)
+- [ ] Checkout funnel tracking (3h)
+- [ ] Payment completion tracking (2h)
+- [ ] Bounce rate calculation (2h)
+- [ ] Return visitor tracking (2h)
+- [ ] Dashboard consolidado (3h)
+
+**Sprint D7-2: Alpha/Beta Process (24h)**
+- [ ] P0-D7-002: Documentar processo alpha testing (4h)
+- [ ] Beta tester signup form (3h)
+- [ ] Beta user segmentation (role: 'beta') (2h)
+- [ ] Beta onboarding diferenciado (4h)
+- [ ] Beta feedback collection workflow (3h)
+- [ ] Integrar LaunchDarkly (feature flags) (6h)
+- [ ] Bug report form (2h)
+- [ ] Feature request form (2h)
+
+**Deliverable**: Infraestrutura de validação operacional
+**Score Projetado**: 78 → 81 (+3 pontos)
+
+---
+
+### FASE 3 - SECURITY & COMPLIANCE (Semana 4-5) - 40h
+
+**Objetivo**: Sistema seguro e compliant
+
+**Sprint D5-1: OWASP Protection (24h)**
+- [ ] CSRF em 100% das APIs (8h)
+- [ ] Rate limiting em 100% das APIs públicas (6h)
+- [ ] Zod validation em 100% das APIs (6h)
+- [ ] RLS policies com tenant isolation (4h)
+
+**Sprint D5-2: Compliance (16h)**
+- [ ] Cookie consent banner (3h)
+- [ ] Disclaimer automático IA responses (2h)
+- [ ] MFA/2FA para admin (8h)
+- [ ] Security audit logs (3h)
+
+**Deliverable**: Sistema seguro e compliant
+**Score Projetado**: 81 → 84 (+3 pontos)
+
+---
+
+### FASE 4 - PERFORMANCE & UX (Semana 6-7) - 40h
+
+**Objetivo**: Sistema performático e acessível
+
+**Sprint D6: Performance (24h)**
+- [ ] P0-D6-001: Bundle analyzer + redução (8h)
+- [ ] Converter 70% para Server Components (6h)
+- [ ] P0-D6-002: Implementar SSG/ISR (6h)
+- [ ] Code splitting agressivo (2h)
+- [ ] Preload critical fonts (2h)
+
+**Sprint D4: Accessibility & UX (16h)**
+- [ ] P0-D4-001: Adicionar 200+ aria-labels (3h)
+- [ ] P0-D4-002: Keyboard navigation completo (4h)
+- [ ] Validar contraste de cores WCAG AA (2h)
+- [ ] Testar responsividade 320px, 768px, 1920px (3h)
+- [ ] Criar empty states personalizados (3h)
+- [ ] Progress bars em uploads (1h)
+
+**Deliverable**: Sistema performático e acessível
+**Score Projetado**: 84 → 87.5 (+3.5 pontos)
+
+---
+
+### FASE 5 - TESTING & REFINEMENT (Semana 8) - 24h
+
+**Objetivo**: Sistema testado e confiável
+
+**Sprint D3: Test Coverage (24h)**
+- [ ] Unit tests 50% código crítico (12h)
+- [ ] Integration tests top 20 APIs (8h)
+- [ ] 5+ E2E tests principais (4h)
+
+**Deliverable**: Test coverage 85%+
+**Score Projetado**: 87.5 → **90.05** (+2.55 pontos) 🚀
+
+---
+
+## 🎯 BREAKDOWN POR DIMENSÃO - TASKS DETALHADAS
+
+### D1: DOCUMENTAÇÃO ✅ (100/100)
+
+**Status**: EXCELENTE - Apenas manutenção mensal
+
+#### [MAINT-D1-001] Manutenção Mensal
+- **Prioridade**: P2 | **Esforço**: 2h/mês | **Status**: ⏳ RECORRENTE
+- Review de alinhamento docs ↔ código
+- Atualizar após implementação de P0/P1
+- **Deliverable**: Docs sincronizados
+
+---
+
+### D2: CÓDIGO 🟡 (82/100 → Meta: 88/100)
+
+**Gaps Principais**: TypeScript errors, Zod validation, Client components
+
+#### [P1-D2-001] Fix TypeScript Errors (847 erros)
+- **Prioridade**: P1 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
+- Remover `ignoreBuildErrors: true`
+- Corrigir erros de tipo em tests, pages, APIs
+- **Deliverable**: `npx tsc --noEmit` zero erros
+
+#### [P1-D2-002] Zod Validation em 100% APIs
 - **Prioridade**: P1 | **Esforço**: 8h | **Status**: ⏳ PENDENTE
-- Testes para 6 agents IA (1h cada)
-- Testes para API routes críticas (2h)
-- **Meta**: 50%+ coverage
-- **Deliverable**: Coverage aumentado para 50%+
+- Atualmente: 13% com validação (19 de 148 APIs)
+- Criar schemas Zod para todas rotas
+- **Deliverable**: 100% APIs validadas
 
-#### [MANUS-V7-004] Configurar CI/CD Pipeline
+#### [P1-D2-003] Input Sanitization
+- **Prioridade**: P1 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Aplicar sanitization em 87% dos endpoints
+- Usar `input-sanitizer.ts` existente
+- **Deliverable**: XSS protection completo
+
+#### [P1-D2-004] Migrar para Server Components
+- **Prioridade**: P1 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
+- Atual: 99% Client Components
+- Meta: 30% Client, 70% Server
+- Converter homepage, marketing pages, layouts
+- **Deliverable**: Performance melhorada
+
+**Esforço Total D2**: 36h
+
+---
+
+### D3: TESTES 🟡 (68/100 → Meta: 85/100)
+
+**Gaps Principais**: Coverage baixo (15-20%), zero E2E, zero visual regression
+
+#### [P1-D3-001] Aumentar Unit Test Coverage
+- **Prioridade**: P1 | **Esforço**: 16h | **Status**: ⏳ PENDENTE
+- Atual: 15-20% coverage
+- Meta: 70% coverage
+- Testes para AI agents, utils, helpers
+- **Deliverable**: 70%+ coverage
+
+#### [P1-D3-002] Integration Tests APIs
+- **Prioridade**: P1 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
+- Testar top 20 API routes
+- Auth, payments, webhooks
+- **Deliverable**: APIs críticas testadas
+
+#### [P1-D3-003] E2E Tests Principais
+- **Prioridade**: P1 | **Esforço**: 12h | **Status**: ⏳ PENDENTE
+- Cypress ou Playwright
+- 5+ cenários: chat, checkout, auth, dashboard
+- **Deliverable**: E2E suite funcionando
+
+#### [P2-D3-004] Visual Regression Tests
+- **Prioridade**: P2 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Percy.io ou Chromatic
+- Snapshots de páginas principais
+- **Deliverable**: Visual testing ativo
+
+**Esforço Total D3**: 44h
+
+---
+
+### D4: UX/UI 🟡 (78/100 → Meta: 92/100)
+
+**Gaps Principais**: Acessibilidade (45/100), keyboard navigation, contraste
+
+#### [P0-D4-001] Aria-labels Completo ✅ (já listado)
+
+#### [P0-D4-002] Keyboard Navigation ✅ (já listado)
+
+#### [P1-D4-003] Validar Contraste WCAG 2.1
 - **Prioridade**: P1 | **Esforço**: 2h | **Status**: ⏳ PENDENTE
-- GitHub Actions workflow
-- Rodar testes em cada PR
-- Block merge se testes falharem
-- **Deliverable**: `.github/workflows/test.yml`
+- 8 temas × 6 estados = 48 combinações
+- Ferramenta: axe DevTools
+- **Deliverable**: Compliance WCAG AA
 
-**TOTAL SPRINT 0**: 32 horas
+#### [P1-D4-004] Testar Responsividade Extrema
+- **Prioridade**: P1 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- 320px (mobile small)
+- 1920px+ (ultra-wide)
+- **Deliverable**: Responsivo em todos breakpoints
 
----
+#### [P1-D4-005] Empty States Personalizados
+- **Prioridade**: P1 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- Chat, Dashboard, Processos, Documentos
+- Ilustrações custom (unDraw ou similar)
+- **Deliverable**: UX polida
 
-## 🚀 NOVA SESSÃO - SEMANA 1 QUICK WINS (30/12/2024)
+#### [P1-D4-006] Progress Indicators
+- **Prioridade**: P1 | **Esforço**: 2h | **Status**: ⏳ PENDENTE
+- Upload de arquivos
+- Checkout steps
+- **Deliverable**: Feedback visual melhorado
 
-### ✅ COMPLETADAS NESTA SESSÃO (6 tasks - 12-18h)
+#### [P2-D4-007] Micro-interactions Forms
+- **Prioridade**: P2 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- Label float animation
+- Checkbox bounce
+- Input focus scale
+- **Deliverable**: UX premium
 
-#### **CLEANUP-001**: Remover 17 Arquivos Deprecated ✅
-- ✅ 7 agents deprecated removidos
-- ✅ 2 backups de código removidos (.old, .original.tsx)
-- ✅ 2 task backups removidos
-- ✅ 3 documentos duplicados removidos (catalogo, landing-page, google-ads)
-- **Impacto**: -78KB, codebase limpo e organizado
+#### [P2-D4-008] Documentar Design System
+- **Prioridade**: P2 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- `/docs/design-system.md` ou Storybook
+- Tokens, componentes, exemplos
+- **Deliverable**: Design system documentado
 
-#### **CODE-004**: Client Documents Table + RLS ✅
-- ✅ Migration criada: `20251230000004_client_documents.sql`
-- ✅ 4 RLS policies implementadas (view, insert, update, delete)
-- ✅ API ativada: `/api/documents/route.ts` (TODO removido)
-- ✅ Suporte para upload, análise IA (GPT-4 Vision), storage
-- **Impacto**: Sistema de documentos 100% funcional
-
-#### **CODE-005**: ClickSign Webhooks (4 TODOs) ✅
-- ✅ Welcome email após assinatura de contrato
-- ✅ Notificação para advogado quando caso ativa (1h após assinatura)
-- ✅ Notificação admin em cancelamento de contrato
-- ✅ Notificação admin em recusa de contrato
-- **Impacto**: Automação completa do ciclo de contratos
-
-#### **CLEANUP-002**: Console.logs Limpos ✅
-- ✅ 10 console.logs removidos de componentes/páginas
-- ✅ Mantidos logs úteis (PWA, APIs, export functions)
-- ✅ Código production-ready
-- **Impacto**: Código limpo e profissional
-
-#### **CODE-001**: Checkout Payment Flow (Stripe) ✅ 💰
-**Arquivos modificados:**
-- ✅ `src/app/(app)/checkout/page.tsx` - Integração completa
-- ✅ `src/app/api/stripe/checkout/route.ts` - API atualizada
-- ✅ `.env.example` - 5 novos Price IDs documentados
-
-**Features implementadas:**
-- ✅ Integração Stripe Checkout completa
-- ✅ Suporte para 3 planos (Starter R$ 497, Pro R$ 997, Enterprise R$ 1.997)
-- ✅ Suporte para 2 addons (Nicho Extra R$ 97, Catálogo R$ 297)
-- ✅ Customer details salvos automaticamente no Stripe
-- ✅ Line items dinâmicos (plano + addons)
-- ✅ Redirecionamento para Stripe Checkout
-- ✅ Webhook preparado para auto-provisioning
-- ✅ Documentação completa: `docs/STRIPE_SETUP.md` (200+ linhas)
-
-**Impacto**: **SISTEMA PRONTO PARA GERAR REVENUE!** 🚀💰
-
-#### **DATA-001**: Completar DADOS_MESTRES.md ✅ 📄
-**Arquivos modificados:**
-- ✅ `business/DADOS_MESTRES.md` - v2.2 atualizado
-
-**Campo confirmado:**
-- ✅ **CNPJ**: 54.185.007/0001-54 (validado com cliente)
-
-**Features desbloqueadas:**
-- ✅ Dados fiscais completos para emissão de NFs
-- ✅ Integração com gateways de pagamento ativada
-- ✅ Compliance fiscal 100% operacional
-- ✅ Documentação oficial pronta para contratos
-
-**Impacto**: **DADOS MESTRES 99/100 - COMPLIANCE FISCAL COMPLETO!** ✅
+**Esforço Total D4**: 22h
 
 ---
 
-### 📊 ESTATÍSTICAS DESTA SESSÃO
+### D5: SEGURANÇA 🔴 (68/100 → Meta: 90/100)
 
-**Arquivos:**
-- Criados: 3 (migration, STRIPE_SETUP.md, plan consolidation)
-- Modificados: 9 (+ DADOS_MESTRES.md)
-- Deletados: 13
+**Gaps Principais**: CSRF, rate limiting, audit logs, MFA
 
-**Código:**
-- LOC adicionadas: ~350 linhas
-- LOC removidas: ~50 linhas
-- TODOs resolvidos: 7
-- Campos críticos confirmados: 1 (CNPJ)
+#### P0s já listados acima (CSRF, passwords, API keys, .env)
 
-**Tempo estimado:** ~12-18h de trabalho
+#### [P1-D5-001] Rate Limiting 100% APIs
+- **Prioridade**: P1 | **Esforço**: 6h | **Status**: ⏳ PENDENTE
+- Atual: 13% coverage (2 de 148 APIs)
+- Aplicar `withRateLimit` em todas
+- **Deliverable**: Proteção DDoS/brute force
 
-**Features desbloqueadas:**
-- ✅ Sistema de documentos com IA
-- ✅ Automação completa de contratos
-- ✅ **Pagamentos com Stripe (REVENUE READY!)**
-- ✅ **Compliance Fiscal 100% (CNPJ confirmado)**
+#### [P1-D5-002] Audit Logs Implementar
+- **Prioridade**: P1 | **Esforço**: 6h | **Status**: ⏳ PENDENTE
+- Tabela `audit_logs`
+- Log: login, data access, admin actions
+- Compliance LGPD Art. 37
+- **Deliverable**: Rastreabilidade completa
+
+#### [P1-D5-003] RLS Policies Tenant Isolation
+- **Prioridade**: P1 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Atual: Policies muito permissivas (`USING true`)
+- Implementar: `auth.uid() = user_id OR role = 'admin'`
+- **Deliverable**: Multi-tenancy seguro
+
+#### [P1-D5-004] MFA/2FA Admin
+- **Prioridade**: P1 | **Esforço**: 8h | **Status**: ⏳ PENDENTE
+- Implementar 2FA para roles admin e lawyer
+- **Deliverable**: Contas admin protegidas
+
+#### [P1-D5-005] Cookie Consent Banner
+- **Prioridade**: P1 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- Biblioteca: `react-cookie-consent`
+- Categorias: Essenciais, Analytics, Marketing
+- **Deliverable**: Compliance LGPD
+
+#### [P1-D5-006] Disclaimer Automático IA
+- **Prioridade**: P1 | **Esforço**: 2h | **Status**: ⏳ PENDENTE
+- Adicionar footer em `chat/route.ts`
+- Compliance OAB
+- **Deliverable**: Respostas IA com disclaimer
+
+#### [P2-D5-007] Remover unsafe-eval CSP
+- **Prioridade**: P2 | **Esforço**: 2h | **Status**: ⏳ PENDENTE
+- `next.config.js:116`
+- Documentar necessidade ou remover
+- **Deliverable**: CSP mais restritivo
+
+**Esforço Total D5**: 51h
 
 ---
 
-### ⏳ PENDENTE SEMANA 1 (1 task)
+### D6: PERFORMANCE 🟡 (72/100 → Meta: 88/100)
 
-#### **DOCS-007**: Resolver duplicates
-- **Status**: ✅ 80% Completo (3 docs removidos)
-- **Restante**: Verificar se há mais duplicates
+**Gaps Principais**: Bundle size, client components, SSG/ISR, cache
+
+#### P0s já listados acima (Bundle, SSG/ISR)
+
+#### [P1-D6-001] Implementar Bundle Analyzer
+- **Prioridade**: P1 | **Esforço**: 30min | **Status**: ⏳ PENDENTE
+- `@next/bundle-analyzer`
+- `npm run analyze`
+- **Deliverable**: Visibilidade de bloat
+
+#### [P1-D6-002] Cache em 80% APIs
+- **Prioridade**: P1 | **Esforço**: 6h | **Status**: ⏳ PENDENTE
+- Atual: 3 de 148 APIs com revalidate
+- Implementar ISR/revalidate em APIs estáticas
+- **Deliverable**: Response time melhorado
+
+#### [P1-D6-003] Preload Critical Fonts
+- **Prioridade**: P1 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
+- 4 famílias Google Fonts
+- Preload em `layout.tsx`
+- **Deliverable**: FCP melhorado
+
+#### [P1-D6-004] Lazy Load Framer-motion
+- **Prioridade**: P1 | **Esforço**: 2h | **Status**: ⏳ PENDENT
+- 23 components com animações
+- Dynamic imports
+- **Deliverable**: Bundle reduzido
+
+#### [P1-D6-005] Code Splitting Agressivo
+- **Prioridade**: P1 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Split chat bundle
+- Split admin bundle
+- **Deliverable**: Chunks otimizados
+
+#### [P1-D6-006] Remover Brasão 1.2MB
+- **Prioridade**: P1 | **Esforço**: 5min | **Status**: ⏳ PENDENTE
+- `rm public/brasao-garcez-palha.png`
+- WebP 112KB já existe
+- **Deliverable**: Bandwidth economizado
+
+#### [P2-D6-007] Web Vitals Tracking
+- **Prioridade**: P2 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
+- `reportWebVitals` em `layout.tsx`
+- Send to analytics
+- **Deliverable**: Core Web Vitals monitorados
+
+#### [P2-D6-008] Edge Functions APIs Rápidas
+- **Prioridade**: P2 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- `export const runtime = 'edge'`
+- `/api/products`, `/api/blog`
+- **Deliverable**: TTFB < 100ms
+
+**Esforço Total D6**: 24h
 
 ---
 
-### 🎯 PRÓXIMOS PASSOS IMEDIATOS
+### D7: VALIDAÇÃO REAL 🔴 (28/100 → Meta: 85/100)
 
-**Para colocar Stripe em produção:**
-1. Criar produtos no Stripe Dashboard (15min)
-2. Configurar webhooks (10min)
-3. Testar fluxo completo (30min)
-4. **LANÇAR E GERAR REVENUE!** 🚀
+**Gaps Principais**: GA4, alpha/beta, métricas, feature flags
 
-**Guia completo:** `docs/STRIPE_SETUP.md`
+#### P0s já listados acima (GA4, alpha/beta, métricas)
+
+#### [P1-D7-001] Vercel Analytics
+- **Prioridade**: P1 | **Esforço**: 15min | **Status**: ⏳ PENDENTE
+- `npm install @vercel/analytics`
+- 2 linhas de código
+- **Deliverable**: Web Vitals automático
+
+#### [P1-D7-002] Conversion Funnel Completo
+- **Prioridade**: P1 | **Esforço**: 8h | **Status**: ⏳ PENDENTE
+- Onboarding funnel
+- Checkout funnel
+- Chat engagement funnel
+- **Deliverable**: Visibilidade customer journey
+
+#### [P1-D7-003] User Interview Process
+- **Prioridade**: P1 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- Documentar processo
+- Templates de perguntas
+- Scheduling system
+- **Deliverable**: Qualitative feedback estruturado
+
+#### [P1-D7-004] Session Recording Aumentar
+- **Prioridade**: P1 | **Esforço**: 1h | **Status**: ⏳ PENDENTE
+- Sentry replay: 10% → 50%
+- **Deliverable**: Mais sessões para debugging
+
+#### [P1-D7-005] Return Visitor Tracking
+- **Prioridade**: P1 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Cookie tracking + cohort analysis
+- **Deliverable**: Medir retention real
+
+#### [P1-D7-006] A/B Testing Ativar
+- **Prioridade**: P1 | **Esforço**: 4h | **Status**: ⏳ PENDENTE
+- Código existe, mas não ativo
+- Criar primeiro test (hero CTA)
+- **Deliverable**: A/B testing operacional
+
+#### [P2-D7-007] NPS Dashboard
+- **Prioridade**: P2 | **Esforço**: 3h | **Status**: ⏳ PENDENTE
+- NPS implementado (90/100) mas sem dashboard
+- Analytics de NPS scores
+- **Deliverable**: Visualização de NPS
+
+**Esforço Total D7**: 35h
 
 ---
 
-## 🎯 RESUMO EXECUTIVO
+## 📊 RESUMO EXECUTIVO - ESFORÇOS
 
-| Métrica | Valor |
-|---------|-------|
-| **Tasks Anteriores** | P1 (18) + P2 (3) + P3 (4) = 25 ✅ COMPLETAS |
-| **Tasks Semana 1** | 6/7 ✅ COMPLETAS (86% conclusão) |
-| **Novas Tasks Q1 2025** | 51 tasks restantes |
-| **Próximas Prioridades** | Dashboard B2B APIs + Onboarding + Docs |
+| Dimensão | Score Atual | Meta | Gap | Esforço | Sprints |
+|----------|-------------|------|-----|---------|---------|
+| **D1** Documentação | 100/100 | - | - | 2h/mês | Manutenção |
+| **D2** Código | 82/100 | 88 | +6 | 36h | 1 semana |
+| **D3** Testes | 68/100 | 85 | +17 | 44h | 1.5 semanas |
+| **D4** UX/UI | 78/100 | 92 | +14 | 22h | 1 semana |
+| **D5** Segurança | 68/100 | 90 | +22 | 51h | 1.5 semanas |
+| **D6** Performance | 72/100 | 88 | +16 | 24h | 1 semana |
+| **D7** Validação | 28/100 | 85 | +57 | 35h | 1 semana |
+| **TOTAL** | **73.9/100** | **90.05** | **+16.15** | **212h** | **8 semanas** |
+
+**Priorização Recomendada:**
+1. **Semana 1**: P0s (47h) - Bloqueadores críticos
+2. **Semanas 2-3**: D7 Validation (40h) - Dados essenciais
+3. **Semanas 4-5**: D5 Security (40h) - Compliance
+4. **Semanas 6-7**: D6 + D4 (40h) - Performance & UX
+5. **Semana 8**: D3 Testing (24h) - Quality assurance
 
 ---
 
 ## ✅ O QUE JÁ FOI CONCLUÍDO
 
 ### FASE P1 - Automação Core (18/18 ✅)
+### FASE P2 - APIs Reais (3/3 ✅)
+### FASE P3 - Deploy Docs (4/4 ✅)
+### MANUS v6.0 - Documentação (100/100 ✅)
+### MANUS v7.0 FASE 1 - ANALYZE (100% ✅)
 
-### Esta Sessão (30/12/2024):
-- ✅ **Semana 1 Quick Wins**: 5 tasks completadas
-- ✅ **Stripe Payment Flow**: Sistema de pagamentos pronto
-- ✅ **Code Quality**: Codebase limpo e organizado
-
----
-
-## ✅ TAREFAS IMPLEMENTADAS NESTA SESSÃO (6/6)
-
-### **P1-007: Fluxo Fechamento UI** ✅ (8-10h)
-**Arquivos criados:**
-- ✅ `/admin/leads/[id]/page.tsx` - Página detalhes do lead com UI de proposta
-- ✅ `/api/admin/proposals/generate/route.ts` - API GPT-4 geração de propostas
-- ✅ `/api/admin/proposals/send-payment/route.ts` - API MercadoPago + emails
-
-**Features:**
-- Geração automática de propostas com GPT-4 (OAB compliant)
-- Pricing dinâmico por tipo de caso (10+ categorias)
-- Integração MercadoPago PIX
-- 2 emails HTML profissionais (proposta + pagamento)
-- QR Code PIX + código copiável
+**Total:** 25 tasks anteriores + Auditoria completa
 
 ---
 
-### **P1-008: Fluxo Agendamento UI** ✅ (5-6h)
-**Arquivos criados:**
-- ✅ `/api/calendar/available-slots/route.ts` - Busca slots disponíveis Google Calendar
-- ✅ `/api/calendar/book-appointment/route.ts` - Cria evento + envia confirmação
-- ✅ `/components/appointments/AvailableSlotsPicker.tsx` - UI seleção de horário
+## 🚀 NOVAS TASKS - Q1 2025 (Após Production Ready)
 
-**Features:**
-- Busca automática 5 slots disponíveis (7 dias, horário comercial)
-- Filtra finais de semana e períodos ocupados
-- Cria evento Google Calendar com Meet automático
-- Email confirmação com reminders (1 dia + 30min)
-
----
-
-### **P1-009: Fluxo Documentos - Upload + IA** ✅ (6-8h)
-**Arquivos criados:**
-- ✅ `migration 030_add_document_ai_analysis.sql`
-- ✅ `/lib/ai/document-analyzer.ts` - GPT-4 Vision análise documentos
-- ✅ `/api/documents/analyze/route.ts` - API análise assíncrona
-- ✅ `/components/admin/documents/DocumentsList.tsx` - UI upload + lista + preview
-- ✅ Atualizado `/api/documents/upload/route.ts` - Ativado banco + trigger IA
-- ✅ Atualizado `/api/documents/route.ts` - GET com filtro leadId
-
-**Features:**
-- Upload Supabase Storage (10MB, PDF/JPG/PNG/DOC)
-- GPT-4 Vision extrai dados de RG/CPF/Contratos
-- Análise automática assíncrona
-- UI mostra dados extraídos + confiança + warnings
-- Tipos: RG/CPF, Contratos, PDFs
-
----
-
-### **P1-012: Templates de Perícia** ✅ (6-9h)
-**Status**: JÁ EXISTIAM COMPLETOS (verificado)
-
-**Arquivos verificados:**
-- ✅ `/lib/contracts/templates/pericia-documental.ts` (186 linhas)
-- ✅ `/lib/contracts/templates/avaliacao-imoveis.ts` (215 linhas)
-- ✅ `/lib/contracts/templates/pericia-medica.ts` (258 linhas)
-
-**Compliance:**
-- ✅ OAB (Perícia Documental)
-- ✅ NBR 14653 ABNT (Avaliação Imóveis)
-- ✅ CFM + Código Ética Médica (Perícia Médica)
-
----
-
-### **P1-013: Human Handoff UI** ✅ (6-8h)
-**Arquivos criados:**
-- ✅ `/admin/conversations/page.tsx` - Lista conversas com filtros HOT/WARM/COLD
-- ✅ `/admin/conversations/[id]/page.tsx` - Chat interface admin assumir conversa
-
-**Features:**
-- Dashboard com 4 métricas (Total, Escaladas, HOT 80+, WARM 50+)
-- Filtros: All, Escaladas, HOT, WARM, COLD
-- Cards conversa com score, estado, última mensagem
-- Badge "AGUARDANDO HANDOFF" para escaladas
-- Interface chat read-only do histórico
-- Botão "Assumir Conversa" → habilita input admin
-- Botão "Finalizar Handoff" → volta para agente
-
----
-
-### **P1-014: Email Templates Avançados** ✅ (3-4h)
-**Arquivos criados:**
-- ✅ `/lib/email/templates/contract-signed-template.tsx` - Email contrato assinado
-- ✅ `/lib/email/templates/payment-reminder-template.tsx` - Lembrete pagamento
-- ✅ `/lib/email/templates/nps-feedback-template.tsx` - Pesquisa NPS/feedback
-- ✅ Atualizado `/lib/email/templates/index.ts` - Exports dos novos templates
-
-**Features:**
-
-**1. Contract Signed:**
-- Congratulações profissional
-- Detalhes do contrato
-- Próximos passos (até 10 steps)
-- Lawyer card com responsável
-- CTA onboarding área do cliente
-
-**2. Payment Reminder:**
-- 4 níveis de urgência (none/low/medium/high)
-- Cores dinâmicas por urgência
-- QR Code PIX + código copiável
-- Suporte parcelas (X de Y)
-- Email + WhatsApp de ajuda
-
-**3. NPS Feedback:**
-- Escala visual 0-10 clicável
-- Formulário pesquisa satisfação
-- Opção deixar depoimento
-- Design celebratório (conclusão caso)
-
----
-
-## 📊 RESUMO TOTAL - TODAS AS 18 TAREFAS P1
-
-### ✅ FASE 1 - Quick Wins (5 tarefas) - 100%
-- ✅ P1-001: Brasão WebP
-- ✅ P1-002: Code Splitting
-- ✅ P1-003: ISR Cache
-- ✅ P1-004: Redis Upstash
-- ✅ P1-005: IA Cache
-
-### ✅ FASE 2 - Automação (4 tarefas) - 100%
-- ✅ P1-006: Fluxo Triagem
-- ✅ P1-007: Fluxo Fechamento UI
-- ✅ P1-008: Fluxo Agendamento UI
-- ✅ P1-009: Fluxo Documentos Upload+IA
-
-### ✅ FASE 3 - Integrações (5 tarefas) - 100%
-- ✅ P1-010: Google Calendar
-- ✅ P1-011: Gmail Monitor
-- ✅ P1-012: Templates Perícia
-- ✅ P1-013: Human Handoff UI
-- ✅ P1-014: Email Templates
-
-### ✅ FASE 4 - Produção (4 tarefas) - 100%
-- ✅ P1-015: Cron Jobs
-- ✅ P1-016: Webhooks
-- ⏭️ P1-017: Deploy Vercel (N/A - operacional)
-- ⏭️ P1-018: Monitoring (N/A - operacional)
-
----
-
-## 📈 ESTATÍSTICAS DA IMPLEMENTAÇÃO
-
-**Nesta sessão:**
-- ✅ Tarefas completadas: 6/6 (100%)
-- 📁 Arquivos criados: 18
-- ✏️ Arquivos modificados: 4
-- 🗄️ Migrations criadas: 1
-- ⏱️ Tempo estimado: ~32-37h de trabalho
-- 📝 Linhas de código: ~4.500+
-
-**Total do projeto:**
-- ✅ Tarefas P1: 18/18 (100%)
-- 📁 Total arquivos AI: 134+
-- 🤖 Agentes: 24
-- 🔄 Workflows: 8
-- 🗄️ Tabelas DB: 30+
-- 🛣️ APIs: 95+
-- 📄 Páginas: 45+
-
----
-
-## 🚀 SISTEMA PRONTO PARA PRODUÇÃO
-
-### O que está 100% funcional:
-
-1. **Captação de Leads**
-   - ✅ Chat widget WhatsApp
-   - ✅ Qualificação automática com IA
-   - ✅ Dashboard admin completo
-
-2. **Fluxo Comercial**
-   - ✅ Geração propostas GPT-4
-   - ✅ Payment links MercadoPago
-   - ✅ Emails profissionais
-   - ✅ Contratos OAB compliant
-
-3. **Agendamento**
-   - ✅ Google Calendar integration
-   - ✅ Slots automáticos
-   - ✅ Confirmações + reminders
-
-4. **Gestão Documentos**
-   - ✅ Upload Supabase
-   - ✅ Análise IA GPT-4 Vision
-   - ✅ Extração dados RG/CPF/Contratos
-
-5. **Handoff Humano**
-   - ✅ Dashboard conversas
-   - ✅ Filtros inteligentes
-   - ✅ Interface chat admin
-   - ✅ Escalation automática
-
-6. **Comunicação**
-   - ✅ 10+ email templates
-   - ✅ Sequências automáticas
-   - ✅ NPS/Feedback
-   - ✅ Lembretes pagamento
-
----
-
-## 🚀 TAREFAS P2 CONCLUÍDAS! (3/3) ✅
-
-### **P2-001: APIs Reais Conversas (mock → real)** ✅
-**Arquivos criados/modificados:**
-- ✅ `/api/conversations/route.ts` - GET list with filters (status, needsAttention, limit, offset)
-- ✅ `/api/conversations/[id]/route.ts` - GET details + PATCH (escalate, takeover, resolve, close, return_to_bot)
-- ✅ `/api/conversations/[id]/messages/route.ts` - POST admin messages
-
-**Features:**
-- Real Supabase queries replacing mock data
-- Status mapping: `waiting_human` → `escalated`, `human` → `admin_active`, `bot` → `qualified/classifying`
-- Message role transformation: `sender_type` → `role` (lead/client → user, agent → admin, bot/ai → assistant)
-- Proper authentication with Supabase Auth
-- Updates `last_message_at` and `needs_attention` flags
-
----
-
-### **P2-002: Auto-Escalate Score 80+** ✅
-**Arquivos modificados:**
-- ✅ `/lib/ai/agents/state-machine/types.ts` - Added new escalation rule for high-score leads
-- ✅ `/lib/ai/agents/state-machine/state-machine.ts` - Updated escalate method to set `needs_attention = true`
-
-**Features:**
-- Auto-escalation rule: `score >= 80 && status === 'qualified'` → escalate to human
-- Reason: "Lead altamente qualificado (Score >= 80) - prioridade máxima"
-- Priority: "high"
-- Updates conversation in database: `status = 'waiting_human'`, `needs_attention = true`
-- Triggers admin notification via `AutomatedActionsDispatcher`
-
----
-
-### **P2-003: Testes de Integração** ✅
-**Arquivos criados:**
-- ✅ `/src/__tests__/integration/auto-escalation.test.ts` - Auto-escalation logic tests (11 tests)
-- ✅ `/src/__tests__/integration/conversation-status-mapping.test.ts` - Status mapping tests (24 tests)
-
-**Test Coverage:**
-- ✅ 35 integration test cases (100% passing)
-- Auto-escalation: High-score (>= 80), complex cases, angry customers, high-value proposals
-- Status mapping: Database ↔ Frontend, message role transformation
-- Conversation actions: escalate, takeover, resolve, close, return_to_bot
-- Query filters: status, needsAttention, limit, offset
-
-**Execution:**
-```bash
-npm run test -- src/__tests__/integration/ --run
-# ✅ Test Files: 2 passed (2)
-# ✅ Tests: 35 passed (35)
-# ⚡ Duration: 1.01s
-```
-
----
-
-## 🚀 P3 - DEPLOY & MONITORING (DOCUMENTAÇÃO COMPLETA) ✅
-
-### **P3-001 até P3-004: Guias de Deploy** ✅
-
-**Arquivos criados:**
-- ✅ `DEPLOY_PRODUCTION_GUIDE.md` - Guia completo de deploy em produção (500+ linhas)
-- ✅ `.env.example` - Template de variáveis de ambiente (atualizado)
-- ✅ `vercel.json` - Configuração de cron jobs (já existente, verificado)
-
-**Conteúdo do Guia:**
-
-1. **Database Setup (30 min)**
-   - Criar projeto Supabase
-   - Aplicar 30+ migrations em ordem
-   - Criar usuário admin
-   - Copiar API keys
-
-2. **Environment Variables (20 min)**
-   - Gerar secrets (NEXTAUTH_SECRET, CRON_SECRET)
-   - Configurar CORE (Supabase, OpenAI, D-ID)
-   - Configurar P2 Automation (Redis, Resend, WhatsApp, ClickSign)
-   - Opcionais (MercadoPago, Google Calendar, Analytics)
-
-3. **Deploy Vercel (30 min)**
-   - Conectar Git repository
-   - Configurar 20+ environment variables
-   - Deploy automatizado
-   - Setup domínio customizado
-
-4. **Cron Jobs (10 min)**
-   - 4 crons ativos:
-     - Email sequences (a cada 15 min)
-     - Process monitor (a cada 30 min)
-     - Appointment reminders (a cada 6h)
-     - NPS surveys (diariamente às 10h)
-   - Proteção com CRON_SECRET
-   - Testes manuais
-
-5. **Monitoring (30 min)**
-   - Vercel Analytics (grátis, já ativo)
-   - Sentry (error tracking)
-   - Better Uptime (healthcheck 24/7)
-   - LogRocket (session replay - opcional)
-
-6. **Validação Pós-Deploy (20 min)**
-   - Healthcheck API
-   - Teste de login
-   - Teste de chat de voz
-   - Teste de auto-escalation
-   - Verificação de logs
-
-7. **Segurança (15 min)**
-   - RLS policies verificadas
-   - Backups automáticos configurados
-   - Rate limiting ativo
-   - Schedule de rotation de secrets
-
-8. **Troubleshooting**
-   - Build failing
-   - Database connection issues
-   - Crons not running
-   - OpenAI rate limits
-
-**Checklist Completo:**
-- ✅ 40+ itens de validação
-- ✅ Todos os passos documentados
-- ✅ Tempo estimado: 2-3 horas
-- ✅ Suporte e links incluídos
-
----
-
-## ✨ CONCLUSÃO FINAL
-
-**🎉 TODAS AS TAREFAS P1, P2 E P3 FORAM CONCLUÍDAS COM SUCESSO! 🎉**
-
-### Status do Projeto:
-- ✅ **P1 (18/18)** - 100% Completo
-- ✅ **P2 (3/3)** - 100% Completo
-- ✅ **P3 (4/4 Documentação)** - 100% Completo
-
-### O que foi entregue:
-
-**Código de Produção:**
-- ✅ 18 features P1 implementadas
-- ✅ 3 features P2 implementadas
-- ✅ ~10.000+ linhas de código TypeScript
-- ✅ 35 testes de integração (100% passando)
-- ✅ APIs reais com Supabase
-- ✅ Auto-escalação inteligente
-- ✅ Sistema completo de conversas
-
-**Documentação:**
-- ✅ Guia de deploy production (500+ linhas)
-- ✅ Guia de deploy P2 automation
-- ✅ Relatório P2 completo
-- ✅ Resumo executivo P2
-- ✅ Tasks.md atualizado
-- ✅ README de testes
-- ✅ .env.example completo
-
-**Infraestrutura:**
-- ✅ 30+ migrations de banco
-- ✅ 4 cron jobs configurados
-- ✅ Monitoring setup documentado
-- ✅ Segurança implementada
-
-### O Sistema Garcez Palha está PRONTO para:
-- ✅ Captar e qualificar leads automaticamente
-- ✅ Gerar propostas personalizadas com GPT-4
-- ✅ Processar pagamentos (MercadoPago PIX)
-- ✅ Agendar consultas (Google Calendar + automático)
-- ✅ Analisar documentos com IA (GPT-4 Vision)
-- ✅ Escalar automaticamente leads qualificados (score 80+)
-- ✅ Gerenciar conversas com handoff humano
-- ✅ APIs reais com banco de dados Supabase
-- ✅ Enviar email sequences automatizadas
-- ✅ Monitorar processos judiciais
-- ✅ Coletar NPS pós-atendimento
-- ✅ Avatar com lip sync no chat de voz
-
-### Deploy:
-**A plataforma está 100% pronta para deploy em produção!**
-
-Basta seguir o guia: `DEPLOY_PRODUCTION_GUIDE.md`
-
-Tempo estimado: 2-3 horas
-
-**Parabéns pelo projeto concluído! 🎉**
-
----
-
-**Para referência futura:**
-- Documentação completa: `/docs/README.md`
-- Relatórios detalhados: `/.manus/reports/`
-- Templates perícia: `/src/lib/contracts/templates/`
-- Email templates: `/src/lib/email/templates/`
-
----
-
-## 🚀 NOVAS TASKS - Q1 2025
-
-### 📊 SPRINT 1: HOMEPAGE + DOCS (Semana 1 - 18h)
-
-#### ✅ [MANUS-PAGES-001] Homepage Reorganizada - CONCLUÍDO
-- Status: ✅ Implementado
-- Hero principal com 364 anos + 2 CTAs
-- Seção clientes + seção advogados separadas
-- Arquivos: ImprovedHero.tsx, ClientsSection.tsx, LawyersPlatformSection.tsx
-
-#### [MANUS-DOCS-001] Documentar 10 Produtos Extras
-- Prioridade: P1 | Esforço: 4h | Status: ⏳ PENDENTE
-- Documentar: cartao-consignado-rmc, crimes-empresariais, etc
-- Arquivos: CATALOGO_COMPLETO_47_NICHOS.md, INDEX.md
-
-#### [MANUS-DOCS-002] Component Library
-- Prioridade: P1 | Esforço: 6h | Status: ⏳ PENDENTE
-- Documentar 50+ componentes principais
-- Arquivo: docs/COMPONENT_LIBRARY.md
-
-#### [MANUS-DOCS-003] Diagramas Arquitetura
-- Prioridade: P2 | Esforço: 6h | Status: ⏳ PENDENTE
-- 6 diagramas Mermaid.js
-- Arquivo: docs/ARQUITETURA.md
-
----
-
-### 🔧 SPRINT 2-3: DASHBOARD B2B APIS (Semanas 2-3 - 32h)
+### 📊 SPRINT 1-2: DASHBOARD B2B (Semanas 9-10 - 24h)
 
 #### [MANUS-INFRA-001] Dashboard Stats API
-- Prioridade: P1 | Esforço: 4h
-- GET /api/app/dashboard/stats (produtos, leads, conversão, revenue)
-- Substituir mock data por queries Supabase
+- **Prioridade**: P1 | **Esforço**: 4h
+- GET /api/app/dashboard/stats
+- Substituir mock data
 
 #### [MANUS-INFRA-002] Products CRUD
-- Prioridade: P1 | Esforço: 8h
-- 5 endpoints: GET/POST/PATCH/DELETE products
-- Migration: lawyer_products table
+- **Prioridade**: P1 | **Esforço**: 8h
+- 5 endpoints products
+- Migration: lawyer_products
 
 #### [MANUS-INFRA-003] Clients Management API
-- Prioridade: P1 | Esforço: 6h
-- Listar/filtrar leads com paginação
+- **Prioridade**: P1 | **Esforço**: 6h
+- Listar/filtrar leads
 - Conectar /dashboard/clientes
 
-#### [MANUS-INFRA-004] Integrar Analytics Real
-- Prioridade: P1 | Esforço: 2h
-- Remover mock, usar APIs já existentes
-- Conectar /dashboard/analytics
+#### [MANUS-INFRA-004] Analytics Real
+- **Prioridade**: P1 | **Esforço**: 2h
+- Remover mock
+- Usar APIs existentes
 
 #### [MANUS-INFRA-005] User Settings API
-- Prioridade: P1 | Esforço: 4h
+- **Prioridade**: P1 | **Esforço**: 4h
 - GET/PATCH /api/app/settings
-- Salvar notificações, integrações, perfil
 
 ---
 
-### �� SPRINT 4: PAYMENTS (Semana 4 - 16h)
+### 💳 SPRINT 3: PAYMENTS (Semana 11 - 16h)
 
 #### [MANUS-FLOWS-001] Stripe Subscriptions
-- Prioridade: P1 | Esforço: 8h
-- Checkout Session + Webhooks
-- Provisioning automático após pagamento
+- **Prioridade**: P1 | **Esforço**: 8h
+- Checkout + Webhooks
+- Provisioning automático
 
 #### [MANUS-FLOWS-002] Customer Portal
-- Prioridade: P1 | Esforço: 4h
-- Stripe Billing Portal integration
-- Gerenciar assinatura (upgrade, cancel)
+- **Prioridade**: P1 | **Esforço**: 4h
+- Stripe Billing Portal
+- Upgrade, cancel
 
 #### [MANUS-INFRA-006] Auto Provisioning
-- Prioridade: P1 | Esforço: 4h
-- Criar tenant + user + agent após pagamento
-- Email de boas-vindas
+- **Prioridade**: P1 | **Esforço**: 4h
+- Criar tenant + user após pagamento
 
 ---
 
-### 🎓 SPRINT 5: ONBOARDING (Semana 5 - 12h)
+### 🎓 SPRINT 4: ONBOARDING (Semana 12 - 12h)
 
 #### [MANUS-FLOWS-003] Onboarding Wizard
-- Prioridade: P2 | Esforço: 8h
-- 6 steps: boas-vindas, nicho, agent, produto, white-label, tour
-- Multi-step form com progresso salvo
+- **Prioridade**: P2 | **Esforço**: 8h
+- 6 steps multi-step form
 
 #### [MANUS-FLOWS-004] Product Tours
-- Prioridade: P2 | Esforço: 4h
-- react-joyride: 4 tours interativos
-- Auto-start primeiro login
+- **Prioridade**: P2 | **Esforço**: 4h
+- react-joyride
 
 ---
 
-### 📊 SPRINT 6-7: CRM PIPELINE (Semanas 6-7 - 24h)
+### 📊 SPRINT 5-6: CRM (Semanas 13-14 - 24h)
 
 #### [MANUS-FLOWS-005] Kanban Board
-- Prioridade: P2 | Esforço: 10h
-- Pipeline drag-and-drop (@hello-pangea/dnd)
-- 7 colunas customizáveis
+- **Prioridade**: P2 | **Esforço**: 10h
+- Pipeline drag-and-drop
 
 #### [MANUS-FLOWS-006] Atividades & Tarefas
-- Prioridade: P2 | Esforço: 8h
-- Registro de ligações, emails, reuniões
-- Tarefas com due date e reminders
+- **Prioridade**: P2 | **Esforço**: 8h
+- Log de interações
 
 #### [MANUS-FLOWS-007] Histórico Completo
-- Prioridade: P2 | Esforço: 6h
-- Página /clientes/[id] com 8 seções
-- Timeline de todas interações
+- **Prioridade**: P2 | **Esforço**: 6h
+- Timeline /clientes/[id]
 
 ---
 
-### 📧 SPRINT 8-9: MARKETING (Semanas 8-9 - 18h)
+### 📧 SPRINT 7-8: MARKETING (Semanas 15-16 - 18h)
 
 #### [MANUS-FLOWS-008] Email Sequences Builder
-- Prioridade: P2 | Esforço: 10h
-- Visual builder de sequências
-- Editor com variáveis, delays, A/B test
+- **Prioridade**: P2 | **Esforço**: 10h
+- Visual builder
 
 #### [MANUS-FLOWS-009] Triggers Automáticos
-- Prioridade: P2 | Esforço: 6h
-- Quando X acontece → fazer Y
-- 6 triggers + 6 actions
+- **Prioridade**: P2 | **Esforço**: 6h
+- Quando X → fazer Y
 
 #### [MANUS-FLOWS-010] A/B Testing Emails
-- Prioridade: P3 | Esforço: 4h
-- Testar subject/content/CTA
-- Métricas: open rate, click rate, conversion
+- **Prioridade**: P3 | **Esforço**: 4h
+- Subject/content/CTA
 
 ---
 
-### 📢 CAMPANHAS GOOGLE ADS (P1)
-
-#### [MANUS-ADS-001 a ADS-007] Campanhas TOP 7
-- Prioridade: P1 | Esforço: 21h total (3h cada)
-- Produtos: Fraude Consignado, Desbloqueio, Plano Saúde, etc
-- 3 grupos anúncios + keywords + landing page
-
-**Lista:**
-1. Fraude Consignado (25k buscas/mês)
-2. Desbloqueio Conta (20k/mês)
-3. Plano de Saúde (18k/mês)
-4. Usucapião (15k/mês)
-5. BPC LOAS (12k/mês)
-6. Negativação (10k/mês)
-7. Defesa Criminal (8k/mês)
-
----
-
-## 📋 TASKS P3 - Q2 2025 (20 tasks)
-
-### Advanced Features (Prioridade Baixa)
-- [MANUS-PAGES-002] Landing Page Builder Visual (16h)
-- [MANUS-INFRA-007] Multi-Agent System (RAG, orchestrator)
-- [MANUS-INFRA-008] API Pública + Webhooks
-- [MANUS-INFRA-009] Voice Calls (Twilio)
-- [MANUS-INFRA-010] Video Calls (Daily.co)
-- [MANUS-INFRA-011] Mobile App (React Native)
-- [MANUS-INFRA-012] Client Portal (área do cliente)
-- [MANUS-INFRA-013] Telegram Bot
-- [MANUS-INFRA-014] AI Document Review
-- [MANUS-INFRA-015] Legal Research Assistant
-- ... e mais 10 features
-
-Ver detalhamento completo em: `.manus/reports/TASK_PLAN_MISSING_IMPLEMENTATIONS.md`
-
----
-
-## 🎯 ROADMAP RECOMENDADO
+## 🎯 TIMELINE CONSOLIDADO
 
 ```
-✅ SPRINT 1 (Semana 1): Homepage + Docs - 18h
-   ├── ✅ MANUS-PAGES-001 (CONCLUÍDO)
-   ├── MANUS-DOCS-001 (4h)
-   ├── MANUS-DOCS-002 (6h)
-   └── MANUS-DOCS-003 (6h)
+✅ SEMANA 1 (Atual): FASE 1 - Bloqueadores P0 (16h)
+   ├── Sprint Security P0 (8h)
+   └── Sprint Analytics P0 (8h)
 
-⏳ SPRINT 2-3 (Semanas 2-3): Dashboard APIs - 24h
-   ├── INFRA-001: Dashboard stats (4h)
-   ├── INFRA-002: Products CRUD (8h)
-   ├── INFRA-003: Clients API (6h)
-   ├── INFRA-004: Analytics (2h)
-   └── INFRA-005: Settings (4h)
+⏳ SEMANA 2-3: FASE 2 - Validation Infrastructure (40h)
+   ├── Sprint D7-1: Analytics (16h)
+   └── Sprint D7-2: Alpha/Beta (24h)
 
-⏳ SPRINT 4 (Semana 4): Payments - 16h
-   ├── FLOWS-001: Stripe subscriptions (8h)
-   ├── FLOWS-002: Customer portal (4h)
-   └── INFRA-006: Auto provisioning (4h)
+⏳ SEMANA 4-5: FASE 3 - Security & Compliance (40h)
+   ├── Sprint D5-1: OWASP (24h)
+   └── Sprint D5-2: Compliance (16h)
 
-⏳ SPRINT 5 (Semana 5): Onboarding - 12h
-   ├── FLOWS-003: Wizard (8h)
-   └── FLOWS-004: Tours (4h)
+⏳ SEMANA 6-7: FASE 4 - Performance & UX (40h)
+   ├── Sprint D6: Performance (24h)
+   └── Sprint D4: Accessibility (16h)
 
-⏳ SPRINT 6-7 (Semanas 6-7): CRM - 24h
-   ├── FLOWS-005: Kanban (10h)
-   ├── FLOWS-006: Atividades (8h)
-   └── FLOWS-007: Histórico (6h)
+⏳ SEMANA 8: FASE 5 - Testing (24h)
+   └── Sprint D3: Test Coverage (24h)
 
-⏳ SPRINT 8-9 (Semanas 8-9): Marketing - 18h
-   ├── FLOWS-008: Sequences (10h)
-   ├── FLOWS-009: Triggers (6h)
-   └── FLOWS-010: A/B test (4h)
+🎯 META ATINGIDA: 90.05/100 PRODUCTION READY
+
+⏳ SEMANA 9-16: Features B2B (94h)
+   ├── Dashboard APIs (24h)
+   ├── Payments (16h)
+   ├── Onboarding (12h)
+   ├── CRM (24h)
+   └── Marketing (18h)
 ```
 
-**Total P1:** 112h (~5-6 sprints = 10-12 semanas)
+**Total até Production Ready:** 160h (8 semanas)
+**Total até Features B2B:** 254h (16 semanas)
 
 ---
 
-## 📈 MÉTRICAS DE SUCESSO Q1 2025
+## 📈 MÉTRICAS DE SUCESSO
 
-### MRR (Meta)
-- Sprint 4: R$ 5.000 (5 advogados)
-- Sprint 9: R$ 30.000 (30 advogados)
-- Q2 2025: R$ 100.000 (100 advogados)
+### Score Progression
 
-### Taxa de Conversão
-- Sprint 4: 5% (trial → paid)
-- Sprint 9: 10% (otimizações)
+```
+Semana 1:  73.9 → 78.0  (+4.1)  🟡 MVP READY → MVP BASIC
+Semana 3:  78.0 → 81.0  (+3.0)  🟡 Validation ativo
+Semana 5:  81.0 → 84.0  (+3.0)  🟢 Security completo
+Semana 7:  84.0 → 87.5  (+3.5)  🟢 Performance + UX
+Semana 8:  87.5 → 90.05 (+2.55) 🟢 PRODUCTION READY ✅
+```
 
-### Churn Rate
-- Meta: < 5% mensal
+### Vulnerabilidades
 
----
+```
+Atual:
+- P0 (Críticas): 11
+- P1 (Altas): ~40
+- P2 (Médias): ~25
 
----
+Meta Semana 8:
+- P0 (Críticas): 0
+- P1 (Altas): < 5
+- P2 (Médias): 10-15
+```
 
-## 🔍 MANUS AUDIT 31/12/2024 - GAPS IDENTIFICADOS
+### Test Coverage
 
-**Auditoria Completa:** 4 agentes paralelos + testes automatizados
-**Score Sistema:** 74/100 (Production Ready com Gaps)
-**Relatório Completo:** `.manus/reports/MANUS_AUDIT_MASTER_31DEC2024.md`
+```
+Atual:  15-20%
+Meta:   85%+
 
----
+Unit:        20% → 70%
+Integration:  0% → 60%
+E2E:          0% → 80%
+Visual:       0% → 50%
+```
 
-### 🔴 SPRINT SECURITY - P0 BLOCKERS (11h) - CRÍTICO
+### Performance (Core Web Vitals)
 
-**Objetivo:** Eliminar vulnerabilidades de segurança antes de escalar
+```
+Atual:
+- LCP: 2.8s  🟠
+- FID: 180ms 🟠
+- CLS: 0.12  🟠
 
-#### [SECURITY-001] MercadoPago Authentication ✅
-- **Prioridade:** P0 | **Esforço:** 1h | **Status:** ✅ COMPLETO (31/12/2024)
-- **Problema:** POST `/api/mercadopago/create-payment` sem autenticação
-- **Impacto:** Qualquer pessoa pode criar pagamentos
-- **Fix:** ✅ Adicionado `await supabase.auth.getSession()` + validação tenant_id
-- **Arquivo:** `src/app/api/mercadopago/create-payment/route.ts`
-- **Commit:** 90c66c4
-
-#### [SECURITY-002] Webhook Signature Verification ✅
-- **Prioridade:** P0 | **Esforço:** 2h | **Status:** ✅ COMPLETO (31/12/2024)
-- **Problema:** Webhooks MercadoPago sem verificação de assinatura
-- **Impacto:** Vulnerável a spoofing de webhooks
-- **Fix:** ✅ Implementado HMAC SHA256 X-Signature header verification
-- **Arquivos:** `src/app/api/mercadopago/webhook/route.ts`, `.env.example`
-- **Commit:** 90c66c4
-
-#### [SECURITY-003] WhatsApp Webhook Deduplication ⏭️
-- **Prioridade:** P0 → P3 | **Esforço:** 3h | **Status:** ⏭️ SKIP (prioridade alterada)
-- **Problema:** 4 rotas de webhook WhatsApp podem processar mesmo evento
-- **Impacto:** Mensagens duplicadas enviadas aos usuários
-- **Fix:** Consolidar em 1-2 rotas + cache de message_id (Redis)
-- **Nota:** **WhatsApp não é prioridade agora** - foco em Chat Assistant primeiro
-- **Arquivos:** `/api/webhooks/whatsapp`, `/api/whatsapp/webhook`, `/api/whatsapp/baileys/webhook`, `/api/whatsapp/twilio/webhook`
-
-#### [SECURITY-004] TypeScript Compilation Errors ✅
-- **Prioridade:** P0 | **Esforço:** 1h | **Status:** ✅ COMPLETO (31/12/2024)
-- **Problema:** 15 erros de compilação TypeScript
-- **Impacto:** Build pode falhar em produção
-- **Fix:** ✅ Corrigidos syntax errors (anosQueFaltam, mediaCidade)
-- **Arquivos:**
-  - `src/lib/ai/agents/legal/social-security/benefit-calculator.ts` (9 erros → 0)
-  - `src/lib/ai/agents/legal/valuation/market-comparator.ts` (6 erros → 0)
-- **Commit:** 90c66c4
-
-#### [SECURITY-005] RLS Policies Incomplete ✅
-- **Prioridade:** P0 | **Esforço:** 4h | **Status:** ✅ COMPLETO (31/12/2024)
-- **Problema:** Row Level Security incompleta em tabelas críticas
-- **Impacto:** Dados podem vazar entre tenants (multi-tenancy)
-- **Fix:** ✅ Implementadas RLS policies completas (20 policies total)
-- **Tabelas:** leads, conversations, products, contracts, messages (5 tabelas)
-- **Deliverable:** `supabase/migrations/20251231000001_rls_policies_critical_tables.sql`
-- **Commit:** 90c66c4
-- **Próximo:** Aplicar migration no Supabase + testes de isolamento
+Meta:
+- LCP: 1.8s  🟢 (-36%)
+- FID: 80ms  🟢 (-56%)
+- CLS: 0.05  🟢 (-58%)
+```
 
 ---
 
-### 🟠 SPRINT CODE QUALITY - P1 ALTA PRIORIDADE (60h)
+## 🔍 REFERÊNCIAS
 
-**Objetivo:** Elevar code quality para production-grade
+**Relatórios Completos:**
+- Baseline: `.manus/reports/MANUS_V7_AUDIT_BASELINE.md`
+- D4 (UX/UI): Agent ab45fb4
+- D5 (Segurança): Agent a54062c
+- D6 (Performance): Agent a37d44f
+- D7 (Validação): Agent a323be9
 
-#### [QUALITY-001] Remove Console.logs
-- **Prioridade:** P1 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
-- **Problema:** 555 console.logs expondo dados sensíveis
-- **Impacto:** Performance + segurança (logs em produção)
-- **Fix:** Substituir por logger estruturado (Winston/Pino)
-- **Escopo:** Todo o projeto (manter apenas error logging em APIs)
-
-#### [QUALITY-002] Input Validation (Zod)
-- **Prioridade:** P1 | **Esforço:** 8h | **Status:** ⏳ PENDENTE
-- **Problema:** 80+ APIs sem validação de input
-- **Impacto:** Vulnerável a injection attacks, bad data
-- **Fix:** Implementar Zod schemas em todas rotas
-- **Escopo:** 116 APIs identificadas sem validação
-
-#### [QUALITY-003] Type Safety (Remove `any`)
-- **Prioridade:** P1 | **Esforço:** 6h | **Status:** ⏳ PENDENTE
-- **Problema:** 50+ usos explícitos de `any`
-- **Impacto:** Perda de type safety, bugs em runtime
-- **Fix:** Criar interfaces apropriadas
-- **Arquivos:** Identificar com `grep -r "any" src/`
-
-#### [QUALITY-004] Error Handling Improvements
-- **Prioridade:** P1 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
-- **Problema:** 20+ try-catch apenas logam, não recuperam
-- **Impacto:** Falhas silenciosas, UX ruim
-- **Fix:** Implementar retry logic + fallbacks + user feedback
-- **Padrão:** Exponential backoff para APIs externas
-
-#### [QUALITY-005] Accessibility (a11y)
-- **Prioridade:** P1 | **Esforço:** 6h | **Status:** ⏳ PENDENTE
-- **Problema:** Apenas 7 instâncias de aria-* no projeto inteiro
-- **Impacto:** Site inacessível para screen readers
-- **Fix:** Adicionar aria-label, role, aria-modal em todos componentes interativos
-- **Ferramentas:** axe-core, eslint-plugin-jsx-a11y
-
-#### [QUALITY-006] Critical TODOs
-- **Prioridade:** P1 | **Esforço:** 24h | **Status:** ⏳ PENDENTE
-- **Problema:** 12 TODOs críticos bloqueando features core
-- **Impacto:** Features incompletas (email, PDF, payments)
-- **Lista:**
-  1. Email integration (triagem-flow.ts:213)
-  2. WhatsApp processing (automation/engine.ts:235-238)
-  3. PDF generation (financeiro-flow.ts:230-231)
-  4. Payment processing (fechamento-flow.ts:143,147,200,204)
-  5. Process monitor APIs (monitor-engine.ts:104,217,231,248)
-  6. ... (outros 7 TODOs)
-
-#### [QUALITY-007] Integration Tests
-- **Prioridade:** P1 | **Esforço:** 8h | **Status:** ⏳ PENDENTE
-- **Problema:** 0 testes de integração para webhooks/payments
-- **Impacto:** Bugs em produção em fluxos críticos
-- **Fix:** Implementar testes E2E
-- **Escopo:** Stripe, MercadoPago, ClickSign webhooks + payment flows
-
----
-
-### 🟡 SPRINT UX & PERFORMANCE - P2 MÉDIA PRIORIDADE (24.5h)
-
-**Objetivo:** Polir UX e melhorar performance
-
-#### [UX-001] Dashboard Mock Data Verification
-- **Prioridade:** P2 | **Esforço:** 5h | **Status:** ⏳ PENDENTE
-- **Problema:** `/api/app/dashboard/stats` pode ter mock data
-- **Fix:** Investigar (2h) + implementar queries reais (3h)
-- **Arquivo:** `src/app/api/app/dashboard/stats/route.ts`
-
-#### [PERF-001] N+1 Queries Optimization
-- **Prioridade:** P2 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
-- **Problema:** Queries N+1 em páginas admin
-- **Impacto:** Performance ruim com muitos dados
-- **Fix:** Otimizar com joins, eager loading
-- **Ferramentas:** Supabase query analyzer
-
-#### [INFRA-001] Rate Limiting
-- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
-- **Problema:** Rate limiting não implementado
-- **Impacto:** Vulnerável a abuse/DDoS
-- **Fix:** Adicionar Upstash Redis rate limiting
-- **Escopo:** Todas APIs públicas + webhooks
-
-#### [CLEANUP-003] Deprecated Components
-- **Prioridade:** P2 | **Esforço:** 30min | **Status:** ⏳ PENDENTE
-- **Problema:** 2 componentes deprecated não removidos (~32KB)
-- **Fix:** Deletar arquivos
-- **Arquivos:** `AgentFlowChatWidget.deprecated.tsx` (2 arquivos)
-
-#### [REFACTOR-001] Hero Components Consolidation
-- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
-- **Problema:** 3 variações de Hero component duplicadas
-- **Impacto:** Manutenção difícil, inconsistências
-- **Fix:** Consolidar em 1 componente parametrizado
-- **Arquivos:** Identificar Hero components duplicados
-
-#### [PERF-002] Lazy Loading
-- **Prioridade:** P2 | **Esforço:** 2h | **Status:** ⏳ PENDENTE
-- **Problema:** 5 componentes grandes sem lazy loading
-- **Impacto:** Bundle size grande, LCP ruim
-- **Fix:** Implementar `dynamic()` em modals/dialogs
-- **Ferramentas:** next/dynamic
-
-#### [DOCS-008] SLA Documentation
-- **Prioridade:** P2 | **Esforço:** 4h | **Status:** ⏳ PENDENTE
-- **Problema:** SLA documentation completamente faltando
-- **Impacto:** Cliente não sabe o que esperar
-- **Fix:** Criar `SLA_AGREEMENT.md` com SLAs de resposta
-- **Conteúdo:** Response times, uptime guarantees, support tiers
-
-#### [INFRA-002] Backup Automation
-- **Prioridade:** P2 | **Esforço:** 3h | **Status:** ⏳ PENDENTE
-- **Problema:** Supabase backups não automatizados
-- **Impacto:** Risco de perda de dados
-- **Fix:** Implementar cron backup + retention policy
-- **Ferramentas:** Supabase CLI + Vercel Cron
-
----
-
-## 📊 RESUMO AUDITORIA
-
-| Sprint | Tasks | Completas | Esforço | Progresso | Status |
-|--------|-------|-----------|---------|-----------|--------|
-| **SECURITY (P0)** | 5 | 4/5 (80%) | 8h/11h | ✅✅✅✅⏭️ | 🟢 4 Completas + 1 Skip |
-| **CODE QUALITY (P1)** | 7 | 0/7 (0%) | 0h/60h | ⬜⬜⬜⬜⬜⬜⬜ | ⏳ Pendente |
-| **UX & PERF (P2)** | 8 | 0/8 (0%) | 0h/24.5h | ⬜⬜⬜⬜⬜⬜⬜⬜ | ⏳ Pendente |
-| **TOTAL AUDITORIA** | **20** | **4/20 (20%)** | **8h/95.5h** | **████░░░░░░** | 🟡 **Em Progresso** |
-
-### ✅ Completadas em 31/12/2024 (Commit 90c66c4):
-1. ✅ SECURITY-001: MercadoPago Authentication (1h)
-2. ✅ SECURITY-002: Webhook Signature Verification (2h)
-3. ✅ SECURITY-004: TypeScript Compilation Errors (1h)
-4. ✅ SECURITY-005: RLS Policies (4h)
-
-### ⏭️ Skipped (prioridade alterada):
-- ⏭️ SECURITY-003: WhatsApp Dedup (3h) - foco em Chat Assistant primeiro
-
----
-
-## 🎯 PLANO DE EXECUÇÃO RECOMENDADO
-
-### ⚡ ESTA SEMANA: SPRINT SECURITY (11h) - BLOCKER
-**Objetivo:** Sistema seguro para escalar
-
-**Tasks:**
-1. ✅ SECURITY-001: MercadoPago auth (1h)
-2. ✅ SECURITY-002: Webhook signatures (2h)
-3. ✅ SECURITY-003: WhatsApp dedup (3h)
-4. ✅ SECURITY-004: Fix TS errors (1h)
-5. ✅ SECURITY-005: RLS policies (4h)
-
-**Deliverable:** Sistema sem vulnerabilidades críticas
-
----
-
-### SEMANAS 2-3: SPRINT CODE QUALITY (60h)
-**Objetivo:** Código production-grade
-
-**Tasks:**
-6. ✅ QUALITY-001: Console.logs (4h)
-7. ✅ QUALITY-002: Zod validation (8h)
-8. ✅ QUALITY-003: Type safety (6h)
-9. ✅ QUALITY-004: Error handling (4h)
-10. ✅ QUALITY-005: Accessibility (6h)
-11. ✅ QUALITY-006: Critical TODOs (24h)
-12. ✅ QUALITY-007: Integration tests (8h)
-
-**Deliverable:** Codebase com qualidade alta + testado
-
----
-
-### SEMANA 4: SPRINT UX & PERFORMANCE (24.5h)
-**Objetivo:** Sistema polido e otimizado
-
-**Tasks:**
-13. ✅ UX-001: Dashboard real data (5h)
-14. ✅ PERF-001: N+1 queries (4h)
-15. ✅ INFRA-001: Rate limiting (3h)
-16. ✅ CLEANUP-003: Deprecated (30min)
-17. ✅ REFACTOR-001: Hero consolidation (3h)
-18. ✅ PERF-002: Lazy loading (2h)
-19. ✅ DOCS-008: SLA docs (4h)
-20. ✅ INFRA-002: Backups (3h)
-
-**Deliverable:** Sistema otimizado + documentado
-
----
-
-### Timeline Total: 4 semanas (95.5h)
-
-**Após completar:**
-- Code Quality Score: 65/100 → 85/100 (+20)
-- Production Readiness: 70% → 95% (+25%)
-- Security Issues: 5 críticos → 0 (-5)
-- Type Safety: 45/100 → 90/100 (+45)
-- Documentation: 70/100 → 95/100 (+25)
-- Test Coverage: ~15% → 60% (+45%)
+**Documentação:**
+- MANUS v6.0: `.manus/reports/MANUS_AUDIT_MASTER_31DEC2024.md`
+- Tests: `.manus/reports/TEST_RESULTS_31DEC2024.md`
+- Security Fixes: `docs/reports/SECURITY-FIXES-2024-12-29.md`
+- Stripe Setup: `docs/STRIPE_SETUP.md`
+- Deploy Guide: `DEPLOY_PRODUCTION_GUIDE.md`
 
 ---
 
 ## ✅ CONCLUSÃO
 
-**Status Atual:**
-- ✅ P1/P2/P3 anteriores 100% completos
-- ✅ Score 100/100 (features)
-- 🟡 Score 74/100 (code quality + segurança)
-- ✅ Production ready (com ressalvas de segurança)
-- 🔍 Auditoria MANUS completa: 20 gaps identificados
-- 🆕 52 novas tasks geradas para Q1 2025
+**Status Atual (31/12/2024):**
+- ✅ Features P1/P2/P3: 100% completas
+- ✅ MANUS v7.0 FASE 1: ANALYZE completa
+- 🟡 Score: 73.9/100 (MVP READY)
+- 🎯 Meta: 90/100 (PRODUCTION READY) em 8 semanas
 
 **Próximo Passo IMEDIATO:**
-**SPRINT SECURITY (11h)** - Eliminar 5 vulnerabilidades P0 antes de escalar
-
-**Depois:**
-Executar SPRINT 2-3 (Dashboard B2B APIs) para launch do produto B2B.
+1. ✅ Review relatório MANUS_V7_AUDIT_BASELINE.md
+2. Executar FASE 1 - Bloqueadores P0 (16h)
+3. Configurar GA4 (30min) ← **FAZER AGORA**
+4. Rotacionar API keys (1h)
 
 **Recomendação:**
-1. Completar SPRINT SECURITY esta semana
-2. Priorizar Dashboard + Payments para monetização imediata
-3. Intercalar Code Quality com features novas
+Sistema está **funcional e pronto para beta launch** após corrigir P0s críticos (Semana 1).
+
+Para **lançamento em escala**, seguir roadmap completo de 8 semanas até PRODUCTION READY (90/100).
 
 ---
 
-**Gerado por:** MANUS v7.0 Comprehensive Audit
-**Data Auditoria:** 31/12/2024
-**Data Atualização:** 31/12/2024
-**Próxima auditoria:** Após Sprint 2 (2 semanas)
+**Gerado por:** MANUS v7.0 Multi-Agent System
+**Data:** 31/12/2024 - 23:45
+**Próxima Auditoria:** Após Semana 4 (2 meses)
+**Versão:** 4.0
+

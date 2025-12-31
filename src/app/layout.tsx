@@ -10,6 +10,7 @@ import { ReferralTracker } from '@/components/referral-tracker'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
 import { BetaBanner } from '@/components/beta-banner'
 import { PWAProvider } from '@/components/pwa-provider'
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
 import { Suspense } from 'react'
 import './globals.css'
 
@@ -142,6 +143,7 @@ export default function RootLayout({
             </TRPCProvider>
           </AuthProvider>
         </PWAProvider>
+        <VercelAnalytics />
       </body>
     </html>
   )

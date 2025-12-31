@@ -250,9 +250,9 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto px-4 flex items-center justify-between h-16">
+      <nav className="container mx-auto px-4 flex items-center justify-between h-16" aria-label="Navegação principal">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center" aria-label="Voltar para página inicial - Garcez Palha">
           <Logo variant="horizontal" />
         </Link>
 
@@ -262,13 +262,14 @@ export function Navbar() {
             <NavigationMenuList>
               {/* Solutions Mega Menu */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Solucoes</NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuTrigger aria-label="Menu de Soluções Jurídicas">Solucoes</NavigationMenuTrigger>
+                <NavigationMenuContent role="menu" aria-label="Submenu de soluções jurídicas">
                   <div className="w-[800px] p-4">
                     {/* Link to all solutions */}
                     <Link
                       href="/solucoes"
                       className="block mb-4 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors border border-primary/20"
+                      aria-label={`Ver todas as ${totalProducts} soluções jurídicas em ${totalCategories} categorias`}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -287,16 +288,18 @@ export function Navbar() {
                             <Link
                               href={category.href}
                               className="flex items-center gap-2 font-semibold hover:text-primary transition-colors"
+                              aria-label={`${category.name} - ${category.description}`}
                             >
-                              <Icon className="w-4 h-4" />
+                              <Icon className="w-4 h-4" aria-hidden="true" />
                               {category.name}
                             </Link>
-                            <ul className="space-y-1">
+                            <ul className="space-y-1" role="list" aria-label={`Serviços de ${category.name}`}>
                               {category.items.map((item) => (
-                                <li key={item.name}>
+                                <li key={item.name} role="listitem">
                                   <Link
                                     href={item.href}
                                     className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-1"
+                                    aria-label={`${item.name} - ${category.name}`}
                                   >
                                     {item.name}
                                   </Link>
@@ -323,7 +326,7 @@ export function Navbar() {
               {navigation.slice(1).map((item) => (
                 <NavigationMenuItem key={item.name}>
                   <Link href={item.href} legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()} aria-label={`Navegar para ${item.name}`}>
                       {item.name}
                     </NavigationMenuLink>
                   </Link>
@@ -335,7 +338,7 @@ export function Navbar() {
           <ThemeSwitcher />
 
           <Button variant="outline" asChild>
-            <Link href="/login">Area do Cliente</Link>
+            <Link href="/login" aria-label="Acessar área do cliente - Login">Area do Cliente</Link>
           </Button>
         </div>
 
@@ -344,22 +347,27 @@ export function Navbar() {
           <ThemeSwitcher />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
           </button>
         </div>
       </nav>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t max-h-[80vh] overflow-y-auto">
+        <div id="mobile-menu" className="lg:hidden border-t max-h-[80vh] overflow-y-auto" role="navigation" aria-label="Menu mobile">
           <div className="container mx-auto px-4 py-4 space-y-4">
             {/* Mobile Solutions Accordion */}
             <div>
               <button
                 onClick={() => setMobileSolutionsOpen(!mobileSolutionsOpen)}
                 className="flex items-center justify-between w-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Menu de Soluções Jurídicas"
+                aria-expanded={mobileSolutionsOpen}
+                aria-controls="mobile-solutions"
               >
                 Solucoes
                 <ChevronDown
@@ -367,11 +375,12 @@ export function Navbar() {
                     'h-4 w-4 transition-transform',
                     mobileSolutionsOpen && 'rotate-180'
                   )}
+                  aria-hidden="true"
                 />
               </button>
 
               {mobileSolutionsOpen && (
-                <div className="mt-2 ml-4 space-y-4">
+                <div id="mobile-solutions" className="mt-2 ml-4 space-y-4">
                   {solutionCategories.map((category) => {
                     const Icon = category.icon
                     return (
@@ -380,17 +389,19 @@ export function Navbar() {
                           href={category.href}
                           className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
                           onClick={() => setMobileMenuOpen(false)}
+                          aria-label={`${category.name} - ${category.description}`}
                         >
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-4 h-4" aria-hidden="true" />
                           {category.name}
                         </Link>
-                        <ul className="ml-6 space-y-1">
+                        <ul className="ml-6 space-y-1" role="list" aria-label={`Serviços de ${category.name}`}>
                           {category.items.map((item) => (
-                            <li key={item.name}>
+                            <li key={item.name} role="listitem">
                               <Link
                                 href={item.href}
                                 className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-1"
                                 onClick={() => setMobileMenuOpen(false)}
+                                aria-label={`${item.name} - ${category.name}`}
                               >
                                 {item.name}
                               </Link>

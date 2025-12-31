@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
+import { withRateLimit } from '@/lib/rate-limit'
 import crypto from 'crypto'
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const { email } = await request.json()
 
@@ -77,3 +78,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting: 3 forgot password attempts per 15 minutes
+export const POST = withRateLimit(handler, { type: 'auth', limit: 3 })

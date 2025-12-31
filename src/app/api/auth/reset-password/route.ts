@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const { token, password } = await request.json()
 
@@ -84,3 +85,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting: 5 reset password attempts per 15 minutes
+export const POST = withRateLimit(handler, { type: 'auth', limit: 5 })
