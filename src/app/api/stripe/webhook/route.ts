@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { withRateLimit } from '@/lib/rate-limit'
 import Stripe from 'stripe'
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -275,3 +276,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting for webhook
+export const POST = withRateLimit(handler, { type: 'webhook', limit: 100 })

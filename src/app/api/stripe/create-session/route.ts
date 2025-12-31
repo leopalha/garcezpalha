@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { stripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 
 const createSessionSchema = z.object({
   serviceId: z.string(),
@@ -15,12 +17,11 @@ const createSessionSchema = z.object({
   urgency: z.enum(['normal', 'urgent']).default('normal'),
 })
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     console.log('[DEBUG] STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? `EXISTS (${process.env.STRIPE_SECRET_KEY.substring(0, 20)}...)` : 'NOT FOUND')
 
-    const body = await request.json()
-    const data = createSessionSchema.parse(body)
+    const data = (request as any).validatedData
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -83,23 +84,18 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Stripe session creation error:', error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Dados inválidos',
-          details: error.issues,
-        },
-        { status: 400 }
-      )
-    }
-
     return NextResponse.json(
       {
         error: 'Erro ao criar sessão de pagamento',
-        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Erro desconhecido',
+        message: error instanceof Error ? error.message : 'Erro desconhecido',
       },
       { status: 500 }
     )
   }
 }
+
+// Apply validation and rate limiting
+export const POST = withRateLimit(
+  withValidation(createSessionSchema, handler, { sanitize: true }),
+  { type: 'checkout', limit: 10 }
+)
