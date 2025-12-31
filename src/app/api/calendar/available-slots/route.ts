@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     const availableSlots = generateAvailableSlots(
       timeMin,
       timeMax,
-      busySlots,
+      busySlots as Array<{ start: string; end: string }>,
       slotDuration
     )
 

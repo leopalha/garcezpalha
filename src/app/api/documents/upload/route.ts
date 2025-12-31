@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
       description: description || null,
     }
 
+    // @ts-expect-error - client_documents table not in schema yet
     const { data: docData, error: dbError } = await supabase
       .from('client_documents')
       .insert(documentData as never)
