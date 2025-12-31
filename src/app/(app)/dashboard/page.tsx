@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,86 +16,102 @@ import {
   Sparkles,
   BarChart3,
   Clock,
+  Loader2,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useToast } from '@/components/ui/use-toast'
 
-// Mock data
-const dashboardData = {
-  totalProducts: 8,
-  activeProducts: 6,
-  totalLeads: 127,
-  newLeadsToday: 12,
-  conversionRate: 23.5,
-  totalConversations: 483,
-  activeConversations: 24,
+interface DashboardStats {
+  products: {
+    total: number
+    published: number
+    draft: number
+  }
+  leads: {
+    total: number
+    new: number
+    qualified: number
+    converted: number
+    conversionRate: number
+  }
+  agent: {
+    totalConversations: number
+    activeConversations: number
+    averageResponseTime: number
+    satisfactionScore: number
+    escalationRate: number
+  }
+  revenue: {
+    total: number
+    thisMonth: number
+    lastMonth: number
+    growth: number
+  }
+}
 
-  recentProducts: [
-    {
-      id: '1',
-      name: 'Usucapião Extraordinária',
-      status: 'active',
-      leads: 45,
-      conversion: 28.5,
-      revenue: 12500,
-    },
-    {
-      id: '2',
-      name: 'Regularização de Imóvel',
-      status: 'active',
-      leads: 38,
-      conversion: 21.2,
-      revenue: 9800,
-    },
-    {
-      id: '3',
-      name: 'Holding Familiar',
-      status: 'draft',
-      leads: 0,
-      conversion: 0,
-      revenue: 0,
-    },
-  ],
-
-  recentActivity: [
-    {
-      id: '1',
-      type: 'lead',
-      message: 'Novo lead qualificado: Maria Silva',
-      time: '5 minutos atrás',
-      icon: Users,
-    },
-    {
-      id: '2',
-      type: 'conversation',
-      message: 'Agent IA finalizou atendimento com João Santos',
-      time: '15 minutos atrás',
-      icon: MessageSquare,
-    },
-    {
-      id: '3',
-      type: 'product',
-      message: 'Produto "Usucapião" recebeu nova visualização',
-      time: '1 hora atrás',
-      icon: Eye,
-    },
-    {
-      id: '4',
-      type: 'conversion',
-      message: 'Cliente convertido: Ana Costa - R$ 3.500',
-      time: '2 horas atrás',
-      icon: CheckCircle,
-    },
-  ],
-
-  agentStats: {
-    totalConversations: 483,
-    averageResponseTime: '2.3s',
-    satisfactionRate: 94.5,
-    resolvedWithoutHuman: 78.2,
-  },
+interface Product {
+  id: string
+  name: string
+  status: string
+  stats: {
+    leads: number
+    conversionRate: number
+    revenue: number
+  }
 }
 
 export default function AppDashboard() {
+  const { toast } = useToast()
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
+  async function fetchDashboardData() {
+    try {
+      setLoading(true)
+
+      // Fetch dashboard stats
+      const statsRes = await fetch('/api/app/dashboard/stats')
+      if (!statsRes.ok) throw new Error('Failed to fetch stats')
+      const statsData = await statsRes.json()
+      setStats(statsData)
+
+      // Fetch top 3 products
+      const productsRes = await fetch('/api/app/products?limit=3&status=published')
+      if (!productsRes.ok) throw new Error('Failed to fetch products')
+      const productsData = await productsRes.json()
+      setProducts(productsData.products || [])
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+      toast({
+        title: 'Erro ao carregar dados',
+        description: 'Não foi possível carregar os dados do dashboard.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-muted-foreground">Erro ao carregar dados do dashboard</p>
+      </div>
+    )
+  }
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -129,9 +146,9 @@ export default function AppDashboard() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.activeProducts}</div>
+            <div className="text-2xl font-bold">{stats.products.published}</div>
             <p className="text-xs text-muted-foreground">
-              {dashboardData.totalProducts} no total
+              {stats.products.total} no total
             </p>
           </CardContent>
         </Card>
@@ -142,9 +159,9 @@ export default function AppDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.totalLeads}</div>
+            <div className="text-2xl font-bold">{stats.leads.total}</div>
             <p className="text-xs text-green-600">
-              +{dashboardData.newLeadsToday} hoje
+              +{stats.leads.new} novos
             </p>
           </CardContent>
         </Card>
@@ -155,7 +172,7 @@ export default function AppDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.conversionRate}%</div>
+            <div className="text-2xl font-bold">{stats.leads.conversionRate.toFixed(1)}%</div>
             <p className="text-xs text-muted-foreground">
               Últimos 30 dias
             </p>
@@ -168,9 +185,9 @@ export default function AppDashboard() {
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardData.totalConversations}</div>
+            <div className="text-2xl font-bold">{stats.agent.totalConversations}</div>
             <p className="text-xs text-muted-foreground">
-              {dashboardData.activeConversations} ativas
+              {stats.agent.activeConversations} ativas
             </p>
           </CardContent>
         </Card>
@@ -189,19 +206,19 @@ export default function AppDashboard() {
           <div className="grid gap-4 md:grid-cols-4">
             <div>
               <p className="text-sm text-muted-foreground mb-1">Total de Conversas</p>
-              <p className="text-2xl font-bold">{dashboardData.agentStats.totalConversations}</p>
+              <p className="text-2xl font-bold">{stats.agent.totalConversations}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Tempo Médio de Resposta</p>
-              <p className="text-2xl font-bold">{dashboardData.agentStats.averageResponseTime}</p>
+              <p className="text-2xl font-bold">{stats.agent.averageResponseTime}s</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Taxa de Satisfação</p>
-              <p className="text-2xl font-bold text-green-600">{dashboardData.agentStats.satisfactionRate}%</p>
+              <p className="text-2xl font-bold text-green-600">{stats.agent.satisfactionScore.toFixed(1)}/5.0</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Resolvido sem Humano</p>
-              <p className="text-2xl font-bold text-blue-600">{dashboardData.agentStats.resolvedWithoutHuman}%</p>
+              <p className="text-sm text-muted-foreground mb-1">Taxa de Escalação</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.agent.escalationRate.toFixed(1)}%</p>
             </div>
           </div>
           <div className="mt-4">
@@ -224,47 +241,57 @@ export default function AppDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {dashboardData.recentProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium">{product.name}</p>
-                      {product.status === 'active' ? (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                          Ativo
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-medium">{product.name}</p>
+                        {product.status === 'published' ? (
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                            Ativo
+                          </span>
+                        ) : (
+                          <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                            Rascunho
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          {product.stats?.leads || 0} leads
                         </span>
-                      ) : (
-                        <span className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
-                          Rascunho
+                        <span className="flex items-center gap-1">
+                          <TrendingUp className="h-3 w-3" />
+                          {product.stats?.conversionRate?.toFixed(1) || 0}% conversão
                         </span>
-                      )}
+                        {product.stats?.revenue > 0 && (
+                          <span className="font-semibold text-green-600">
+                            R$ {product.stats.revenue.toLocaleString('pt-BR')}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        {product.leads} leads
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <TrendingUp className="h-3 w-3" />
-                        {product.conversion}% conversão
-                      </span>
-                      {product.revenue > 0 && (
-                        <span className="font-semibold text-green-600">
-                          R$ {product.revenue.toLocaleString('pt-BR')}
-                        </span>
-                      )}
-                    </div>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href={`/dashboard/produtos/${product.id}`}>
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/app/dashboard/produtos/${product.id}`}>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Package className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>Nenhum produto criado ainda</p>
+                  <Button variant="outline" asChild className="mt-4">
+                    <Link href="/dashboard/produtos/novo">Criar Primeiro Produto</Link>
                   </Button>
                 </div>
-              ))}
+              )}
             </div>
             <div className="mt-4">
               <Button variant="outline" className="w-full" asChild>
