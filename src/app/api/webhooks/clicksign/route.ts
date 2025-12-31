@@ -148,11 +148,47 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
 
   console.log(`[ClickSign] Conversation ${conversation.conversation_id} moved to onboarding`)
 
-  // TODO: Trigger next steps
-  // - Send welcome email with case details
-  // - Schedule onboarding call
-  // - Assign case to lawyer
-  // - Create case in CRM
+  // Trigger next steps after contract signature
+  try {
+    // Send welcome email with case details
+    const lead = conversation.lead_data || {}
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/email/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: lead.email,
+        template: 'contract-signed',
+        data: {
+          name: lead.name,
+          caseType: conversation.case_type,
+          lawyerName: 'Garcez Palha',
+          nextSteps: [
+            'Análise detalhada do seu caso pela nossa equipe jurídica',
+            'Contato do advogado responsável em até 24h',
+            'Coleta de documentação complementar, se necessário',
+            'Desenvolvimento da estratégia jurídica personalizada'
+          ]
+        }
+      })
+    })
+
+    // Notify admin about new signed contract
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'contract_signed',
+        title: 'Novo Contrato Assinado',
+        message: `${lead.name} assinou o contrato. Caso: ${conversation.case_type}`,
+        conversation_id: conversation.conversation_id,
+        priority: 'high'
+      })
+    })
+
+    console.log('[ClickSign] Welcome email sent and admin notified')
+  } catch (error) {
+    console.error('[ClickSign] Error sending notifications:', error)
+  }
 
   // After 1 hour, transition to 'active_case'
   setTimeout(async () => {
@@ -170,7 +206,26 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
       console.error('[ClickSign] Error transitioning to active_case:', transitionError)
     } else {
       console.log(`[ClickSign] Conversation ${conversation.conversation_id} moved to active_case`)
-      // TODO: Notify assigned lawyer
+
+      // Notify assigned lawyer
+      try {
+        const lead = conversation.lead_data || {}
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'case_activated',
+            title: 'Novo Caso Ativo',
+            message: `Caso de ${lead.name} está pronto para atendimento. Tipo: ${conversation.case_type}`,
+            conversation_id: conversation.conversation_id,
+            priority: 'high',
+            assigned_to: 'lawyer' // Will be replaced with specific lawyer ID in the future
+          })
+        })
+        console.log('[ClickSign] Lawyer notified about active case')
+      } catch (error) {
+        console.error('[ClickSign] Error notifying lawyer:', error)
+      }
     }
   }, 3600000) // 1 hour
 }
@@ -259,7 +314,24 @@ async function handleDocumentCanceled(payload: ClickSignWebhookPayload) {
 
   console.log('[ClickSign] Conversation escalated due to contract cancellation')
 
-  // TODO: Notify admin
+  // Notify admin about contract cancellation
+  try {
+    const lead = conversation.lead_data || {}
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'contract_canceled',
+        title: 'Contrato Cancelado - Requer Atenção',
+        message: `Contrato de ${lead.name} foi cancelado. Caso: ${conversation.case_type}. Requer follow-up manual.`,
+        conversation_id: conversation.conversation_id,
+        priority: 'urgent'
+      })
+    })
+    console.log('[ClickSign] Admin notified about contract cancellation')
+  } catch (error) {
+    console.error('[ClickSign] Error notifying admin about cancellation:', error)
+  }
 }
 
 /**
@@ -302,7 +374,24 @@ async function handleDocumentRefused(payload: ClickSignWebhookPayload) {
 
   console.log('[ClickSign] Conversation escalated due to contract refusal')
 
-  // TODO: Notify admin for follow-up
+  // Notify admin about contract refusal for follow-up
+  try {
+    const lead = conversation.lead_data || {}
+    await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notifications/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'contract_refused',
+        title: 'Contrato Recusado - Follow-up Necessário',
+        message: `${lead.name} recusou o contrato. Caso: ${conversation.case_type}. Entrar em contato para entender objeções.`,
+        conversation_id: conversation.conversation_id,
+        priority: 'urgent'
+      })
+    })
+    console.log('[ClickSign] Admin notified about contract refusal')
+  } catch (error) {
+    console.error('[ClickSign] Error notifying admin about refusal:', error)
+  }
 }
 
 export const runtime = 'nodejs'

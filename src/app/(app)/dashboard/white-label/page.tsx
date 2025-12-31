@@ -114,8 +114,7 @@ export default function WhiteLabelPage() {
   }
 
   const handleSave = () => {
-    // Here you would save to your backend
-    console.log('Saving config:', config)
+    // TODO: Save to backend API
     setHasChanges(false)
   }
 
