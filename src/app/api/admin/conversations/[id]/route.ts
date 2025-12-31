@@ -4,9 +4,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 
-export async function GET(
+async function getHandler(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
@@ -39,6 +40,9 @@ export async function GET(
     )
   }
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
