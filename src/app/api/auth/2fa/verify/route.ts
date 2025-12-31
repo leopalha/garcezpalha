@@ -61,8 +61,8 @@ async function handler(request: NextRequest) {
   }
 }
 
-// Apply validation and rate limiting (stricter for security)
+// Apply validation, sanitization, and rate limiting (stricter for security)
 export const POST = withRateLimit(
-  withValidation(verify2FASchema, handler),
+  withValidation(verify2FASchema, handler, { sanitize: true }),
   { type: 'auth', limit: 10 } // 10 attempts per window
 )

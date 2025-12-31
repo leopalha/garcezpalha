@@ -47,8 +47,8 @@ async function handler(request: NextRequest) {
   }
 }
 
-// Apply validation and rate limiting
+// Apply validation, sanitization, and rate limiting
 export const POST = withRateLimit(
-  withValidation(enable2FASchema, handler),
+  withValidation(enable2FASchema, handler, { sanitize: true }),
   { type: 'auth', limit: 5 }
 )

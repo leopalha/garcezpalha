@@ -4,11 +4,12 @@ import crypto from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
 import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 
 const signupSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
-  email: z.string().email('Email inválido'),
+  email: z.string().email('Email inválido').toLowerCase(),
   password: z.string().min(8, 'Senha deve ter no mínimo 8 caracteres'),
   phone: z.string().optional(),
   document: z.string().optional(), // CPF/CNPJ
@@ -16,18 +17,7 @@ const signupSchema = z.object({
 
 async function handler(request: NextRequest) {
   try {
-    const body = await request.json()
-    
-    // Validate input
-    const validation = signupSchema.safeParse(body)
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.issues[0].message },
-        { status: 400 }
-      )
-    }
-
-    const { name, email, password, phone, document } = validation.data
+    const { name, email, password, phone, document } = (request as any).validatedData
 
     // Create Supabase client
     const supabase = await createClient()
@@ -118,5 +108,8 @@ async function handler(request: NextRequest) {
   }
 }
 
-// Apply rate limiting: 5 signup attempts per 15 minutes
-export const POST = withRateLimit(handler, { type: 'auth', limit: 5 })
+// Apply validation, sanitization, and rate limiting
+export const POST = withRateLimit(
+  withValidation(signupSchema, handler, { sanitize: true }),
+  { type: 'auth', limit: 5 }
+)
