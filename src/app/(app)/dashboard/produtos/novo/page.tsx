@@ -170,7 +170,7 @@ export default function NewProductPage() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500))
     setIsSaving(false)
-    router.push('/app/dashboard/produtos')
+    router.push('/dashboard/produtos')
   }
 
   const progressPercentage = {

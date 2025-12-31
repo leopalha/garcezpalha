@@ -449,7 +449,7 @@ export default function ConversasPage() {
                     </div>
 
                     <Button size="sm" asChild>
-                      <Link href={`/app/dashboard/conversas/${conversation.id}`}>
+                      <Link href={`/dashboard/conversas/${conversation.id}`}>
                         <Eye className="h-4 w-4 mr-1" />
                         Ver Chat
                       </Link>

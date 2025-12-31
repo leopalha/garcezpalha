@@ -114,7 +114,7 @@ export default function ProductsPage() {
           </p>
         </div>
         <Button asChild size="lg">
-          <Link href="/app/dashboard/produtos/novo">
+          <Link href="/dashboard/produtos/novo">
             <Plus className="h-4 w-4 mr-2" />
             Criar Produto
           </Link>
@@ -235,7 +235,7 @@ export default function ProductsPage() {
                   </p>
                   {products.length === 0 ? (
                     <Button asChild className="mt-4">
-                      <Link href="/app/dashboard/produtos/novo">Criar Primeiro Produto</Link>
+                      <Link href="/dashboard/produtos/novo">Criar Primeiro Produto</Link>
                     </Button>
                   ) : (
                     <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
@@ -284,13 +284,13 @@ export default function ProductsPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem asChild>
-                                <Link href={`/app/dashboard/produtos/${product.id}`}>
+                                <Link href={`/dashboard/produtos/${product.id}`}>
                                   <Edit className="h-4 w-4 mr-2" />
                                   Editar
                                 </Link>
                               </DropdownMenuItem>
                               <DropdownMenuItem asChild>
-                                <Link href={`/app/dashboard/produtos/${product.id}/preview`}>
+                                <Link href={`/dashboard/produtos/${product.id}/preview`}>
                                   <Eye className="h-4 w-4 mr-2" />
                                   Visualizar
                                 </Link>

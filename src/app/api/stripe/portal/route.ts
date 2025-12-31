@@ -43,7 +43,7 @@ async function handler(request: NextRequest) {
     // Create Customer Portal session
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/dashboard/assinatura`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/assinatura`,
     })
 
     return NextResponse.json({

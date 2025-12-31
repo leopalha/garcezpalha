@@ -2,7 +2,7 @@
  * Dashboard Stats API (Real Data)
  * P4-001: Substituir mock data por queries reais do Supabase
  *
- * GET /api/app/dashboard/stats
+ * GET /api/dashboard/stats
  * Returns: KPIs do dashboard principal do advogado
  */
 

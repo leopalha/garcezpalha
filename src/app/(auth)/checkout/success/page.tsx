@@ -115,7 +115,7 @@ export default function CheckoutSuccessPage() {
                 </Link>
               </Button>
               <Button asChild variant="outline" className="flex-1" size="lg">
-                <Link href="/app/dashboard">Ir para Dashboard</Link>
+                <Link href="/dashboard">Ir para Dashboard</Link>
               </Button>
             </div>
 

@@ -12,6 +12,8 @@ import {
   Upload, Palette, Building2, CheckCircle2
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useAnalytics } from '@/hooks/use-analytics'
+import { useEffect, useState as useReactState } from 'react'
 
 const NICHOS_DISPONIVEIS = [
   {
@@ -86,15 +88,23 @@ type Step = 'welcome' | 'choose-mode' | 'select-nicho' | 'setup-brand' | 'comple
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const { trackOnboarding } = useAnalytics()
   const [step, setStep] = useState<Step>('welcome')
   const [selectedMode, setSelectedMode] = useState<'nicho' | 'generico' | null>(null)
   const [selectedNicho, setSelectedNicho] = useState<string | null>(null)
+  const [startTime] = useState(Date.now())
   const [brandSetup, setBrandSetup] = useState({
     nome: '',
     logo: null as File | null,
     corPrimaria: '#2563eb',
     corSecundaria: '#6366f1'
   })
+
+  const TOTAL_STEPS = 5 // welcome, choose-mode, select-nicho, setup-brand, complete
+  const getCurrentStepNumber = () => {
+    const steps: Step[] = ['welcome', 'choose-mode', 'select-nicho', 'setup-brand', 'complete']
+    return steps.indexOf(step) + 1
+  }
 
   const handleNext = () => {
     if (step === 'welcome') setStep('choose-mode')

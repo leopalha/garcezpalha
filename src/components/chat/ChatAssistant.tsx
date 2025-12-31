@@ -201,6 +201,15 @@ export function ChatAssistant({
 
       setMessages((prev) => [...prev, assistantMessage])
 
+      // Track chat usage
+      const messageCount = messages.filter(m => m.role === 'user').length + 1
+      const sessionDuration = Date.now() - Number(messages[0]?.timestamp || Date.now())
+      trackChat({
+        messageCount,
+        sessionDuration: Math.floor(sessionDuration / 1000), // Convert to seconds
+        assistantUsed: mode === 'agent-flow' ? productName || 'Agent Flow' : 'Chat Assistant',
+      })
+
       // Update agent-flow state
       if (mode === 'agent-flow' && response.state) {
         setCurrentState(response.state as AgentState)

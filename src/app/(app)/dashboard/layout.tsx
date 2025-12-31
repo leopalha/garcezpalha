@@ -24,16 +24,16 @@ import { cn } from '@/lib/utils'
 import { useSession, signOut } from 'next-auth/react'
 
 const navigation = [
-  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
-  { name: 'Produtos', href: '/app/dashboard/produtos', icon: Package },
-  { name: 'Landing Pages', href: '/app/dashboard/landing-pages', icon: FileText },
-  { name: 'Conversas IA', href: '/app/dashboard/conversas', icon: MessageSquare },
-  { name: 'Clientes', href: '/app/dashboard/clientes', icon: Users },
-  { name: 'Analytics', href: '/app/dashboard/analytics', icon: BarChart3 },
-  { name: 'Agent IA', href: '/app/dashboard/agent', icon: Sparkles },
-  { name: 'White-Label', href: '/app/dashboard/white-label', icon: Palette },
-  { name: 'Assinatura', href: '/app/dashboard/assinatura', icon: DollarSign },
-  { name: 'Configurações', href: '/app/dashboard/configuracoes', icon: Settings },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Produtos', href: '/dashboard/produtos', icon: Package },
+  { name: 'Landing Pages', href: '/dashboard/landing-pages', icon: FileText },
+  { name: 'Conversas IA', href: '/dashboard/conversas', icon: MessageSquare },
+  { name: 'Clientes', href: '/dashboard/clientes', icon: Users },
+  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  { name: 'Agent IA', href: '/dashboard/agent', icon: Sparkles },
+  { name: 'White-Label', href: '/dashboard/white-label', icon: Palette },
+  { name: 'Assinatura', href: '/dashboard/assinatura', icon: DollarSign },
+  { name: 'Configurações', href: '/dashboard/configuracoes', icon: Settings },
 ]
 
 export default function AppDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -74,7 +74,7 @@ export default function AppDashboardLayout({ children }: { children: React.React
           <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
           <div className="fixed inset-y-0 left-0 w-64 bg-card border-r">
             <div className="flex items-center justify-between p-4 border-b">
-              <Link href="/app/dashboard" className="font-display text-xl font-bold">
+              <Link href="/dashboard" className="font-display text-xl font-bold">
                 <span className="text-primary">Garcez</span>
                 <span className="text-secondary"> Palha</span>
               </Link>
@@ -100,7 +100,7 @@ export default function AppDashboardLayout({ children }: { children: React.React
               {navigation.map((item) => {
                 const isActive =
                   pathname === item.href ||
-                  (item.href !== '/app/dashboard' && pathname.startsWith(item.href))
+                  (item.href !== '/dashboard' && pathname.startsWith(item.href))
                 return (
                   <Link
                     key={item.name}
@@ -127,7 +127,7 @@ export default function AppDashboardLayout({ children }: { children: React.React
       <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-64 lg:block">
         <div className="flex h-full flex-col bg-card border-r">
           <div className="flex items-center gap-2 p-6 border-b">
-            <Link href="/app/dashboard" className="font-display text-xl font-bold">
+            <Link href="/dashboard" className="font-display text-xl font-bold">
               <span className="text-primary">Garcez</span>
               <span className="text-secondary"> Palha</span>
             </Link>
@@ -150,7 +150,7 @@ export default function AppDashboardLayout({ children }: { children: React.React
             {navigation.map((item) => {
               const isActive =
                 pathname === item.href ||
-                (item.href !== '/app/dashboard' && pathname.startsWith(item.href))
+                (item.href !== '/dashboard' && pathname.startsWith(item.href))
               return (
                 <Link
                   key={item.name}

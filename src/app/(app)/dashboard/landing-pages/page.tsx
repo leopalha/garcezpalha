@@ -168,7 +168,7 @@ export default function LandingPagesPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/app/dashboard/produtos/novo">
+          <Link href="/dashboard/produtos/novo">
             <Plus className="h-4 w-4 mr-2" />
             Nova Landing Page
           </Link>
@@ -384,7 +384,7 @@ export default function LandingPagesPage() {
                 Crie sua primeira landing page para começar a capturar leads
               </p>
               <Button asChild className="mt-4">
-                <Link href="/app/dashboard/produtos/novo">
+                <Link href="/dashboard/produtos/novo">
                   <Plus className="h-4 w-4 mr-2" />
                   Criar Landing Page
                 </Link>

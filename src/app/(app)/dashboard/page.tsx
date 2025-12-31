@@ -75,7 +75,7 @@ export default function AppDashboard() {
       setLoading(true)
 
       // Fetch dashboard stats
-      const statsRes = await fetch('/api/app/dashboard/stats')
+      const statsRes = await fetch('/api/dashboard/stats')
       if (!statsRes.ok) throw new Error('Failed to fetch stats')
       const statsData = await statsRes.json()
       setStats(statsData)
@@ -124,13 +124,13 @@ export default function AppDashboard() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
-            <Link href="/app/dashboard/analytics">
+            <Link href="/dashboard/analytics">
               <BarChart3 className="h-4 w-4 mr-2" />
               Ver Relatórios
             </Link>
           </Button>
           <Button asChild>
-            <Link href="/app/dashboard/produtos/novo">
+            <Link href="/dashboard/produtos/novo">
               <Package className="h-4 w-4 mr-2" />
               Novo Produto
             </Link>
@@ -223,7 +223,7 @@ export default function AppDashboard() {
           </div>
           <div className="mt-4">
             <Button variant="outline" asChild className="w-full md:w-auto">
-              <Link href="/app/dashboard/agent">
+              <Link href="/dashboard/agent">
                 Ver Configurações do Agent
                 <ArrowUpRight className="h-4 w-4 ml-2" />
               </Link>
@@ -295,7 +295,7 @@ export default function AppDashboard() {
             </div>
             <div className="mt-4">
               <Button variant="outline" className="w-full" asChild>
-                <Link href="/app/dashboard/produtos">Ver Todos os Produtos</Link>
+                <Link href="/dashboard/produtos">Ver Todos os Produtos</Link>
               </Button>
             </div>
           </CardContent>
@@ -318,7 +318,7 @@ export default function AppDashboard() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Link href="/app/dashboard/produtos/novo">
+        <Link href="/dashboard/produtos/novo">
           <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <Package className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
@@ -330,7 +330,7 @@ export default function AppDashboard() {
           </Card>
         </Link>
 
-        <Link href="/app/dashboard/landing-pages">
+        <Link href="/dashboard/landing-pages">
           <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <FileText className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
@@ -342,7 +342,7 @@ export default function AppDashboard() {
           </Card>
         </Link>
 
-        <Link href="/app/dashboard/agent">
+        <Link href="/dashboard/agent">
           <Card className="cursor-pointer hover:shadow-md transition-shadow group">
             <CardContent className="pt-6 text-center">
               <Sparkles className="h-10 w-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
