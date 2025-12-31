@@ -139,7 +139,7 @@ export default function LeadDetailPage() {
             <p className="text-muted-foreground">Lead #{lead.id.slice(0, 8)}</p>
           </div>
         </div>
-        <div className={`px-4 py-2 rounded-full text-sm font-semibold ${statusColors[lead.status]}`}>
+        <div className={`px-4 py-2 rounded-full text-sm font-semibold ${statusColors[lead.status as keyof typeof statusColors]}`}>
           {lead.status.toUpperCase()}
         </div>
       </div>

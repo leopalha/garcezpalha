@@ -385,7 +385,7 @@ export default function PlataformaGestaoJuridicaPage() {
               {(Object.keys(plans) as Array<keyof typeof plans>).map((key) => {
                 const plan = plans[key]
                 const Icon = plan.icon
-                const isRecommended = plan.recommended
+                const isRecommended = "recommended" in plan && plan.recommended
 
                 return (
                   <Card
