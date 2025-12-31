@@ -195,35 +195,41 @@ EXECUTE FUNCTION update_variant_stats_trigger();
 -- DADOS INICIAIS (EXEMPLO DE TESTE A/B)
 -- ============================================================================
 
--- Criar teste de exemplo
-INSERT INTO ab_tests (id, name, description, sequence_id, step_id, status, config)
-VALUES (
-  'ab-test-welcome-1',
-  'Teste A/B: Welcome Email Subject',
-  'Testar qual subject line tem melhor open rate no primeiro email de boas-vindas',
-  'welcome-sequence',
-  'welcome-1',
-  'draft',
-  '{
-    "trafficSplit": [50, 50],
-    "minSampleSize": 100,
-    "confidenceLevel": 0.95
-  }'::jsonb
-);
+-- Criar teste de exemplo (removendo ID para gerar automaticamente)
+DO $$
+DECLARE
+  test_uuid UUID;
+BEGIN
+  -- Inserir teste e capturar UUID gerado
+  INSERT INTO ab_tests (name, description, sequence_id, step_id, status, config)
+  VALUES (
+    'Teste A/B: Welcome Email Subject',
+    'Testar qual subject line tem melhor open rate no primeiro email de boas-vindas',
+    'welcome-sequence',
+    'welcome-1',
+    'draft',
+    '{
+      "trafficSplit": [50, 50],
+      "minSampleSize": 100,
+      "confidenceLevel": 0.95
+    }'::jsonb
+  )
+  RETURNING id INTO test_uuid;
 
--- Criar variantes
-INSERT INTO ab_test_variants (test_id, name, subject)
-VALUES
-  (
-    'ab-test-welcome-1',
-    'Control',
-    '{{firstName}}, bem-vindo à Garcez Palha! Seus direitos começam aqui'
-  ),
-  (
-    'ab-test-welcome-1',
-    'Variant A',
-    '{{firstName}}, você tem direitos que nem imagina! Descubra quais'
-  );
+  -- Criar variantes usando o UUID do teste
+  INSERT INTO ab_test_variants (test_id, name, subject)
+  VALUES
+    (
+      test_uuid,
+      'Control',
+      '{{firstName}}, bem-vindo à Garcez Palha! Seus direitos começam aqui'
+    ),
+    (
+      test_uuid,
+      'Variant A',
+      '{{firstName}}, você tem direitos que nem imagina! Descubra quais'
+    );
+END $$;
 
 COMMENT ON TABLE ab_tests IS 'Testes A/B para subject lines e conteúdo de emails';
 COMMENT ON TABLE ab_test_variants IS 'Variantes de cada teste A/B (control, variant A, B, C...)';
