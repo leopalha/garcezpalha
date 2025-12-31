@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 
@@ -31,7 +32,7 @@ interface Product {
   product_packages?: ProductPackage[]
 }
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     // Parse FormData (supports file uploads)
     const formData = await request.formData()
@@ -235,3 +236,6 @@ A: ${faq.answer}
     )
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(postHandler, { type: 'chat', limit: 20 })
