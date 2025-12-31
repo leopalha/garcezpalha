@@ -248,16 +248,62 @@ export default function AppCheckoutPage() {
     setIsProcessing(true)
 
     try {
-      // TODO: Create Stripe checkout session or process payment
-      // For now, simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      if (!selectedPlan) {
+        throw new Error('Nenhum plano selecionado')
+      }
 
-      // Redirect to success page
-      router.push('/app/checkout/success')
-    } catch (error) {
+      // Map plan IDs to Stripe Price IDs
+      // NOTE: These should be created in Stripe Dashboard and set as env vars
+      // For now, using test price IDs - replace with real ones
+      const stripePriceIds: Record<PlanId, string> = {
+        starter: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || 'price_starter_monthly',
+        pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || 'price_pro_monthly',
+        enterprise: process.env.NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE || 'price_enterprise_monthly',
+      }
+
+      const priceId = stripePriceIds[selectedPlan.id]
+
+      // Create Stripe Checkout Session
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId,
+          planId: selectedPlan.id,
+          billingCycle: 'monthly',
+          // Include user details for customer creation
+          customerDetails: {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            taxId: formData.cpfCnpj,
+            companyName: formData.companyName,
+          },
+          // Include selected addons
+          addons: selectedAddons,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erro ao criar sessão de checkout')
+      }
+
+      const { url } = await response.json()
+
+      // Redirect to Stripe Checkout
+      if (url) {
+        window.location.href = url
+      } else {
+        throw new Error('URL de checkout não recebida')
+      }
+    } catch (error: any) {
+      console.error('Checkout error:', error)
       toast({
         title: 'Erro no pagamento',
-        description: 'Ocorreu um erro ao processar seu pagamento. Tente novamente.',
+        description: error.message || 'Ocorreu um erro ao processar seu pagamento. Tente novamente.',
         variant: 'destructive',
       })
       setIsProcessing(false)

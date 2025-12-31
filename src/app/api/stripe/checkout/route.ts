@@ -12,6 +12,14 @@ interface CheckoutBody {
   priceId: string
   planId: 'starter' | 'pro' | 'enterprise'
   billingCycle: 'monthly' | 'yearly'
+  customerDetails?: {
+    name: string
+    email: string
+    phone: string
+    taxId: string
+    companyName: string
+  }
+  addons?: string[]
 }
 
 /**
@@ -32,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body: CheckoutBody = await request.json()
-    const { priceId, planId, billingCycle } = body
+    const { priceId, planId, billingCycle, customerDetails, addons } = body
 
     if (!priceId || !planId) {
       return NextResponse.json(
@@ -56,23 +64,56 @@ export async function POST(request: NextRequest) {
     let customerId = user.stripe_customer_id
 
     if (!customerId) {
-      // Create Stripe customer
+      // Create Stripe customer with details from checkout form
       const customer = await stripe.customers.create({
-        email: session.user.email!,
-        name: user.name || undefined,
+        email: customerDetails?.email || session.user.email!,
+        name: customerDetails?.name || user.name || undefined,
+        phone: customerDetails?.phone || undefined,
         metadata: {
           user_id: session.user.id,
           tenant_id: user.tenant_id || '',
+          company_name: customerDetails?.companyName || '',
+          tax_id: customerDetails?.taxId || '',
         },
       })
 
       customerId = customer.id
 
-      // Update user with Stripe customer ID
+      // Update user with Stripe customer ID and additional info
       await supabase
         .from('users')
-        .update({ stripe_customer_id: customerId })
+        .update({
+          stripe_customer_id: customerId,
+          name: customerDetails?.name || user.name,
+          phone: customerDetails?.phone || user.phone,
+        })
         .eq('id', session.user.id)
+    }
+
+    // Build line items (plan + addons)
+    const lineItems = [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ]
+
+    // Add addon line items if any
+    // NOTE: Addon price IDs should be created in Stripe and mapped here
+    if (addons && addons.length > 0) {
+      const addonPriceIds: Record<string, string> = {
+        'nicho-extra': process.env.NEXT_PUBLIC_STRIPE_PRICE_ADDON_NICHO || 'price_addon_nicho',
+        'catalogo': process.env.NEXT_PUBLIC_STRIPE_PRICE_ADDON_CATALOGO || 'price_addon_catalogo',
+      }
+
+      addons.forEach((addonId) => {
+        if (addonPriceIds[addonId]) {
+          lineItems.push({
+            price: addonPriceIds[addonId],
+            quantity: 1,
+          })
+        }
+      })
     }
 
     // Create Checkout Session
@@ -80,18 +121,14 @@ export async function POST(request: NextRequest) {
       customer: customerId,
       mode: 'subscription',
       payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/dashboard/assinatura/sucesso?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/dashboard/assinatura`,
+      line_items: lineItems,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/checkout?plan=${planId}`,
       metadata: {
         user_id: session.user.id,
         plan_id: planId,
         billing_cycle: billingCycle,
+        addons: addons?.join(',') || '',
       },
       allow_promotion_codes: true,
       billing_address_collection: 'required',
