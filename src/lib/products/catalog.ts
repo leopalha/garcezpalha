@@ -1853,7 +1853,7 @@ export const PRODUTO_INVENTARIO: Product = {
 }
 
 export const PRODUTO_PLANO_SAUDE: Product = {
-  id: 'plano-saude',
+  id: 'plano-saude-negou',
   name: 'Plano de Saúde Negou',
   slug: 'plano-saude-negou',
   category: 'saude',
@@ -1908,7 +1908,7 @@ export const PRODUTO_PLANO_SAUDE: Product = {
 }
 
 export const PRODUTO_BARIATRICA: Product = {
-  id: 'bariatrica',
+  id: 'cirurgia-bariatrica',
   name: 'Cirurgia Bariátrica',
   slug: 'cirurgia-bariatrica',
   category: 'saude',
@@ -1963,7 +1963,7 @@ export const PRODUTO_BARIATRICA: Product = {
 }
 
 export const PRODUTO_TRATAMENTO_TEA: Product = {
-  id: 'tratamento-tea',
+  id: 'tea',
   name: 'Tratamento TEA',
   slug: 'tea',
   category: 'saude',
@@ -2128,7 +2128,7 @@ export const PRODUTO_PERICIA_DOCUMENTAL: Product = {
 }
 
 export const PRODUTO_GRAFOTECNICA: Product = {
-  id: 'grafotecnica',
+  id: 'grafotecnia',
   name: 'Grafotecnia',
   slug: 'grafotecnia',
   category: 'pericia',
@@ -2934,7 +2934,7 @@ export const PRODUTO_AUXILIO_DOENCA: Product = {
 }
 
 export const PRODUTO_APOSENTADORIA_INSS: Product = {
-  id: 'aposentadoria-inss',
+  id: 'aposentadoria',
   name: 'Aposentadoria INSS',
   slug: 'aposentadoria',
   category: 'previdenciario',
