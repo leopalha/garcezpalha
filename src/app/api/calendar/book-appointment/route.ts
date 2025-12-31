@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
-import { cookies } from 'next/headers'
 import { sendEmail } from '@/lib/email/send'
 
 const calendar = google.calendar('v3')
@@ -41,7 +40,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // 1. Fetch lead data
     const { data: lead, error: leadError } = await supabase
@@ -76,12 +75,14 @@ export async function POST(request: NextRequest) {
         process.env.GOOGLE_CALENDAR_REFRESH_TOKEN || process.env.GMAIL_REFRESH_TOKEN,
     })
 
+    const leadAny = lead as any
+
     // 4. Create Google Calendar event
     const eventTitle =
-      title || `${appointmentType === 'consultation' ? 'Consulta' : 'Reunião'} - ${lead.full_name}`
+      title || `${appointmentType === 'consultation' ? 'Consulta' : 'Reunião'} - ${leadAny.full_name}`
     const eventDescription =
       description ||
-      `Cliente: ${lead.full_name}\nEmail: ${lead.email}\nTelefone: ${lead.phone}\nServiço: ${lead.service_interest}`
+      `Cliente: ${leadAny.full_name}\nEmail: ${leadAny.email}\nTelefone: ${leadAny.phone}\nServiço: ${leadAny.service_interest}`
 
     const calendarEvent = {
       summary: eventTitle,
@@ -91,13 +92,13 @@ export async function POST(request: NextRequest) {
         timeZone: 'America/Sao_Paulo',
       },
       end: {
-        dateTime: slotEnd,
+        dateTime: slotStart,
         timeZone: 'America/Sao_Paulo',
       },
       attendees: [
         {
-          email: lead.email,
-          displayName: lead.full_name,
+          email: leadAny.email,
+          displayName: leadAny.full_name,
           responseStatus: 'needsAction',
         },
       ],
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
     const endDate = new Date(slotEnd)
     const durationMinutes = Math.round((endDate.getTime() - startDate.getTime()) / 60000)
 
-    const { data: appointment, error: appointmentError } = await supabase
+    const { data: appointment, error: appointmentError } = await (supabase as any)
       .from('appointments')
       .insert({
         client_id: leadId,
@@ -162,10 +163,10 @@ export async function POST(request: NextRequest) {
 
     // 6. Send confirmation email to client
     await sendEmail({
-      to: lead.email,
+      to: leadAny.email || '',
       subject: `Agendamento Confirmado - ${eventTitle}`,
       html: generateAppointmentConfirmationEmail({
-        clientName: lead.full_name,
+        clientName: leadAny.full_name,
         appointmentTitle: eventTitle,
         appointmentDate: startDate.toLocaleDateString('pt-BR', {
           weekday: 'long',
