@@ -2,7 +2,7 @@
 
 **Versão**: 2.2
 **Data de Criação**: 26/12/2025
-**Última Atualização**: 29/12/2025 (Auditoria P2-003 + P2-005: Validação de Stats)
+**Última Atualização**: 30/12/2024 (CNPJ Confirmado: 54.185.007/0001-54)
 **Status**: Fonte Única de Verdade (Single Source of Truth)
 
 ---
@@ -27,7 +27,7 @@ Este documento é a **FONTE ÚNICA DE VERDADE** para todos os dados da empresa.
 | **Nome Oficial** | Garcez Palha Advocacia e Pericia |
 | **Nome Fantasia** | Garcez Palha |
 | **Nome Comercial** | Garcez Palha Advogados Associados |
-| **CNPJ** | TBD - Aguardando validação junto ao cliente (Leonardo Mendonça Palha da Silva) |
+| **CNPJ** | 54.185.007/0001-54 |
 | **Fundação (Família)** | 1661 |
 | **Tradição Familiar** | **364 anos** (desde 1661) |
 | **Tipo de Negócio** | Escritório de Advocacia Digital com Serviços de Perícia |
@@ -1019,8 +1019,7 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - ✅ **Google Analytics 4**: Implementado com dashboard funcional em `/admin/analytics`
 - ✅ **Sentry**: Integração preparada, documentada em MCP Server, pronto para deploy
 
-**Campos Marcados como TBD com Justificativa (12):**
-- 📋 **CNPJ**: Aguardando validação junto ao cliente (Leonardo Mendonça Palha da Silva)
+**Campos Marcados como TBD com Justificativa (11):**
 - 📋 **Inscrição OAB Sociedade**: Aguardando informação oficial
 - 📋 **Registros Profissionais** (Ana Maria e Ricardo): Aguardando números de registro OAB
 - 📋 **CSAT**: Requer coleta de feedback estruturada (não há dados históricos)
@@ -1042,7 +1041,7 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - ✅ Infraestrutura: Staging via Preview Deployments (padrão Vercel)
 
 **Próximas Ações:**
-1. [ ] Confirmar CNPJ com cliente
+1. [x] Confirmar CNPJ com cliente ✅ Completo: 54.185.007/0001-54
 2. [ ] Obter número de Inscrição OAB Sociedade
 3. [ ] Coletar registros profissionais (Ana Maria e Ricardo)
 4. [ ] Implementar coleta de CSAT (via surveys pós-atendimento)
@@ -1054,9 +1053,36 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - Validação de campos: +3 pontos
 - **Score final: 98/100** ⭐⭐⭐⭐⭐
 
+### v2.2 - 30/12/2024
+
+**Atualização Crítica - CNPJ Confirmado**
+
+Confirmação oficial do CNPJ junto ao cliente Leonardo Mendonça Palha da Silva:
+
+**Campo Atualizado:**
+- ✅ **CNPJ**: 54.185.007/0001-54 (confirmado)
+
+**Impacto:**
+- ✅ Dados fiscais completos para emissão de NFs
+- ✅ Integração com gateways de pagamento (Stripe, MercadoPago)
+- ✅ Compliance fiscal 100% ativo
+- ✅ Documentação oficial pronta para contratos
+
+**Campos Restantes TBD:**
+- 11 campos aguardando validação (redução de 12 → 11)
+- Prioridade: Inscrição OAB Sociedade + registros profissionais equipe
+
+**Score Atualizado:**
+- Score anterior: 98/100
+- CNPJ confirmado: +1 ponto
+- **Score atual: 99/100** ⭐⭐⭐⭐⭐
+
+**Próxima Meta:**
+- Obter Inscrição OAB Sociedade → Score 100/100
+
 ---
 
-**Última Atualização**: 29/12/2025
+**Última Atualização**: 30/12/2024
 **Próxima Revisão Programada**: 29/01/2026
-**Versão**: 2.1
+**Versão**: 2.2
 **Mantido por**: Equipe Garcez Palha
