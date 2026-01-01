@@ -41,8 +41,14 @@ async function getHandler(
   }
 }
 
-// Apply rate limiting
-export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })
+// Apply rate limiting - wrapper extracts params from URL
+export const GET = withRateLimit(
+  async (request: NextRequest) => {
+    const id = request.url.split("/").slice(-1)[0].split("?")[0]
+    return getHandler(request, { params: { id } })
+  },
+  { type: "api", limit: 100 }
+)
 
 export const runtime = 'nodejs'
 export const maxDuration = 30

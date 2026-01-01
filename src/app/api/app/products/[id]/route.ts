@@ -117,7 +117,7 @@ export async function GET(
       .eq('product_id', params.id)
       .eq('status', 'succeeded')
 
-    const revenue = payments?.reduce((sum: number, p: PaymentFromDB) => sum + (p.amount || 0), 0) || 0
+    const revenue = (payments as any)?.reduce((sum: number, p: any) => sum + (p.amount || 0), 0) || 0
 
     // Leads por status
     const leadsByStatus = {

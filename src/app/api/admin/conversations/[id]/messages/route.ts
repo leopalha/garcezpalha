@@ -133,9 +133,22 @@ async function postHandler(
   }
 }
 
-// Apply rate limiting
-export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })
-export const POST = withRateLimit(postHandler, { type: 'chat', limit: 20 })
+// Apply rate limiting - wrappers extract params from URL
+export const GET = withRateLimit(
+  async (request: NextRequest) => {
+    const id = request.url.split("/")[5]
+    return getHandler(request, { params: { id } })
+  },
+  { type: "api", limit: 100 }
+)
+
+export const POST = withRateLimit(
+  async (request: NextRequest) => {
+    const id = request.url.split("/")[5]
+    return postHandler(request, { params: { id } })
+  },
+  { type: "chat", limit: 20 }
+)
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
