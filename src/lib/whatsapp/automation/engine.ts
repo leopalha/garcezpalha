@@ -247,7 +247,7 @@ export class WhatsAppAutomationEngine {
     for (const step of flow.steps) {
       // Delay entre steps
       if (step.delaySeconds && step.delaySeconds > 0) {
-        await new Promise((resolve) => setTimeout(resolve, step.delaySeconds * 1000))
+        await new Promise((resolve) => setTimeout(resolve, step.delaySeconds! * 1000))
       }
 
       // Substituir variáveis no message

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { ZodError } from 'zod'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 interface ErrorSummary {
   total: number
@@ -58,6 +59,20 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(errorSummary)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error fetching error summary:', error)
 
     // Return empty summary instead of crashing

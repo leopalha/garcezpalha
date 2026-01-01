@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { AgentStateMachine } from '@/lib/ai/agents/state-machine'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/chat/agent-flow')
+
   try {
     const body = await request.json()
     const { conversationId, message, channel = 'website' } = body
 
     if (!conversationId || !message) {
+      timer.end()
       return NextResponse.json(
         { error: 'conversationId and message are required' },
         { status: 400 }
@@ -19,8 +24,14 @@ export async function POST(request: NextRequest) {
     // Process message through state machine
     const result = await stateMachine.processMessage(conversationId, message)
 
+    const duration = timer.end()
+    trackApiCall('/api/chat/agent-flow', duration, 200, {
+      conversationId,
+      state: result.data.status.state,
+    })
+
     return NextResponse.json({
-      response: result.response,
+      message: result.response, // Changed from 'response' to 'message' for frontend compatibility
       state: result.data.status.state,
       classification: result.data.classification,
       qualification: result.data.qualification,
@@ -29,6 +40,12 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
+    timer.end()
+    trackError(error as Error, {
+      endpoint: '/api/chat/agent-flow',
+      method: 'POST',
+    })
+
     console.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
@@ -42,7 +59,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET method to retrieve conversation state
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const conversationId = searchParams.get('conversationId')
@@ -80,7 +97,7 @@ export async function GET(request: NextRequest) {
 }
 
 // PUT method for manual state transitions (admin only)
-export async function PUT(request: NextRequest) {
+async function putHandler(request: NextRequest) {
   try {
     const body = await request.json()
     const { conversationId, newState, reason } = body
@@ -118,6 +135,11 @@ export async function PUT(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting to all endpoints
+export const POST = withRateLimit(postHandler, { type: 'chat', limit: 20 })
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 50 })
+export const PUT = withRateLimit(putHandler, { type: 'api', limit: 10 })
 
 export const runtime = 'nodejs'
 export const maxDuration = 30

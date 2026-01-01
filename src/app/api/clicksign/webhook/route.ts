@@ -25,6 +25,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createPreference, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { emailService } from '@/lib/email/email-service'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
+import { withRateLimit } from '@/lib/rate-limit'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 /**
@@ -57,7 +58,7 @@ interface ClickSignWebhookPayload {
 /**
  * POST - Receive webhook from ClickSign
  */
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.text()
     const signature = request.headers.get('x-clicksign-signature') || ''
@@ -412,3 +413,6 @@ async function handleDocumentCancelled(payload: ClickSignWebhookPayload) {
  *    - RESEND_API_KEY
  *    - WHATSAPP_ACCESS_TOKEN (optional)
  */
+
+// Apply rate limiting for webhook
+export const POST = withRateLimit(handler, { type: 'webhook', limit: 100 })

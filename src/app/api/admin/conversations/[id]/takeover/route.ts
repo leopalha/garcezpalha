@@ -4,14 +4,22 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
+import { conversationTakeoverSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
-export async function POST(
+async function postHandler(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const conversationId = params.id
+    const rawBody = await request.json()
+
+    // Validate request body with Zod
+    const body = conversationTakeoverSchema.parse(rawBody)
+
     const supabase = await createClient()
 
     // Auth check for admin/lawyer roles
@@ -49,14 +57,14 @@ export async function POST(
         status: {
           state: 'escalated',
           updated_at: new Date().toISOString(),
-          escalation_reason: 'Manual takeover by admin',
+          escalation_reason: body.reason,
         },
         metadata: {
           ...conversation.metadata,
           human_takeover: true,
           taken_over_at: new Date().toISOString(),
-          // TODO: Add user ID when auth is implemented
-          // taken_over_by: user.id,
+          taken_over_by: user.id,
+          notify_user: body.notify,
         },
       })
       .eq('conversation_id', conversationId)
@@ -76,13 +84,30 @@ export async function POST(
       message: 'Conversation taken over successfully',
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[Takeover API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(  async (request: NextRequest) => {    const id = request.url.split("/")[5]    return postHandler(request, { params: { id } })  },  { type: "api", limit: 10 })
 
 export const runtime = 'nodejs'
 export const maxDuration = 30

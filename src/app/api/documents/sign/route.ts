@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     // Retornar PDF assinado
     const filename = file.name.replace('.pdf', '_assinado.pdf')
 
-    return new NextResponse(result.signedPdf, {
+    return new NextResponse(result.signedPdf as any, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',

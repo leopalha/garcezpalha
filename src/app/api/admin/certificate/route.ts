@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { validateCertificate, getCertificateInfo } from '@/lib/signature/gov-br-signer'
+import { ZodError } from 'zod'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -72,6 +73,20 @@ export async function GET() {
         : undefined,
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[Admin] Erro ao verificar certificado:', error)
 
     return NextResponse.json(

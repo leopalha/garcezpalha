@@ -1,16 +1,18 @@
 /**
-// Force dynamic rendering - required for API routes
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
  * API Route: Subscribe to Email Sequence
  * POST /api/email/sequences/subscribe
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
 import type { SequenceTriggerData } from '@/lib/email/sequences/types'
 
-export async function POST(req: NextRequest) {
+// Force dynamic rendering - required for API routes
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+async function postHandler(req: NextRequest) {
   try {
     const body = await req.json()
     const { sequenceId, email, firstName, lastName, customData, userId, leadId, conversationId } =
@@ -48,3 +50,6 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(postHandler, { type: 'api', limit: 20 })

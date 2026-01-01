@@ -112,8 +112,8 @@ export default function WhatsAppConfigPage() {
         })
 
         if (connectResponse.ok) {
-          const data = await connectResponse.json()
-          console.log('Connect response:', data)
+          await connectResponse.json()
+          // QR code connection initiated
         }
       }
 
@@ -200,8 +200,7 @@ export default function WhatsAppConfigPage() {
       })
 
       if (createResponse.ok) {
-        const data = await createResponse.json()
-        console.log('Instance created:', data)
+        await createResponse.json()
         setError('Instância recriada com sucesso! Clique em "Gerar QR Code"')
         await fetchInstanceStatus()
       } else {

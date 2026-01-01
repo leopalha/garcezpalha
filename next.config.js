@@ -1,10 +1,59 @@
+// Sentry configuration
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
   // Do NOT set output - let Vercel auto-detect
+
+  // Enable compression for better performance
+  compress: true,
+
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundle
+
+  // Optimize fonts
+  optimizeFonts: true,
+
+  // Modularize imports for better tree-shaking
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+      skipDefaultConversion: true,
+    },
+  },
+
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
+    },
+    // Optimize CSS for smaller bundles
+    optimizeCss: true,
+    // Optimize package imports for faster dev and smaller bundles
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      'lucide-react',
+      'recharts',
+      '@supabase/supabase-js',
+      'framer-motion',
+      '@tiptap/react',
+      '@tiptap/starter-kit',
+      'react-hook-form',
+      '@tanstack/react-query',
+      'date-fns',
+      'lodash-es',
+    ],
+    // Turbopack optimizations for high-memory machines (32GB)
+    turbo: {
+      // Enable parallel builds
+      resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    },
+    // Cache compiled modules more aggressively
+    cacheHandlers: {
+      // Increase cache size for 32GB RAM
+      memory: {
+        maxSize: 2048, // 2GB cache
+      },
     },
   },
   eslint: {
@@ -25,28 +74,106 @@ const nextConfig = {
         hostname: '**.supabase.co',
       },
     ],
+    // Optimize image loading
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Enable lazy loading by default
+    loader: 'default',
+    // Cache optimized images for 60 days
+    minimumCacheTTL: 60 * 60 * 24 * 60,
   },
-  // Webpack optimization for code splitting
-  webpack: (config, { isServer }) => {
-    // Split chunks for better caching (removed usedExports to fix conflict with cacheUnaffected)
+  // Webpack optimization for code splitting and tree shaking
+  webpack: (config, { isServer, dev }) => {
+    // Faster source maps in development
+    if (dev && !isServer) {
+      config.devtool = 'eval-cheap-module-source-map'
+      // Minimize webpack stats output
+      config.stats = 'minimal'
+    }
+
+    // Production optimizations
+    if (!dev) {
+      // Enable tree shaking
+      config.optimization.providedExports = true
+      config.optimization.usedExports = true
+      config.optimization.sideEffects = true
+
+      // Minimize bundle size
+      config.optimization.minimize = true
+    }
+
+    // Split chunks for better caching and lazy loading
     if (!isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
+          // Framework bundle (React, Next.js)
+          framework: {
+            name: 'framework',
+            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // UI Libraries bundle
+          uiLibs: {
+            name: 'ui-libs',
+            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|framer-motion)[\\/]/,
+            priority: 30,
+            enforce: true,
+          },
+          // Tiptap editor bundle (only loaded when needed)
+          editor: {
+            name: 'editor',
+            test: /[\\/]node_modules[\\/](@tiptap)[\\/]/,
+            priority: 25,
+            enforce: true,
+          },
+          // Charts bundle (only loaded when needed)
+          charts: {
+            name: 'charts',
+            test: /[\\/]node_modules[\\/](recharts|d3-)[\\/]/,
+            priority: 25,
+            enforce: true,
+          },
+          // Supabase bundle
+          supabase: {
+            name: 'supabase',
+            test: /[\\/]node_modules[\\/](@supabase)[\\/]/,
+            priority: 20,
+            enforce: true,
+          },
+          // Internal components
           chat: {
             name: 'chat',
             test: /[\\/]src[\\/]components[\\/]chat[\\/]/,
-            priority: 10,
+            priority: 15,
           },
           ui: {
             name: 'ui',
             test: /[\\/]src[\\/]components[\\/]ui[\\/]/,
-            priority: 9,
+            priority: 14,
           },
           agents: {
             name: 'agents',
             test: /[\\/]src[\\/]lib[\\/]ai[\\/]agents[\\/]/,
-            priority: 8,
+            priority: 13,
+          },
+          // Default vendors
+          vendors: {
+            name: 'vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+          // Common components
+          common: {
+            name: 'common',
+            minChunks: 2,
+            priority: 5,
+            reuseExistingChunk: true,
           },
         },
       }
@@ -246,4 +373,34 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+// Sentry webpack plugin options
+const sentryWebpackPluginOptions = {
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options
+
+  // Suppresses source map uploading logs during build
+  silent: true,
+  org: process.env.SENTRY_ORG || 'garcezpalha',
+  project: process.env.SENTRY_PROJECT || 'garcezpalha-platform',
+
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
+
+  // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers
+  // Note: This can increase server load significantly if you get lots of traffic.
+  tunnelRoute: '/monitoring',
+
+  // Hides source maps from generated client bundles
+  hideSourceMaps: true,
+
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+
+  // Enables automatic instrumentation of Vercel Cron Monitors
+  automaticVercelMonitors: true,
+}
+
+// Make sure adding Sentry options is the last code to run before exporting
+module.exports = process.env.SENTRY_DSN
+  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+  : nextConfig

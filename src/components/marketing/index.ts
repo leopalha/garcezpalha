@@ -3,6 +3,9 @@
 
 export { DualHero } from './dual-hero'
 export { HeroSection } from './HeroSection'
+export { ImprovedHero } from './ImprovedHero'
+export { ClientsSection } from './ClientsSection'
+export { LawyersPlatformSection } from './LawyersPlatformSection'
 export { ProductsCatalog } from './ProductsCatalog'
 export { Services } from './Services'
 export { HowItWorks } from './HowItWorks'

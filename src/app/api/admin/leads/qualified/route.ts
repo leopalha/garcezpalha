@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { qualifiedLeadCreateSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 /**
  * Database type definitions
@@ -107,67 +110,36 @@ export async function GET(request: NextRequest) {
  * Create a new qualified lead
  */
 export async function POST(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/admin/leads/qualified')
+
   try {
     const supabase = await createClient()
 
-    // Parse request body
-    const body = await request.json()
-    const {
-      clientName,
-      phone,
-      email,
-      productId,
-      productName,
-      score,
-      answers,
-      source,
-      sessionId,
-      metadata,
-    } = body
-
-    // Validate required fields
-    if (!phone || !productId || !productName || !score || !sessionId) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Validate score structure
-    if (
-      typeof score.total !== 'number' ||
-      typeof score.urgency !== 'number' ||
-      typeof score.probability !== 'number' ||
-      typeof score.complexity !== 'number' ||
-      !score.category
-    ) {
-      return NextResponse.json(
-        { error: 'Invalid score structure' },
-        { status: 400 }
-      )
-    }
+    // Parse and validate request body with Zod
+    const rawBody = await request.json()
+    const body = qualifiedLeadCreateSchema.parse(rawBody)
 
     // Insert into database
     const { data: lead, error } = await supabase
       .from('qualified_leads')
       .insert([
         {
-          client_name: clientName,
-          phone,
-          email,
-          product_id: productId,
-          product_name: productName,
-          score_total: score.total,
-          score_urgency: score.urgency,
-          score_probability: score.probability,
-          score_complexity: score.complexity,
-          category: score.category,
-          answers: answers || [],
-          reasoning: score.reasoning || [],
-          source,
-          session_id: sessionId,
+          client_name: body.clientName,
+          phone: body.phone,
+          email: body.email,
+          product_id: body.productId,
+          product_name: body.productName,
+          score_total: body.score.total,
+          score_urgency: body.score.urgency,
+          score_probability: body.score.probability,
+          score_complexity: body.score.complexity,
+          category: body.score.category,
+          answers: body.answers || [],
+          reasoning: body.score.reasoning || [],
+          source: body.source,
+          session_id: body.sessionId,
           status: 'new',
-          metadata: metadata || {},
+          metadata: body.metadata || {},
         },
       ])
       .select()
@@ -200,14 +172,36 @@ export async function POST(request: NextRequest) {
       status: lead.status,
     }
 
+    const duration = timer.end()
+    trackApiCall('/api/admin/leads/qualified', duration, 201, { leadId: lead.id, category: lead.category })
+    trackConversion('qualified_lead_created', undefined, { category: lead.category, productId: lead.product_id })
+
     return NextResponse.json(
       { lead: formattedLead, message: 'Lead created successfully' },
       { status: 201 }
     )
   } catch (error) {
+    timer.end()
+
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      trackError(error as Error, { endpoint: '/api/admin/leads/qualified', type: 'validation' })
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
+    trackError(error as Error, { endpoint: '/api/admin/leads/qualified', method: 'POST' })
     console.error('[API /admin/leads/qualified POST] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

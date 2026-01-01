@@ -170,7 +170,6 @@ export async function generateContractForConversation(
         name: input.clientName,
         phone_number: input.clientPhone,
         auths: input.clientPhone ? ['email', 'sms'] : ['email'],
-        name: input.clientName,
         documentation: input.clientCPF,
         has_documentation: true,
       },

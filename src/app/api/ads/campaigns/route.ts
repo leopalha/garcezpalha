@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import { createAdsAgent } from '@/lib/ai/agents/marketing/ads-agent'
 
@@ -23,7 +24,7 @@ interface CreateCampaignRequest {
 }
 
 // POST - Create new campaign
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     const body = await request.json() as CreateCampaignRequest
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET - List campaigns
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const platform = searchParams.get('platform')
@@ -136,3 +137,7 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// Apply rate limiting to all endpoints
+export const POST = withRateLimit(postHandler, { type: 'api', limit: 10 })
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 50 })

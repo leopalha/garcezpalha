@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
 
 /**
  * GET /api/conversations
@@ -15,7 +14,7 @@ import { cookies } from 'next/headers'
  */
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient()
 
     // Check authentication
     const {
@@ -77,7 +76,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch last message for each conversation
     const conversationsWithMessages = await Promise.all(
-      (conversations || []).map(async (conv: any) => {
+      ((conversations as any) || []).map(async (conv: any) => {
         const { data: lastMessage } = await supabase
           .from('messages')
           .select('content, created_at')
@@ -86,7 +85,7 @@ export async function GET(request: NextRequest) {
           .limit(1)
           .single()
 
-        const { data: messageCount } = await supabase
+        const { data: messageCount, count: msgCount } = await supabase
           .from('messages')
           .select('id', { count: 'exact', head: true })
           .eq('conversation_id', conv.id)
@@ -112,7 +111,7 @@ export async function GET(request: NextRequest) {
           last_message: lastMessage?.content || '',
           last_message_at: lastMessage?.created_at || conv.created_at,
           created_at: conv.created_at,
-          message_count: messageCount?.count || 0,
+          message_count: msgCount || 0,
           channel: conv.channel,
           needs_attention: conv.needs_attention,
         }

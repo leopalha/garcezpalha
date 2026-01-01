@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 
-export async function POST(request: NextRequest) {
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token é obrigatório'),
+  password: z.string().min(8, 'Senha deve ter no mínimo 8 caracteres'),
+})
+
+async function handler(request: NextRequest) {
   try {
-    const { token, password } = await request.json()
-
-    if (!token || !password) {
-      return NextResponse.json(
-        { error: 'Token e senha são obrigatórios' },
-        { status: 400 }
-      )
-    }
-
-    if (password.length < 8) {
-      return NextResponse.json(
-        { error: 'Senha deve ter no mínimo 8 caracteres' },
-        { status: 400 }
-      )
-    }
+    const { token, password } = (request as any).validatedData
 
     // Hash the token to compare with database
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
@@ -84,3 +78,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation and rate limiting: 5 reset password attempts per 15 minutes
+export const POST = withRateLimit(
+  withValidation(resetPasswordSchema, handler, { sanitize: true }),
+  { type: 'auth', limit: 5 }
+)

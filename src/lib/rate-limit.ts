@@ -51,6 +51,9 @@ export const rateLimiters = {
   auth: new RateLimiter({ uniqueTokenPerInterval: 500, interval: 900000 }), // 15 min window
   contact: new RateLimiter({ uniqueTokenPerInterval: 500, interval: 3600000 }), // 1 hour window
   chat: new RateLimiter({ uniqueTokenPerInterval: 500, interval: 60000 }), // 60 sec window
+  webhook: new RateLimiter({ uniqueTokenPerInterval: 500, interval: 60000 }), // 60 req/min
+  cron: new RateLimiter({ uniqueTokenPerInterval: 100, interval: 3600000 }), // 1 hour window
+  checkout: new RateLimiter({ uniqueTokenPerInterval: 500, interval: 60000 }), // 60 req/min
 }
 
 // Get client identifier from request
@@ -86,7 +89,7 @@ function getClientId(request: NextRequest): string {
 export function withRateLimit(
   handler: (request: NextRequest) => Promise<NextResponse>,
   options: {
-    type?: 'api' | 'auth' | 'contact' | 'chat'
+    type?: 'api' | 'auth' | 'contact' | 'chat' | 'webhook' | 'cron' | 'checkout'
     limit?: number
   } = {}
 ) {
@@ -138,6 +141,12 @@ function getDefaultLimit(type: string): number {
       return 3 // 3 contact form submissions per hour
     case 'chat':
       return 20 // 20 chat messages per minute
+    case 'webhook':
+      return 100 // 100 webhook calls per minute
+    case 'cron':
+      return 10 // 10 cron executions per hour
+    case 'checkout':
+      return 10 // 10 checkout attempts per minute
     default:
       return 60
   }
@@ -146,7 +155,7 @@ function getDefaultLimit(type: string): number {
 // Simple rate limit check for use in API routes
 export function checkRateLimit(
   request: NextRequest,
-  type: 'api' | 'auth' | 'contact' | 'chat' = 'api',
+  type: 'api' | 'auth' | 'contact' | 'chat' | 'webhook' | 'cron' | 'checkout' = 'api',
   customLimit?: number
 ): {
   success: boolean

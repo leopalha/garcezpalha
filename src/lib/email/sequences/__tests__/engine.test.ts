@@ -99,7 +99,7 @@ describe('EmailSequenceEngine', () => {
         text: 'Olá {{firstName}} {{lastName}}',
       }
 
-      const event = await engine.sendSequenceEmail(subscription, step, template)
+      const event = await (engine as any).sendSequenceEmail(subscription, step, template)
 
       expect(event).toBeDefined()
       expect(event.type).toBe('sent')
@@ -133,7 +133,7 @@ describe('EmailSequenceEngine', () => {
       // Mock console.log to capture the replaced content
       const consoleSpy = vi.spyOn(console, 'log')
 
-      await engine.sendSequenceEmail(subscription, step, template)
+      await (engine as any).sendSequenceEmail(subscription, step, template)
 
       // Variables should be replaced
       expect(consoleSpy).toHaveBeenCalled()
@@ -164,7 +164,7 @@ describe('EmailSequenceEngine', () => {
       }) as any)
 
       const newEngine = new EmailSequenceEngine()
-      const event = await newEngine.sendSequenceEmail(subscription, step, template)
+      const event = await (newEngine as any).sendSequenceEmail(subscription, step, template)
 
       expect(event.type).toBe('bounced')
       expect(event.metadata?.error).toBe('Email sending failed')
@@ -186,7 +186,7 @@ describe('EmailSequenceEngine', () => {
         html: '<p>{{unsubscribeLink}}</p>',
       }
 
-      const event = await engine.sendSequenceEmail(subscription, step, template)
+      const event = await (engine as any).sendSequenceEmail(subscription, step, template)
 
       expect(event.type).toBe('sent')
       // Unsubscribe link should be replaced in template
@@ -277,7 +277,7 @@ describe('EmailSequenceEngine', () => {
         stepId: 'step-1',
       }
 
-      await expect(engine.handleWebhook('resend', webhookEvent)).resolves.toBeUndefined()
+      await expect((engine as any).handleWebhook('resend', webhookEvent)).resolves.toBeUndefined()
     })
 
     it('should log webhook events', async () => {
@@ -291,7 +291,7 @@ describe('EmailSequenceEngine', () => {
         link: 'https://example.com',
       }
 
-      await engine.handleWebhook('resend', webhookEvent)
+      await (engine as any).handleWebhook('resend', webhookEvent)
 
       expect(consoleSpy).toHaveBeenCalledWith(
         '[EmailSequenceEngine] Webhook received:',
@@ -328,7 +328,7 @@ describe('EmailSequenceEngine', () => {
         html: '<p>Olá {{firstName}} {{lastName}}</p><p>Produto: {{produto}}</p><p>Valor: {{valor}}</p>',
       }
 
-      const event = await engine.sendSequenceEmail(subscription, step, template)
+      const event = await (engine as any).sendSequenceEmail(subscription, step, template)
 
       expect(event.type).toBe('sent')
     })
@@ -354,7 +354,7 @@ describe('EmailSequenceEngine', () => {
         html: '<p>Test</p>',
       }
 
-      const event = await engine.sendSequenceEmail(subscription, step, template)
+      const event = await (engine as any).sendSequenceEmail(subscription, step, template)
 
       expect(event.type).toBe('sent')
       // Should replace missing variables with empty string

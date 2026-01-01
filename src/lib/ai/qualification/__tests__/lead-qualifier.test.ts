@@ -2,11 +2,12 @@
  * Lead Qualifier Unit Tests
  */
 
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { LeadQualifier, createLeadQualifier, resumeLeadQualification } from '../lead-qualifier'
 import type { ProductQualificationConfig, QualificationContext, QualificationQuestion, ScoringRule } from '../types'
 
 // Mock uuid
-jest.mock('uuid', () => ({
+vi.mock('uuid', () => ({
   v4: () => 'test-lead-id-12345',
 }))
 

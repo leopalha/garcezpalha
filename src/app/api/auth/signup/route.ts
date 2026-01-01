@@ -3,30 +3,24 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 const signupSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
-  email: z.string().email('Email inválido'),
+  email: z.string().email('Email inválido').toLowerCase(),
   password: z.string().min(8, 'Senha deve ter no mínimo 8 caracteres'),
   phone: z.string().optional(),
   document: z.string().optional(), // CPF/CNPJ
 })
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    
-    // Validate input
-    const validation = signupSchema.safeParse(body)
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.issues[0].message },
-        { status: 400 }
-      )
-    }
+async function handler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/auth/signup')
 
-    const { name, email, password, phone, document } = validation.data
+  try {
+    const { name, email, password, phone, document } = (request as any).validatedData
 
     // Create Supabase client
     const supabase = await createClient()
@@ -98,6 +92,10 @@ export async function POST(request: NextRequest) {
 
     console.log('[Signup] Verification email sent to:', email)
 
+    const duration = timer.end()
+    trackApiCall('/api/auth/signup', duration, 200, { userId: newUser.id })
+    trackConversion('user_signup', undefined, { role: newUser.role })
+
     return NextResponse.json({
       success: true,
       user: {
@@ -109,6 +107,8 @@ export async function POST(request: NextRequest) {
       message: 'Cadastro realizado! Enviamos um email de verificação. Confira sua caixa de entrada.',
     })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/auth/signup', method: 'POST' })
     console.error('Signup error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
@@ -116,3 +116,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation, sanitization, and rate limiting
+export const POST = withRateLimit(
+  withValidation(signupSchema, handler, { sanitize: true }),
+  { type: 'auth', limit: 5 }
+)

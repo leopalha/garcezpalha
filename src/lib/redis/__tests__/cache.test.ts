@@ -1,12 +1,13 @@
 // Redis Cache Helpers - Unit Tests
 // Garcez Palha - MANUS v7.0 (29/12/2025)
 
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getCached, setCache, getCache, invalidateCache, TTL_STRATEGY } from '../cache'
 import { getRedisClient } from '../client'
 
 // Mock Redis client
-jest.mock('../client', () => ({
-  getRedisClient: jest.fn(),
+vi.mock('../client', () => ({
+  getRedisClient: vi.fn(),
 }))
 
 describe('Redis Cache Helpers', () => {
@@ -16,18 +17,18 @@ describe('Redis Cache Helpers', () => {
     // Reset mocks
     mockRedis = {
       status: 'ready',
-      get: jest.fn(),
-      setex: jest.fn().mockResolvedValue('OK'),
-      del: jest.fn().mockResolvedValue(1),
-      keys: jest.fn().mockResolvedValue([]),
-      flushdb: jest.fn().mockResolvedValue('OK'),
+      get: vi.fn(),
+      setex: vi.fn().mockResolvedValue('OK'),
+      del: vi.fn().mockResolvedValue(1),
+      keys: vi.fn().mockResolvedValue([]),
+      flushdb: vi.fn().mockResolvedValue('OK'),
     }
 
-    ;(getRedisClient as jest.Mock).mockReturnValue(mockRedis)
+    ;(getRedisClient as any).mockReturnValue(mockRedis)
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('getCached', () => {
@@ -35,7 +36,7 @@ describe('Redis Cache Helpers', () => {
       const cachedData = { id: 1, name: 'Test' }
       mockRedis.get.mockResolvedValue(JSON.stringify(cachedData))
 
-      const fallback = jest.fn()
+      const fallback = vi.fn()
       const result = await getCached('test:key', fallback, { ttl: 60 })
 
       expect(result).toEqual(cachedData)
@@ -47,7 +48,7 @@ describe('Redis Cache Helpers', () => {
       mockRedis.get.mockResolvedValue(null)
 
       const fallbackData = { id: 2, name: 'Fallback' }
-      const fallback = jest.fn().mockResolvedValue(fallbackData)
+      const fallback = vi.fn().mockResolvedValue(fallbackData)
 
       const result = await getCached('test:key', fallback, { ttl: 60 })
 
@@ -65,7 +66,7 @@ describe('Redis Cache Helpers', () => {
       mockRedis.get.mockResolvedValue(null)
 
       const fallbackData = { test: 'data' }
-      const fallback = jest.fn().mockResolvedValue(fallbackData)
+      const fallback = vi.fn().mockResolvedValue(fallbackData)
 
       await getCached('test:key', fallback)
 
@@ -79,7 +80,7 @@ describe('Redis Cache Helpers', () => {
     it('should add prefix when provided', async () => {
       mockRedis.get.mockResolvedValue(null)
 
-      const fallback = jest.fn().mockResolvedValue({ test: 'data' })
+      const fallback = vi.fn().mockResolvedValue({ test: 'data' })
 
       await getCached('key', fallback, { prefix: 'product' })
 
@@ -90,7 +91,7 @@ describe('Redis Cache Helpers', () => {
       mockRedis.get.mockRejectedValue(new Error('Redis error'))
 
       const fallbackData = { id: 3, name: 'Error fallback' }
-      const fallback = jest.fn().mockResolvedValue(fallbackData)
+      const fallback = vi.fn().mockResolvedValue(fallbackData)
 
       const result = await getCached('test:key', fallback)
 
@@ -102,7 +103,7 @@ describe('Redis Cache Helpers', () => {
       mockRedis.status = 'disconnected'
 
       const fallbackData = { id: 4, name: 'Not ready fallback' }
-      const fallback = jest.fn().mockResolvedValue(fallbackData)
+      const fallback = vi.fn().mockResolvedValue(fallbackData)
 
       const result = await getCached('test:key', fallback)
 

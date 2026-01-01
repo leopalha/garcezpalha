@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { ZodError } from 'zod'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 interface AnalyticsOverview {
   pageViews: {
@@ -26,6 +28,8 @@ interface AnalyticsOverview {
 }
 
 export async function GET(request: NextRequest) {
+  const timer = new PerformanceTimer('GET /api/admin/analytics/overview')
+
   try {
     const supabase = await createClient()
 
@@ -150,8 +154,38 @@ export async function GET(request: NextRequest) {
       topPages,
     }
 
+    const duration = timer.end()
+    trackApiCall('/api/admin/analytics/overview', duration, 200, {
+      dataPoints: analyticsData.topPages.length,
+    })
+
     return NextResponse.json(analyticsData)
   } catch (error) {
+    timer.end()
+
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      trackError(error as Error, {
+        endpoint: '/api/admin/analytics/overview',
+        type: 'validation',
+      })
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
+    trackError(error as Error, {
+      endpoint: '/api/admin/analytics/overview',
+      method: 'GET',
+    })
+
     console.error('Error fetching analytics overview:', error)
     return NextResponse.json(
       { error: 'Failed to fetch analytics data' },

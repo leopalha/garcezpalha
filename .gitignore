@@ -1,7 +1,10 @@
 nul
 node_modules/
 .next/
+.env
 .env.local
+.env.development
+.env.production
 .n8n/
 .claude/settings.local.json
 

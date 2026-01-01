@@ -455,7 +455,7 @@ describe('ReportGeneratorEngine', () => {
       const report = await generator.generateReport(config.id)
 
       if (report.data.monthlyBreakdown) {
-        const sumOfMonths = report.data.monthlyBreakdown.reduce(
+        const sumOfMonths = (report.data.monthlyBreakdown as any[]).reduce(
           (sum: number, month: any) => sum + month.revenue,
           0
         )
@@ -485,7 +485,7 @@ describe('ReportGeneratorEngine', () => {
       const report = await generator.generateReport(mockConfig.id)
 
       if (report.data.conversionRate) {
-        const formatted = report.data.conversionRate.toFixed(2)
+        const formatted = (report.data.conversionRate as number).toFixed(2)
         expect(formatted).toMatch(/^\d+\.\d{2}$/)
       }
     })

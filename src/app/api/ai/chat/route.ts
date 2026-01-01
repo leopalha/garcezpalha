@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
 import { processQuery } from '@/lib/ai/agents/agent-orchestrator'
+
+// AI chat schema
+const aiChatSchema = z.object({
+  message: z.string().min(1, 'Message é obrigatória').max(2000, 'Mensagem muito longa'),
+  history: z.array(z.object({
+    role: z.enum(['user', 'assistant', 'system']),
+    content: z.string(),
+  })).optional(),
+})
 
 /**
  * Universal AI Chat Endpoint
@@ -12,16 +24,9 @@ import { processQuery } from '@/lib/ai/agents/agent-orchestrator'
  *   "history": [] // optional conversation history
  * }
  */
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   try {
-    const { message, history } = await req.json()
-
-    if (!message || typeof message !== 'string') {
-      return NextResponse.json(
-        { error: 'Message is required and must be a string' },
-        { status: 400 }
-      )
-    }
+    const { message, history } = (req as any).validatedData
 
     // Process query through orchestrator
     const response = await processQuery(message, history || [])
@@ -48,7 +53,7 @@ export async function POST(req: NextRequest) {
 /**
  * Health check endpoint
  */
-export async function GET() {
+async function getHandler() {
   return NextResponse.json({
     status: 'ok',
     service: 'AI Chat API',
@@ -64,3 +69,11 @@ export async function GET() {
     ],
   })
 }
+
+// Apply validation, sanitization, and rate limiting
+export const POST = withRateLimit(
+  withValidation(aiChatSchema, postHandler, { sanitize: true }),
+  { type: 'chat', limit: 20 }
+)
+
+export const GET = withRateLimit(getHandler, { type: 'api', limit: 100 })

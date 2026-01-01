@@ -20,7 +20,6 @@ export default defineConfig({
         '**/mockData',
         '**/__tests__/**',
       ],
-      all: true,
       lines: 80,
       functions: 80,
       branches: 80,

@@ -33,7 +33,7 @@ export function CheckoutModalExample() {
           open={isOpen}
           onOpenChange={setIsOpen}
           onSuccess={() => {
-            console.log('Checkout completo!')
+            // Checkout completed successfully
           }}
         />
       </div>
@@ -53,8 +53,7 @@ export function CheckoutModalExample() {
           onOpenChange={setIsOpenWithService}
           serviceId="desbloqueio-conta"
           onSuccess={() => {
-            console.log('Desbloqueio de Conta contratado!')
-            // Aqui você pode fazer ações adicionais após o checkout
+            // Service contracted successfully - additional actions can be added here
           }}
         />
       </div>
@@ -96,7 +95,6 @@ function ServiceCard() {
         onOpenChange={setIsCheckoutOpen}
         serviceId="desbloqueio-conta"
         onSuccess={() => {
-          console.log('Serviço contratado com sucesso!')
           setIsCheckoutOpen(false)
         }}
       />

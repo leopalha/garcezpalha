@@ -13,6 +13,7 @@ import {
   Activity,
   Download,
   Clock,
+  RefreshCw,
 } from 'lucide-react'
 
 // TypeScript Types

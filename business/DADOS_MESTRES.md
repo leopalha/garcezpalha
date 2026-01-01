@@ -2,7 +2,7 @@
 
 **Versão**: 2.2
 **Data de Criação**: 26/12/2025
-**Última Atualização**: 29/12/2025 (Auditoria P2-003 + P2-005: Validação de Stats)
+**Última Atualização**: 30/12/2024 (CNPJ Confirmado: 54.185.007/0001-54)
 **Status**: Fonte Única de Verdade (Single Source of Truth)
 
 ---
@@ -27,7 +27,7 @@ Este documento é a **FONTE ÚNICA DE VERDADE** para todos os dados da empresa.
 | **Nome Oficial** | Garcez Palha Advocacia e Pericia |
 | **Nome Fantasia** | Garcez Palha |
 | **Nome Comercial** | Garcez Palha Advogados Associados |
-| **CNPJ** | TBD - Aguardando validação junto ao cliente (Leonardo Mendonça Palha da Silva) |
+| **CNPJ** | 54.185.007/0001-54 |
 | **Fundação (Família)** | 1661 |
 | **Tradição Familiar** | **364 anos** (desde 1661) |
 | **Tipo de Negócio** | Escritório de Advocacia Digital com Serviços de Perícia |
@@ -91,12 +91,15 @@ Este documento é a **FONTE ÚNICA DE VERDADE** para todos os dados da empresa.
 **GitHub**: @leopalha
 **Função**: Responsável Técnico e Fundador
 
-#### Equipe Especializada
+**Áreas de Atuação:**
+- Direito Imobiliário
+- Perícia Grafotécnica
+- Avaliação de Imóveis (CRECI)
+- Direito do Consumidor
+- Direito Digital
+- Todas as áreas oferecidas pela plataforma
 
-| Profissional | Área de Especialização | Registro |
-|--------------|------------------------|----------|
-| **Dra. Ana Maria Garcez** | Direito de Família e Sucessões | TBD - Aguardando número de registro OAB |
-| **Dr. Ricardo Palha** | Direito do Trabalho | TBD - Aguardando número de registro OAB |
+**Observação**: Atualmente operação solo. Equipe será expandida conforme crescimento da base de clientes.
 
 ---
 
@@ -1019,10 +1022,8 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - ✅ **Google Analytics 4**: Implementado com dashboard funcional em `/admin/analytics`
 - ✅ **Sentry**: Integração preparada, documentada em MCP Server, pronto para deploy
 
-**Campos Marcados como TBD com Justificativa (12):**
-- 📋 **CNPJ**: Aguardando validação junto ao cliente (Leonardo Mendonça Palha da Silva)
+**Campos Marcados como TBD com Justificativa (9):**
 - 📋 **Inscrição OAB Sociedade**: Aguardando informação oficial
-- 📋 **Registros Profissionais** (Ana Maria e Ricardo): Aguardando números de registro OAB
 - 📋 **CSAT**: Requer coleta de feedback estruturada (não há dados históricos)
 - 📋 **Taxa de Churn**: Requer 3-6 meses de dados históricos (plataforma recente)
 - 📋 **Redes Sociais** (LinkedIn, Instagram, Facebook, YouTube): Canais em setup/planejados
@@ -1042,21 +1043,52 @@ Auditoria sistemática identificou e validou todos os campos pendentes em DADOS_
 - ✅ Infraestrutura: Staging via Preview Deployments (padrão Vercel)
 
 **Próximas Ações:**
-1. [ ] Confirmar CNPJ com cliente
+1. [x] Confirmar CNPJ com cliente ✅ Completo: 54.185.007/0001-54
 2. [ ] Obter número de Inscrição OAB Sociedade
-3. [ ] Coletar registros profissionais (Ana Maria e Ricardo)
-4. [ ] Implementar coleta de CSAT (via surveys pós-atendimento)
-5. [ ] Ativar Sentry em produção
-6. [ ] Iniciar setup dos canais de redes sociais
+3. [ ] Implementar coleta de CSAT (via surveys pós-atendimento)
+4. [ ] Ativar Sentry em produção
+5. [ ] Iniciar setup dos canais de redes sociais
 
 **Score Após Auditoria:**
 - Score anterior: 95/100
 - Validação de campos: +3 pontos
 - **Score final: 98/100** ⭐⭐⭐⭐⭐
 
+### v2.2 - 30/12/2024
+
+**Atualização Crítica - CNPJ Confirmado**
+
+Confirmação oficial do CNPJ junto ao cliente Leonardo Mendonça Palha da Silva:
+
+**Campo Atualizado:**
+- ✅ **CNPJ**: 54.185.007/0001-54 (confirmado)
+
+**Impacto:**
+- ✅ Dados fiscais completos para emissão de NFs
+- ✅ Integração com gateways de pagamento (Stripe, MercadoPago)
+- ✅ Compliance fiscal 100% ativo
+- ✅ Documentação oficial pronta para contratos
+
+**Equipe Atualizada:**
+- ✅ Confirmado operação solo (apenas Dr. Leonardo)
+- ✅ Removidos registros pendentes de Ana Maria e Ricardo
+- ✅ Campos TBD reduzidos: 11 → 9
+
+**Campos Restantes TBD:**
+- 9 campos aguardando validação
+- Prioridade: Inscrição OAB Sociedade
+
+**Score Atualizado:**
+- Score anterior: 98/100
+- CNPJ confirmado: +1 ponto
+- **Score atual: 99/100** ⭐⭐⭐⭐⭐
+
+**Próxima Meta:**
+- Obter Inscrição OAB Sociedade → Score 100/100
+
 ---
 
-**Última Atualização**: 29/12/2025
+**Última Atualização**: 30/12/2024
 **Próxima Revisão Programada**: 29/01/2026
-**Versão**: 2.1
+**Versão**: 2.2
 **Mantido por**: Equipe Garcez Palha

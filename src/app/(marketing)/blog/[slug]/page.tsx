@@ -17,7 +17,8 @@ import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react'
 import { getPostBySlug, getAllPostSlugs, getRelatedPosts } from '@/lib/blog/get-posts'
 import { MDXComponents } from '@/components/blog/mdx-components'
 
-export const dynamic = 'force-dynamic'
+// Enable ISR with 2 hour revalidation
+export const revalidate = 7200 // Revalidate every 2 hours
 
 interface PageProps {
   params: {
@@ -25,9 +26,38 @@ interface PageProps {
   }
 }
 
-// Generate static params for all blog posts
+// Generate static params for all blog posts at build time
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs()
+  return slugs.map((slug) => ({
+    slug,
+  }))
+}
 
 // Generate metadata for SEO
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug)
+
+  if (!post) {
+    return {
+      title: 'Post não encontrado',
+    }
+  }
+
+  return {
+    title: `${post.title} - Garcez Palha`,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      images: [post.image.url],
+      type: 'article',
+      publishedTime: post.datePublished,
+      modifiedTime: post.dateModified,
+      authors: [post.author],
+    },
+  }
+}
 
 export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(params.slug)

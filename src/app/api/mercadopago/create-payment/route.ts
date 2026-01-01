@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 
 const createPaymentSchema = z.object({
   serviceId: z.string(),
@@ -15,8 +17,29 @@ const createPaymentSchema = z.object({
   urgency: z.enum(['normal', 'urgent']).default('normal'),
 })
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
+    // Authentication check
+    const supabase = await createClient()
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Get user to validate tenant_id
+    const { data: user } = await supabase
+      .from('users')
+      .select('id, tenant_id')
+      .eq('id', session.user.id)
+      .single()
+
+    if (!user || !user.tenant_id) {
+      return NextResponse.json({ error: 'User or tenant not found' }, { status: 404 })
+    }
+
     if (!isMercadoPagoConfigured() || !paymentClient) {
       return NextResponse.json(
         { error: 'MercadoPago não está configurado' },
@@ -24,8 +47,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const data = createPaymentSchema.parse(body)
+    const data = (request as any).validatedData
 
     // Create PIX payment
     const payment = await paymentClient.create({
@@ -58,11 +80,12 @@ export async function POST(request: NextRequest) {
     const qrCode = pixData.qr_code
     const qrCodeBase64 = pixData.qr_code_base64
 
-    // Save order to database
-    const supabase = await createClient()
+    // Save order to database with tenant isolation
     const { data: order, error: dbError } = await supabase
       .from('checkout_orders')
       .insert({
+        tenant_id: user.tenant_id,
+        user_id: session.user.id,
         service_id: data.serviceId,
         service_name: data.serviceName,
         customer_name: data.customerName,
@@ -97,23 +120,18 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('MercadoPago payment creation error:', error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Dados inválidos',
-          details: error.issues,
-        },
-        { status: 400 }
-      )
-    }
-
     return NextResponse.json(
       {
         error: 'Erro ao criar pagamento PIX',
-        message: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Erro desconhecido',
+        message: error instanceof Error ? error.message : 'Erro desconhecido',
       },
       { status: 500 }
     )
   }
 }
+
+// Apply validation and rate limiting
+export const POST = withRateLimit(
+  withValidation(createPaymentSchema, handler, { sanitize: true }),
+  { type: 'checkout', limit: 10 }
+)

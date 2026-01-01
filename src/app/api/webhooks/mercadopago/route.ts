@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
+import { withRateLimit } from '@/lib/rate-limit'
 import { processMercadoPagoPaymentWebhook } from '@/lib/workflows/financeiro-flow'
 
 // Supabase admin client
@@ -66,7 +67,7 @@ function verifySignature(
   return calculatedSignature === v1
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
   const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET
 
@@ -490,3 +491,6 @@ async function handlePlanEvent(payload: MPWebhookPayload, accessToken: string) {
 
   // Handle plan changes
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(handler, { type: 'webhook', limit: 100 })

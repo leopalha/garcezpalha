@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { analyticsSourceQuerySchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 interface SourcePerformance {
   source: string
@@ -35,7 +37,13 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
     const { searchParams } = new URL(request.url)
-    const days = parseInt(searchParams.get('days') || '30')
+
+    // Validate query parameters with Zod
+    const queryParams = analyticsSourceQuerySchema.parse({
+      days: searchParams.get('days') || '30'
+    })
+
+    const days = parseInt(queryParams.days)
 
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)
@@ -156,6 +164,20 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error fetching source performance:', error)
     return NextResponse.json(
       { error: 'Failed to fetch source performance' },

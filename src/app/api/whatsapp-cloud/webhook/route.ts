@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { whatsappMessageHandler } from '@/lib/whatsapp/message-handler'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import type { WhatsAppIncomingMessage } from '@/lib/whatsapp/types'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
 /**
  * WhatsApp Cloud API webhook type definitions
@@ -68,6 +69,8 @@ export async function GET(request: NextRequest) {
  * - Follow-up scheduling
  */
 export async function POST(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/whatsapp-cloud/webhook')
+
   try {
     const body = await request.json()
 
@@ -114,8 +117,20 @@ export async function POST(request: NextRequest) {
 
     // Return 200 OK immediately to acknowledge receipt
     // Meta expects response within 20 seconds
+    const duration = timer.end()
+    trackApiCall('/api/whatsapp-cloud/webhook', duration, 200, {
+      hasMessage: !!value?.messages,
+      hasStatus: !!value?.statuses,
+    })
+
     return NextResponse.json({ success: true })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, {
+      endpoint: '/api/whatsapp-cloud/webhook',
+      method: 'POST',
+    })
+
     console.error('[WhatsApp Webhook] Error:', error)
     // Still return 200 to avoid Meta retrying
     return NextResponse.json({ success: false, error: 'Internal error' })

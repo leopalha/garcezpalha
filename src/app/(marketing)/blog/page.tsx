@@ -10,8 +10,13 @@ import { BLOG_CATEGORIES } from '@/lib/blog/types'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-export const dynamic = 'force-dynamic'
+// Enable ISR with 2 hour revalidation for blog listing
+export const revalidate = 7200 // Revalidate every 2 hours
 
+export const metadata = {
+  title: 'Blog - Garcez Palha',
+  description: 'Insights, guias e novidades sobre direito, perícia e tecnologia jurídica',
+}
 
 export default async function BlogPage() {
   const posts = await getAllPosts()

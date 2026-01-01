@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
 import { createClient } from '@supabase/supabase-js'
+import { wrapWithDisclaimer } from '@/lib/ai/disclaimer'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -18,10 +20,7 @@ const chatMessageSchema = z.object({
 
 async function handleChat(request: NextRequest) {
   try {
-    const body = await request.json()
-
-    // Validate input
-    const { message, threadId } = chatMessageSchema.parse(body)
+    const { message, threadId } = (request as any).validatedData
 
     // Check if AI is configured (OpenAI or OpenRouter)
     const aiConfigured = Boolean(
@@ -58,8 +57,11 @@ async function handleChat(request: NextRequest) {
         response = demoResponses.horário
       }
 
+      // Add OAB disclaimer to demo responses (P1-009)
+      const responseWithDisclaimer = wrapWithDisclaimer(response, { mode: 'chat' })
+
       return NextResponse.json({
-        reply: response,
+        reply: responseWithDisclaimer,
         threadId: threadId || `demo-thread-${Date.now()}`,
         suggestions: [
           'Quais serviços vocês oferecem?',
@@ -188,5 +190,8 @@ async function handleChat(request: NextRequest) {
   }
 }
 
-// Apply rate limiting: 20 messages per minute per IP
-export const POST = withRateLimit(handleChat, { type: 'chat', limit: 20 })
+// Apply validation, sanitization, and rate limiting
+export const POST = withRateLimit(
+  withValidation(chatMessageSchema, handleChat, { sanitize: true }),
+  { type: 'chat', limit: 20 }
+)

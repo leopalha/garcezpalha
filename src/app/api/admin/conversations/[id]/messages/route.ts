@@ -4,9 +4,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
+import { conversationMessageSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
-export async function GET(
+async function getHandler(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
@@ -51,17 +54,20 @@ export async function GET(
   }
 }
 
-export async function POST(
+async function postHandler(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const conversationId = params.id
-    const { message, humanTakeover } = await request.json()
+    const rawBody = await request.json()
 
-    if (!message) {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 })
-    }
+    // Validate request body with Zod
+    const validatedData = conversationMessageSchema.parse({
+      content: rawBody.message,
+      role: 'user',
+      metadata: { humanTakeover: rawBody.humanTakeover }
+    })
 
     const supabase = await createClient()
 
@@ -74,14 +80,14 @@ export async function POST(
     // Save user message to database
     await supabase.from('messages').insert({
       conversation_id: conversationId,
-      role: 'user',
-      content: message,
-      metadata: { human_takeover: humanTakeover, user_id: user.id },
+      role: validatedData.role,
+      content: validatedData.content,
+      metadata: { ...validatedData.metadata, user_id: user.id },
     })
 
     // If human takeover, don't route through agent-flow
-    if (humanTakeover) {
-      console.log('[Human Message]:', message)
+    if (rawBody.humanTakeover) {
+      console.log('[Human Message]:', validatedData.content)
 
       return NextResponse.json({
         success: true,
@@ -97,7 +103,7 @@ export async function POST(
       },
       body: JSON.stringify({
         conversationId,
-        message,
+        message: validatedData.content,
         channel: 'admin',
       }),
     })
@@ -124,13 +130,44 @@ export async function POST(
       state: data.state,
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[Messages API] Error sending message:', error)
     return NextResponse.json(
-      { error: 'Failed to send message', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Failed to send message', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
 }
+
+// Apply rate limiting - wrappers extract params from URL
+export const GET = withRateLimit(
+  async (request: NextRequest) => {
+    const id = request.url.split("/")[5]
+    return getHandler(request, { params: { id } })
+  },
+  { type: "api", limit: 100 }
+)
+
+export const POST = withRateLimit(
+  async (request: NextRequest) => {
+    const id = request.url.split("/")[5]
+    return postHandler(request, { params: { id } })
+  },
+  { type: "chat", limit: 20 }
+)
 
 export const runtime = 'nodejs'
 export const maxDuration = 30

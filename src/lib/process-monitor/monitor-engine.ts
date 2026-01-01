@@ -22,6 +22,18 @@ export class ProcessMonitorEngine {
    * Inicia monitoramento de um processo
    */
   async startMonitoring(processData: ProcessData): Promise<MonitoringSession> {
+    // Validate process number format (CNJ standard: NNNNNNN-DD.AAAA.J.TT.OOOO)
+    const processNumberRegex = /^\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}$/
+    if (!processNumberRegex.test(processData.numeroProcesso)) {
+      throw new Error(`Formato inválido de número de processo: ${processData.numeroProcesso}`)
+    }
+
+    // Validate tribunal
+    const validTribunals = ['PJe', 'E-SAJ', 'TJ-RJ', 'CNJ']
+    if (!validTribunals.includes(processData.tribunal)) {
+      throw new Error(`Tribunal não suportado: ${processData.tribunal}`)
+    }
+
     const session: MonitoringSession = {
       id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       numeroProcesso: processData.numeroProcesso,
@@ -46,12 +58,16 @@ export class ProcessMonitorEngine {
   /**
    * Para monitoramento de um processo
    */
-  stopMonitoring(numeroProcesso: string): void {
-    const session = this.sessions.get(numeroProcesso)
-    if (session) {
-      session.status = 'stopped'
-      this.sessions.delete(numeroProcesso)
+  async stopMonitoring(sessionId: string): Promise<void> {
+    // Find session by ID
+    const session = Array.from(this.sessions.values()).find((s) => s.id === sessionId)
+
+    if (!session) {
+      throw new Error(`Session não encontrada: ${sessionId}`)
     }
+
+    session.status = 'stopped'
+    this.sessions.delete(session.numeroProcesso)
   }
 
   /**

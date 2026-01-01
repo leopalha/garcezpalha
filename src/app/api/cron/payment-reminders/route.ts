@@ -14,13 +14,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import { emailService } from '@/lib/email/email-service'
+import { withRateLimit } from '@/lib/rate-limit'
 
 /**
  * GET - Run payment reminder cycle
  *
  * Protected by Vercel Cron Secret
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     // Verify cron secret (security)
     const authHeader = request.headers.get('authorization')
@@ -184,6 +185,10 @@ Garcez Palha - Consultoria Jurídica & Pericial
 /**
  * POST - Manual trigger (for testing)
  */
-export async function POST(request: NextRequest) {
-  return GET(request)
+async function postHandler(request: NextRequest) {
+  return getHandler(request)
 }
+
+// Apply rate limiting (allow more for cron jobs)
+export const GET = withRateLimit(getHandler, { type: 'cron', limit: 10 })
+export const POST = withRateLimit(postHandler, { type: 'cron', limit: 10 })

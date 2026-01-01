@@ -375,6 +375,23 @@ export async function notifyAdminsOfNewLead(
   return sendLeadNotificationEmail(recipients, data)
 }
 
+/**
+ * Generic function to send any email with HTML content
+ * Wraps sendEmailWithLogging with 'notification' type
+ */
+export async function sendEmail(params: {
+  to: string | string[]
+  subject: string
+  html: string
+}): Promise<SendEmailResult> {
+  return sendEmailWithLogging(
+    'notification',
+    params.to,
+    params.subject,
+    params.html
+  )
+}
+
 // Export types for external use
 export type {
   SendEmailResult,

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -31,9 +33,16 @@ interface Product {
   product_packages?: ProductPackage[]
 }
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/chat/assistant')
+
   try {
-    const { productId, message, history } = await request.json()
+    // Parse FormData (supports file uploads)
+    const formData = await request.formData()
+    const productId = formData.get('productId') as string
+    const message = formData.get('message') as string
+    const historyJson = formData.get('history') as string
+    const files = formData.getAll('files') as File[]
 
     if (!productId || !message) {
       return NextResponse.json(
@@ -41,6 +50,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Parse history
+    const history = historyJson ? JSON.parse(historyJson) : []
 
     // Se for productId genérico (não UUID), usar contexto geral
     let product: Product | null = null
@@ -194,7 +206,7 @@ A: ${faq.answer}
 
     // Chamar OpenAI
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o', // Updated from deprecated gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,
@@ -210,6 +222,9 @@ A: ${faq.answer}
     // TODO: Gerar áudio com TTS (ElevenLabs ou OpenAI)
     // const audioUrl = await generateTTS(assistantMessage)
 
+    const duration = timer.end()
+    trackApiCall('/api/chat/assistant', duration, 200, { productId })
+
     return NextResponse.json({
       message: assistantMessage,
       audioUrl: null, // TODO: Implementar TTS
@@ -220,10 +235,15 @@ A: ${faq.answer}
     })
 
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/chat/assistant', method: 'POST' })
     console.error('Erro no assistente:', error)
     return NextResponse.json(
-      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
 }
+
+// Apply rate limiting
+export const POST = withRateLimit(postHandler, { type: 'chat', limit: 20 })

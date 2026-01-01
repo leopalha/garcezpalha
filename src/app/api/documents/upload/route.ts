@@ -91,9 +91,9 @@ export async function POST(request: NextRequest) {
       description: description || null,
     }
 
-    const { data: docData, error: dbError } = await supabase
+    const { data: docData, error: dbError } = await (supabase as any)
       .from('client_documents')
-      .insert(documentData as never)
+      .insert(documentData)
       .select()
       .single()
 

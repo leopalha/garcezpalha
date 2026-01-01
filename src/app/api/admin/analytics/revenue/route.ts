@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { analyticsRevenueQuerySchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 interface RevenueStats {
   total: number
@@ -31,7 +33,13 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
     const { searchParams } = new URL(request.url)
-    const months = parseInt(searchParams.get('months') || '12')
+
+    // Validate query parameters with Zod
+    const queryParams = analyticsRevenueQuerySchema.parse({
+      months: searchParams.get('months') || '12'
+    })
+
+    const months = parseInt(queryParams.months)
 
     const startDate = new Date()
     startDate.setMonth(startDate.getMonth() - months)
@@ -139,6 +147,20 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(stats)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error fetching revenue stats:', error)
     return NextResponse.json(
       { error: 'Failed to fetch revenue stats' },

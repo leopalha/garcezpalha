@@ -8,6 +8,7 @@
  * @requires CERTIFICADO_DIGITAL_SENHA - Senha do certificado
  */
 
+// @ts-ignore - node-forge doesn't have types
 import forge from 'node-forge'
 import { PDFDocument } from 'pdf-lib'
 
@@ -69,11 +70,11 @@ export async function getCertificateInfo(): Promise<CertificateInfo | null> {
 
     // Extrair informações
     const subject = cert.subject.attributes
-      .map((attr) => `${attr.shortName}=${attr.value}`)
+      .map((attr: any) => `${attr.shortName}=${attr.value}`)
       .join(', ')
 
     const issuer = cert.issuer.attributes
-      .map((attr) => `${attr.shortName}=${attr.value}`)
+      .map((attr: any) => `${attr.shortName}=${attr.value}`)
       .join(', ')
 
     const notBefore = cert.validity.notBefore

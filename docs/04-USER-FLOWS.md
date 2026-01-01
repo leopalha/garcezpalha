@@ -2,8 +2,8 @@
 
 Este documento descreve todos os fluxos de usuario da plataforma Garcez Palha.
 
-**Versao**: 2.0
-**Data**: 2024-12-23
+**Versao**: 3.0
+**Data**: 2024-12-31
 
 ---
 
@@ -559,6 +559,388 @@ flowchart TD
 
 ---
 
+## 16. FLUXO DE CRIACAO DE CAMPANHA DE MARKETING (NOVO)
+
+```mermaid
+flowchart TD
+    A[Admin acessa /admin/marketing] --> B[Lista de Campanhas]
+    B --> C[Clicar: Nova Campanha]
+
+    C --> D[Campaign Builder]
+    D --> E[Preencher Informacoes Basicas]
+    E --> F[Nome, Tipo, Objetivo]
+
+    F --> G{Tipo de Campanha?}
+    G -->|Email| H[Email Sequence Builder]
+    G -->|WhatsApp| I[WhatsApp Template Builder]
+    G -->|Multi-canal| J[Multi-channel Builder]
+
+    H --> K[Adicionar Emails a Sequencia]
+    I --> K
+    J --> K
+
+    K --> L[Configurar Email]
+    L --> M[Subject Line]
+    M --> N[Body Content]
+    N --> O[Delay/Trigger]
+
+    O --> P{Adicionar A/B Test?}
+    P -->|Sim| Q[Criar Variante B]
+    Q --> R[Subject Line B]
+    R --> S[Body B]
+    S --> T[Split % A/B]
+
+    P -->|Nao| U[Selecionar Segmento]
+    T --> U
+
+    U --> V[Filtros de Lead]
+    V --> W[Tags, Score, Status]
+
+    W --> X{Envio Imediato ou Agendado?}
+    X -->|Imediato| Y[Salvar e Enviar]
+    X -->|Agendado| Z[Definir Data/Hora]
+    Z --> Y
+
+    Y --> AA[Criar campaign no DB]
+    AA --> AB[Criar campaign_emails]
+    AB --> AC[Criar ab_tests se necessario]
+    AC --> AD[Status: draft/scheduled/active]
+
+    AD --> AE{Status?}
+    AE -->|Scheduled| AF[Aguardar horario]
+    AE -->|Active| AG[Iniciar Envios]
+
+    AG --> AH{A/B Test?}
+    AH -->|Sim| AI[Enviar variante A para 50%]
+    AI --> AJ[Enviar variante B para 50%]
+    AJ --> AK[Aguardar periodo teste]
+    AK --> AL[Analisar metricas]
+    AL --> AM[Selecionar vencedor]
+    AM --> AN[Enviar vencedor para restante]
+
+    AH -->|Nao| AO[Enviar para todos do segmento]
+    AN --> AO
+
+    AO --> AP[Registrar campaign_analytics]
+    AP --> AQ[Dashboard de Performance]
+```
+
+---
+
+## 17. FLUXO DE ANALYTICS DE CAMPANHA (NOVO)
+
+```mermaid
+flowchart TD
+    A[Admin acessa /admin/marketing] --> B[Seleciona Campanha]
+    B --> C[Ver Analytics]
+
+    C --> D[API /api/marketing/campaigns/:id/analytics]
+    D --> E[Carregar Metricas]
+
+    E --> F[Email Sent Count]
+    E --> G[Open Rate]
+    E --> H[Click Rate]
+    E --> I[Conversion Rate]
+
+    F --> J[Renderizar Dashboard]
+    G --> J
+    H --> J
+    I --> J
+
+    J --> K[Grafico de Performance]
+    K --> L[Timeline de Envios]
+    L --> M[Funnel de Conversao]
+
+    M --> N{A/B Test Ativo?}
+    N -->|Sim| O[Comparar Variantes]
+    O --> P[Tabela A vs B]
+    P --> Q[Open Rate A vs B]
+    Q --> R[Click Rate A vs B]
+    R --> S[Conversao A vs B]
+
+    S --> T[Indicar Vencedor]
+    T --> U{Admin Define Winner?}
+    U -->|Sim| V[API /api/marketing/ab-tests/:id/winner]
+    V --> W[Atualizar status ab_test]
+    W --> X[Enviar vencedor para restante]
+
+    N -->|Nao| Y[Mostrar Metricas Gerais]
+    U -->|Nao| Y
+
+    Y --> Z[Lista de Emails Enviados]
+    Z --> AA[Status individual: sent/opened/clicked]
+
+    AA --> AB{Acao Admin?}
+    AB -->|Pausar| AC[Status: paused]
+    AB -->|Retomar| AD[Status: active]
+    AB -->|Encerrar| AE[Status: completed]
+    AB -->|Editar| AF[Campaign Builder Edit Mode]
+```
+
+---
+
+## 18. FLUXO DE STRIPE CHECKOUT (SUBSCRIPTION) (NOVO)
+
+```mermaid
+flowchart TD
+    A[Advogado acessa /app/checkout] --> B[Selecionar Plano]
+    B --> C{Plano?}
+
+    C -->|Starter| D[R$ 297/mes ou R$ 2.970/ano]
+    C -->|Pro| E[R$ 697/mes ou R$ 6.970/ano]
+    C -->|Enterprise| F[Preco customizado]
+
+    D --> G[Selecionar Ciclo]
+    E --> G
+    F --> G
+
+    G --> H{Adicionar Addons?}
+    H -->|Sim| I[Nicho Extra +R$ 97/mes]
+    I --> J[Catalogo Premium +R$ 197/mes]
+    H -->|Nao| K[Preencher Dados]
+    J --> K
+
+    K --> L[Nome, Email, Telefone, CPF/CNPJ]
+    L --> M[Validacao de Dados]
+
+    M --> N{Dados Validos?}
+    N -->|Nao| O[Mostrar Erros]
+    O --> L
+
+    N -->|Sim| P[API /api/stripe/checkout]
+    P --> Q{User tem Stripe Customer ID?}
+
+    Q -->|Nao| R[Criar Stripe Customer]
+    R --> S[Salvar stripe_customer_id no DB]
+
+    Q -->|Sim| T[Usar Customer ID existente]
+    S --> T
+
+    T --> U[Criar Checkout Session]
+    U --> V[Line Items: Plano + Addons]
+    V --> W[Metadata: user_id, plan_id, billing_cycle]
+
+    W --> X[Retornar checkout.url]
+    X --> Y[Redirect para Stripe Checkout]
+
+    Y --> Z{Pagamento?}
+    Z -->|Sucesso| AA[Stripe redireciona /app/checkout/success]
+    Z -->|Cancelado| AB[Stripe redireciona /app/checkout?plan=...]
+
+    AA --> AC[Stripe envia webhook]
+    AC --> AD[checkout.session.completed]
+    AD --> AE[customer.subscription.created]
+
+    AE --> AF[Criar/Atualizar subscription no DB]
+    AF --> AG[Criar usage_tracking record]
+    AG --> AH[Atualizar user.current_plan]
+
+    AH --> AI[Mostrar Success Page]
+    AI --> AJ[Confetti Animation]
+    AJ --> AK[Redirect /app/dashboard]
+```
+
+---
+
+## 19. FLUXO DE SUBSCRIPTION MANAGEMENT (NOVO)
+
+```mermaid
+flowchart TD
+    A[Advogado logado] --> B[/app/dashboard/assinatura]
+    B --> C[API /api/subscriptions/current]
+
+    C --> D{Subscription Existe?}
+    D -->|Nao| E[Mostrar CTA: Assinar Agora]
+    E --> F[Redirect /app/checkout]
+
+    D -->|Sim| G[Carregar Dados]
+    G --> H[subscription, usage, limits]
+
+    H --> I[Renderizar Plano Atual]
+    I --> J[Nome do Plano]
+    J --> K[Preco Mensal/Anual]
+    K --> L[Status: active/past_due/canceled]
+
+    L --> M[Periodo de Cobranca]
+    M --> N[current_period_start]
+    N --> O[current_period_end]
+
+    O --> P[Usage Tracking]
+    P --> Q[Produtos: X / limite]
+    Q --> R[Leads: X / limite]
+    R --> S[Conversas: X / limite]
+    S --> T[Emails: X / limite]
+
+    T --> U{Usage >= 90% do Limite?}
+    U -->|Sim| V[Mostrar Warning Badge]
+    V --> W[Sugerir Upgrade de Plano]
+
+    U -->|Nao| X{Usage >= 70%?}
+    X -->|Sim| Y[Mostrar Info Badge]
+    X -->|Nao| Z[Progress Bar Normal]
+
+    W --> AA[Secao de Acoes]
+    Y --> AA
+    Z --> AA
+
+    AA --> AB{Acao do Usuario?}
+    AB -->|Gerenciar Metodo| AC[API /api/stripe/portal POST]
+    AC --> AD[Criar Billing Portal Session]
+    AD --> AE[Redirect para Stripe Portal]
+    AE --> AF[Usuario atualiza cartao/endereco]
+    AF --> AG[Retorna para /app/dashboard/assinatura]
+
+    AB -->|Cancelar Assinatura| AH[Confirmacao Modal]
+    AH --> AI{Confirma?}
+    AI -->|Sim| AJ[API /api/subscriptions/cancel POST]
+    AJ --> AK[Stripe: cancel_at_period_end = true]
+    AK --> AL[Atualizar DB]
+    AL --> AM[Mostrar: Cancelado em dd/mm/yyyy]
+
+    AI -->|Nao| AN[Fechar Modal]
+
+    AB -->|Reativar| AO[API /api/subscriptions/cancel DELETE]
+    AO --> AP[Stripe: cancel_at_period_end = false]
+    AP --> AQ[Atualizar DB]
+    AQ --> AR[Status: active novamente]
+
+    AB -->|Ver Faturas| AS[API /api/subscriptions/invoices]
+    AS --> AT[Listar Invoices]
+    AT --> AU[Tabela: Data, Valor, Status, PDF]
+    AU --> AV{Download PDF?}
+    AV -->|Sim| AW[invoice.invoice_pdf URL]
+    AW --> AX[Abrir PDF Stripe]
+```
+
+---
+
+## 20. FLUXO DE STRIPE WEBHOOKS (SUBSCRIPTION LIFECYCLE) (NOVO)
+
+```mermaid
+flowchart TD
+    A[Stripe envia webhook] --> B[API /api/stripe/webhook]
+    B --> C[Verificar Signature]
+
+    C --> D{Signature Valida?}
+    D -->|Nao| E[Retornar 400 Erro]
+
+    D -->|Sim| F[Parse Event]
+    F --> G{event.type?}
+
+    G -->|checkout.session.completed| H[Processar Checkout]
+    H --> I[Extrair metadata: user_id, plan_id]
+    I --> J[Criar/Atualizar user]
+    J --> K[Confirmar pagamento]
+
+    G -->|customer.subscription.created| L[Criar Subscription]
+    L --> M[Inserir tabela subscriptions]
+    M --> N[status, plan_id, period_start, period_end]
+    N --> O[Atualizar user.current_plan]
+
+    G -->|customer.subscription.updated| P[Atualizar Subscription]
+    P --> Q[Upsert tabela subscriptions]
+    Q --> R[Atualizar status, current_period_end]
+    R --> S{cancel_at_period_end?}
+    S -->|true| T[Marcar para cancelamento]
+    S -->|false| U[Subscription ativa]
+
+    G -->|customer.subscription.deleted| V[Deletar Subscription]
+    V --> W[Atualizar status: canceled]
+    W --> X[Atualizar user.current_plan = free]
+    X --> Y[Cancelar follow-ups automaticos]
+
+    G -->|invoice.paid| Z[Marcar Invoice Paga]
+    Z --> AA[Inserir/Atualizar invoices]
+    AA --> AB[status: paid, paid_at]
+    AB --> AC[Enviar Email: Fatura Paga]
+
+    G -->|invoice.payment_failed| AD[Payment Failed]
+    AD --> AE[Atualizar subscription.status = past_due]
+    AE --> AF[Enviar Email: Falha no Pagamento]
+    AF --> AG[Criar notificacao in-app]
+
+    G -->|payment_method.attached| AH[Metodo Anexado]
+    AH --> AI[Salvar payment_method_id]
+
+    G -->|payment_method.detached| AJ[Metodo Removido]
+    AJ --> AK[Remover payment_method_id]
+
+    K --> AL[Retornar 200 OK]
+    O --> AL
+    U --> AL
+    T --> AL
+    Y --> AL
+    AC --> AL
+    AG --> AL
+    AI --> AL
+    AK --> AL
+```
+
+---
+
+## 21. FLUXO DE USAGE TRACKING (SUBSCRIPTION LIMITS) (NOVO)
+
+```mermaid
+flowchart TD
+    A[Usuario realiza acao] --> B{Tipo de Acao?}
+
+    B -->|Criar Produto| C[API /api/products]
+    B -->|Criar Lead| D[API /api/leads]
+    B -->|Enviar Email| E[API /api/marketing/send]
+    B -->|Nova Conversa| F[API /api/chat]
+
+    C --> G[Verificar Limite]
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H[API /api/subscriptions/current]
+    H --> I[Carregar limits do plano]
+
+    I --> J{plan_limits?}
+    J -->|Nao encontrado| K[Usar Free Plan Limits]
+    J -->|Encontrado| L[Usar limits do plano]
+
+    K --> M[Calcular Usage Atual]
+    L --> M
+
+    M --> N[Query usage_tracking]
+    N --> O[Filtrar por current_period]
+    O --> P[SUM(quantity) GROUP BY metric]
+
+    P --> Q{metric: products}
+    Q --> R[usage.products vs limits.max_products]
+
+    R --> S{usage < limit?}
+    S -->|Nao| T[Mostrar Modal: Limite Atingido]
+    T --> U[CTA: Fazer Upgrade de Plano]
+    U --> V[Redirect /app/checkout]
+
+    S -->|Sim| W[Permitir Acao]
+    W --> X[Executar Acao: Criar Produto]
+    X --> Y[Inserir em products]
+
+    Y --> Z[Registrar Usage]
+    Z --> AA[INSERT usage_tracking]
+    AA --> AB[user_id, metric: products, quantity: +1]
+    AB --> AC[period_start, period_end]
+
+    AC --> AD{usage >= 90% do limite?}
+    AD -->|Sim| AE[Enviar Warning Email]
+    AE --> AF[Notificacao in-app]
+    AF --> AG[Badge vermelho no dashboard]
+
+    AD -->|Nao| AH{usage >= 70%?}
+    AH -->|Sim| AI[Badge amarelo]
+    AH -->|Nao| AJ[Badge verde]
+
+    AG --> AK[Retornar Sucesso]
+    AI --> AK
+    AJ --> AK
+```
+
+---
+
 ## LEGENDA
 
 | Simbolo | Significado |
@@ -581,6 +963,12 @@ flowchart TD
 | Consulta -> Cliente | 60-70% |
 | Checkout iniciado -> Pago | 70-80% |
 | Documento gerado -> Aprovado | 90-95% |
+| Campanha Enviada -> Email Aberto | 20-30% |
+| Email Aberto -> Click | 10-15% |
+| Email Click -> Conversao | 5-10% |
+| Subscription Checkout -> Pagamento | 65-75% |
+| Free Trial -> Assinatura Paga | 40-50% |
+| Usage 90% -> Upgrade | 30-40% |
 
 ---
 
@@ -588,5 +976,6 @@ flowchart TD
 
 | Versao | Data | Mudancas |
 |--------|------|----------|
+| 3.0 | 2024-12-31 | Adicao de 6 novos fluxos: Marketing Campaigns, Analytics, Stripe Checkout, Subscription Management, Webhooks, Usage Tracking |
 | 2.0 | 2024-12-23 | Adicao de fluxos: Qualificacao, Documentos, Follow-up, Urgencia, Dashboard Executivo |
 | 1.0 | 2024-11-19 | Versao inicial |

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     const supabase = getSupabaseAdmin()
 
-    let query = supabase.from('client_documents').select('*').order('created_at', { ascending: false })
+    let query = (supabase as any).from('client_documents').select('*').order('created_at', { ascending: false })
 
     // Filter by leadId if provided (for admin viewing lead's documents)
     if (leadId) {
@@ -62,40 +62,39 @@ export async function DELETE(request: NextRequest) {
 
     const supabase = getSupabaseAdmin()
 
-    // TODO: Create client_documents table in Supabase
-    // Temporarily return not found until table is created
-    // const { data: document, error: fetchError } = await supabase
-    //   .from('client_documents')
-    //   .select('*')
-    //   .eq('id', documentId)
-    //   .eq('user_id', token.id)
-    //   .single()
+    // Fetch document from database
+    const { data: document, error: fetchError } = await (supabase as any)
+      .from('client_documents')
+      .select('*')
+      .eq('id', documentId)
+      .eq('uploaded_by', token.id)
+      .single()
 
-    // if (fetchError || !document) {
-    //   return NextResponse.json({ error: 'Documento não encontrado' }, { status: 404 })
-    // }
+    if (fetchError || !document) {
+      return NextResponse.json({ error: 'Documento não encontrado' }, { status: 404 })
+    }
 
-    // // Delete from storage
-    // const doc = document as { storage_path?: string }
-    // if (doc.storage_path) {
-    //   await supabase.storage.from('client-documents').remove([doc.storage_path])
-    // }
+    // Delete from storage
+    const doc = document as { storage_path?: string }
+    if (doc.storage_path) {
+      await supabase.storage.from('client-documents').remove([doc.storage_path])
+    }
 
-    // // Delete from database
-    // const { error: deleteError } = await supabase
-    //   .from('client_documents')
-    //   .delete()
-    //   .eq('id', documentId)
+    // Delete from database
+    const { error: deleteError } = await (supabase as any)
+      .from('client_documents')
+      .delete()
+      .eq('id', documentId)
 
-    // if (deleteError) {
-    //   console.error('Delete error:', deleteError)
-    //   return NextResponse.json(
-    //     { error: 'Erro ao excluir documento' },
-    //     { status: 500 }
-    //   )
-    // }
+    if (deleteError) {
+      console.error('Delete error:', deleteError)
+      return NextResponse.json(
+        { error: 'Erro ao excluir documento' },
+        { status: 500 }
+      )
+    }
 
-    return NextResponse.json({ error: 'Funcionalidade temporariamente indisponível' }, { status: 503 })
+    return NextResponse.json({ message: 'Documento excluído com sucesso' }, { status: 200 })
   } catch (error) {
     console.error('Document delete error:', error)
     return NextResponse.json(

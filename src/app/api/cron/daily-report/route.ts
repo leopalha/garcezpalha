@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
 import telegramBotService from '@/lib/telegram/bot-service'
 
 /**
@@ -21,7 +22,7 @@ import telegramBotService from '@/lib/telegram/bot-service'
  *
  * Protected by Vercel Cron Secret
  */
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     // Verify cron secret (security)
     const authHeader = request.headers.get('authorization')
@@ -219,6 +220,10 @@ _Garcez Palha - ${now.toLocaleTimeString('pt-BR')}_`
 /**
  * POST - Manual trigger (for testing)
  */
-export async function POST(request: NextRequest) {
-  return GET(request)
+async function postHandler(request: NextRequest) {
+  return getHandler(request)
 }
+
+// Apply rate limiting
+export const GET = withRateLimit(getHandler, { type: 'cron', limit: 10 })
+export const POST = withRateLimit(postHandler, { type: 'cron', limit: 10 })

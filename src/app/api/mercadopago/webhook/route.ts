@@ -1,14 +1,86 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
 import { createClient } from '@/lib/supabase/server'
+import { withRateLimit } from '@/lib/rate-limit'
+import { withValidation } from '@/lib/validations/api-middleware'
+import { z } from 'zod'
+import crypto from 'crypto'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
-export async function POST(request: NextRequest) {
+const mercadoPagoWebhookSchema = z.object({
+  type: z.string(),
+  data: z
+    .object({
+      id: z.union([z.string(), z.number()]),
+    })
+    .optional(),
+})
+
+/**
+ * Verify MercadoPago webhook signature
+ * Docs: https://www.mercadopago.com.br/developers/pt/docs/your-integrations/notifications/webhooks
+ */
+function verifyMercadoPagoSignature(
+  xSignature: string | null,
+  xRequestId: string | null,
+  dataId: string,
+  secret: string
+): boolean {
+  if (!xSignature || !xRequestId) {
+    return false
+  }
+
+  // Extract ts and hash from x-signature header
+  // Format: "ts=1234567890,v1=hash"
+  const parts = xSignature.split(',')
+  const tsPart = parts.find((p) => p.startsWith('ts='))
+  const hashPart = parts.find((p) => p.startsWith('v1='))
+
+  if (!tsPart || !hashPart) {
+    return false
+  }
+
+  const ts = tsPart.replace('ts=', '')
+  const receivedHash = hashPart.replace('v1=', '')
+
+  // Create manifest: id:{data.id};request-id:{x-request-id};ts:{ts};
+  const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`
+
+  // Generate HMAC SHA256
+  const hmac = crypto.createHmac('sha256', secret)
+  hmac.update(manifest)
+  const calculatedHash = hmac.digest('hex')
+
+  return calculatedHash === receivedHash
+}
+
+async function handler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/mercadopago/webhook')
+
   try {
     if (!isMercadoPagoConfigured() || !paymentClient) {
+      timer.end()
       return NextResponse.json({ error: 'MercadoPago not configured' }, { status: 500 })
     }
 
-    const body = await request.json()
+    const body = (request as any).validatedData
+
+    // Verify webhook signature
+    const xSignature = request.headers.get('x-signature')
+    const xRequestId = request.headers.get('x-request-id')
+    const dataId = body.data?.id
+
+    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET
+
+    if (webhookSecret && dataId) {
+      const isValid = verifyMercadoPagoSignature(xSignature, xRequestId, dataId, webhookSecret)
+      if (!isValid) {
+        console.error('MercadoPago webhook signature verification failed')
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+      }
+    } else if (!webhookSecret) {
+      console.warn('MERCADOPAGO_WEBHOOK_SECRET not configured - skipping signature verification')
+    }
 
     // MercadoPago sends different notification types
     // We're interested in 'payment' notifications
@@ -43,6 +115,12 @@ export async function POST(request: NextRequest) {
           .eq('mercadopago_payment_id', paymentId.toString())
 
         console.log(`PIX payment approved: ${paymentId}`)
+
+        // Track conversion
+        trackConversion('payment_approved', payment.transaction_amount, {
+          paymentId: paymentId.toString(),
+          method: 'pix',
+        })
         break
       }
 
@@ -76,8 +154,20 @@ export async function POST(request: NextRequest) {
         console.log(`Unhandled payment status: ${payment.status}`)
     }
 
+    const duration = timer.end()
+    trackApiCall('/api/mercadopago/webhook', duration, 200, {
+      paymentId: paymentId.toString(),
+      status: payment.status,
+    })
+
     return NextResponse.json({ received: true })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, {
+      endpoint: '/api/mercadopago/webhook',
+      method: 'POST',
+    })
+
     console.error('MercadoPago webhook error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
@@ -85,3 +175,9 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Apply validation and rate limiting for webhook
+export const POST = withRateLimit(
+  withValidation(mercadoPagoWebhookSchema, handler),
+  { type: 'webhook', limit: 100 }
+)
