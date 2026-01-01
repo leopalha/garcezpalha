@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { analyticsTopProductsQuerySchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,8 +29,15 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient()
     const { searchParams } = new URL(request.url)
-    const days = parseInt(searchParams.get('days') || '30')
-    const limit = parseInt(searchParams.get('limit') || '10')
+
+    // Validate query parameters with Zod
+    const queryParams = analyticsTopProductsQuerySchema.parse({
+      days: searchParams.get('days') || '30',
+      limit: searchParams.get('limit') || '10'
+    })
+
+    const days = parseInt(queryParams.days)
+    const limit = parseInt(queryParams.limit)
 
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)
@@ -116,6 +125,20 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error fetching top products:', error)
     return NextResponse.json(
       { error: 'Failed to fetch top products' },

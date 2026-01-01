@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { analyticsLeadsQuerySchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 /**
  * Analytics Interfaces
@@ -68,10 +70,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Get query parameters
+    // Validate query parameters with Zod
     const searchParams = request.nextUrl.searchParams
-    const period = searchParams.get('period') || '30' // days
-    const groupBy = searchParams.get('groupBy') || 'day' // day, week, month
+    const queryParams = analyticsLeadsQuerySchema.parse({
+      period: searchParams.get('period') || '30',
+      groupBy: searchParams.get('groupBy') || 'day'
+    })
+
+    const period = queryParams.period
+    const groupBy = queryParams.groupBy
 
     // Calculate date range
     const endDate = new Date()
@@ -248,6 +255,20 @@ export async function GET(request: NextRequest) {
       timeSeries: timeSeriesData,
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[API /admin/analytics/leads] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },

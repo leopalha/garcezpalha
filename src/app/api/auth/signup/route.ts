@@ -6,6 +6,7 @@ import { emailService } from '@/lib/email/email-service'
 import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 const signupSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
@@ -16,6 +17,8 @@ const signupSchema = z.object({
 })
 
 async function handler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/auth/signup')
+
   try {
     const { name, email, password, phone, document } = (request as any).validatedData
 
@@ -89,6 +92,10 @@ async function handler(request: NextRequest) {
 
     console.log('[Signup] Verification email sent to:', email)
 
+    const duration = timer.end()
+    trackApiCall('/api/auth/signup', duration, 200, { userId: newUser.id })
+    trackConversion('user_signup', undefined, { role: newUser.role })
+
     return NextResponse.json({
       success: true,
       user: {
@@ -100,6 +107,8 @@ async function handler(request: NextRequest) {
       message: 'Cadastro realizado! Enviamos um email de verificação. Confira sua caixa de entrada.',
     })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/auth/signup', method: 'POST' })
     console.error('Signup error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },

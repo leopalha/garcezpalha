@@ -5,6 +5,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import crypto from 'crypto'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 const mercadoPagoWebhookSchema = z.object({
   type: z.string(),
@@ -54,8 +55,11 @@ function verifyMercadoPagoSignature(
 }
 
 async function handler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/mercadopago/webhook')
+
   try {
     if (!isMercadoPagoConfigured() || !paymentClient) {
+      timer.end()
       return NextResponse.json({ error: 'MercadoPago not configured' }, { status: 500 })
     }
 
@@ -111,6 +115,12 @@ async function handler(request: NextRequest) {
           .eq('mercadopago_payment_id', paymentId.toString())
 
         console.log(`PIX payment approved: ${paymentId}`)
+
+        // Track conversion
+        trackConversion('payment_approved', payment.transaction_amount, {
+          paymentId: paymentId.toString(),
+          method: 'pix',
+        })
         break
       }
 
@@ -144,8 +154,20 @@ async function handler(request: NextRequest) {
         console.log(`Unhandled payment status: ${payment.status}`)
     }
 
+    const duration = timer.end()
+    trackApiCall('/api/mercadopago/webhook', duration, 200, {
+      paymentId: paymentId.toString(),
+      status: payment.status,
+    })
+
     return NextResponse.json({ received: true })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, {
+      endpoint: '/api/mercadopago/webhook',
+      method: 'POST',
+    })
+
     console.error('MercadoPago webhook error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },

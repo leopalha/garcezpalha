@@ -3,7 +3,7 @@
  * Tests all products with their questions and scoring rules
  */
 
-import { describe, it, expect } from '@jest/globals'
+import { describe, it, expect } from 'vitest'
 import {
   // Criminal
   DEFESA_CRIMINAL_QUESTIONS,

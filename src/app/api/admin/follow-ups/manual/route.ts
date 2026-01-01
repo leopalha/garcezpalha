@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { triggerManualFollowUp } from '@/lib/automation/follow-up-automation'
+import { manualFollowUpSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 /**
  * POST /api/admin/follow-ups/manual
@@ -18,22 +20,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Parse request body
-    const body = await request.json()
-    const { leadId, message } = body
-
-    if (!leadId || !message) {
-      return NextResponse.json({ error: 'Missing leadId or message' }, { status: 400 })
-    }
+    // Parse and validate request body with Zod
+    const rawBody = await request.json()
+    const body = manualFollowUpSchema.parse(rawBody)
 
     // Trigger follow-up
-    const result = await triggerManualFollowUp(leadId, message)
+    const result = await triggerManualFollowUp(body.leadId, body.message)
 
     return NextResponse.json(result)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[API /admin/follow-ups/manual] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

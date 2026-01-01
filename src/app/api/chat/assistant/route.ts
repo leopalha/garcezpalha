@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -33,6 +34,8 @@ interface Product {
 }
 
 async function postHandler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/chat/assistant')
+
   try {
     // Parse FormData (supports file uploads)
     const formData = await request.formData()
@@ -219,6 +222,9 @@ A: ${faq.answer}
     // TODO: Gerar áudio com TTS (ElevenLabs ou OpenAI)
     // const audioUrl = await generateTTS(assistantMessage)
 
+    const duration = timer.end()
+    trackApiCall('/api/chat/assistant', duration, 200, { productId })
+
     return NextResponse.json({
       message: assistantMessage,
       audioUrl: null, // TODO: Implementar TTS
@@ -229,6 +235,8 @@ A: ${faq.answer}
     })
 
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/chat/assistant', method: 'POST' })
     console.error('Erro no assistente:', error)
     return NextResponse.json(
       { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },

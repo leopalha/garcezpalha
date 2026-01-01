@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { documentGenerator, type DocumentType, type DocumentGenerationRequest } from '@/lib/ai/production/document-generator'
 import { getTemplate, getAllTemplates, getAvailableDocumentTypes } from '@/lib/ai/production/template-engine'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
 /**
  * POST /api/documents/generate
  * Generate a new legal document
  */
 export async function POST(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/documents/generate')
+
   try {
     const body = await request.json()
 
@@ -57,6 +60,9 @@ export async function POST(request: NextRequest) {
     // Generate document
     const document = await documentGenerator.generateDocument(generationRequest)
 
+    const duration = timer.end()
+    trackApiCall('/api/documents/generate', duration, 200, { documentId: document.id, type: document.documentType })
+
     return NextResponse.json({
       success: true,
       document: {
@@ -70,6 +76,8 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/documents/generate', method: 'POST' })
     console.error('[API] Error generating document:', error)
     return NextResponse.json(
       { error: 'Failed to generate document', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },

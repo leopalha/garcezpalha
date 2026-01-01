@@ -4,27 +4,32 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { OfflineDetector, useOnlineStatus } from '../offline-detector'
 import { renderHook, act } from '@testing-library/react'
+import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest'
 
 describe('OfflineDetector', () => {
-  let onlineGetter: jest.SpyInstance
-  let addEventListenerSpy: jest.SpyInstance
-  let removeEventListenerSpy: jest.SpyInstance
+  let originalOnLine: boolean
 
   beforeEach(() => {
-    // Mock navigator.onLine
-    onlineGetter = jest.spyOn(navigator, 'onLine', 'get')
-    onlineGetter.mockReturnValue(true)
+    // Save original value
+    originalOnLine = navigator.onLine
 
-    // Spy on addEventListener/removeEventListener
-    addEventListenerSpy = jest.spyOn(window, 'addEventListener')
-    removeEventListenerSpy = jest.spyOn(window, 'removeEventListener')
+    // Mock navigator.onLine as writable property
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
   })
 
   afterEach(() => {
-    onlineGetter.mockRestore()
-    addEventListenerSpy.mockRestore()
-    removeEventListenerSpy.mockRestore()
-    jest.clearAllMocks()
+    // Restore original value
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: originalOnLine
+    })
+
+    vi.clearAllMocks()
   })
 
   it('should not show banner when online', () => {
@@ -34,7 +39,11 @@ describe('OfflineDetector', () => {
   })
 
   it('should show banner when going offline', async () => {
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
 
     render(<OfflineDetector showNotification={true} />)
 
@@ -49,7 +58,11 @@ describe('OfflineDetector', () => {
   })
 
   it('should hide banner when going back online', async () => {
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     const { rerender } = render(<OfflineDetector showNotification={true} />)
 
     // Go offline
@@ -62,7 +75,11 @@ describe('OfflineDetector', () => {
     })
 
     // Go back online
-    onlineGetter.mockReturnValue(true)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
     act(() => {
       window.dispatchEvent(new Event('online'))
     })
@@ -73,13 +90,22 @@ describe('OfflineDetector', () => {
   })
 
   it('should call onOnline callback when going online', async () => {
-    const onOnline = jest.fn()
-    onlineGetter.mockReturnValue(false)
+    const onOnline = vi.fn()
+
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
 
     render(<OfflineDetector showNotification={true} onOnline={onOnline} />)
 
     // Go online
-    onlineGetter.mockReturnValue(true)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
     act(() => {
       window.dispatchEvent(new Event('online'))
     })
@@ -90,13 +116,22 @@ describe('OfflineDetector', () => {
   })
 
   it('should call onOffline callback when going offline', async () => {
-    const onOffline = jest.fn()
-    onlineGetter.mockReturnValue(true)
+    const onOffline = vi.fn()
+
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
 
     render(<OfflineDetector showNotification={true} onOffline={onOffline} />)
 
     // Go offline
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     act(() => {
       window.dispatchEvent(new Event('offline'))
     })
@@ -107,7 +142,11 @@ describe('OfflineDetector', () => {
   })
 
   it('should hide banner when close button is clicked', async () => {
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     render(<OfflineDetector showNotification={true} />)
 
     // Go offline
@@ -129,7 +168,11 @@ describe('OfflineDetector', () => {
   })
 
   it('should not show banner when showNotification is false', () => {
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     render(<OfflineDetector showNotification={false} />)
 
     act(() => {
@@ -140,32 +183,46 @@ describe('OfflineDetector', () => {
   })
 
   it('should register event listeners on mount', () => {
+    const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
     render(<OfflineDetector showNotification={true} />)
 
     expect(addEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function))
     expect(addEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function))
+
+    addEventListenerSpy.mockRestore()
   })
 
   it('should cleanup event listeners on unmount', () => {
+    const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener')
     const { unmount } = render(<OfflineDetector showNotification={true} />)
 
     unmount()
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith('online', expect.any(Function))
     expect(removeEventListenerSpy).toHaveBeenCalledWith('offline', expect.any(Function))
+
+    removeEventListenerSpy.mockRestore()
   })
 })
 
 describe('useOnlineStatus', () => {
-  let onlineGetter: jest.SpyInstance
+  let originalOnLine: boolean
 
   beforeEach(() => {
-    onlineGetter = jest.spyOn(navigator, 'onLine', 'get')
-    onlineGetter.mockReturnValue(true)
+    originalOnLine = navigator.onLine
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
   })
 
   afterEach(() => {
-    onlineGetter.mockRestore()
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: originalOnLine
+    })
   })
 
   it('should return initial online status', () => {
@@ -177,7 +234,13 @@ describe('useOnlineStatus', () => {
   it('should update status when going offline', () => {
     const { result } = renderHook(() => useOnlineStatus())
 
-    onlineGetter.mockReturnValue(false)
+    expect(result.current).toBe(true)
+
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     act(() => {
       window.dispatchEvent(new Event('offline'))
     })
@@ -186,10 +249,20 @@ describe('useOnlineStatus', () => {
   })
 
   it('should update status when going back online', () => {
-    onlineGetter.mockReturnValue(false)
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: false
+    })
     const { result } = renderHook(() => useOnlineStatus())
 
-    onlineGetter.mockReturnValue(true)
+    expect(result.current).toBe(false)
+
+    Object.defineProperty(navigator, 'onLine', {
+      writable: true,
+      configurable: true,
+      value: true
+    })
     act(() => {
       window.dispatchEvent(new Event('online'))
     })

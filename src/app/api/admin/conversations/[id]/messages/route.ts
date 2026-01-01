@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
+import { conversationMessageSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 async function getHandler(
   request: NextRequest,
@@ -58,11 +60,14 @@ async function postHandler(
 ) {
   try {
     const conversationId = params.id
-    const { message, humanTakeover } = await request.json()
+    const rawBody = await request.json()
 
-    if (!message) {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 })
-    }
+    // Validate request body with Zod
+    const validatedData = conversationMessageSchema.parse({
+      content: rawBody.message,
+      role: 'user',
+      metadata: { humanTakeover: rawBody.humanTakeover }
+    })
 
     const supabase = await createClient()
 
@@ -75,14 +80,14 @@ async function postHandler(
     // Save user message to database
     await supabase.from('messages').insert({
       conversation_id: conversationId,
-      role: 'user',
-      content: message,
-      metadata: { human_takeover: humanTakeover, user_id: user.id },
+      role: validatedData.role,
+      content: validatedData.content,
+      metadata: { ...validatedData.metadata, user_id: user.id },
     })
 
     // If human takeover, don't route through agent-flow
-    if (humanTakeover) {
-      console.log('[Human Message]:', message)
+    if (rawBody.humanTakeover) {
+      console.log('[Human Message]:', validatedData.content)
 
       return NextResponse.json({
         success: true,
@@ -98,7 +103,7 @@ async function postHandler(
       },
       body: JSON.stringify({
         conversationId,
-        message,
+        message: validatedData.content,
         channel: 'admin',
       }),
     })
@@ -125,9 +130,23 @@ async function postHandler(
       state: data.state,
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[Messages API] Error sending message:', error)
     return NextResponse.json(
-      { error: 'Failed to send message', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Failed to send message', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }

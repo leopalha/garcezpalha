@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 // Supabase admin client for server-side operations
 const supabaseAdmin = createClient(
@@ -20,6 +21,8 @@ const contactSchema = z.object({
 })
 
 async function handleContact(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/contact')
+
   try {
     const body = await request.json()
 
@@ -80,6 +83,14 @@ async function handleContact(request: NextRequest) {
       service: validatedData.service,
     })
 
+    // Track performance and conversion
+    const duration = timer.end()
+    trackApiCall('/api/contact', duration, 201, { leadId })
+    trackConversion('contact_form_submitted', undefined, {
+      service: validatedData.service,
+      source: validatedData.source,
+    })
+
     return NextResponse.json(
       {
         success: true,
@@ -89,7 +100,13 @@ async function handleContact(request: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
+    timer.end()
+
     if (error instanceof z.ZodError) {
+      trackError(error as Error, {
+        endpoint: '/api/contact',
+        type: 'validation',
+      })
       return NextResponse.json(
         {
           success: false,
@@ -102,6 +119,11 @@ async function handleContact(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    trackError(error as Error, {
+      endpoint: '/api/contact',
+      method: 'POST',
+    })
 
     console.error('Contact form error:', error)
     return NextResponse.json(

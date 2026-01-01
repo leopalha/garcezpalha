@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals'
+import { describe, it, expect } from 'vitest'
 
 // Simple sanitization tests without mocking
 describe('Input Sanitizer', () => {

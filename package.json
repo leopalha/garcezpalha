@@ -143,6 +143,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@axe-core/react": "^4.11.0",
     "@eslint/eslintrc": "^3.3.3",
     "@jest/globals": "^30.2.0",
     "@testing-library/jest-dom": "^6.9.1",
@@ -164,6 +165,7 @@
     "eslint": "^9.39.1",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
+    "jsdom": "^27.4.0",
     "pg": "^8.16.3",
     "postcss": "^8",
     "sharp": "^0.34.5",
@@ -171,6 +173,7 @@
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.4.6",
     "typescript": "^5",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "vitest-axe": "^0.1.0"
   }
 }

@@ -16,3 +16,16 @@ export {
   type JuditMovement,
   type JuditWebhookPayload,
 } from './judit-service'
+
+export {
+  monitor,
+  trackError,
+  trackValidationError,
+  trackApiCall,
+  trackApiError,
+  trackUserAction,
+  trackConversion,
+  getSystemHealth,
+  PerformanceTimer,
+  type MonitoringEvent,
+} from './observability'

@@ -1,12 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader'
-import { TemplateEditor } from '@/components/admin/TemplateEditor'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { Loader2 } from 'lucide-react'
+
+// Lazy load the heavy TipTap editor
+const TemplateEditor = lazy(() =>
+  import('@/components/admin/TemplateEditor').then((mod) => ({
+    default: mod.TemplateEditor,
+  }))
+)
 
 // Template metadata (same as in templates/page.tsx)
 const TEMPLATE_METADATA: Record<string, any> = {
@@ -219,7 +225,16 @@ export default function TemplateEditPage() {
             </div>
           )}
 
-          <TemplateEditor template={template} onSave={handleSave} onPreview={handlePreview} />
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <span className="ml-2 text-muted-foreground">Carregando editor...</span>
+              </div>
+            }
+          >
+            <TemplateEditor template={template} onSave={handleSave} onPreview={handlePreview} />
+          </Suspense>
         </CardContent>
       </Card>
     </div>

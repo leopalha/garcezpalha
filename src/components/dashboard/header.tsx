@@ -78,15 +78,16 @@ export function Header({ title, description, onMenuClick }: HeaderProps) {
   const userName = session?.user?.name || 'Usuário'
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6" role="banner">
       {/* Mobile menu button */}
       <Button
         variant="ghost"
         size="icon"
         className="md:hidden"
         onClick={onMenuClick}
+        aria-label="Abrir menu de navegação"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-5 w-5" aria-hidden="true" />
       </Button>
 
       {/* Title */}
@@ -100,19 +101,25 @@ export function Header({ title, description, onMenuClick }: HeaderProps) {
       {/* Notifications */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            aria-label={`Notificações${unreadCount > 0 ? ` - ${unreadCount} não lidas` : ''}`}
+          >
+            <Bell className="h-5 w-5" aria-hidden="true" />
             {unreadCount > 0 && (
               <Badge
                 variant="destructive"
                 className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px] font-semibold"
+                aria-hidden="true"
               >
                 {unreadCount > 9 ? '9+' : unreadCount}
               </Badge>
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto">
+        <DropdownMenuContent align="end" className="w-80 max-h-96 overflow-y-auto" role="menu" aria-label="Menu de notificações">
           <DropdownMenuLabel className="text-foreground">Notificações</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {notifications.length === 0 ? (
@@ -125,10 +132,11 @@ export function Header({ title, description, onMenuClick }: HeaderProps) {
                 key={notification.id}
                 className="flex flex-col items-start gap-1 p-3 cursor-pointer focus:bg-accent"
                 onClick={() => markAsRead(notification.id)}
+                role="menuitem"
               >
                 <div className="flex items-start gap-2 w-full">
                   {!notification.read && (
-                    <div className="w-2 h-2 rounded-full bg-primary mt-1 flex-shrink-0" />
+                    <div className="w-2 h-2 rounded-full bg-primary mt-1 flex-shrink-0" aria-label="Não lida" />
                   )}
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{notification.title}</p>
@@ -144,7 +152,7 @@ export function Header({ title, description, onMenuClick }: HeaderProps) {
       </DropdownMenu>
 
       {/* User profile */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" role="complementary" aria-label="Perfil do usuário">
         <Avatar className="h-8 w-8 border-2 border-primary/10">
           <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
             {getUserInitials(userName)}

@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { AgentStateMachine } from '@/lib/ai/agents/state-machine'
+import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 
 async function postHandler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/chat/agent-flow')
+
   try {
     const body = await request.json()
     const { conversationId, message, channel = 'website' } = body
 
     if (!conversationId || !message) {
+      timer.end()
       return NextResponse.json(
         { error: 'conversationId and message are required' },
         { status: 400 }
@@ -20,6 +24,12 @@ async function postHandler(request: NextRequest) {
     // Process message through state machine
     const result = await stateMachine.processMessage(conversationId, message)
 
+    const duration = timer.end()
+    trackApiCall('/api/chat/agent-flow', duration, 200, {
+      conversationId,
+      state: result.data.status.state,
+    })
+
     return NextResponse.json({
       message: result.response, // Changed from 'response' to 'message' for frontend compatibility
       state: result.data.status.state,
@@ -30,6 +40,12 @@ async function postHandler(request: NextRequest) {
     })
 
   } catch (error) {
+    timer.end()
+    trackError(error as Error, {
+      endpoint: '/api/chat/agent-flow',
+      method: 'POST',
+    })
+
     console.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(

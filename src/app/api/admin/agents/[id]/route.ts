@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { agentConfigUpdateSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,7 +66,10 @@ export async function PATCH(
     }
 
     const agentId = params.id
-    const body = await req.json()
+    const rawBody = await req.json()
+
+    // Validate request body with Zod
+    const body = agentConfigUpdateSchema.parse(rawBody)
 
     // Update agent config
     const { data, error } = await supabase
@@ -102,6 +107,20 @@ export async function PATCH(
 
     return NextResponse.json(data)
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error updating agent config:', error)
     return NextResponse.json(
       { error: 'Internal server error' },

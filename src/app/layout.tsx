@@ -10,30 +10,44 @@ import { ReferralTracker } from '@/components/referral-tracker'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
 import { BetaBanner } from '@/components/beta-banner'
 import { PWAProvider } from '@/components/pwa-provider'
-import { CookieConsentBanner } from '@/components/cookies/CookieConsentBanner'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import './globals.css'
+
+// Lazy load non-critical components
+const CookieConsentBanner = lazy(() =>
+  import('@/components/cookies/CookieConsentBanner').then((mod) => ({
+    default: mod.CookieConsentBanner,
+  }))
+)
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+  preload: true,
 })
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
+  display: 'swap',
+  preload: false,
 })
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '600', '700'],
   variable: '--font-cormorant',
+  display: 'swap',
+  preload: false,
 })
 
 const jetbrains = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains',
+  display: 'swap',
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -145,7 +159,9 @@ export default function RootLayout({
           </AuthProvider>
         </PWAProvider>
         <VercelAnalytics />
-        <CookieConsentBanner />
+        <Suspense fallback={null}>
+          <CookieConsentBanner />
+        </Suspense>
       </body>
     </html>
   )

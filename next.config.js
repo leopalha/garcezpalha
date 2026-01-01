@@ -5,16 +5,43 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
   // Do NOT set output - let Vercel auto-detect
+
+  // Enable compression for better performance
+  compress: true,
+
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundle
+
+  // Optimize fonts
+  optimizeFonts: true,
+
+  // Modularize imports for better tree-shaking
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+      skipDefaultConversion: true,
+    },
+  },
+
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
     },
-    // Optimize package imports for faster dev
+    // Optimize CSS for smaller bundles
+    optimizeCss: true,
+    // Optimize package imports for faster dev and smaller bundles
     optimizePackageImports: [
       '@radix-ui/react-icons',
       'lucide-react',
       'recharts',
       '@supabase/supabase-js',
+      'framer-motion',
+      '@tiptap/react',
+      '@tiptap/starter-kit',
+      'react-hook-form',
+      '@tanstack/react-query',
+      'date-fns',
+      'lodash-es',
     ],
     // Turbopack optimizations for high-memory machines (32GB)
     turbo: {
@@ -47,8 +74,16 @@ const nextConfig = {
         hostname: '**.supabase.co',
       },
     ],
+    // Optimize image loading
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Enable lazy loading by default
+    loader: 'default',
+    // Cache optimized images for 60 days
+    minimumCacheTTL: 60 * 60 * 24 * 60,
   },
-  // Webpack optimization for code splitting
+  // Webpack optimization for code splitting and tree shaking
   webpack: (config, { isServer, dev }) => {
     // Faster source maps in development
     if (dev && !isServer) {
@@ -57,25 +92,88 @@ const nextConfig = {
       config.stats = 'minimal'
     }
 
-    // Split chunks for better caching (removed usedExports to fix conflict with cacheUnaffected)
+    // Production optimizations
+    if (!dev) {
+      // Enable tree shaking
+      config.optimization.providedExports = true
+      config.optimization.usedExports = true
+      config.optimization.sideEffects = true
+
+      // Minimize bundle size
+      config.optimization.minimize = true
+    }
+
+    // Split chunks for better caching and lazy loading
     if (!isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
+          // Framework bundle (React, Next.js)
+          framework: {
+            name: 'framework',
+            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // UI Libraries bundle
+          uiLibs: {
+            name: 'ui-libs',
+            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|framer-motion)[\\/]/,
+            priority: 30,
+            enforce: true,
+          },
+          // Tiptap editor bundle (only loaded when needed)
+          editor: {
+            name: 'editor',
+            test: /[\\/]node_modules[\\/](@tiptap)[\\/]/,
+            priority: 25,
+            enforce: true,
+          },
+          // Charts bundle (only loaded when needed)
+          charts: {
+            name: 'charts',
+            test: /[\\/]node_modules[\\/](recharts|d3-)[\\/]/,
+            priority: 25,
+            enforce: true,
+          },
+          // Supabase bundle
+          supabase: {
+            name: 'supabase',
+            test: /[\\/]node_modules[\\/](@supabase)[\\/]/,
+            priority: 20,
+            enforce: true,
+          },
+          // Internal components
           chat: {
             name: 'chat',
             test: /[\\/]src[\\/]components[\\/]chat[\\/]/,
-            priority: 10,
+            priority: 15,
           },
           ui: {
             name: 'ui',
             test: /[\\/]src[\\/]components[\\/]ui[\\/]/,
-            priority: 9,
+            priority: 14,
           },
           agents: {
             name: 'agents',
             test: /[\\/]src[\\/]lib[\\/]ai[\\/]agents[\\/]/,
-            priority: 8,
+            priority: 13,
+          },
+          // Default vendors
+          vendors: {
+            name: 'vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+          // Common components
+          common: {
+            name: 'common',
+            minChunks: 2,
+            priority: 5,
+            reuseExistingChunk: true,
           },
         },
       }

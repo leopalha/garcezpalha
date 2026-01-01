@@ -3,16 +3,21 @@ import { stripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import Stripe from 'stripe'
+import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 
 async function handler(request: NextRequest) {
+  const timer = new PerformanceTimer('POST /api/stripe/webhook')
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
   if (!signature) {
+    timer.end()
     return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 })
   }
 
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    timer.end()
     console.error('STRIPE_WEBHOOK_SECRET not configured')
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
   }
@@ -22,6 +27,8 @@ async function handler(request: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET)
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/stripe/webhook', type: 'signature_verification' })
     console.error('Webhook signature verification failed:', error)
     return NextResponse.json(
       { error: 'Invalid signature' },
@@ -267,8 +274,13 @@ async function handler(request: NextRequest) {
         console.log(`Unhandled event type: ${event.type}`)
     }
 
+    const duration = timer.end()
+    trackApiCall('/api/stripe/webhook', duration, 200, { eventType: event.type })
+
     return NextResponse.json({ received: true })
   } catch (error) {
+    timer.end()
+    trackError(error as Error, { endpoint: '/api/stripe/webhook', eventType: event.type })
     console.error('Webhook handler error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },

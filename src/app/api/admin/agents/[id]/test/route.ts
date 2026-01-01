@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import Groq from 'groq-sdk'
+import { agentTestSchema } from '@/lib/validations/admin-schemas'
+import { ZodError } from 'zod'
 
 export const dynamic = 'force-dynamic'
 
@@ -85,8 +87,13 @@ export async function POST(
     }
 
     const agentId = params.id
-    const body = await req.json()
-    const { message, history = [] } = body
+    const rawBody = await req.json()
+
+    // Validate request body with Zod
+    const body = agentTestSchema.parse({
+      input: rawBody.message,
+      context: { history: rawBody.history || [] }
+    })
 
     // Get agent config from database or use default
     let agentConfig = DEFAULT_CONFIGS[agentId]
@@ -120,7 +127,8 @@ export async function POST(
       },
     ]
 
-    // Add conversation history
+    // Add conversation history from context
+    const history = (body.context as any)?.history || []
     history.forEach((msg: any) => {
       messages.push({
         role: msg.role,
@@ -131,7 +139,7 @@ export async function POST(
     // Add current message
     messages.push({
       role: 'user',
-      content: message,
+      content: body.input,
     })
 
     // Call Groq API
@@ -149,7 +157,7 @@ export async function POST(
     await supabase.from('agent_interactions').insert({
       agent_id: agentId,
       user_id: user.id,
-      prompt: message,
+      prompt: body.input,
       response,
       tokens_used: completion.usage?.total_tokens || 0,
       model: agentConfig.model,
@@ -163,6 +171,20 @@ export async function POST(
       model: agentConfig.model,
     })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('Error testing agent:', error)
     return NextResponse.json(
       { error: 'Failed to get response from agent' },

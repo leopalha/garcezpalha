@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
+import { ZodError } from 'zod'
 
 async function getHandler(
   request: NextRequest,
@@ -33,9 +34,23 @@ async function getHandler(
 
     return NextResponse.json({ conversation })
   } catch (error) {
+    // Handle Zod validation errors
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: error.errors.map((err) => ({
+            field: err.path.join('.'),
+            message: err.message
+          }))
+        },
+        { status: 400 }
+      )
+    }
+
     console.error('[Conversation Detail API] Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
