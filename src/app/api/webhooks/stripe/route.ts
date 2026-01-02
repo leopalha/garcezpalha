@@ -6,6 +6,9 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { sendEvent } from '@/lib/jobs/inngest-client'
 import { logger } from '@/lib/logger'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 // Supabase admin client
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

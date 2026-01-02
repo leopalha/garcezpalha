@@ -3,6 +3,9 @@ import OpenAI from 'openai'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
 import { createLogger } from '@/lib/logger'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const logger = createLogger('api:admin:proposals:generate')
 
 const openai = new OpenAI({

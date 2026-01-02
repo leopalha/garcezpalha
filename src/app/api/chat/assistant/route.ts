@@ -5,6 +5,9 @@ import OpenAI from 'openai'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
 import { logger } from '@/lib/logger'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })

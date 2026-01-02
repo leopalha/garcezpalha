@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { getOpenAIKey } from '@/lib/api/keys-manager'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 /**
  * GET /api/diagnostic/openai
  * Tests OpenAI API connectivity and quota

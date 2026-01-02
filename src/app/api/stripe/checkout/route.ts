@@ -8,6 +8,7 @@ import { logger } from '@/lib/logger'
 import { createCheckoutWithFallback } from '@/lib/resilience/payment-breaker'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-11-20.acacia' as any,
