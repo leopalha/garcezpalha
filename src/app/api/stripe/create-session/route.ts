@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { stripe } from '@/lib/payments/stripe'
+import { getStripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { logger } from '@/lib/logger'
+
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 const createSessionSchema = z.object({
   serviceId: z.string(),
@@ -25,7 +28,7 @@ async function handler(request: NextRequest) {
     const data = (request as any).validatedData
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [

@@ -1,9 +1,11 @@
 # Tech Stack - Garcez Palha Platform
 
-**Versão**: 1.0
-**Atualização**: 29/12/2025
+**Versão**: 2.0
+**Atualização**: 01/01/2026
 **Node**: 20.x
 **Package Manager**: npm
+**Arquivos TS/TSX**: 827
+**Score Plataforma**: 78/100 (Meta: 100/100)
 
 ---
 
@@ -517,30 +519,44 @@ RESEND_API_KEY=
 
 ---
 
-## 21. ESTRUTURA DE PASTAS TECH
+## 21. ESTRUTURA DE PASTAS TECH (Atualizada 01/01/2026)
 
 ```
-src/
+src/                           # 827 arquivos TypeScript/TSX
 ├── lib/
-│   ├── ai/              # Sistema de IA
-│   │   ├── agents/      # Agentes especializados
-│   │   ├── prompts/     # Prompts
-│   │   └── qualification/ # Engine de qualificação
-│   ├── products/        # Catálogo de produtos
-│   ├── supabase/        # Client Supabase
-│   ├── stripe/          # Integração Stripe
-│   ├── mercadopago/     # Integração MercadoPago
-│   ├── twilio/          # Integração Twilio
-│   └── utils/           # Utilidades
-├── app/                 # Next.js App Router
-│   ├── (marketing)/     # Grupo marketing
-│   ├── (dashboard)/     # Grupo dashboard
-│   └── api/             # API routes
-├── components/          # Componentes React
-│   ├── ui/              # Componentes base (Radix)
-│   └── vsl/             # VSL específicos
-└── types/               # TypeScript types
+│   ├── ai/                    # Sistema de IA completo
+│   │   ├── agents/            # 24 agentes + 15 sub-agentes
+│   │   ├── prompts/           # 29 arquivos de prompts
+│   │   ├── qualification/     # Sistema de qualificação
+│   │   └── state-machine/     # 17 estados de conversação
+│   ├── products/              # Catálogo (57 produtos)
+│   ├── supabase/              # Client Supabase
+│   ├── stripe/                # Integração Stripe
+│   ├── mercadopago/           # Integração MercadoPago
+│   ├── twilio/                # 3 integrações WhatsApp
+│   ├── cron/                  # 16 cron jobs
+│   ├── workflows/             # Inngest workflows
+│   └── utils/                 # Utilidades
+├── app/                       # Next.js App Router
+│   ├── (marketing)/           # 86 landing pages
+│   │   └── solucoes/          # Sistema dinâmico por produto
+│   ├── (dashboard)/           # Dashboard admin/cliente
+│   └── api/                   # 159 API routes (48 categorias)
+│       └── webhooks/          # 7 webhooks ativos
+├── components/                # 114 componentes React
+│   ├── ui/                    # Componentes base (Radix UI)
+│   ├── vsl/                   # VSL específicos
+│   └── chat/                  # Widget chat
+└── types/                     # TypeScript types
 ```
+
+**Estatísticas do código:**
+- **Total arquivos TS/TSX:** 827
+- **Componentes React:** 114
+- **APIs:** 159 rotas em 48 categorias
+- **Agentes IA:** 24 principais + 15 sub-agentes
+- **Landing Pages:** 86
+- **Testes:** 28 arquivos
 
 ---
 
@@ -653,9 +669,49 @@ src/
 
 ---
 
+## 26. DATABASE & INFRAESTRUTURA (Atualização 01/01/2026)
+
+### Supabase PostgreSQL
+- **Versão:** PostgreSQL 15+
+- **Tabelas:** 75+ tabelas
+- **Migrations:** 62 arquivos SQL
+- **RLS Policies:** 262 políticas ativas
+- **Functions:** 82 PostgreSQL functions
+- **Storage Buckets:** 4 (contracts, process-docs, uploads, avatars)
+
+### Integrações Ativas
+- **APIs:** 159 rotas em 48 categorias
+- **WhatsApp:** 3 integrações (Cloud API, Baileys, Twilio)
+- **Webhooks:** 7 ativos (Stripe, MercadoPago, ClickSign, WhatsApp, Telegram, Resend, PJe)
+- **Cron Jobs:** 16 automatizados (Vercel Cron)
+
+### State Machine
+- **Estados:** 17 estados de conversação
+- **Automação:** 87% das interações
+- **Conversão:** 1.3-3.8% end-to-end
+- **Escalation:** 35% dos casos
+
+### Custos Operacionais Mensais
+- **Vercel Pro:** R$ 100/mês
+- **Supabase Pro:** R$ 125/mês
+- **OpenAI API:** R$ 500-1,000/mês (variável)
+- **MercadoPago:** 5.39% + R$ 0.60/transação
+- **Stripe:** 4.99% + R$ 0.50/transação
+- **Outros:** ClickSign, Resend, Google Cloud
+- **Total:** R$ 1,315 - 1,365/mês
+
+**Ver documentação completa:**
+- Database: `docs/DATABASE_SCHEMA.md`
+- Integrações: `docs/reference/17_INTEGRACOES.md`
+- User Flows: `docs/04-USER-FLOWS.md`
+- State Machine: `.manus/knowledge/state-machine-17-estados.md`
+
+---
+
 **Total de Dependencies**: ~80
 **Total de DevDependencies**: ~15
 
-**Última atualização**: 29/12/2025
+**Última atualização**: 01/01/2026
 **Package Manager**: npm
 **Node Version**: 20.x
+**Código Real Validado**: 827 arquivos TS/TSX

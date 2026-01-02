@@ -4,8 +4,8 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/payments/stripe'
 import Stripe from 'stripe'
+// Note: This file uses Stripe types only, no client instance needed
 
 /**
  * Database type definitions

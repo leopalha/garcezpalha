@@ -102,6 +102,74 @@ WHERE role = 'admin';
 
 ---
 
+### 3️⃣ Terceiro: Client Portal Tables (NOVO)
+```bash
+psql $DATABASE_URL < 20260101_create_client_portal_tables.sql
+```
+
+Ou via Dashboard:
+1. Supabase Dashboard → SQL Editor
+2. Copiar conteúdo de `20260101_create_client_portal_tables.sql`
+3. Executar
+
+**O que faz:**
+- ✅ Cria tabela `cases` para casos jurídicos do cliente
+- ✅ Cria tabela `case_timeline` para histórico de eventos
+- ✅ Cria tabela `case_documents` para documentos anexados
+- ✅ Cria tabela `notifications` para notificações do usuário
+- ✅ Configura RLS completo (clientes veem apenas seus casos)
+- ✅ Adiciona triggers automáticos (atualiza timeline ao mudar status)
+- ✅ Adiciona triggers de notificação (notifica cliente sobre mudanças)
+
+**Verificar instalação:**
+```sql
+-- Verificar se as 4 tabelas foram criadas
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+AND table_name IN ('cases', 'case_timeline', 'case_documents', 'notifications');
+
+-- Deve retornar 4 linhas
+```
+
+**Dados de teste (opcional):**
+```sql
+-- Substitua os UUIDs pelos IDs reais de seus usuários da tabela profiles
+INSERT INTO cases (
+  client_id,
+  lawyer_id,
+  service_type,
+  status,
+  description,
+  current_phase,
+  progress,
+  next_step
+) VALUES (
+  'UUID-DO-CLIENTE-AQUI',  -- ID do perfil com role='client'
+  'UUID-DO-ADVOGADO-AQUI', -- ID do perfil com role='lawyer'
+  'Divórcio Consensual',
+  'em_andamento',
+  'Processo de divórcio consensual com partilha de bens',
+  'Aguardando homologação judicial',
+  65,
+  'Aguardando homologação do juiz'
+) RETURNING id;
+
+-- Use o ID retornado para criar eventos
+-- Substitua 'CASE-ID-RETORNADO' pelo ID do caso criado acima
+INSERT INTO case_timeline (case_id, type, title, description) VALUES
+  ('CASE-ID-RETORNADO', 'created', 'Caso criado', 'Serviço contratado e caso iniciado'),
+  ('CASE-ID-RETORNADO', 'document_submitted', 'Documentos enviados', 'RG e CPF aprovados');
+```
+
+**APIs já integradas:**
+Após executar esta migration, as seguintes APIs já funcionam com dados reais:
+- `GET /api/client/dashboard` - Dashboard do cliente
+- `GET /api/client/cases` - Lista de casos
+- `GET /api/client/cases/[id]` - Detalhes do caso
+
+---
+
 ## 📚 Documentação Completa
 
 Consulte `SUPABASE_SETUP.md` na raiz do projeto para guia completo de setup.

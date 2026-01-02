@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/payments/stripe'
+import { getStripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import Stripe from 'stripe'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
 import { logger } from '@/lib/logger'
+
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 async function handler(request: NextRequest) {
   const timer = new PerformanceTimer('POST /api/stripe/webhook')
@@ -26,7 +29,7 @@ async function handler(request: NextRequest) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET)
+    event = getStripe().webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET)
   } catch (error) {
     timer.end()
     trackError(error as Error, { endpoint: '/api/stripe/webhook', type: 'signature_verification' })

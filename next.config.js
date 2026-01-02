@@ -6,6 +6,9 @@ const nextConfig = {
   // CRITICAL: Do NOT use static export - we need API routes and serverless functions
   // Do NOT set output - let Vercel auto-detect
 
+  // CDN Configuration (D7-011)
+  assetPrefix: process.env.NEXT_PUBLIC_CDN_URL || '',
+
   // Enable compression for better performance
   compress: true,
 
@@ -15,13 +18,13 @@ const nextConfig = {
   // Optimize fonts
   optimizeFonts: true,
 
-  // Modularize imports for better tree-shaking
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
-      skipDefaultConversion: true,
-    },
-  },
+  // Modularize imports disabled - was causing undefined exports
+  // modularizeImports: {
+  //   'lucide-react': {
+  //     transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+  //     skipDefaultConversion: true,
+  //   },
+  // },
 
   experimental: {
     serverActions: {
@@ -43,17 +46,10 @@ const nextConfig = {
       'date-fns',
       'lodash-es',
     ],
-    // Turbopack optimizations for high-memory machines (32GB)
+    // Turbopack optimizations (reduced for memory constraints)
     turbo: {
       // Enable parallel builds
       resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
-    },
-    // Cache compiled modules more aggressively
-    cacheHandlers: {
-      // Increase cache size for 32GB RAM
-      memory: {
-        maxSize: 2048, // 2GB cache
-      },
     },
   },
   eslint: {
@@ -62,8 +58,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Temporarily ignore TS errors to deploy Google integrations
-    // TODO: Fix remaining TS errors in automated-actions.ts, contract-generator.ts, etc.
+    // ⚠️ TEMPORARILY DISABLED: P1-003 logging migration created type errors
+    // TODO: Fix logger type definitions in all files
     ignoreBuildErrors: true,
   },
   images: {
@@ -73,13 +69,19 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.supabase.co',
       },
+      // CDN domain support
+      ...(process.env.NEXT_PUBLIC_CDN_URL ? [{
+        protocol: 'https',
+        hostname: new URL(process.env.NEXT_PUBLIC_CDN_URL).hostname,
+      }] : []),
     ],
     // Optimize image loading
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    // Enable lazy loading by default
-    loader: 'default',
+    // CDN-aware image loader
+    loader: process.env.NEXT_PUBLIC_CDN_URL ? 'custom' : 'default',
+    path: process.env.NEXT_PUBLIC_CDN_URL ? `${process.env.NEXT_PUBLIC_CDN_URL}/_next/image` : '/_next/image',
     // Cache optimized images for 60 days
     minimumCacheTTL: 60 * 60 * 24 * 60,
   },
@@ -184,6 +186,25 @@ const nextConfig = {
   // Security headers applied globally
   async headers() {
     return [
+      // CDN cache headers for static assets (D7-011)
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/public/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400',
+          },
+        ],
+      },
       {
         source: '/:path*',
         headers: [

@@ -18,9 +18,8 @@ export function isStripeConfigured(): boolean {
   return !!process.env.STRIPE_SECRET_KEY
 }
 
-// Backward compatibility: export instance directly
-// @deprecated Use getStripe() instead
-export const stripe = getStripe()
+// Note: Do NOT export a direct stripe instance to avoid build-time initialization errors
+// Always use getStripe() to get the Stripe client
 
 export interface CreateCheckoutSessionParams {
   clientId: string

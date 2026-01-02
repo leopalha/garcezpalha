@@ -1,0 +1,283 @@
+
+> garcezpalha-platform@0.1.0 build
+> next build
+
+[@sentry/nextjs] DEPRECATION WARNING: disableLogger is deprecated and will be removed in a future version. Use webpack.treeshake.removeDebugLogging instead.
+[@sentry/nextjs] DEPRECATION WARNING: automaticVercelMonitors is deprecated and will be removed in a future version. Use webpack.automaticVercelMonitors instead.
+ ⚠ Invalid next.config.js options detected: 
+ ⚠     Unrecognized key(s) in object: 'cacheHandlers' at "experimental"
+ ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+  ▲ Next.js 14.2.35
+  - Environments: .env.local, .env.production
+  - Experiments (use with caution):
+    · turbo
+    · optimizeCss
+    · instrumentationHook
+
+   Creating an optimized production build ...
+[@sentry/nextjs] It appears you've configured a `sentry.server.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.server.config.ts` file afterward.
+[@sentry/nextjs] It seems like you don't have a global error handler set up. It is recommended that you add a 'global-error.js' file with Sentry instrumentation so that React rendering errors are reported to Sentry. Read more: https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#react-render-errors-in-app-router (you can suppress this warning by setting SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING=1 as environment variable)
+[@sentry/nextjs] It appears you've configured a `sentry.edge.config.ts` file. Please ensure to put this file's content into the `register()` function of a Next.js instrumentation file instead. To ensure correct functionality of the SDK, `Sentry.init` must be called inside of an instrumentation file. Learn more about setting up an instrumentation file in Next.js: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation. You can safely delete the `sentry.edge.config.ts` file afterward.
+[@sentry/nextjs] DEPRECATION WARNING: It is recommended renaming your `sentry.client.config.ts` file, or moving its content to `instrumentation-client.ts`. When using Turbopack `sentry.client.config.ts` will no longer work. Read more about the `instrumentation-client.ts` file: https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation-client
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+[WhatsApp] Cloud API credentials not configured
+ ⚠ Using edge runtime on a page currently disables static generation for that page
+[WhatsApp] Cloud API credentials not configured
+[WhatsApp] Cloud API credentials not configured
+[WhatsApp] Cloud API credentials not configured
+[WhatsApp] Cloud API credentials not configured
+[WhatsApp] Cloud API credentials not configured
+   Generating static pages (0/298) ...
+[API /admin/analytics/leads] Error: n [Error]: Dynamic server usage: Route /api/admin/analytics/leads couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (d:\garcezpalha\.next\server\chunks\9085.js:1:58881)
+    at f (d:\garcezpalha\.next\server\chunks\429.js:9:4985)
+    at i (d:\garcezpalha\.next\server\app\api\admin\analytics\conversion-rate\route.js:1:7523)
+    at m (d:\garcezpalha\.next\server\app\api\admin\analytics\leads\route.js:1:3525)
+    at d:\garcezpalha\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at d:\garcezpalha\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/admin/analytics/leads couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+{"timestamp":"2026-01-02T01:36:02.149Z","level":"error","message":"Lead statistics fetch failed","context":"api:admin:leads:stats","error":{"message":"Dynamic server usage: Route /api/admin/leads/stats couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/admin/leads/stats couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at l (d:\\garcezpalha\\.next\\server\\chunks\\9085.js:1:58881)\n    at f (d:\\garcezpalha\\.next\\server\\chunks\\429.js:9:4985)\n    at o (d:\\garcezpalha\\.next\\server\\app\\api\\admin\\analytics\\health\\route.js:1:5930)\n    at g (d:\\garcezpalha\\.next\\server\\app\\api\\admin\\leads\\stats\\route.js:1:2802)\n    at d:\\garcezpalha\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.prod.js:6:38417\n    at d:\\garcezpalha\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:140:36\n    at NoopContextManager.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\context\\NoopContextManager.js:25:19)\n    at ContextAPI.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\api\\context.js:60:46)\n    at NoopTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\NoopTracer.js:65:31)\n    at ProxyTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\ProxyTracer.js:36:24)","name":"Error"}}
+{"timestamp":"2026-01-02T01:36:02.153Z","level":"error","message":"Leads list fetch failed","context":"api:admin:leads","error":{"message":"Dynamic server usage: Route /api/admin/leads couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/admin/leads couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at l (d:\\garcezpalha\\.next\\server\\chunks\\9085.js:1:58881)\n    at f (d:\\garcezpalha\\.next\\server\\chunks\\429.js:9:4985)\n    at i (d:\\garcezpalha\\.next\\server\\app\\api\\admin\\agents\\[id]\\test\\route.js:38:47172)\n    at h (d:\\garcezpalha\\.next\\server\\app\\api\\admin\\leads\\route.js:1:2795)\n    at d:\\garcezpalha\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.prod.js:6:38417\n    at d:\\garcezpalha\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:140:36\n    at NoopContextManager.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\context\\NoopContextManager.js:25:19)\n    at ContextAPI.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\api\\context.js:60:46)\n    at NoopTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\NoopTracer.js:65:31)\n    at ProxyTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\ProxyTracer.js:36:24)","name":"Error"}}
+[API /admin/leads/dashboard] Error: n [Error]: Dynamic server usage: Route /api/admin/leads/dashboard couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at l (d:\garcezpalha\.next\server\chunks\9085.js:1:58881)
+    at f (d:\garcezpalha\.next\server\chunks\429.js:9:4985)
+    at i (d:\garcezpalha\.next\server\app\api\admin\agents\[id]\route.js:1:6325)
+    at x (d:\garcezpalha\.next\server\app\api\admin\leads\dashboard\route.js:1:2740)
+    at d:\garcezpalha\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at d:\garcezpalha\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24) {
+  description: "Route /api/admin/leads/dashboard couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+
+Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error
+
+Error: Cannot find module 'critters'
+Require stack:
+- d:\garcezpalha\node_modules\next\dist\compiled\next-server\pages.runtime.prod.js
+- d:\garcezpalha\.next\server\pages\_document.js
+- d:\garcezpalha\node_modules\next\dist\server\require.js
+- d:\garcezpalha\node_modules\next\dist\server\load-components.js
+- d:\garcezpalha\node_modules\next\dist\build\utils.js
+- d:\garcezpalha\node_modules\next\dist\build\worker.js
+- d:\garcezpalha\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1383:15)
+    at d:\garcezpalha\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1463:12)
+    at mod.require (d:\garcezpalha\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:147:16)
+
+Error occurred prerendering page "/500". Read more: https://nextjs.org/docs/messages/prerender-error
+
+Error: Cannot find module 'critters'
+Require stack:
+- d:\garcezpalha\node_modules\next\dist\compiled\next-server\pages.runtime.prod.js
+- d:\garcezpalha\.next\server\pages\_document.js
+- d:\garcezpalha\node_modules\next\dist\server\require.js
+- d:\garcezpalha\node_modules\next\dist\server\load-components.js
+- d:\garcezpalha\node_modules\next\dist\build\utils.js
+- d:\garcezpalha\node_modules\next\dist\build\worker.js
+- d:\garcezpalha\node_modules\next\dist\compiled\jest-worker\processChild.js
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1383:15)
+    at d:\garcezpalha\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1463:12)
+    at mod.require (d:\garcezpalha\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:147:16)
+{"timestamp":"2026-01-02T01:36:12.981Z","level":"error","message":"Conversations fetch request failed","context":"api:conversations","error":{"message":"Dynamic server usage: Route /api/conversations couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error","stack":"Error: Dynamic server usage: Route /api/conversations couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error\n    at l (d:\\garcezpalha\\.next\\server\\chunks\\9085.js:1:58881)\n    at f (d:\\garcezpalha\\.next\\server\\chunks\\429.js:9:4985)\n    at i (d:\\garcezpalha\\.next\\server\\app\\api\\app\\products\\[id]\\route.js:1:8490)\n    at f (d:\\garcezpalha\\.next\\server\\app\\api\\conversations\\route.js:1:3542)\n    at d:\\garcezpalha\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.prod.js:6:38417\n    at d:\\garcezpalha\\node_modules\\next\\dist\\server\\lib\\trace\\tracer.js:140:36\n    at NoopContextManager.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\context\\NoopContextManager.js:25:19)\n    at ContextAPI.with (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\api\\context.js:60:46)\n    at NoopTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\NoopTracer.js:65:31)\n    at ProxyTracer.startActiveSpan (d:\\garcezpalha\\node_modules\\@opentelemetry\\api\\build\\src\\trace\\ProxyTracer.js:36:24)","name":"Error"}}
+[WhatsApp] Cloud API credentials not configured
+   Generating static pages (74/298) 
+[NPS Check] Error: B [Error]: Dynamic server usage: Route /api/nps/check couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (d:\garcezpalha\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:21778)
+    at Object.get (d:\garcezpalha\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:29465)
+    at d (d:\garcezpalha\.next\server\app\api\nps\check\route.js:1:3512)
+    at d:\garcezpalha\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at d:\garcezpalha\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\context\NoopContextManager.js:25:19)
+    at ContextAPI.with (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\api\context.js:60:46)
+    at NoopTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\NoopTracer.js:65:31)
+    at ProxyTracer.startActiveSpan (d:\garcezpalha\node_modules\@opentelemetry\api\build\src\trace\ProxyTracer.js:36:24)
+    at d:\garcezpalha\node_modules\next\dist\server\lib\trace\tracer.js:122:103 {
+  description: "Route /api/nps/check couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (148/298) 
+   Generating static pages (223/298) 
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:7974
+    at Array.map (<anonymous>)
+    at j (d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:6825) {
+  digest: '1634420983'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:7974
+    at Array.map (<anonymous>)
+    at j (d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:6825) {
+  digest: '1634420983'
+}
+
+Error occurred prerendering page "/blog". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:7974
+    at Array.map (<anonymous>)
+    at j (d:\garcezpalha\.next\server\app\(marketing)\blog\page.js:1:6825)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+
+Error occurred prerendering page "/blog/contrato-locacao-guia-completo". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+
+Error occurred prerendering page "/blog/acao-despejo-guia-completo". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+
+Error occurred prerendering page "/blog/golpes-imobiliarios-como-evitar". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+
+Error occurred prerendering page "/blog/inventario-partilha-bens-heranca". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+
+Error occurred prerendering page "/blog/prisao-flagrante-direitos-procedimento". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7) {
+  digest: '639409980'
+}
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912) {
+  digest: '3298526042'
+}
+
+Error occurred prerendering page "/blog/rescisao-contrato-trabalho-verbas-rescisarias". Read more: https://nextjs.org/docs/messages/prerender-error
+
+RangeError: Invalid time value
+    at ew (d:\garcezpalha\.next\server\chunks\7842.js:2:19420)
+    at C (d:\garcezpalha\.next\server\app\(marketing)\blog\[slug]\page.js:1:3912)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:549:9)
+    at process.processTimers (node:internal/timers:523:7)
+ ✓ Generating static pages (298/298)
+
+> Export encountered errors on following paths:
+	/(marketing)/blog/[slug]/page: /blog/acao-despejo-guia-completo
+	/(marketing)/blog/[slug]/page: /blog/contrato-locacao-guia-completo
+	/(marketing)/blog/[slug]/page: /blog/golpes-imobiliarios-como-evitar
+	/(marketing)/blog/[slug]/page: /blog/inventario-partilha-bens-heranca
+	/(marketing)/blog/[slug]/page: /blog/prisao-flagrante-direitos-procedimento
+	/(marketing)/blog/[slug]/page: /blog/rescisao-contrato-trabalho-verbas-rescisarias
+	/(marketing)/blog/page: /blog
+	/_error: /404
+	/_error: /500
