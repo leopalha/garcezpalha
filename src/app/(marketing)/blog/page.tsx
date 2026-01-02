@@ -10,6 +10,17 @@ import { BLOG_CATEGORIES } from '@/lib/blog/types'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
+// Safe date formatting helper
+function formatDateSafe(dateStr: string, formatStr: string): string {
+  try {
+    const date = new Date(dateStr + 'T12:00:00')
+    if (isNaN(date.getTime())) return ''
+    return format(date, formatStr, { locale: ptBR })
+  } catch {
+    return ''
+  }
+}
+
 // Enable ISR with 2 hour revalidation for blog listing
 export const revalidate = 7200 // Revalidate every 2 hours
 
@@ -113,9 +124,7 @@ export default async function BlogPage() {
                         <div className="flex items-center gap-4">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {format(new Date(posts[0].datePublished + "T12:00:00"), "d 'de' MMM", {
-                              locale: ptBR,
-                            })}
+                            {formatDateSafe(posts[0].datePublished, "d 'de' MMM")}
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
@@ -178,7 +187,7 @@ export default async function BlogPage() {
                       <span>{post.author}</span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {format(new Date(post.datePublished + "T12:00:00"), 'd MMM', { locale: ptBR })}
+                        {formatDateSafe(post.datePublished, 'd MMM')}
                       </span>
                     </div>
 

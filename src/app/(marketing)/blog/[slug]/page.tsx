@@ -68,8 +68,16 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const relatedPosts = await getRelatedPosts(post.slug, post.category, 3)
 
-  const publishedDate = new Date(post.datePublished)
-  const formattedDate = format(publishedDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR })
+  // Handle date formatting safely
+  let formattedDate = 'Data não disponível'
+  try {
+    const publishedDate = new Date(post.datePublished + 'T12:00:00')
+    if (!isNaN(publishedDate.getTime())) {
+      formattedDate = format(publishedDate, "d 'de' MMMM 'de' yyyy", { locale: ptBR })
+    }
+  } catch {
+    console.warn(`Invalid date for post ${post.slug}: ${post.datePublished}`)
+  }
 
   // JSON-LD structured data
   const articleSchema = {

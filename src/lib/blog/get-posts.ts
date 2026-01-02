@@ -86,18 +86,22 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     // Calculate reading time
     const stats = readingTime(content)
 
+    // Handle date field - support both 'date' and 'datePublished'
+    const datePublished = data.datePublished || data.date || new Date().toISOString().split('T')[0]
+    const dateModified = data.dateModified || datePublished
+
     return {
       slug,
-      title: data.title,
-      description: data.description,
-      author: data.author,
-      authorRole: data.authorRole,
-      authorImage: data.authorImage,
-      datePublished: data.datePublished,
-      dateModified: data.dateModified,
-      category: data.category,
+      title: data.title || 'Sem título',
+      description: data.description || '',
+      author: data.author || 'Garcez Palha',
+      authorRole: data.authorRole || 'Advogado',
+      authorImage: data.authorImage || '/images/team/default-avatar.jpg',
+      datePublished,
+      dateModified,
+      category: data.category || 'Geral',
       tags: data.tags || [],
-      image: data.image,
+      image: data.image || { url: '/images/blog/default.jpg', width: 1200, height: 630, alt: data.title || 'Blog' },
       readingTime: stats.text,
       featured: data.featured || false,
       seoKeywords: data.seoKeywords || [],
