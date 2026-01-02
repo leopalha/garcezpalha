@@ -4,6 +4,10 @@
  * Atualizado: 02/01/2026 - P0-003 Cron Jobs
  */
 
+// Force dynamic to prevent build-time execution
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 import { serve } from 'inngest/next'
 import { inngest } from '@/lib/jobs/inngest-client'
 

@@ -3,9 +3,19 @@ import OpenAI from 'openai'
 
 const logger = createLogger('document-analyzer-v2')
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || ''
-})
+// Lazy-loaded OpenAI client to avoid build-time initialization errors
+let openaiClient: OpenAI | null = null
+function getOpenAI(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY not configured')
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  }
+  return openaiClient
+}
 
 export interface OCRResult {
   text: string
@@ -45,7 +55,7 @@ export async function performOCR(imageUrl: string): Promise<OCRResult> {
   try {
     logger.info('Starting OCR', { imageUrl })
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o', // GPT-4 with vision
       messages: [
         {
@@ -92,7 +102,7 @@ export async function classifyDocument(text: string): Promise<DocumentClassifica
   try {
     logger.info('Classifying document', { textLength: text.length })
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -154,7 +164,7 @@ export async function extractEntities(text: string): Promise<ExtractedEntity[]> 
   try {
     logger.info('Extracting entities', { textLength: text.length })
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -229,7 +239,7 @@ export async function summarizeDocument(text: string): Promise<DocumentSummary> 
   try {
     logger.info('Summarizing document', { textLength: text.length })
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -320,7 +330,7 @@ export async function compareDocuments(
       lengthB: textB.length
     })
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
