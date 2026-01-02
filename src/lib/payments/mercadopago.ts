@@ -18,9 +18,21 @@ export function isMercadoPagoConfigured(): boolean {
   return !!process.env.MERCADOPAGO_ACCESS_TOKEN
 }
 
-// Backward compatibility: export client directly
+// Lazy-loaded payment client for backward compatibility
 // @deprecated Use getMercadoPago() and create your own Payment instance
-export const paymentClient = new Payment(getMercadoPago())
+let _paymentClient: Payment | null = null
+export function getPaymentClient(): Payment {
+  if (!_paymentClient) {
+    _paymentClient = new Payment(getMercadoPago())
+  }
+  return _paymentClient
+}
+// For backward compatibility - getter that lazily initializes
+export const paymentClient = {
+  get client(): Payment {
+    return getPaymentClient()
+  }
+}
 
 export interface CreatePixPaymentParams {
   clientId: string

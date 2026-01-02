@@ -20,14 +20,39 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { clickSign } from '@/lib/signature/clicksign-service'
-import { createClient } from '@/lib/supabase/server'
-import { createPreference, isMercadoPagoConfigured } from '@/lib/payments/mercadopago'
-import { emailService } from '@/lib/email/email-service'
-import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import { withRateLimit } from '@/lib/rate-limit'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { logger } from '@/lib/logger'
+
+// Force dynamic to prevent build-time execution
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+// Lazy imports to avoid build-time initialization errors
+async function getClickSign() {
+  const { clickSign } = await import('@/lib/signature/clicksign-service')
+  return clickSign
+}
+
+async function getMercadoPagoUtils() {
+  const { createPreference, isMercadoPagoConfigured } = await import('@/lib/payments/mercadopago')
+  return { createPreference, isMercadoPagoConfigured }
+}
+
+async function getEmailService() {
+  const { emailService } = await import('@/lib/email/email-service')
+  return emailService
+}
+
+async function getWhatsAppCloudAPI() {
+  const { whatsappCloudAPI } = await import('@/lib/whatsapp/cloud-api')
+  return whatsappCloudAPI
+}
+
+async function getSupabaseClient() {
+  const { createClient } = await import('@/lib/supabase/server')
+  return createClient()
+}
 
 /**
  * Database type definitions
@@ -63,6 +88,9 @@ async function handler(request: NextRequest) {
   try {
     const body = await request.text()
     const signature = request.headers.get('x-clicksign-signature') || ''
+
+    // Lazy load clickSign
+    const clickSign = await getClickSign()
 
     // Verify webhook signature (security)
     if (!clickSign.verifyWebhookSignature(signature, body)) {
@@ -101,7 +129,8 @@ async function handler(request: NextRequest) {
  * Handle document signed event (all parties signed)
  */
 async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseClient()
+  const clickSign = await getClickSign()
   const documentKey = payload.data.document.key
 
   logger.info('Document signed:', documentKey)
@@ -192,6 +221,8 @@ async function createPaymentLinkForContract(
   signedDocumentUrl: string
 ) {
   try {
+    const { createPreference, isMercadoPagoConfigured } = await getMercadoPagoUtils()
+
     if (!isMercadoPagoConfigured()) {
       logger.warn('[ClickSign] MercadoPago not configured, skipping payment link')
       return
@@ -229,6 +260,7 @@ async function createPaymentLinkForContract(
     }).format(contract.amount / 100)
 
     // Send payment link via WhatsApp
+    const whatsappCloudAPI = await getWhatsAppCloudAPI()
     if (lead.phone && whatsappCloudAPI.isConfigured()) {
       const message = `✅ *Contrato Assinado com Sucesso!*
 
@@ -251,6 +283,7 @@ Garcez Palha - Consultoria Jurídica & Pericial
     }
 
     // Send payment link via Email
+    const emailService = await getEmailService()
     if (lead.email) {
       await emailService.sendCustomEmail({
         to: lead.email,
@@ -310,6 +343,7 @@ async function sendContractConfirmationEmail(
       year: 'numeric',
     })
 
+    const emailService = await getEmailService()
     await emailService.sendContractSigned({
       to: lead.email,
       name: lead.name,
@@ -329,7 +363,7 @@ async function sendContractConfirmationEmail(
  * Handle document closed event (signing process completed)
  */
 async function handleDocumentClosed(payload: ClickSignWebhookPayload) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseClient()
   const documentKey = payload.data.document.key
 
   logger.info('Document closed:', documentKey)
@@ -348,7 +382,7 @@ async function handleDocumentClosed(payload: ClickSignWebhookPayload) {
  * Handle document cancelled event
  */
 async function handleDocumentCancelled(payload: ClickSignWebhookPayload) {
-  const supabase = await createClient()
+  const supabase = await getSupabaseClient()
   const documentKey = payload.data.document.key
 
   logger.info('Document cancelled:', documentKey)
