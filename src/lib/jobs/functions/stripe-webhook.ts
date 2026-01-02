@@ -8,10 +8,20 @@ import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  // @ts-expect-error - Using stable API version
-  apiVersion: '2024-11-20.acacia',
-})
+// Lazy-loaded Stripe client to avoid build-time initialization errors
+let stripeClient: Stripe | null = null
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY not configured')
+    }
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      // @ts-expect-error - Using stable API version
+      apiVersion: '2024-11-20.acacia',
+    })
+  }
+  return stripeClient
+}
 
 export const stripeWebhookHandler = inngest.createFunction(
   {
@@ -28,7 +38,7 @@ export const stripeWebhookHandler = inngest.createFunction(
     // Step 1: Validate event with Stripe API
     const stripeEvent = await step.run('validate-event', async () => {
       try {
-        return await stripe.events.retrieve(eventId)
+        return await getStripe().events.retrieve(eventId)
       } catch (error) {
         logger.error('Failed to validate Stripe event', { eventId, error })
         throw error
