@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, HelpCircle } from 'lucide-react'
+import { IconChevronDown, IconHelpCircle } from './icons'
 
 const faqs = [
   {
@@ -53,7 +53,7 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: FAQItemProps) {
         className="w-full py-5 flex items-center justify-between text-left hover:text-primary transition-colors"
       >
         <span className="font-medium text-lg pr-4">{question}</span>
-        <ChevronDown
+        <IconChevronDown
           className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
             isOpen ? 'rotate-180' : ''
           }`}
@@ -118,7 +118,7 @@ export function FAQ() {
           className="text-center mb-12"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-6">
-            <HelpCircle className="w-8 h-8 text-primary" />
+            <IconHelpCircle className="w-8 h-8 text-primary" />
           </div>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
             Perguntas Frequentes

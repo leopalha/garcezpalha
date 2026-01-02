@@ -2,27 +2,27 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, Brain, FileCheck, ArrowRight } from 'lucide-react'
+import { IconMessageCircle, IconBrain, IconFileCheck, IconArrowRight } from './icons'
 import Link from 'next/link'
 
 const steps = [
   {
     number: 1,
-    icon: MessageCircle,
+    icon: IconMessageCircle,
     title: 'Contato',
     description: 'Voce nos conta seu problema pelo WhatsApp ou telefone. Entendemos sua situacao e tiramos suas duvidas.',
     color: 'bg-primary',
   },
   {
     number: 2,
-    icon: Brain,
+    icon: IconBrain,
     title: 'Analise',
     description: 'Analisamos seu caso detalhadamente e montamos a melhor estrategia. Voce recebe uma proposta clara.',
     color: 'bg-primary',
   },
   {
     number: 3,
-    icon: FileCheck,
+    icon: IconFileCheck,
     title: 'Atuacao',
     description: 'Atuamos no seu caso com total dedicacao. Voce acompanha cada passo em tempo real.',
     color: 'bg-primary',
@@ -98,7 +98,7 @@ export function HowItWorks() {
                   {/* Arrow between steps (mobile only) */}
                   {index < steps.length - 1 && (
                     <div className="md:hidden flex justify-center py-4">
-                      <ArrowRight className="w-6 h-6 text-muted-foreground rotate-90" />
+                      <IconArrowRight className="w-6 h-6 text-muted-foreground rotate-90" />
                     </div>
                   )}
                 </motion.div>
@@ -121,7 +121,7 @@ export function HowItWorks() {
             asChild
           >
             <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="w-5 h-5" />
+              <IconMessageCircle className="w-5 h-5" />
               Iniciar Atendimento
             </Link>
           </Button>

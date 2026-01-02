@@ -14,7 +14,7 @@ import { Loader2, AlertCircle } from 'lucide-react'
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/admin'
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
   const error = searchParams.get('error')
 
   const [isLoading, setIsLoading] = useState(false)
@@ -137,14 +137,6 @@ export default function LoginPage() {
                     <code className="text-xs bg-white px-2 py-1 rounded border border-slate-200">advogado@garcezpalha.com</code>
                     <span className="text-slate-400">/</span>
                     <code className="text-xs bg-white px-2 py-1 rounded border border-slate-200 font-semibold text-primary">advogado123</code>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center gap-3">
-                  <span className="font-semibold text-slate-700">Parceiro:</span>
-                  <div className="flex items-center gap-2">
-                    <code className="text-xs bg-white px-2 py-1 rounded border border-slate-200">parceiro@garcezpalha.com</code>
-                    <span className="text-slate-400">/</span>
-                    <code className="text-xs bg-white px-2 py-1 rounded border border-slate-200 font-semibold text-primary">parceiro123</code>
                   </div>
                 </div>
                 <div className="flex justify-between items-center gap-3">

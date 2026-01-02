@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Quote, Star } from 'lucide-react'
+import { IconQuote, IconStar } from './icons'
 
 const testimonials = [
   {
@@ -67,7 +67,7 @@ export function Testimonials() {
               <div className="h-full p-6 bg-muted/50 rounded-xl border border-border/50 hover:shadow-md transition-shadow">
                 {/* Quote Icon */}
                 <div className="mb-4">
-                  <Quote className="w-8 h-8 text-primary/30" />
+                  <IconQuote className="w-8 h-8 text-primary/30" />
                 </div>
 
                 {/* Quote Text */}
@@ -95,7 +95,7 @@ export function Testimonials() {
                 {/* Stars */}
                 <div className="flex gap-1 mt-4">
                   {Array.from({ length: testimonial.stars }).map((_, i) => (
-                    <Star
+                    <IconStar
                       key={i}
                       className="w-4 h-4 fill-gold-500 text-gold-500"
                     />

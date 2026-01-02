@@ -1,12 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Award, Scale, Building2 } from 'lucide-react'
+import { IconAward, IconScale, IconBuilding2 } from './icons'
 
 const credentials = [
-  { icon: Scale, label: 'OAB/RJ', value: '219.390', description: 'Advocacia' },
-  { icon: Award, label: 'CONPEJ/RJ', value: 'Registrado', description: 'Pericias' },
-  { icon: Building2, label: 'CRECI/RJ', value: 'Ativo', description: 'Imoveis' },
+  { icon: IconScale, label: 'OAB/RJ', value: '219.390', description: 'Advocacia' },
+  { icon: IconAward, label: 'CONPEJ/RJ', value: 'Registrado', description: 'Pericias' },
+  { icon: IconBuilding2, label: 'CRECI/RJ', value: 'Ativo', description: 'Imoveis' },
 ]
 
 export function Credentials() {

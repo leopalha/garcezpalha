@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, ArrowRight, Phone } from 'lucide-react'
+import { IconMessageCircle, IconArrowRight, IconPhone } from './icons'
 import Link from 'next/link'
 
 export function FinalCTA() {
@@ -52,7 +52,7 @@ export function FinalCTA() {
               asChild
             >
               <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-5 h-5" />
+                <IconMessageCircle className="w-5 h-5" />
                 Falar pelo WhatsApp
               </Link>
             </Button>
@@ -64,9 +64,9 @@ export function FinalCTA() {
               asChild
             >
               <Link href="/contato">
-                <Phone className="w-5 h-5" />
+                <IconPhone className="w-5 h-5" />
                 Agendar Consulta
-                <ArrowRight className="w-5 h-5" />
+                <IconArrowRight className="w-5 h-5" />
               </Link>
             </Button>
           </motion.div>

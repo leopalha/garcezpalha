@@ -5,38 +5,38 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
-  Banknote,
-  Home,
-  Heart,
-  Shield,
-  ArrowRight,
-  MessageCircle,
-  Users,
-  TrendingUp,
-  Clock,
-} from 'lucide-react'
+  IconBanknote,
+  IconHome,
+  IconHeart,
+  IconShield,
+  IconArrowRight,
+  IconMessageCircle,
+  IconUsers,
+  IconTrendingUp,
+  IconClock,
+} from './icons'
 
 const topServices = [
   {
-    icon: Banknote,
+    icon: IconBanknote,
     title: 'Bancário',
     description: 'Desbloqueio de conta, Golpe PIX, Negativação indevida',
     href: '/solucoes?categoria=bancario',
   },
   {
-    icon: Home,
+    icon: IconHome,
     title: 'Imóveis',
     description: 'Usucapião, Regularização, Inventário',
     href: '/solucoes?categoria=imobiliario',
   },
   {
-    icon: Heart,
+    icon: IconHeart,
     title: 'Saúde',
     description: 'Plano de saúde, Cirurgia bariátrica, TEA/Autismo',
     href: '/solucoes?categoria=saude',
   },
   {
-    icon: Shield,
+    icon: IconShield,
     title: 'Criminal',
     description: 'Defesa criminal, Habeas corpus, Audiência de custódia',
     href: '/solucoes?categoria=criminal',
@@ -112,7 +112,7 @@ export function ClientsSection() {
           <Button size="lg" className="text-lg px-8" asChild>
             <Link href="/solucoes">
               Ver Todos os Serviços
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <IconArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
           <Button
@@ -122,7 +122,7 @@ export function ClientsSection() {
             asChild
           >
             <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="h-5 w-5" />
+              <IconMessageCircle className="h-5 w-5" />
               Falar no WhatsApp
             </Link>
           </Button>
@@ -138,7 +138,7 @@ export function ClientsSection() {
         >
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <Users className="w-6 h-6 text-primary" />
+              <IconUsers className="w-6 h-6 text-primary" />
             </div>
             <p className="text-4xl font-bold text-primary mb-2">10.000+</p>
             <p className="text-muted-foreground">Clientes atendidos</p>
@@ -146,7 +146,7 @@ export function ClientsSection() {
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <TrendingUp className="w-6 h-6 text-primary" />
+              <IconTrendingUp className="w-6 h-6 text-primary" />
             </div>
             <p className="text-4xl font-bold text-primary mb-2">98%</p>
             <p className="text-muted-foreground">Satisfação</p>
@@ -154,7 +154,7 @@ export function ClientsSection() {
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <Clock className="w-6 h-6 text-primary" />
+              <IconClock className="w-6 h-6 text-primary" />
             </div>
             <p className="text-4xl font-bold text-primary mb-2">24/7</p>
             <p className="text-muted-foreground">Atendimento</p>

@@ -4,18 +4,77 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  Building2,
-  Scale,
-  ArrowRight,
-  CheckCircle,
-  Users,
-  Sparkles,
-  TrendingUp,
-  Zap,
-} from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+
+// Inline SVG icons to avoid Turbopack issues with lucide-react
+const IconCheckCircle = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+)
+
+const IconBuilding2 = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+    <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+    <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+    <path d="M10 6h4"/>
+    <path d="M10 10h4"/>
+    <path d="M10 14h4"/>
+    <path d="M10 18h4"/>
+  </svg>
+)
+
+const IconScale = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+    <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+    <path d="M7 21h10"/>
+    <path d="M12 3v18"/>
+    <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+  </svg>
+)
+
+const IconArrowRight = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14"/>
+    <path d="m12 5 7 7-7 7"/>
+  </svg>
+)
+
+const IconUsers = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+)
+
+const IconSparkles = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+    <path d="M5 3v4"/>
+    <path d="M19 17v4"/>
+    <path d="M3 5h4"/>
+    <path d="M17 19h4"/>
+  </svg>
+)
+
+const IconTrendingUp = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+    <polyline points="16 7 22 7 22 13"/>
+  </svg>
+)
+
+const IconZap = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </svg>
+)
 
 type Audience = 'client' | 'lawyer' | null
 
@@ -56,7 +115,7 @@ export function DualHero() {
               >
                 <CardContent className="pt-8 pb-8 text-center">
                   <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-500 group-hover:scale-110 transition-all">
-                    <Scale className="h-8 w-8 text-blue-600 group-hover:text-white" />
+                    <IconScale className="h-8 w-8 text-blue-600 group-hover:text-white" />
                   </div>
 
                   <h2 className="text-2xl font-bold mb-3">Preciso de Serviços Jurídicos</h2>
@@ -74,7 +133,7 @@ export function DualHero() {
                       'E muito mais...',
                     ].map((item) => (
                       <div key={item} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <IconCheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
                         <span>{item}</span>
                       </div>
                     ))}
@@ -82,16 +141,16 @@ export function DualHero() {
 
                   <Button className="w-full group-hover:bg-primary group-hover:scale-105 transition-all">
                     Ver Serviços
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <IconArrowRight className="ml-2 h-4 w-4" />
                   </Button>
 
                   <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
+                      <IconUsers className="h-3 w-3" />
                       10.000+ atendidos
                     </span>
                     <span className="flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" />
+                      <IconTrendingUp className="h-3 w-3" />
                       98% satisfação
                     </span>
                   </div>
@@ -105,14 +164,14 @@ export function DualHero() {
               >
                 <div className="absolute top-4 right-4">
                   <Badge className="bg-gradient-to-r from-primary to-blue-600">
-                    <Sparkles className="h-3 w-3 mr-1" />
+                    <IconSparkles className="h-3 w-3 mr-1" />
                     Novidade
                   </Badge>
                 </div>
 
                 <CardContent className="pt-8 pb-8 text-center">
                   <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary group-hover:scale-110 transition-all">
-                    <Building2 className="h-8 w-8 text-primary group-hover:text-primary-foreground" />
+                    <IconBuilding2 className="h-8 w-8 text-primary group-hover:text-primary-foreground" />
                   </div>
 
                   <h2 className="text-2xl font-bold mb-3">Sou Advogado(a)</h2>
@@ -130,7 +189,7 @@ export function DualHero() {
                       'De R$ 497/mês',
                     ].map((item) => (
                       <div key={item} className="flex items-center gap-2 text-sm">
-                        <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+                        <IconZap className="h-4 w-4 text-primary flex-shrink-0" />
                         <span>{item}</span>
                       </div>
                     ))}
@@ -138,16 +197,16 @@ export function DualHero() {
 
                   <Button className="w-full bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 group-hover:scale-105 transition-all">
                     Conhecer Plataforma
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <IconArrowRight className="ml-2 h-4 w-4" />
                   </Button>
 
                   <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
+                      <IconUsers className="h-3 w-3" />
                       300+ advogados
                     </span>
                     <span className="flex items-center gap-1">
-                      <TrendingUp className="h-3 w-3" />
+                      <IconTrendingUp className="h-3 w-3" />
                       847 leads/mês
                     </span>
                   </div>
@@ -201,7 +260,7 @@ export function DualHero() {
                   <Button size="lg" className="text-lg px-8" asChild>
                     <Link href="#produtos">
                       Ver Todos os Serviços
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <IconArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="text-lg px-8" asChild>
@@ -248,7 +307,7 @@ export function DualHero() {
                           key={area.title}
                           className="flex items-start gap-3 p-4 rounded-lg hover:bg-muted/50 transition-colors"
                         >
-                          <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <IconCheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                           <div>
                             <p className="font-semibold">{area.title}</p>
                             <p className="text-sm text-muted-foreground">{area.desc}</p>
@@ -276,7 +335,7 @@ export function DualHero() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 <Badge className="text-sm px-4 py-1 bg-gradient-to-r from-primary to-blue-600">
-                  <Sparkles className="h-3 w-3 mr-1" />
+                  <IconSparkles className="h-3 w-3 mr-1" />
                   Plataforma para Advogados
                 </Badge>
 
@@ -300,7 +359,7 @@ export function DualHero() {
                   >
                     <Link href="/app">
                       Ver a Plataforma
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <IconArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="text-lg px-8" asChild>
@@ -332,27 +391,27 @@ export function DualHero() {
                     <div className="grid gap-4">
                       {[
                         {
-                          icon: Sparkles,
+                          icon: IconSparkles,
                           title: 'Secretária IA 24/7',
                           desc: 'Atende e qualifica leads automaticamente',
                         },
                         {
-                          icon: Users,
+                          icon: IconUsers,
                           title: 'CRM Completo',
                           desc: 'Gestão de leads, clientes e processos',
                         },
                         {
-                          icon: TrendingUp,
+                          icon: IconTrendingUp,
                           title: 'Marketing Automation',
                           desc: 'Landing pages, VSL e automações',
                         },
                         {
-                          icon: Building2,
+                          icon: IconBuilding2,
                           title: 'White-Label',
                           desc: 'Sua marca, seu domínio, suas cores',
                         },
                         {
-                          icon: Zap,
+                          icon: IconZap,
                           title: 'Ferramentas de Criação',
                           desc: 'Crie produtos, perguntas e propostas',
                         },

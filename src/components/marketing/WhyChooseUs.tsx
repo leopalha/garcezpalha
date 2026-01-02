@@ -1,25 +1,25 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Bot, ScrollText, CheckCircle2 } from 'lucide-react'
+import { IconBot, IconScrollText, IconCheckCircle2 } from './icons'
 
 const features = [
   {
-    icon: Bot,
+    icon: IconBot,
     title: 'Tecnologia',
     description: 'Inteligencia artificial que trabalha 24 horas por dia. Respostas rapidas e precisas.',
     color: 'text-primary',
     bgColor: 'bg-primary/10',
   },
   {
-    icon: ScrollText,
+    icon: IconScrollText,
     title: 'Tradicao',
     description: '364 anos de historia juridica. De governadores coloniais a advogados do seculo XXI.',
     color: 'text-primary',
     bgColor: 'bg-primary/10',
   },
   {
-    icon: CheckCircle2,
+    icon: IconCheckCircle2,
     title: 'Resultado',
     description: 'Transparencia total em cada etapa. Voce acompanha cada movimento do seu processo.',
     color: 'text-primary',

@@ -6,39 +6,39 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
-  Sparkles,
-  Users,
-  TrendingUp,
-  Bot,
-  Zap,
-  Globe,
-  BarChart3,
-  ArrowRight,
-} from 'lucide-react'
+  IconSparkles,
+  IconUsers,
+  IconTrendingUp,
+  IconBot,
+  IconZap,
+  IconGlobe,
+  IconBarChart3,
+  IconArrowRight,
+} from './icons'
 
 const platformFeatures = [
   {
-    icon: Bot,
+    icon: IconBot,
     title: 'Secretária IA 24/7',
     description: 'Atende e qualifica leads automaticamente',
   },
   {
-    icon: Users,
+    icon: IconUsers,
     title: 'CRM Completo',
     description: 'Gestão de leads, clientes e processos',
   },
   {
-    icon: TrendingUp,
+    icon: IconTrendingUp,
     title: 'Marketing Automation',
     description: 'Landing pages, VSL e automações',
   },
   {
-    icon: Globe,
+    icon: IconGlobe,
     title: 'White-Label',
     description: 'Sua marca, seu domínio, suas cores',
   },
   {
-    icon: Zap,
+    icon: IconZap,
     title: 'Ferramentas de Criação',
     description: 'Crie produtos, perguntas e propostas',
   },
@@ -57,7 +57,7 @@ export function LawyersPlatformSection() {
           className="text-center mb-16 max-w-3xl mx-auto"
         >
           <Badge className="mb-4 bg-gradient-to-r from-primary to-blue-600">
-            <Sparkles className="h-3 w-3 mr-1" />
+            <IconSparkles className="h-3 w-3 mr-1" />
             Plataforma para Advogados
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
@@ -112,7 +112,7 @@ export function LawyersPlatformSection() {
               <CardContent className="pt-6 pb-6">
                 <div className="flex items-start gap-4">
                   <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <BarChart3 className="h-6 w-6 text-primary" />
+                    <IconBarChart3 className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Analytics Avançado</h3>
@@ -141,7 +141,7 @@ export function LawyersPlatformSection() {
           >
             <Link href="/automacao">
               Ver a Plataforma
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <IconArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" className="text-lg px-8" asChild>
