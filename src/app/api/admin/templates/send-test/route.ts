@@ -4,8 +4,19 @@ import { Resend } from 'resend'
 import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-load Resend client to avoid build-time errors
+let resendClient: Resend | null = null
+function getResend(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY not configured')
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -90,7 +101,7 @@ export async function POST(req: NextRequest) {
     `
 
     // Send email via Resend
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: 'Garcez Palha <noreply@garcezpalha.com.br>',
       to: [to],
       subject: `[TESTE] ${subject}`,
