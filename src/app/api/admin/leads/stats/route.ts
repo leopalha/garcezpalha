@@ -4,29 +4,38 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth/options'
 import { createClient } from '@/lib/supabase/server'
 import { getLeadStatistics } from '@/lib/leads/lead-database'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:admin:leads:stats')
 
 // Cache stats for 5 minutes (300 seconds)
 export const revalidate = 300
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient()
+    logger.info('Fetching lead statistics')
 
-    // Check authentication
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
+    // Check authentication using next-auth
+    const session = await getServerSession(authOptions)
+    if (!session?.user) {
+      logger.warn('Lead stats fetch failed - unauthorized')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Check admin/lawyer role
-    const userRole = user.user_metadata?.role
+    const userRole = session.user.role
     if (userRole !== 'admin' && userRole !== 'lawyer') {
+      logger.warn('Lead stats fetch failed - insufficient permissions', { userId: session.user.id, role: userRole })
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
+
+    logger.info('Computing lead statistics', { userId: session.user.id })
+
+    const supabase = await createClient()
 
     // Get real statistics from database
     const dbStats = await getLeadStatistics()
@@ -63,9 +72,11 @@ export async function GET(request: NextRequest) {
       avgScore,
     }
 
+    logger.info('Lead statistics computed successfully', { userId: session.user.id, total: stats.total, status: 200 })
+
     return NextResponse.json(stats)
   } catch (error) {
-    console.error('[API /admin/leads/stats] Error:', error)
+    logger.error('Lead statistics fetch failed', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
