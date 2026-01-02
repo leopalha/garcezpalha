@@ -1,11 +1,21 @@
 /**
- * Unified Notification Service  
+ * Unified Notification Service
  * Sends notifications via Email (Resend) and WhatsApp (Cloud API)
  */
 
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-loaded Resend client to avoid build-time initialization errors
+let resendClient: Resend | null = null
+function getResend(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY not configured')
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient
+}
 
 interface EmailNotification {
   to: string
@@ -21,6 +31,7 @@ interface WhatsAppNotification {
 
 export async function sendEmail(params: EmailNotification): Promise<boolean> {
   try {
+    const resend = getResend()
     const { data, error } = await resend.emails.send({
       from: params.from || 'Garcez Palha <noreply@garcezpalha.com>',
       to: params.to,

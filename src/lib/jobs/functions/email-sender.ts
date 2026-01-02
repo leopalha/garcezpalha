@@ -7,7 +7,17 @@ import { inngest } from '../inngest-client'
 import { logger } from '@/lib/logger'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY!)
+// Lazy-loaded Resend client to avoid build-time initialization errors
+let resendClient: Resend | null = null
+function getResend(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY not configured')
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient
+}
 
 // Email templates
 const templates = {
@@ -84,6 +94,7 @@ export const emailSenderHandler = inngest.createFunction(
         const emailContent = templateFn(variables)
 
         // Send via Resend
+        const resend = getResend()
         const { data, error } = await resend.emails.send({
           from: 'Garcez Palha <noreply@garcezpalha.com.br>',
           to,

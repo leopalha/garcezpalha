@@ -4,7 +4,7 @@
  */
 
 import { Resend } from 'resend'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import type {
   EmailSequence,
   SequenceSubscription,
@@ -15,12 +15,32 @@ import type {
   SequenceStatus,
 } from './types'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy-loaded clients to avoid build-time initialization errors
+let resendClient: Resend | null = null
+let supabaseClient: SupabaseClient | null = null
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getResend(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY not configured')
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient
+}
+
+function getSupabase(): SupabaseClient {
+  if (!supabaseClient) {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Supabase environment variables not configured')
+    }
+    supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+  }
+  return supabaseClient
+}
 
 export class EmailSequenceEngine {
   /**
@@ -31,6 +51,7 @@ export class EmailSequenceEngine {
     data: SequenceTriggerData
   ): Promise<SequenceSubscription> {
     // Verificar se já existe subscription ativa
+    const supabase = getSupabase()
     const { data: existing } = await supabase
       .from('email_sequence_subscriptions')
       .select('*')
@@ -81,6 +102,7 @@ export class EmailSequenceEngine {
    * Agenda o próximo step de uma subscription
    */
   async scheduleNextStep(subscriptionId: string): Promise<void> {
+    const supabase = getSupabase()
     // Buscar próximo step usando function do PostgreSQL
     const { data: nextStepData, error } = await supabase
       .rpc('get_next_sequence_step', {
@@ -144,6 +166,7 @@ export class EmailSequenceEngine {
     emailsScheduled: number
     errors: number
   }> {
+    const supabase = getSupabase()
     console.log('[EmailSequenceEngine] Processing scheduled emails...')
 
     // Buscar emails agendados para agora ou antes
@@ -198,6 +221,8 @@ export class EmailSequenceEngine {
    * Envia email a partir de um registro de send
    */
   private async sendEmailFromSend(send: any): Promise<void> {
+    const supabase = getSupabase()
+    const resend = getResend()
     const { subscription, step, lead } = send
     const metadata = subscription.metadata || {}
 
@@ -287,6 +312,7 @@ export class EmailSequenceEngine {
     timestamp: string
     link?: string
   }): Promise<void> {
+    const supabase = getSupabase()
     console.log('[EmailSequenceEngine] Webhook received:', event.type, 'for:', event.email)
 
     // Buscar send pelo email_id
@@ -361,6 +387,7 @@ export class EmailSequenceEngine {
    * Cancela uma subscription
    */
   async unsubscribe(subscriptionId: string): Promise<void> {
+    const supabase = getSupabase()
     await supabase
       .from('email_sequence_subscriptions')
       .update({
@@ -385,6 +412,7 @@ export class EmailSequenceEngine {
     openRate: number
     clickRate: number
   }> {
+    const supabase = getSupabase()
     // Total subscribers
     const { count: totalSubscribers } = await supabase
       .from('email_sequence_subscriptions')
