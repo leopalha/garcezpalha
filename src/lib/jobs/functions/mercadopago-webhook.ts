@@ -8,10 +8,24 @@ import { createClient } from '@/lib/supabase/server'
 import { logger } from '@/lib/logger'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
 
-const mpClient = new MercadoPagoConfig({
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-})
-const paymentAPI = new Payment(mpClient)
+// Lazy-loaded MercadoPago clients to avoid build-time initialization errors
+let mpClient: MercadoPagoConfig | null = null
+let paymentAPI: Payment | null = null
+
+function getMercadoPagoPayment(): Payment {
+  if (!mpClient) {
+    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+      throw new Error('MERCADOPAGO_ACCESS_TOKEN not configured')
+    }
+    mpClient = new MercadoPagoConfig({
+      accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+    })
+  }
+  if (!paymentAPI) {
+    paymentAPI = new Payment(mpClient)
+  }
+  return paymentAPI
+}
 
 export const mercadoPagoWebhookHandler = inngest.createFunction(
   {
@@ -29,7 +43,8 @@ export const mercadoPagoWebhookHandler = inngest.createFunction(
     const paymentDetails = await step.run('fetch-payment', async () => {
       if (type === 'payment') {
         try {
-          const payment = await paymentAPI.get({ id: payload.id })
+          const paymentApi = getMercadoPagoPayment()
+          const payment = await paymentApi.get({ id: payload.id })
           return payment
         } catch (error) {
           logger.error('Failed to fetch MercadoPago payment', { paymentId: payload.id, error })
