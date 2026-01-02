@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { analyticsLeadsQuerySchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 /**
  * Analytics Interfaces
@@ -94,7 +95,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true })
 
     if (error) {
-      console.error('[API /admin/analytics/leads] Error:', error)
+      logger.error('[API /admin/analytics/leads] Error:', error)
       return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 })
     }
 
@@ -260,7 +261,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -269,7 +270,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.error('[API /admin/analytics/leads] Error:', error)
+    logger.error('[API /admin/analytics/leads] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }

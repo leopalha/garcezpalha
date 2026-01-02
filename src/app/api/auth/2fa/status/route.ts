@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 async function handler(request: NextRequest) {
   try {
@@ -37,7 +38,7 @@ async function handler(request: NextRequest) {
       required: data.role === 'admin', // 2FA is required for admins
     })
   } catch (error: any) {
-    console.error('Get 2FA status error:', error)
+    logger.error('Get 2FA status error:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to get 2FA status' },
       { status: 500 }

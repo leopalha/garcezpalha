@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run NPS request cycle
@@ -27,11 +28,11 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[NPS Requests] Unauthorized access attempt')
+      logger.error('[NPS Requests] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[NPS Requests] Starting NPS survey cycle...')
+    logger.info('[NPS Requests] Starting NPS survey cycle...')
 
     const supabase = await createClient()
     const now = new Date()
@@ -64,12 +65,12 @@ export async function GET(request: NextRequest) {
       .limit(50)
 
     if (error) {
-      console.error('[NPS Requests] Error fetching completed services:', error)
+      logger.error('[NPS Requests] Error fetching completed services:', error)
       throw error
     }
 
     if (completedServices && completedServices.length > 0) {
-      console.log(`[NPS Requests] Processing ${completedServices.length} completed services`)
+      logger.info(`[NPS Requests] Processing ${completedServices.length} completed services`)
 
       for (const service of completedServices) {
         try {
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
           const clientEmail = service.email || client?.email
 
           if (!clientEmail) {
-            console.log(`[NPS Requests] No email for conversation ${service.conversation_id}`)
+            logger.info(`[NPS Requests] No email for conversation ${service.conversation_id}`)
             continue
           }
 
@@ -115,20 +116,20 @@ export async function GET(request: NextRequest) {
               })
               .eq('conversation_id', service.conversation_id)
 
-            console.log(`[NPS Requests] ✅ NPS sent to ${clientEmail} for conversation ${service.conversation_id}`)
+            logger.info(`[NPS Requests] ✅ NPS sent to ${clientEmail} for conversation ${service.conversation_id}`)
           } else {
             results.failed++
           }
         } catch (err) {
-          console.error(`[NPS Requests] Error processing service ${service.conversation_id}:`, err)
+          logger.error(`[NPS Requests] Error processing service ${service.conversation_id}:`, err)
           results.failed++
         }
       }
     } else {
-      console.log('[NPS Requests] No completed services requiring NPS surveys at this time')
+      logger.info('[NPS Requests] No completed services requiring NPS surveys at this time')
     }
 
-    console.log('[NPS Requests] Cycle complete:', results)
+    logger.info('[NPS Requests] Cycle complete:', results)
 
     return NextResponse.json(
       {
@@ -139,7 +140,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[NPS Requests] Error:', error instanceof Error ? error.message : String(error))
+    logger.error('[NPS Requests] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

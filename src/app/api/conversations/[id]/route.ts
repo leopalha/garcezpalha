@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/conversations/[id]
@@ -54,7 +55,7 @@ export async function GET(
       .single()
 
     if (convError || !conversation) {
-      console.error('Error fetching conversation:', convError)
+      logger.error('Error fetching conversation:', convError)
       return NextResponse.json(
         { error: 'Conversa não encontrada' },
         { status: 404 }
@@ -69,7 +70,7 @@ export async function GET(
       .order('created_at', { ascending: true })
 
     if (msgError) {
-      console.error('Error fetching messages:', msgError)
+      logger.error('Error fetching messages:', msgError)
       return NextResponse.json(
         { error: 'Erro ao buscar mensagens' },
         { status: 500 }
@@ -115,7 +116,7 @@ export async function GET(
 
     return NextResponse.json(response)
   } catch (error) {
-    console.error('Error in GET /api/conversations/[id]:', error)
+    logger.error('Error in GET /api/conversations/[id]:', error)
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
   }
 }
@@ -200,7 +201,7 @@ export async function PATCH(
       .single()
 
     if (error) {
-      console.error('Error updating conversation:', error)
+      logger.error('Error updating conversation:', error)
       return NextResponse.json(
         { error: 'Erro ao atualizar conversa' },
         { status: 500 }
@@ -209,7 +210,7 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, conversation: data })
   } catch (error) {
-    console.error('Error in PATCH /api/conversations/[id]:', error)
+    logger.error('Error in PATCH /api/conversations/[id]:', error)
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
   }
 }

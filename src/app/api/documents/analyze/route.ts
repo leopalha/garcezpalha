@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { analyzeDocument } from '@/lib/ai/document-analyzer'
+import { z } from 'zod'
+import { formatZodErrors } from '@/lib/zod-helpers'
+import { logger } from '@/lib/logger'
+
+const analyzeDocumentSchema = z.object({
+  documentId: z.string().uuid('documentId deve ser um UUID válido'),
+})
 
 /**
  * API: POST /api/documents/analyze
@@ -26,14 +33,10 @@ import { analyzeDocument } from '@/lib/ai/document-analyzer'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { documentId } = body
 
-    if (!documentId) {
-      return NextResponse.json(
-        { error: 'documentId é obrigatório' },
-        { status: 400 }
-      )
-    }
+    // Validate with Zod
+    const validatedData = analyzeDocumentSchema.parse(body)
+    const { documentId } = validatedData
 
     const supabase = getSupabaseAdmin()
 
@@ -45,7 +48,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (docError || !document) {
-      console.error('Error fetching document:', docError)
+      logger.error('Error fetching document:', docError)
       return NextResponse.json(
         { error: 'Documento não encontrado' },
         { status: 404 }
@@ -64,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Analyze document with AI
-    console.log(`[AI] Analyzing document: ${docAny.file_name}`)
+    logger.info(`[AI] Analyzing document: ${docAny.file_name}`)
 
     const analysis = await analyzeDocument(
       docAny.public_url,
@@ -83,18 +86,25 @@ export async function POST(request: NextRequest) {
       .eq('id', documentId)
 
     if (updateError) {
-      console.error('Error updating document with analysis:', updateError)
+      logger.error('Error updating document with analysis:', updateError)
       // Don't fail the request, analysis was successful
     }
 
-    console.log(`[AI] Document analyzed successfully: ${docAny.file_name}`)
+    logger.info(`[AI] Document analyzed successfully: ${docAny.file_name}`)
 
     return NextResponse.json({
       success: true,
       analysis,
     })
   } catch (error) {
-    console.error('Error analyzing document:', error)
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Dados inválidos', details: formatZodErrors(error) },
+        { status: 400 }
+      )
+    }
+
+    logger.error('Error analyzing document:', error)
     return NextResponse.json(
       { error: 'Erro ao analisar documento' },
       { status: 500 }

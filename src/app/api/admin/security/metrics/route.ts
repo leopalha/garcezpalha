@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 async function handler(request: NextRequest) {
   try {
@@ -178,7 +179,7 @@ async function handler(request: NextRequest) {
       topFailedUsers: topFailedUsers || [],
     })
   } catch (error: any) {
-    console.error('Security metrics API error:', error)
+    logger.error('Security metrics API error:', error)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }

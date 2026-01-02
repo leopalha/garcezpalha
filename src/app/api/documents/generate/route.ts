@@ -1,7 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 import { documentGenerator, type DocumentType, type DocumentGenerationRequest } from '@/lib/ai/production/document-generator'
 import { getTemplate, getAllTemplates, getAvailableDocumentTypes } from '@/lib/ai/production/template-engine'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { formatZodErrors } from '@/lib/zod-helpers'
+import { logger } from '@/lib/logger'
+
+// Document generation schema
+const clientDataSchema = z.object({
+  name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+  cpf: z.string().optional(),
+  rg: z.string().optional(),
+  address: z.string().optional(),
+  email: z.string().email('Email inválido').optional(),
+  phone: z.string().optional(),
+})
+
+const documentGenerationSchema = z.object({
+  leadId: z.string().uuid('ID do lead inválido'),
+  documentType: z.string().min(1, 'Tipo de documento é obrigatório'),
+  clientData: clientDataSchema,
+  caseData: z.record(z.string(), z.any()).optional(),
+  lawyerData: z.object({
+    name: z.string(),
+    oab: z.string(),
+  }).optional(),
+})
 
 /**
  * POST /api/documents/generate
@@ -13,48 +37,35 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Validate required fields
-    if (!body.leadId || !body.documentType || !body.clientData) {
-      return NextResponse.json(
-        { error: 'Missing required fields: leadId, documentType, clientData' },
-        { status: 400 }
-      )
-    }
+    // Validate with Zod
+    const validatedData = documentGenerationSchema.parse(body)
 
-    // Validate document type
+    // Validate document type against available types
     const availableTypes = getAvailableDocumentTypes()
-    if (!availableTypes.includes(body.documentType)) {
+    if (!availableTypes.includes(validatedData.documentType)) {
       return NextResponse.json(
         {
-          error: `Invalid document type: ${body.documentType}`,
+          error: `Invalid document type: ${validatedData.documentType}`,
           availableTypes
         },
         { status: 400 }
       )
     }
 
-    // Validate client data
-    if (!body.clientData.name) {
-      return NextResponse.json(
-        { error: 'Client name is required' },
-        { status: 400 }
-      )
-    }
-
     // Build generation request
     const generationRequest: DocumentGenerationRequest = {
-      leadId: body.leadId,
-      documentType: body.documentType as DocumentType,
-      caseData: body.caseData || {},
+      leadId: validatedData.leadId,
+      documentType: validatedData.documentType as DocumentType,
+      caseData: validatedData.caseData || {},
       clientData: {
-        name: body.clientData.name,
-        cpf: body.clientData.cpf,
-        rg: body.clientData.rg,
-        address: body.clientData.address,
-        email: body.clientData.email,
-        phone: body.clientData.phone
+        name: validatedData.clientData.name,
+        cpf: validatedData.clientData.cpf,
+        rg: validatedData.clientData.rg,
+        address: validatedData.clientData.address,
+        email: validatedData.clientData.email,
+        phone: validatedData.clientData.phone
       },
-      lawyerData: body.lawyerData
+      lawyerData: validatedData.lawyerData
     }
 
     // Generate document
@@ -77,10 +88,21 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     timer.end()
+
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Dados inválidos',
+          details: formatZodErrors(error),
+        },
+        { status: 400 }
+      )
+    }
+
     trackError(error as Error, { endpoint: '/api/documents/generate', method: 'POST' })
-    console.error('[API] Error generating document:', error)
+    logger.error('[API] Error generating document:', error)
     return NextResponse.json(
-      { error: 'Failed to generate document', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },
+      { error: 'Failed to generate document', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     )
   }
@@ -135,7 +157,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[API] Error fetching templates:', error)
+    logger.error('[API] Error fetching templates:', error)
     return NextResponse.json(
       { error: 'Failed to fetch templates' },
       { status: 500 }

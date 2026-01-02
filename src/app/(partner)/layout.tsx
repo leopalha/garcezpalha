@@ -18,6 +18,7 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useRequireRole } from '@/lib/auth/hooks'
 import { signOut } from 'next-auth/react'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
 
 const navigation = [
   { name: 'Dashboard', href: '/parceiro', icon: LayoutDashboard },
@@ -162,7 +163,11 @@ export default function PartnerLayout({ children }: { children: React.ReactNode 
           </div>
         </header>
 
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="p-4 lg:p-6">
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </main>
       </div>
     </div>
   )

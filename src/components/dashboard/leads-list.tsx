@@ -54,6 +54,27 @@ export function LeadsList() {
     return <LeadsListSkeleton />
   }
 
+  if (leads.length === 0) {
+    return (
+      <div className="rounded-lg bg-white shadow dark:bg-gray-800">
+        <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            Todos os Leads
+          </h3>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 px-6">
+          <Mail className="h-12 w-12 text-gray-400 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            Nenhum lead encontrado
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            Os leads capturados aparecerão aqui quando os visitantes preencherem seus formulários.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-lg bg-white shadow dark:bg-gray-800">
       <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getOpenAIKey } from '@/lib/api/keys-manager'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/realtime/session
@@ -45,7 +46,7 @@ Seja conciso e claro nas suas respostas.`,
 
     if (!response.ok) {
       const error = await response.text()
-      console.error('[Realtime API] Error creating session:', error)
+      logger.error('[Realtime API] Error creating session:', error)
       return NextResponse.json(
         { error: 'Failed to create realtime session' },
         { status: response.status }
@@ -59,7 +60,7 @@ Seja conciso e claro nas suas respostas.`,
       expires_at: data.client_secret.expires_at,
     })
   } catch (error) {
-    console.error('[Realtime API] Error:', error)
+    logger.error('[Realtime API] Error:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : String(error) || 'Internal server error' },
       { status: 500 }

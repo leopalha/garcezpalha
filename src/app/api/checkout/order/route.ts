@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
+import { formatZodErrors } from '@/lib/zod-helpers'
+import { logger } from '@/lib/logger'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -8,19 +11,28 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// Query params schema
+const orderQuerySchema = z.object({
+  order_id: z.string().uuid('ID do pedido inválido').optional(),
+  session_id: z.string().min(1, 'Session ID inválido').optional(),
+}).refine(
+  (data) => data.order_id || data.session_id,
+  { message: 'É necessário fornecer order_id ou session_id' }
+)
+
 async function getHandler(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const orderId = searchParams.get('order_id')
-  const sessionId = searchParams.get('session_id')
-
-  if (!orderId && !sessionId) {
-    return NextResponse.json(
-      { error: 'Missing order_id or session_id parameter' },
-      { status: 400 }
-    )
-  }
-
   try {
+    const searchParams = request.nextUrl.searchParams
+    const queryParams = {
+      order_id: searchParams.get('order_id') || undefined,
+      session_id: searchParams.get('session_id') || undefined,
+    }
+
+    // Validate query params
+    const validatedParams = orderQuerySchema.parse(queryParams)
+    const orderId = validatedParams.order_id
+    const sessionId = validatedParams.session_id
+
     let query = supabaseAdmin
       .from('checkout_orders')
       .select('id, service_name, amount, customer_name, customer_email, status, created_at, paid_at')
@@ -34,7 +46,7 @@ async function getHandler(request: NextRequest) {
     const { data: order, error } = await query.single()
 
     if (error) {
-      console.error('Error fetching order:', error)
+      logger.error('Error fetching order:', error)
       return NextResponse.json(
         { error: 'Order not found' },
         { status: 404 }
@@ -43,7 +55,17 @@ async function getHandler(request: NextRequest) {
 
     return NextResponse.json({ order })
   } catch (error) {
-    console.error('Error fetching checkout order:', error)
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Parâmetros inválidos',
+          details: formatZodErrors(error),
+        },
+        { status: 400 }
+      )
+    }
+
+    logger.error('Error fetching checkout order:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

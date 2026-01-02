@@ -10,10 +10,15 @@ import { withValidation } from '@/lib/validations/api-middleware'
 import { verify2FASchema } from '@/lib/validations/auth'
 import { verify2FACode } from '@/lib/auth/two-factor'
 import { logAuthEvent } from '@/lib/audit/logger'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:auth:2fa:verify')
 
 async function handler(request: NextRequest) {
   try {
     const supabase = await createClient()
+
+    logger.info('Processing 2FA verification request')
 
     // Check authentication
     const {
@@ -21,16 +26,20 @@ async function handler(request: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (!user) {
+      logger.warn('2FA verification failed - unauthorized')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { code } = (request as any).validatedData
+
+    logger.info('Verifying 2FA code for user', { userId: user.id })
 
     // Verify code
     const valid = await verify2FACode(user.id, code)
 
     if (!valid) {
       // Log failed attempt
+      logger.warn('2FA verification failed - invalid or expired code', { userId: user.id })
       await logAuthEvent('auth.2fa_failed', user.id, { code_length: code.length }, false)
 
       return NextResponse.json(
@@ -48,12 +57,14 @@ async function handler(request: NextRequest) {
     // Log successful verification
     await logAuthEvent('auth.2fa_verified', user.id, {}, true)
 
+    logger.info('2FA verification successful', { userId: user.id, status: 200 })
+
     return NextResponse.json({
       success: true,
       message: '2FA verificado com sucesso',
     })
   } catch (error: any) {
-    console.error('Verify 2FA error:', error)
+    logger.error('2FA verification request failed', error)
     return NextResponse.json(
       { error: error.message || 'Failed to verify 2FA' },
       { status: 500 }

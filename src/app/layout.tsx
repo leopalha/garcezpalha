@@ -8,17 +8,18 @@ import { TRPCProvider } from '@/lib/trpc/provider'
 import { AuthProvider } from '@/lib/auth/provider'
 import { ReferralTracker } from '@/components/referral-tracker'
 import { AnalyticsProvider } from '@/components/analytics/analytics-provider'
-import { BetaBanner } from '@/components/beta-banner'
+// import { BetaBanner } from '@/components/beta-banner' // Temporarily disabled due to import error
 import { PWAProvider } from '@/components/pwa-provider'
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
-import { Suspense, lazy } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import './globals.css'
 
-// Lazy load non-critical components
-const CookieConsentBanner = lazy(() =>
-  import('@/components/cookies/CookieConsentBanner').then((mod) => ({
-    default: mod.CookieConsentBanner,
-  }))
+// Lazy load non-critical components with Next.js dynamic import
+const CookieConsentBanner = dynamic(
+  () => import('@/components/cookies/CookieConsentBannerSimple'),
+  { ssr: false }
 )
 
 const inter = Inter({
@@ -146,8 +147,8 @@ export default function RootLayout({
         <PWAProvider>
           <AuthProvider>
             <TRPCProvider>
-              <BetaBanner />
               <ThemeProvider>
+                {/* <BetaBanner /> - Temporarily disabled */}
                 <Suspense fallback={null}>
                   <AnalyticsProvider>
                     <ReferralTracker />
@@ -159,9 +160,8 @@ export default function RootLayout({
           </AuthProvider>
         </PWAProvider>
         <VercelAnalytics />
-        <Suspense fallback={null}>
-          <CookieConsentBanner />
-        </Suspense>
+        <SpeedInsights />
+        <CookieConsentBanner />
       </body>
     </html>
   )

@@ -5,6 +5,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { openai } from '@/lib/ai/openai-client'
+import { sendEmail, sendWhatsApp } from '@/lib/notifications/notification-service'
 
 export interface DocumentosInput {
   file: File | { name: string; url: string; type: string }
@@ -282,26 +283,121 @@ async function notificarAdvogadoAlertas(params: {
   alerts: string[]
   uploadedBy: string
 }): Promise<void> {
+  const supabase = await createClient()
+
   console.log('[Documentos] ⚠️ Alertas encontrados:', params.alerts)
 
-  // TODO: Integrar com Resend para email
-  // TODO: Integrar com WhatsApp para notificação push
+  // Buscar dados do usuário que fez upload
+  const { data: user } = await supabase
+    .from('profiles')
+    .select('email, phone, full_name')
+    .eq('id', params.uploadedBy)
+    .single()
 
-  const emailTemplate = `
-    Alertas Críticos em Documento
+  if (!user?.email) {
+    console.warn('[Documentos] User not found:', params.uploadedBy)
+    return
+  }
 
-    Documento: ${params.documentName}
-    ID: ${params.documentId}
+  const alertsHtml = params.alerts
+    .map((alert, i) => `
+      <div style="background-color: #fef2f2; padding: 12px; border-left: 3px solid #dc2626; margin: 8px 0;">
+        <strong>${i + 1}.</strong> ${alert}
+      </div>
+    `)
+    .join('')
 
-    Alertas encontrados:
-    ${params.alerts.map((alert, i) => `${i + 1}. ${alert}`).join('\n')}
+  // Enviar Email
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background-color: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h2 style="margin: 0;">⚠️ Alertas Críticos em Documento</h2>
+      </div>
+      <div style="padding: 30px; background-color: #f9fafb;">
+        <p>Olá <strong>${user.full_name || 'Advogado'}</strong>,</p>
+        <p>A análise automática identificou <strong>${params.alerts.length} alerta(s) crítico(s)</strong> que requerem sua atenção imediata:</p>
 
-    Recomendamos revisão imediata do documento.
+        <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>📄 Documento:</strong> ${params.documentName}</p>
+          <p style="margin: 5px 0;"><strong>🆔 ID:</strong> ${params.documentId}</p>
+        </div>
 
-    Acesse: https://garcezpalha.com.br/admin/documentos/${params.documentId}
+        <h3 style="color: #dc2626; margin-top: 20px;">Alertas Encontrados:</h3>
+        ${alertsHtml}
+
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0; border: 2px solid #dc2626;">
+          <p style="margin: 0; color: #991b1b; font-weight: bold;">
+            🚨 Recomendamos revisão imediata do documento para verificar os alertas acima.
+          </p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/documentos/${params.documentId}"
+             style="background-color: #2563eb; color: white; padding: 14px 28px;
+                    text-decoration: none; border-radius: 6px; display: inline-block;
+                    font-weight: bold;">
+            Visualizar Documento
+          </a>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+        <p style="color: #9ca3af; font-size: 12px;">
+          <strong>Garcez Palha Advocacia</strong><br/>
+          Sistema de Análise Automática de Documentos
+        </p>
+      </div>
+    </div>
   `
 
-  console.log('[Documentos] Email template:', emailTemplate)
+  const emailSent = await sendEmail({
+    to: user.email,
+    subject: `⚠️ Alertas Críticos: ${params.documentName}`,
+    html: emailHtml,
+  })
+
+  if (emailSent) {
+    console.log('[Documentos] ✅ Email de alerta enviado para:', user.email)
+  } else {
+    console.error('[Documentos] ❌ Falha ao enviar email para:', user.email)
+  }
+
+  // Enviar WhatsApp (se telefone disponível)
+  if (user.phone) {
+    const alertsList = params.alerts
+      .map((alert, i) => `${i + 1}. ${alert}`)
+      .join('\n')
+
+    const whatsappMessage = `⚠️ *ALERTAS CRÍTICOS EM DOCUMENTO*
+
+Olá ${user.full_name || 'Advogado'}! 👋
+
+A análise automática identificou *${params.alerts.length} alerta(s) crítico(s)*:
+
+📄 *Documento:* ${params.documentName}
+
+*🚨 Alertas:*
+${alertsList}
+
+*Recomendação:*
+Revise o documento IMEDIATAMENTE para verificar os alertas acima.
+
+🔗 Acesse: ${process.env.NEXT_PUBLIC_APP_URL}/admin/documentos/${params.documentId}
+
+_Garcez Palha - Sistema de Análise de Documentos_`
+
+    const whatsappSent = await sendWhatsApp({
+      to: user.phone,
+      message: whatsappMessage,
+    })
+
+    if (whatsappSent) {
+      console.log('[Documentos] ✅ WhatsApp de alerta enviado para:', user.phone)
+    } else {
+      console.error('[Documentos] ❌ Falha ao enviar WhatsApp para:', user.phone)
+    }
+  }
+
+  console.log('[Documentos] ✅ Notificação de alertas enviada')
 }
 
 /**

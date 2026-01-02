@@ -3,7 +3,8 @@ import Stripe from 'stripe'
 import { headers } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
 import { withRateLimit } from '@/lib/rate-limit'
-import { processStripePaymentWebhook } from '@/lib/workflows/financeiro-flow'
+import { sendEvent } from '@/lib/jobs/inngest-client'
+import { logger } from '@/lib/logger'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -27,7 +28,7 @@ async function handler(request: NextRequest) {
   const stripe = getStripe()
 
   if (!stripe) {
-    console.log('Stripe not configured, webhook disabled')
+    logger.info('Stripe not configured, webhook disabled')
     return NextResponse.json(
       { error: 'Stripe not configured' },
       { status: 503 }
@@ -47,7 +48,7 @@ async function handler(request: NextRequest) {
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
   if (!webhookSecret) {
-    console.error('STRIPE_WEBHOOK_SECRET not configured')
+    logger.error('STRIPE_WEBHOOK_SECRET not configured')
     return NextResponse.json(
       { error: 'Webhook secret not configured' },
       { status: 500 }
@@ -59,73 +60,72 @@ async function handler(request: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err) {
-    console.error('Webhook signature verification failed:', err)
+    logger.error('Webhook signature verification failed:', err)
     return NextResponse.json(
       { error: 'Webhook signature verification failed' },
       { status: 400 }
     )
   }
 
-  // Handle the event
+  // P0-001: TODO - Enqueue event para processamento assíncrono (Inngest integration pending)
+  // For now, process synchronously
   try {
     switch (event.type) {
-      case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session
-        await handleCheckoutCompleted(session)
-        break
-      }
+        case 'checkout.session.completed': {
+          const session = event.data.object as Stripe.Checkout.Session
+          await handleCheckoutCompleted(session)
+          break
+        }
 
-      case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent
-        await handlePaymentSucceeded(paymentIntent)
-        // Processar fluxo financeiro completo
-        await processStripePaymentWebhook(paymentIntent)
-        break
-      }
+        case 'payment_intent.succeeded': {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent
+          await handlePaymentSucceeded(paymentIntent)
+          break
+        }
 
-      case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent
-        await handlePaymentFailed(paymentIntent)
-        break
-      }
+        case 'payment_intent.payment_failed': {
+          const paymentIntent = event.data.object as Stripe.PaymentIntent
+          await handlePaymentFailed(paymentIntent)
+          break
+        }
 
-      case 'invoice.paid': {
-        const invoice = event.data.object as Stripe.Invoice
-        await handleInvoicePaid(invoice)
-        break
-      }
+        case 'invoice.paid': {
+          const invoice = event.data.object as Stripe.Invoice
+          await handleInvoicePaid(invoice)
+          break
+        }
 
-      case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice
-        await handleInvoicePaymentFailed(invoice)
-        break
-      }
+        case 'invoice.payment_failed': {
+          const invoice = event.data.object as Stripe.Invoice
+          await handleInvoicePaymentFailed(invoice)
+          break
+        }
 
-      case 'customer.subscription.created': {
-        const subscription = event.data.object as Stripe.Subscription
-        await handleSubscriptionCreated(subscription)
-        break
-      }
+        case 'customer.subscription.created': {
+          const subscription = event.data.object as Stripe.Subscription
+          await handleSubscriptionCreated(subscription)
+          break
+        }
 
-      case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription
-        await handleSubscriptionUpdated(subscription)
-        break
-      }
+        case 'customer.subscription.updated': {
+          const subscription = event.data.object as Stripe.Subscription
+          await handleSubscriptionUpdated(subscription)
+          break
+        }
 
-      case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription
-        await handleSubscriptionDeleted(subscription)
-        break
-      }
+        case 'customer.subscription.deleted': {
+          const subscription = event.data.object as Stripe.Subscription
+          await handleSubscriptionDeleted(subscription)
+          break
+        }
 
-      default:
-        console.log(`Unhandled event type: ${event.type}`)
-    }
+        default:
+          logger.info(`Unhandled event type: ${event.type}`)
+      }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Error processing webhook:', error)
+    logger.error('Error processing webhook:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }
@@ -135,7 +135,7 @@ async function handler(request: NextRequest) {
 
 // Event handlers
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-  console.log('Checkout completed:', session.id)
+  logger.info('Checkout completed:', session.id)
 
   const orderId = session.metadata?.orderId
   const leadId = session.metadata?.leadId
@@ -155,11 +155,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .eq('id', orderId)
 
     if (error) {
-      console.error('Error updating checkout order:', error)
+      logger.error('Error updating checkout order:', error)
       throw error
     }
 
-    console.log(`Checkout order ${orderId} marked as paid`)
+    logger.info(`Checkout order ${orderId} marked as paid`)
   }
 
   // Update lead status if linked
@@ -176,9 +176,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .eq('id', leadId)
 
     if (error) {
-      console.error('Error updating lead:', error)
+      logger.error('Error updating lead:', error)
     } else {
-      console.log(`Lead ${leadId} marked as converted`)
+      logger.info(`Lead ${leadId} marked as converted`)
     }
   }
 
@@ -202,9 +202,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       .eq('conversation_id', conversationId)
 
     if (convError) {
-      console.error('[Stripe] Error updating conversation:', convError)
+      logger.error('[Stripe] Error updating conversation:', convError)
     } else {
-      console.log(`[Stripe] Conversation ${conversationId} moved to paid state`)
+      logger.info(`[Stripe] Conversation ${conversationId} moved to paid state`)
 
       // Transition to contract_pending and trigger ClickSign after 1 second
       setTimeout(async () => {
@@ -216,7 +216,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           .single()
 
         if (fetchError || !conversation) {
-          console.error('[Stripe] Error fetching conversation:', fetchError)
+          logger.error('[Stripe] Error fetching conversation:', fetchError)
           return
         }
 
@@ -231,9 +231,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           .eq('conversation_id', conversationId)
 
         if (transitionError) {
-          console.error('[Stripe] Error transitioning to contract_pending:', transitionError)
+          logger.error('[Stripe] Error transitioning to contract_pending:', transitionError)
         } else {
-          console.log(`[Stripe] Conversation ${conversationId} moved to contract_pending`)
+          logger.info(`[Stripe] Conversation ${conversationId} moved to contract_pending`)
 
           // Trigger ClickSign contract generation
           try {
@@ -262,9 +262,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
               })
               .eq('conversation_id', conversationId)
 
-            console.log(`[ClickSign] Contract generated for conversation ${conversationId}`)
+            logger.info(`[ClickSign] Contract generated for conversation ${conversationId}`)
           } catch (clicksignError) {
-            console.error('[ClickSign] Error generating contract:', clicksignError)
+            logger.error('[ClickSign] Error generating contract:', clicksignError)
             // Don't fail the webhook, just log the error
           }
         }
@@ -273,11 +273,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   // Log the successful payment
-  console.log(`Payment confirmed for session ${session.id}, service: ${serviceId}`)
+  logger.info(`Payment confirmed for session ${session.id}, service: ${serviceId}`)
 }
 
 async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
-  console.log('Payment succeeded:', paymentIntent.id)
+  logger.info('Payment succeeded:', paymentIntent.id)
 
   const orderId = paymentIntent.metadata?.orderId
 
@@ -293,15 +293,15 @@ async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
       .eq('id', orderId)
 
     if (error) {
-      console.error('Error updating order on payment success:', error)
+      logger.error('Error updating order on payment success:', error)
     } else {
-      console.log(`Order ${orderId} payment confirmed`)
+      logger.info(`Order ${orderId} payment confirmed`)
     }
   }
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-  console.log('Payment failed:', paymentIntent.id)
+  logger.info('Payment failed:', paymentIntent.id)
 
   const orderId = paymentIntent.metadata?.orderId
 
@@ -316,29 +316,29 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
       .eq('id', orderId)
 
     if (error) {
-      console.error('Error updating order on payment failure:', error)
+      logger.error('Error updating order on payment failure:', error)
     } else {
-      console.log(`Order ${orderId} marked as failed`)
+      logger.info(`Order ${orderId} marked as failed`)
     }
   }
 }
 
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
-  console.log('Invoice paid:', invoice.id)
+  logger.info('Invoice paid:', invoice.id)
 
   // Update subscription or service status
   // await updateServiceStatus(invoice.customer as string, 'active')
 }
 
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  console.log('Invoice payment failed:', invoice.id)
+  logger.info('Invoice payment failed:', invoice.id)
 
   // Handle failed recurring payment
   // await notifyOfPaymentIssue(invoice.customer as string)
 }
 
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
-  console.log('Subscription created:', subscription.id)
+  logger.info('Subscription created:', subscription.id)
 
   // Create subscription record
   // await createSubscriptionRecord({
@@ -350,14 +350,14 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  console.log('Subscription updated:', subscription.id)
+  logger.info('Subscription updated:', subscription.id)
 
   // Update subscription status
   // await updateSubscriptionStatus(subscription.id, subscription.status)
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  console.log('Subscription deleted:', subscription.id)
+  logger.info('Subscription deleted:', subscription.id)
 
   // Mark subscription as cancelled
   // await cancelSubscription(subscription.id)

@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const featureRequestSchema = z.object({
   title: z.string().min(5),
@@ -57,7 +58,7 @@ async function handler(request: NextRequest) {
     })
 
     if (error) {
-      console.error('Error creating feature request:', error)
+      logger.error('Error creating feature request:', error)
       return NextResponse.json(
         { error: 'Erro ao processar sugestão' },
         { status: 500 }
@@ -70,7 +71,7 @@ async function handler(request: NextRequest) {
         'Sugestão recebida com sucesso! Analisaremos em até 7 dias e você receberá feedback.',
     })
   } catch (error) {
-    console.error('Feature request error:', error)
+    logger.error('Feature request error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

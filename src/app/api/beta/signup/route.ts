@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const betaSignupSchema = z.object({
   name: z.string().min(3),
@@ -67,7 +68,7 @@ async function handler(request: NextRequest) {
     })
 
     if (error) {
-      console.error('Error creating beta application:', error)
+      logger.error('Error creating beta application:', error)
       return NextResponse.json(
         { error: 'Erro ao processar inscrição' },
         { status: 500 }
@@ -82,7 +83,7 @@ async function handler(request: NextRequest) {
       autoApproved: isLawyer,
     })
   } catch (error) {
-    console.error('Beta signup error:', error)
+    logger.error('Beta signup error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

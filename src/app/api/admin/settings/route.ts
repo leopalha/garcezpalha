@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -85,7 +86,7 @@ export async function GET(request: NextRequest) {
         .single()
 
       if (insertError) {
-        console.error('Error creating default settings:', insertError)
+        logger.error('Error creating default settings:', insertError)
         return NextResponse.json(
           { error: 'Failed to create settings' },
           { status: 500 }
@@ -96,7 +97,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (error) {
-      console.error('Error fetching settings:', error)
+      logger.error('Error fetching settings:', error)
       return NextResponse.json(
         { error: 'Failed to fetch settings' },
         { status: 500 }
@@ -105,7 +106,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(settings)
   } catch (error) {
-    console.error('Error in GET /api/admin/settings:', error)
+    logger.error('Error in GET /api/admin/settings:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -181,7 +182,7 @@ export async function PUT(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error updating settings:', error)
+      logger.error('Error updating settings:', error)
       return NextResponse.json(
         { error: 'Failed to update settings' },
         { status: 500 }
@@ -194,7 +195,7 @@ export async function PUT(request: NextRequest) {
       message: 'Settings updated successfully',
     })
   } catch (error) {
-    console.error('Error in PUT /api/admin/settings:', error)
+    logger.error('Error in PUT /api/admin/settings:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

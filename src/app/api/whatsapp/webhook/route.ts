@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Webhook Verification
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
   const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN
 
   if (mode === 'subscribe' && token === verifyToken) {
-    console.log('[WhatsApp Legacy] Webhook verified')
+    logger.info('[WhatsApp Legacy] Webhook verified')
     return new NextResponse(challenge, { status: 200 })
   } else {
     return new NextResponse('Forbidden', { status: 403 })

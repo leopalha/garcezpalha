@@ -17,7 +17,22 @@ import {
   ClipboardCheck,
   Scale,
   Package,
-  Shield
+  Shield,
+  Mail,
+  Zap,
+  Plug,
+  UserPlus,
+  DollarSign,
+  Receipt,
+  TrendingDown,
+  FolderOpen,
+  CheckSquare,
+  FileBarChart,
+  Bot,
+  FileCode,
+  Lock,
+  Activity,
+  List
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -27,19 +42,37 @@ import { signOut } from 'next-auth/react'
 import { Loader2 } from 'lucide-react'
 import { Logo } from '@/components/shared/logo'
 import { Toaster } from '@/components/ui/toaster'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Conversas', href: '/admin/conversations', icon: MessageSquare },
   { name: 'Leads', href: '/admin/leads', icon: Users },
   { name: 'Clientes', href: '/admin/clientes', icon: UserCheck },
-  { name: 'Produtos', href: '/admin/produtos', icon: Package },
-  { name: 'Usuários', href: '/admin/usuarios', icon: Shield },
-  { name: 'Documentos', href: '/admin/documentos', icon: Scale },
+  { name: 'Processos', href: '/admin/processos', icon: Scale },
+  { name: 'Prazos', href: '/admin/prazos', icon: ClipboardCheck },
+  { name: 'Documentos', href: '/admin/documentos', icon: FileText },
   { name: 'Agendamentos', href: '/admin/agendamentos', icon: Calendar },
+  { name: 'Produtos', href: '/admin/produtos', icon: Package },
+  { name: 'Marketing', href: '/admin/marketing/campanhas', icon: Mail },
+  { name: 'Automações', href: '/admin/automations', icon: Zap },
+  { name: 'Integrações', href: '/admin/integrations', icon: Plug },
+  { name: 'Equipe', href: '/admin/equipe', icon: UserPlus },
+  { name: 'Financeiro', href: '/admin/financeiro', icon: DollarSign },
+  { name: 'Faturas', href: '/admin/faturas', icon: Receipt },
+  { name: 'Despesas', href: '/admin/despesas', icon: TrendingDown },
+  { name: 'Docs Clientes', href: '/admin/documentos-clientes', icon: FolderOpen },
+  { name: 'Tarefas', href: '/admin/tarefas', icon: CheckSquare },
+  { name: 'Relatórios', href: '/admin/relatorios', icon: FileBarChart },
+  { name: 'Mensagens', href: '/admin/mensagens', icon: MessageSquare },
+  { name: 'Agentes IA', href: '/admin/agents', icon: Bot },
+  { name: 'Templates', href: '/admin/templates', icon: FileCode },
+  { name: 'Segurança', href: '/admin/security', icon: Lock },
+  { name: 'Monitoring', href: '/admin/monitoring', icon: Activity },
+  { name: 'Logs', href: '/admin/logs', icon: List },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-  { name: 'Conversas', href: '/admin/conversas', icon: MessageSquare },
-  { name: 'Faturas', href: '/admin/faturas', icon: FileText },
-  { name: 'Configuracoes', href: '/admin/configuracoes', icon: Settings },
+  { name: 'Usuários', href: '/admin/usuarios', icon: Shield },
+  { name: 'Configurações', href: '/admin/configuracoes', icon: Settings },
 ]
 
 export default function AdminLayout({
@@ -195,7 +228,11 @@ export default function AdminLayout({
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="p-4 lg:p-6">
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </main>
       </div>
 
       {/* Toast notifications */}

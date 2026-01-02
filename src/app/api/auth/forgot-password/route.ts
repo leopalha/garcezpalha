@@ -5,6 +5,9 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import crypto from 'crypto'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:auth:forgot-password')
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Email inválido').toLowerCase(),
@@ -13,6 +16,8 @@ const forgotPasswordSchema = z.object({
 async function handler(request: NextRequest) {
   try {
     const { email } = (request as any).validatedData
+
+    logger.info('Password reset request received', { email })
 
     const supabase = await createClient()
 
@@ -25,11 +30,14 @@ async function handler(request: NextRequest) {
 
     // Don't reveal if email exists for security
     if (!user || !user.is_active) {
+      logger.warn('Password reset requested for inactive or non-existent user', { email })
       return NextResponse.json({
         success: true,
         message: 'Se o email existir, você receberá instruções para redefinir sua senha.',
       })
     }
+
+    logger.info('Found user for password reset', { userId: user.id, email })
 
     // Generate reset token (valid for 1 hour)
     const resetToken = crypto.randomBytes(32).toString('hex')
@@ -46,7 +54,7 @@ async function handler(request: NextRequest) {
       .eq('id', user.id)
 
     if (updateError) {
-      console.error('Error storing reset token:', updateError)
+      logger.error('Error storing reset token in database', updateError, { userId: user.id })
       return NextResponse.json(
         { error: 'Erro ao processar solicitação' },
         { status: 500 }
@@ -63,14 +71,14 @@ async function handler(request: NextRequest) {
       userId: user.id,
     })
 
-    console.log('[Forgot Password] Reset email sent to:', email)
+    logger.info('Password reset email sent successfully', { userId: user.id, email, status: 200 })
 
     return NextResponse.json({
       success: true,
       message: 'Se o email existir, você receberá instruções para redefinir sua senha.',
     })
   } catch (error) {
-    console.error('Forgot password error:', error)
+    logger.error('Password reset request failed', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

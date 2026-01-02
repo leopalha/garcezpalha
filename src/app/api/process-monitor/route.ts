@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 import { processMonitor } from '@/lib/process-monitor/monitor-engine'
 import type { ProcessData } from '@/lib/process-monitor/types'
+import { logger } from '@/lib/logger'
 
 /**
  * P2-004: Process Monitoring API
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Erro ao iniciar monitoramento:', error)
+    logger.error('Erro ao iniciar monitoramento:', error)
 
     return NextResponse.json(
       {
@@ -76,7 +77,7 @@ export async function GET(req: NextRequest) {
       })),
     })
   } catch (error) {
-    console.error('Erro ao listar sessões:', error)
+    logger.error('Erro ao listar sessões:', error)
 
     return NextResponse.json(
       {
@@ -107,7 +108,7 @@ export async function DELETE(req: NextRequest) {
       message: 'Monitoramento interrompido com sucesso',
     })
   } catch (error) {
-    console.error('Erro ao parar monitoramento:', error)
+    logger.error('Erro ao parar monitoramento:', error)
 
     return NextResponse.json(
       {

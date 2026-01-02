@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('[NPS Check] Error:', error)
+      logger.error('[NPS Check] Error:', error)
       return NextResponse.json(
         { error: 'Conversation not found' },
         { status: 404 }
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       submittedAt: conversation.nps_submitted_at || null,
     })
   } catch (error) {
-    console.error('[NPS Check] Error:', error)
+    logger.error('[NPS Check] Error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',

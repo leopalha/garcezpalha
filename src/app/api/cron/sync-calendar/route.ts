@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { googleCalendar } from '@/lib/calendar/google-calendar-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run calendar sync cycle
@@ -21,16 +22,16 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Calendar Sync] Unauthorized access attempt')
+      logger.error('[Calendar Sync] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Calendar Sync] Starting sync cycle...')
+    logger.info('[Calendar Sync] Starting sync cycle...')
 
     // Sync all pending deadlines
     const result = await googleCalendar.syncAllDeadlines()
 
-    console.log('[Calendar Sync] Cycle complete:', result)
+    logger.info('[Calendar Sync] Cycle complete:', result)
 
     return NextResponse.json(
       {
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Calendar Sync] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Calendar Sync] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('[Calendar Sync] Manual trigger')
+    logger.info('[Calendar Sync] Manual trigger')
 
     const result = await googleCalendar.syncAllDeadlines()
 
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Calendar Sync] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Calendar Sync] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

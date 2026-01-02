@@ -3,6 +3,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import { processQuery } from '@/lib/ai/agents/agent-orchestrator'
+import { logger } from '@/lib/logger'
 
 // AI chat schema
 const aiChatSchema = z.object({
@@ -38,7 +39,7 @@ async function postHandler(req: NextRequest) {
       confidence: response.confidence,
     })
   } catch (error) {
-    console.error('[AI Chat] Error processing message:', error)
+    logger.error('[AI Chat] Error processing message:', error)
 
     return NextResponse.json(
       {

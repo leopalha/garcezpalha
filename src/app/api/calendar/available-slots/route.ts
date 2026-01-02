@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { google } from 'googleapis'
+import { logger } from '@/lib/logger'
 
 const calendar = google.calendar('v3')
 
@@ -71,7 +72,7 @@ async function handler(request: NextRequest) {
     // Return first 5 available slots
     return NextResponse.json(availableSlots.slice(0, 5))
   } catch (error) {
-    console.error('Error fetching available slots:', error)
+    logger.error('Error fetching available slots:', error)
     return NextResponse.json(
       { error: 'Erro ao buscar horários disponíveis' },
       { status: 500 }

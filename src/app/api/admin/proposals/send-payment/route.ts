@@ -5,6 +5,9 @@ import { MercadoPagoConfig, Payment } from 'mercadopago'
 import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:admin:proposals:send-payment')
 
 const mercadopago = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
@@ -19,6 +22,8 @@ async function handler(request: NextRequest) {
   try {
     const { proposalId, leadId } = (request as any).validatedData
 
+    logger.info('Processing payment and proposal send request', { proposalId, leadId })
+
     const supabase = createRouteHandlerClient()
 
     // 1. Fetch proposal and lead data
@@ -29,7 +34,7 @@ async function handler(request: NextRequest) {
       .single()
 
     if (proposalError || !proposal) {
-      console.error('Error fetching proposal:', proposalError)
+      logger.error('Error fetching proposal from database', proposalError, { proposalId })
       return NextResponse.json({ error: 'Proposta não encontrada' }, { status: 404 })
     }
 
@@ -40,15 +45,18 @@ async function handler(request: NextRequest) {
       .single()
 
     if (leadError || !lead) {
-      console.error('Error fetching lead:', leadError)
+      logger.error('Error fetching lead from database', leadError, { leadId })
       return NextResponse.json({ error: 'Lead não encontrado' }, { status: 404 })
     }
+
+    logger.info('Found proposal and lead data', { proposalId, leadId, leadEmail: (lead as any).email })
 
     // Cast to any for missing schema fields
     const leadAny = lead as any
     const proposalAny = proposal as any
 
     // 2. Send email with proposal
+    logger.info('Sending proposal email', { proposalId, leadId, email: leadAny.email })
     await sendEmail({
       to: leadAny.email || '',
       subject: `Proposta Comercial - ${leadAny.service_interest}`,
@@ -61,8 +69,10 @@ async function handler(request: NextRequest) {
         },
       }),
     })
+    logger.info('Proposal email sent', { proposalId, leadId })
 
     // 3. Create MercadoPago payment link (PIX)
+    logger.info('Creating MercadoPago payment', { proposalId, leadId, amount: proposalAny.pricing_fixed })
     const payment = new Payment(mercadopago)
 
     const paymentData: any = {
@@ -85,14 +95,17 @@ async function handler(request: NextRequest) {
     const paymentLink = paymentResponse.point_of_interaction?.transaction_data?.ticket_url
 
     if (!pixQrCode || !paymentLink) {
-      console.error('Failed to generate PIX payment:', paymentResponse)
+      logger.error('Failed to generate PIX payment from MercadoPago', new Error('Missing payment data'), { proposalId, leadId })
       return NextResponse.json(
         { error: 'Erro ao gerar pagamento PIX' },
         { status: 500 }
       )
     }
 
+    logger.info('MercadoPago payment created successfully', { proposalId, leadId, mpPaymentId: paymentResponse.id })
+
     // 4. Save payment info to database
+    logger.info('Saving payment to database', { proposalId, leadId })
     const { error: paymentDbError } = await supabase.from('payments').insert({
       proposal_id: proposalId,
       lead_id: leadId,
@@ -108,10 +121,13 @@ async function handler(request: NextRequest) {
     })
 
     if (paymentDbError) {
-      console.error('Error saving payment to database:', paymentDbError)
+      logger.error('Error saving payment to database', paymentDbError, { proposalId, leadId })
+    } else {
+      logger.info('Payment saved to database', { proposalId, leadId })
     }
 
     // 5. Send email with payment link
+    logger.info('Sending payment link email', { proposalId, leadId, email: leadAny.email })
     await sendEmail({
       to: leadAny.email || '',
       subject: 'Link para Pagamento - Garcez Palha Advocacia',
@@ -123,8 +139,10 @@ async function handler(request: NextRequest) {
         paymentLink,
       }),
     })
+    logger.info('Payment link email sent', { proposalId, leadId })
 
     // 6. Update proposal status
+    logger.info('Updating proposal status to sent', { proposalId })
     await supabase
       .from('proposals')
       .update({
@@ -143,6 +161,7 @@ async function handler(request: NextRequest) {
       .single()
 
     if (conversation) {
+      logger.info('Updating conversation state to payment_pending', { conversationId: conversation.id, leadId })
       await supabase
         .from('conversations')
         .update({
@@ -152,6 +171,8 @@ async function handler(request: NextRequest) {
         .eq('id', conversation.id)
     }
 
+    logger.info('Payment and proposal send completed successfully', { proposalId, leadId, amount: proposalAny.pricing_fixed, status: 200 })
+
     return NextResponse.json({
       success: true,
       paymentLink,
@@ -159,7 +180,7 @@ async function handler(request: NextRequest) {
       message: 'Proposta e pagamento enviados com sucesso',
     })
   } catch (error) {
-    console.error('Error sending proposal and payment:', error)
+    logger.error('Payment and proposal send request failed', error)
     return NextResponse.json(
       { error: 'Erro ao enviar proposta e pagamento' },
       { status: 500 }

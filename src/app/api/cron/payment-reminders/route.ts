@@ -15,6 +15,7 @@ import { createClient } from '@/lib/supabase/server'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import { emailService } from '@/lib/email/email-service'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run payment reminder cycle
@@ -28,11 +29,11 @@ async function getHandler(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Payment Reminders] Unauthorized access attempt')
+      logger.error('[Payment Reminders] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Payment Reminders] Starting reminder cycle...')
+    logger.info('[Payment Reminders] Starting reminder cycle...')
 
     const supabase = await createClient()
     const now = new Date()
@@ -68,7 +69,7 @@ async function getHandler(request: NextRequest) {
     if (error) throw error
 
     if (pendingPayments && pendingPayments.length > 0) {
-      console.log(`[Payment Reminders] Processing ${pendingPayments.length} pending payments`)
+      logger.info(`[Payment Reminders] Processing ${pendingPayments.length} pending payments`)
 
       for (const payment of pendingPayments as any[]) {
         try {
@@ -122,7 +123,7 @@ Garcez Palha - Consultoria Jurídica & Pericial
               await whatsappCloudAPI.sendMessage(lead.phone, message, true)
               results.remindersSent++
             } catch (err) {
-              console.error('[Payment Reminders] WhatsApp error:', err)
+              logger.error('[Payment Reminders] WhatsApp error:', err)
             }
           }
 
@@ -154,13 +155,13 @@ Garcez Palha - Consultoria Jurídica & Pericial
             })
             .eq('id', payment.id)
         } catch (err) {
-          console.error(`[Payment Reminders] Error processing payment ${payment.id}:`, err)
+          logger.error(`[Payment Reminders] Error processing payment ${payment.id}:`, err)
           results.failed++
         }
       }
     }
 
-    console.log('[Payment Reminders] Cycle complete:', results)
+    logger.info('[Payment Reminders] Cycle complete:', results)
 
     return NextResponse.json(
       {
@@ -171,7 +172,7 @@ Garcez Palha - Consultoria Jurídica & Pericial
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Payment Reminders] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Payment Reminders] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

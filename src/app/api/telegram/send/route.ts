@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import telegramBotService from '@/lib/telegram/bot-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/telegram/send
@@ -25,7 +26,7 @@ export async function GET() {
       webhook: webhookInfo
     })
   } catch (error) {
-    console.error('Error checking Telegram bot status:', error)
+    logger.error('Error checking Telegram bot status:', error)
     return NextResponse.json({
       configured: true,
       status: 'error',
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       data: result
     })
   } catch (error) {
-    console.error('Error sending Telegram message:', error)
+    logger.error('Error sending Telegram message:', error)
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : String(error)

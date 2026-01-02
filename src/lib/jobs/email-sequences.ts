@@ -3,14 +3,11 @@
  * Runs every 15 minutes via Inngest
  */
 
-import { Inngest } from 'inngest'
+import { inngest } from '@/lib/jobs/inngest-client'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
 
-// Initialize Inngest client
-export const inngest = new Inngest({
-  id: 'garcez-palha',
-  name: 'Garcez Palha',
-})
+// Re-export inngest client for backward compatibility
+export { inngest }
 
 /**
  * Process Email Sequences - Cron Job

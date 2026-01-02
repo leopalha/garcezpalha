@@ -7,6 +7,9 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:auth:signup')
 
 const signupSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
@@ -20,6 +23,7 @@ async function handler(request: NextRequest) {
   const timer = new PerformanceTimer('POST /api/auth/signup')
 
   try {
+    logger.info('Processing signup request')
     const { name, email, password, phone, document } = (request as any).validatedData
 
     // Create Supabase client
@@ -33,6 +37,7 @@ async function handler(request: NextRequest) {
       .single()
 
     if (existingUser) {
+      logger.warn('Signup failed - email already exists', { email })
       return NextResponse.json(
         { error: 'Email já cadastrado' },
         { status: 409 }
@@ -59,12 +64,14 @@ async function handler(request: NextRequest) {
       .single()
 
     if (createError) {
-      console.error('Error creating user:', createError)
+      logger.error('Error creating user in database', createError, { email })
       return NextResponse.json(
         { error: 'Erro ao criar usuário' },
         { status: 500 }
       )
     }
+
+    logger.info('User created successfully', { userId: newUser.id, email })
 
     // Generate verification token (valid for 24 hours)
     const verificationToken = crypto.randomBytes(32).toString('hex')
@@ -90,11 +97,13 @@ async function handler(request: NextRequest) {
       userId: newUser.id,
     })
 
-    console.log('[Signup] Verification email sent to:', email)
+    logger.info('Verification email sent', { userId: newUser.id, email })
 
     const duration = timer.end()
     trackApiCall('/api/auth/signup', duration, 200, { userId: newUser.id })
     trackConversion('user_signup', undefined, { role: newUser.role })
+
+    logger.info('Signup request successful', { userId: newUser.id, status: 200, duration })
 
     return NextResponse.json({
       success: true,
@@ -109,7 +118,7 @@ async function handler(request: NextRequest) {
   } catch (error) {
     timer.end()
     trackError(error as Error, { endpoint: '/api/auth/signup', method: 'POST' })
-    console.error('Signup error:', error)
+    logger.error('Signup request failed', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

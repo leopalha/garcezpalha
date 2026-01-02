@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 // ClickSign webhook event types
 interface ClickSignWebhookPayload {
@@ -49,7 +50,7 @@ async function handler(request: NextRequest) {
     const webhookSecret = process.env.CLICKSIGN_WEBHOOK_SECRET
 
     if (!webhookSecret) {
-      console.log('[ClickSign Webhook] Not configured, returning 503')
+      logger.info('[ClickSign Webhook] Not configured, returning 503')
       return NextResponse.json({ error: 'ClickSign webhook not configured' }, { status: 503 })
     }
 
@@ -60,13 +61,13 @@ async function handler(request: NextRequest) {
     if (signature) {
       const isValid = verifySignature(body, signature, webhookSecret)
       if (!isValid) {
-        console.error('[ClickSign Webhook] Invalid signature')
+        logger.error('[ClickSign Webhook] Invalid signature')
         return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
       }
     }
 
     const payload: ClickSignWebhookPayload = JSON.parse(body)
-    console.log('[ClickSign Webhook] Event received:', payload.event.name)
+    logger.info('[ClickSign Webhook] Event received:', payload.event.name)
 
     // Handle different event types
     switch (payload.event.name) {
@@ -87,12 +88,12 @@ async function handler(request: NextRequest) {
         break
 
       default:
-        console.log('[ClickSign Webhook] Unhandled event type:', payload.event.name)
+        logger.info('[ClickSign Webhook] Unhandled event type:', payload.event.name)
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('[ClickSign Webhook] Error:', error)
+    logger.error('[ClickSign Webhook] Error:', error)
     return NextResponse.json(
       { error: 'Webhook processing failed', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
@@ -107,7 +108,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
   const documentKey = payload.event.data.document.key
   const signedFileUrl = payload.event.data.document.downloads.signed_file_url
 
-  console.log('[ClickSign] Document signed:', documentKey)
+  logger.info('[ClickSign] Document signed:', documentKey)
 
   const supabase = await createClient()
 
@@ -119,7 +120,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
     .limit(1)
 
   if (!conversations || conversations.length === 0) {
-    console.warn('[ClickSign] No conversation found for document:', documentKey)
+    logger.warn('[ClickSign] No conversation found for document:', documentKey)
     return
   }
 
@@ -143,11 +144,11 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
     .eq('conversation_id', conversation.conversation_id)
 
   if (error) {
-    console.error('[ClickSign] Error updating conversation:', error)
+    logger.error('[ClickSign] Error updating conversation:', error)
     return
   }
 
-  console.log(`[ClickSign] Conversation ${conversation.conversation_id} moved to onboarding`)
+  logger.info(`[ClickSign] Conversation ${conversation.conversation_id} moved to onboarding`)
 
   // Trigger next steps after contract signature
   try {
@@ -186,9 +187,9 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
       })
     })
 
-    console.log('[ClickSign] Welcome email sent and admin notified')
+    logger.info('[ClickSign] Welcome email sent and admin notified')
   } catch (error) {
-    console.error('[ClickSign] Error sending notifications:', error)
+    logger.error('[ClickSign] Error sending notifications:', error)
   }
 
   // After 1 hour, transition to 'active_case'
@@ -204,9 +205,9 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
       .eq('conversation_id', conversation.conversation_id)
 
     if (transitionError) {
-      console.error('[ClickSign] Error transitioning to active_case:', transitionError)
+      logger.error('[ClickSign] Error transitioning to active_case:', transitionError)
     } else {
-      console.log(`[ClickSign] Conversation ${conversation.conversation_id} moved to active_case`)
+      logger.info(`[ClickSign] Conversation ${conversation.conversation_id} moved to active_case`)
 
       // Notify assigned lawyer
       try {
@@ -223,9 +224,9 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
             assigned_to: 'lawyer' // Will be replaced with specific lawyer ID in the future
           })
         })
-        console.log('[ClickSign] Lawyer notified about active case')
+        logger.info('[ClickSign] Lawyer notified about active case')
       } catch (error) {
-        console.error('[ClickSign] Error notifying lawyer:', error)
+        logger.error('[ClickSign] Error notifying lawyer:', error)
       }
     }
   }, 3600000) // 1 hour
@@ -238,7 +239,7 @@ async function handleSignerSigned(payload: ClickSignWebhookPayload) {
   const documentKey = payload.event.data.document.key
   const signer = payload.event.data.signer
 
-  console.log('[ClickSign] Signer signed:', signer?.email)
+  logger.info('[ClickSign] Signer signed:', signer?.email)
 
   const supabase = await createClient()
 
@@ -272,7 +273,7 @@ async function handleSignerSigned(payload: ClickSignWebhookPayload) {
     })
     .eq('conversation_id', conversation.conversation_id)
 
-  console.log('[ClickSign] Signer information updated')
+  logger.info('[ClickSign] Signer information updated')
 }
 
 /**
@@ -281,7 +282,7 @@ async function handleSignerSigned(payload: ClickSignWebhookPayload) {
 async function handleDocumentCanceled(payload: ClickSignWebhookPayload) {
   const documentKey = payload.event.data.document.key
 
-  console.log('[ClickSign] Document canceled:', documentKey)
+  logger.info('[ClickSign] Document canceled:', documentKey)
 
   const supabase = await createClient()
 
@@ -313,7 +314,7 @@ async function handleDocumentCanceled(payload: ClickSignWebhookPayload) {
     })
     .eq('conversation_id', conversation.conversation_id)
 
-  console.log('[ClickSign] Conversation escalated due to contract cancellation')
+  logger.info('[ClickSign] Conversation escalated due to contract cancellation')
 
   // Notify admin about contract cancellation
   try {
@@ -329,9 +330,9 @@ async function handleDocumentCanceled(payload: ClickSignWebhookPayload) {
         priority: 'urgent'
       })
     })
-    console.log('[ClickSign] Admin notified about contract cancellation')
+    logger.info('[ClickSign] Admin notified about contract cancellation')
   } catch (error) {
-    console.error('[ClickSign] Error notifying admin about cancellation:', error)
+    logger.error('[ClickSign] Error notifying admin about cancellation:', error)
   }
 }
 
@@ -341,7 +342,7 @@ async function handleDocumentCanceled(payload: ClickSignWebhookPayload) {
 async function handleDocumentRefused(payload: ClickSignWebhookPayload) {
   const documentKey = payload.event.data.document.key
 
-  console.log('[ClickSign] Document refused:', documentKey)
+  logger.info('[ClickSign] Document refused:', documentKey)
 
   const supabase = await createClient()
 
@@ -373,7 +374,7 @@ async function handleDocumentRefused(payload: ClickSignWebhookPayload) {
     })
     .eq('conversation_id', conversation.conversation_id)
 
-  console.log('[ClickSign] Conversation escalated due to contract refusal')
+  logger.info('[ClickSign] Conversation escalated due to contract refusal')
 
   // Notify admin about contract refusal for follow-up
   try {
@@ -389,9 +390,9 @@ async function handleDocumentRefused(payload: ClickSignWebhookPayload) {
         priority: 'urgent'
       })
     })
-    console.log('[ClickSign] Admin notified about contract refusal')
+    logger.info('[ClickSign] Admin notified about contract refusal')
   } catch (error) {
-    console.error('[ClickSign] Error notifying admin about refusal:', error)
+    logger.error('[ClickSign] Error notifying admin about refusal:', error)
   }
 }
 

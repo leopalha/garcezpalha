@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
 import { inngest } from '@/lib/jobs/email-sequences'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (signature && process.env.RESEND_WEBHOOK_SECRET) {
       const isValid = await verifyResendSignature(signature, rawBody)
       if (!isValid) {
-        console.error('[Resend Webhook] Invalid signature')
+        logger.error('[Resend Webhook] Invalid signature')
         return NextResponse.json(
           { error: 'Invalid signature' },
           { status: 401 }
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     const event = JSON.parse(rawBody)
 
-    console.log('[Resend Webhook] Event received:', event.type, event.data?.email_id)
+    logger.info('[Resend Webhook] Event received:', event.type, event.data?.email_id)
 
     // Processar evento conforme tipo
     switch (event.type) {
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
 
       case 'email.delivery_delayed':
         // Email atrasado - pode monitorar mas não precisa ação
-        console.warn('[Resend Webhook] Email delayed:', event.data.email_id)
+        logger.warn('[Resend Webhook] Email delayed:', event.data.email_id)
         break
 
       case 'email.complained':
@@ -151,12 +152,12 @@ export async function POST(req: NextRequest) {
         break
 
       default:
-        console.log('[Resend Webhook] Unknown event type:', event.type)
+        logger.info('[Resend Webhook] Unknown event type:', event.type)
     }
 
     return NextResponse.json({ received: true })
   } catch (error: any) {
-    console.error('[Resend Webhook] Error processing webhook:', error)
+    logger.error('[Resend Webhook] Error processing webhook:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
       { status: 500 }
@@ -172,7 +173,7 @@ async function verifyResendSignature(signature: string, body: string): Promise<b
   const secret = process.env.RESEND_WEBHOOK_SECRET
 
   if (!secret) {
-    console.warn('[Resend Webhook] RESEND_WEBHOOK_SECRET not configured')
+    logger.warn('[Resend Webhook] RESEND_WEBHOOK_SECRET not configured')
     return true // Em desenvolvimento, aceitar sem validação
   }
 
@@ -201,7 +202,7 @@ async function verifyResendSignature(signature: string, body: string): Promise<b
     // Comparar com signature recebida (case-insensitive)
     return signature.toLowerCase() === expectedSignature.toLowerCase()
   } catch (error) {
-    console.error('[Resend Webhook] Error verifying signature:', error)
+    logger.error('[Resend Webhook] Error verifying signature:', error)
     return false
   }
 }

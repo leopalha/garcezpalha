@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 // Error report schema
 const errorReportSchema = z.object({
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     // Log critical and high severity errors immediately
     if (errorReport.severity === 'critical' || errorReport.severity === 'high') {
-      console.error(`[ERROR REPORT - ${errorReport.severity.toUpperCase()}]`, {
+      logger.error(`[ERROR REPORT - ${errorReport.severity.toUpperCase()}]`, {
         id: storedError.id,
         message: errorReport.message,
         page: errorReport.context.page,
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.error('Error API error:', error)
+    logger.error('Error API error:', error)
     return NextResponse.json(
       { error: 'Failed to process error report' },
       { status: 500 }

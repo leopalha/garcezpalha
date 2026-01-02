@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const bugReportSchema = z.object({
   title: z.string().min(5),
@@ -58,7 +59,7 @@ async function handler(request: NextRequest) {
     })
 
     if (error) {
-      console.error('Error creating bug report:', error)
+      logger.error('Error creating bug report:', error)
       return NextResponse.json(
         { error: 'Erro ao processar bug report' },
         { status: 500 }
@@ -70,7 +71,7 @@ async function handler(request: NextRequest) {
       message: 'Bug reportado com sucesso! Analisaremos em breve.',
     })
   } catch (error) {
-    console.error('Bug report error:', error)
+    logger.error('Bug report error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

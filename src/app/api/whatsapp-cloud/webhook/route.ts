@@ -3,6 +3,7 @@ import { whatsappMessageHandler } from '@/lib/whatsapp/message-handler'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import type { WhatsAppIncomingMessage } from '@/lib/whatsapp/types'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 /**
  * WhatsApp Cloud API webhook type definitions
@@ -46,11 +47,11 @@ export async function GET(request: NextRequest) {
   // Check if mode and token are present
   if (mode === 'subscribe' && token === VERIFY_TOKEN) {
     // Respond with the challenge token from the request
-    console.log('[WhatsApp Webhook] Verified successfully')
+    logger.info('[WhatsApp Webhook] Verified successfully')
     return new NextResponse(challenge, { status: 200 })
   } else {
     // Respond with '403 Forbidden' if verify tokens do not match
-    console.error('[WhatsApp Webhook] Verification failed')
+    logger.error('[WhatsApp Webhook] Verification failed')
     return NextResponse.json(
       { error: 'Forbidden' },
       { status: 403 }
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    console.log('[WhatsApp Webhook] Received:', JSON.stringify(body, null, 2))
+    logger.info('[WhatsApp Webhook] Received:', JSON.stringify(body, null, 2))
 
     // Extract message data
     const entry = body.entry?.[0]
@@ -86,32 +87,32 @@ export async function POST(request: NextRequest) {
       const message = value.messages[0]
       const contact = value.contacts?.[0]
 
-      console.log('[WhatsApp Webhook] Message from:', message.from)
-      console.log('[WhatsApp Webhook] Message type:', message.type)
+      logger.info('[WhatsApp Webhook] Message from:', message.from)
+      logger.info('[WhatsApp Webhook] Message type:', message.type)
 
       // Mark message as read immediately
       try {
         await whatsappCloudAPI.markAsRead(message.id)
       } catch (error) {
-        console.error('[WhatsApp Webhook] Error marking as read:', error)
+        logger.error('[WhatsApp Webhook] Error marking as read:', error)
       }
 
       // Process message with handler (async, don't wait)
       // This allows webhook to return quickly while processing continues
       processMessageAsync(message, contact).catch(error => {
-        console.error('[WhatsApp Webhook] Error in async processing:', error)
+        logger.error('[WhatsApp Webhook] Error in async processing:', error)
       })
     }
 
     // Check if this is a status update
     if (value?.statuses) {
       const status = value.statuses[0]
-      console.log('[WhatsApp Webhook] Status update:', status.status, 'for', status.recipient_id)
+      logger.info('[WhatsApp Webhook] Status update:', status.status, 'for', status.recipient_id)
 
       // Log delivery/read status
       // Could be: sent, delivered, read, failed
       if (status.status === 'failed') {
-        console.error('[WhatsApp Webhook] Message failed:', status.errors)
+        logger.error('[WhatsApp Webhook] Message failed:', status.errors)
       }
     }
 
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
     })
 
-    console.error('[WhatsApp Webhook] Error:', error)
+    logger.error('[WhatsApp Webhook] Error:', error)
     // Still return 200 to avoid Meta retrying
     return NextResponse.json({ success: false, error: 'Internal error' })
   }
@@ -146,7 +147,7 @@ async function processMessageAsync(message: WhatsAppWebhookMessage, contact?: Wh
     await whatsappMessageHandler.processMessage(message as any)
 
   } catch (error) {
-    console.error('[WhatsApp Webhook] Async processing error:', error)
+    logger.error('[WhatsApp Webhook] Async processing error:', error)
 
     // Try to send error message to user
     try {
@@ -155,7 +156,7 @@ async function processMessageAsync(message: WhatsAppWebhookMessage, contact?: Wh
         '❌ Desculpe, ocorreu um erro. Por favor, tente novamente ou ligue (21) 2220-0685.'
       )
     } catch (sendError) {
-      console.error('[WhatsApp Webhook] Failed to send error message:', sendError)
+      logger.error('[WhatsApp Webhook] Failed to send error message:', sendError)
     }
   }
 }

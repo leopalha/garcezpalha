@@ -3,6 +3,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -128,7 +129,7 @@ O Garcez Palha é um escritório de advocacia online especializado em diversas �
         .single()
 
       if (productError || !productData) {
-        console.error('Erro ao buscar produto:', productError)
+        logger.error('Erro ao buscar produto:', productError)
         return NextResponse.json(
           { error: 'Produto não encontrado' },
           { status: 404 }
@@ -237,7 +238,7 @@ A: ${faq.answer}
   } catch (error) {
     timer.end()
     trackError(error as Error, { endpoint: '/api/chat/assistant', method: 'POST' })
-    console.error('Erro no assistente:', error)
+    logger.error('Erro no assistente:', error)
     return NextResponse.json(
       { error: 'Erro ao processar mensagem', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

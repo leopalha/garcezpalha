@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { emailSequences } from '@/lib/email/sequences'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Process pending email sequences
@@ -22,16 +23,16 @@ async function getHandler(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Email Sequences] Unauthorized access attempt')
+      logger.error('[Email Sequences] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Email Sequences] Starting sequence processing...')
+    logger.info('[Email Sequences] Starting sequence processing...')
 
     // Process all pending sequences
     const result = await emailSequences.processPendingSequences()
 
-    console.log('[Email Sequences] Processing complete:', result)
+    logger.info('[Email Sequences] Processing complete:', result)
 
     return NextResponse.json(
       {
@@ -43,7 +44,7 @@ async function getHandler(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
+    logger.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -59,7 +60,7 @@ async function getHandler(request: NextRequest) {
  */
 async function postHandler(request: NextRequest) {
   try {
-    console.log('[Email Sequences] Manual trigger')
+    logger.info('[Email Sequences] Manual trigger')
 
     const result = await emailSequences.processPendingSequences()
 
@@ -73,7 +74,7 @@ async function postHandler(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
+    logger.error('[Email Sequences] Error:', error instanceof Error ? error.message : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

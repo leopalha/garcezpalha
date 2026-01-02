@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   Select,
   SelectContent,
@@ -360,117 +361,113 @@ export default function ConversasPage() {
 
       {/* Conversations List */}
       <div className="space-y-4">
-        {filteredConversations.map((conversation) => {
-          const StatusIcon = statusConfig[conversation.status].icon
-          return (
-            <Card
-              key={conversation.id}
-              className={cn(
-                'hover:shadow-md transition-shadow',
-                conversation.needsAttention && 'border-l-4 border-l-yellow-500'
-              )}
-            >
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                  {/* Lead Info - 4 cols */}
-                  <div className="lg:col-span-4 space-y-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold">{conversation.leadName}</h3>
-                          {conversation.needsAttention && (
-                            <Badge variant="outline" className="text-xs bg-yellow-50 border-yellow-300">
-                              <Sparkles className="h-3 w-3 mr-1" />
-                              Atenção
-                            </Badge>
-                          )}
+        {filteredConversations.length === 0 ? (
+          <EmptyState
+            icon={MessageSquare}
+            title="Nenhuma conversa encontrada"
+            description="Tente ajustar os filtros ou aguarde novos leads para começar"
+          />
+        ) : (
+          filteredConversations.map((conversation) => {
+            const StatusIcon = statusConfig[conversation.status].icon
+            return (
+              <Card
+                key={conversation.id}
+                className={cn(
+                  'hover:shadow-md transition-shadow',
+                  conversation.needsAttention && 'border-l-4 border-l-yellow-500'
+                )}
+              >
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    {/* Lead Info - 4 cols */}
+                    <div className="lg:col-span-4 space-y-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold">{conversation.leadName}</h3>
+                            {conversation.needsAttention && (
+                              <Badge variant="outline" className="text-xs bg-yellow-50 border-yellow-300">
+                                <Sparkles className="h-3 w-3 mr-1" />
+                                Atenção
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{conversation.leadEmail}</p>
                         </div>
-                        <p className="text-sm text-muted-foreground">{conversation.leadEmail}</p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className={cn(
+                            'text-xs',
+                            statusConfig[conversation.status].bgColor,
+                            statusConfig[conversation.status].color
+                          )}
+                        >
+                          <StatusIcon className="h-3 w-3 mr-1" />
+                          {statusConfig[conversation.status].label}
+                        </Badge>
+                        <Badge
+                          className={cn(
+                            'text-xs text-white',
+                            qualityConfig[conversation.quality].color
+                          )}
+                        >
+                          {qualityConfig[conversation.quality].label}
+                        </Badge>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant="secondary"
-                        className={cn(
-                          'text-xs',
-                          statusConfig[conversation.status].bgColor,
-                          statusConfig[conversation.status].color
-                        )}
-                      >
-                        <StatusIcon className="h-3 w-3 mr-1" />
-                        {statusConfig[conversation.status].label}
-                      </Badge>
-                      <Badge
-                        className={cn(
-                          'text-xs text-white',
-                          qualityConfig[conversation.quality].color
-                        )}
-                      >
-                        {qualityConfig[conversation.quality].label}
-                      </Badge>
+                    {/* Product & Agent - 3 cols */}
+                    <div className="lg:col-span-3 space-y-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Produto</p>
+                        <p className="font-medium text-sm">{conversation.product}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Agent IA</p>
+                        <p className="text-sm flex items-center gap-1">
+                          <Sparkles className="h-3 w-3 text-primary" />
+                          {conversation.agentType}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Product & Agent - 3 cols */}
-                  <div className="lg:col-span-3 space-y-2">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Produto</p>
-                      <p className="font-medium text-sm">{conversation.product}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Agent IA</p>
-                      <p className="text-sm flex items-center gap-1">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                        {conversation.agentType}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Last Message - 3 cols */}
-                  <div className="lg:col-span-3 space-y-1">
-                    <p className="text-xs text-muted-foreground">Última Mensagem</p>
-                    <p className="text-sm line-clamp-2">{conversation.lastMessage}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(conversation.lastMessageAt)}
-                    </p>
-                  </div>
-
-                  {/* Stats & Actions - 2 cols */}
-                  <div className="lg:col-span-2 flex flex-col items-end justify-between gap-2">
-                    <div className="text-right space-y-1">
-                      <p className="text-xs text-muted-foreground">Score</p>
-                      <p className={cn('text-2xl font-bold', getScoreColor(conversation.score))}>
-                        {conversation.score}%
-                      </p>
+                    {/* Last Message - 3 cols */}
+                    <div className="lg:col-span-3 space-y-1">
+                      <p className="text-xs text-muted-foreground">Última Mensagem</p>
+                      <p className="text-sm line-clamp-2">{conversation.lastMessage}</p>
                       <p className="text-xs text-muted-foreground">
-                        {conversation.messageCount} mensagens
+                        {formatDate(conversation.lastMessageAt)}
                       </p>
                     </div>
 
-                    <Button size="sm" asChild>
-                      <Link href={`/dashboard/conversas/${conversation.id}`}>
-                        <Eye className="h-4 w-4 mr-1" />
-                        Ver Chat
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
+                    {/* Stats & Actions - 2 cols */}
+                    <div className="lg:col-span-2 flex flex-col items-end justify-between gap-2">
+                      <div className="text-right space-y-1">
+                        <p className="text-xs text-muted-foreground">Score</p>
+                        <p className={cn('text-2xl font-bold', getScoreColor(conversation.score))}>
+                          {conversation.score}%
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {conversation.messageCount} mensagens
+                        </p>
+                      </div>
 
-        {filteredConversations.length === 0 && (
-          <Card>
-            <CardContent className="pt-12 pb-12 text-center">
-              <MessageSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">Nenhuma conversa encontrada</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Tente ajustar os filtros ou aguarde novos leads
-              </p>
-            </CardContent>
-          </Card>
+                      <Button size="sm" asChild>
+                        <Link href={`/dashboard/conversas/${conversation.id}`}>
+                          <Eye className="h-4 w-4 mr-1" />
+                          Ver Chat
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })
         )}
       </div>
 

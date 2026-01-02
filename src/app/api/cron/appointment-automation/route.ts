@@ -15,6 +15,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { appointmentAutomation } from '@/lib/appointments/appointment-automation'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run appointment automation cycle
@@ -28,16 +29,16 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Appointment Automation] Unauthorized access attempt')
+      logger.error('[Appointment Automation] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Appointment Automation] Starting automation cycle...')
+    logger.info('[Appointment Automation] Starting automation cycle...')
 
     // Process all automations
     const result = await appointmentAutomation.processAutomations()
 
-    console.log('[Appointment Automation] Cycle complete:', result)
+    logger.info('[Appointment Automation] Cycle complete:', result)
 
     return NextResponse.json(
       {
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Appointment Automation] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Appointment Automation] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('[Appointment Automation] Manual trigger')
+    logger.info('[Appointment Automation] Manual trigger')
 
     const result = await appointmentAutomation.processAutomations()
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Appointment Automation] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Appointment Automation] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

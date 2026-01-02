@@ -4,6 +4,7 @@ import { stripe } from '@/lib/payments/stripe'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
+import { logger } from '@/lib/logger'
 
 const createSessionSchema = z.object({
   serviceId: z.string(),
@@ -19,7 +20,7 @@ const createSessionSchema = z.object({
 
 async function handler(request: NextRequest) {
   try {
-    console.log('[DEBUG] STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? `EXISTS (${process.env.STRIPE_SECRET_KEY.substring(0, 20)}...)` : 'NOT FOUND')
+    logger.info('[DEBUG] STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? `EXISTS (${process.env.STRIPE_SECRET_KEY.substring(0, 20)}...)` : 'NOT FOUND')
 
     const data = (request as any).validatedData
 
@@ -74,7 +75,7 @@ async function handler(request: NextRequest) {
     } as any)
 
     if (dbError) {
-      console.error('Database error:', dbError)
+      logger.error('Database error:', dbError)
       // Don't fail the request if DB insert fails
     }
 
@@ -83,7 +84,7 @@ async function handler(request: NextRequest) {
       url: session.url,
     })
   } catch (error) {
-    console.error('Stripe session creation error:', error)
+    logger.error('Stripe session creation error:', error)
     return NextResponse.json(
       {
         error: 'Erro ao criar sessão de pagamento',

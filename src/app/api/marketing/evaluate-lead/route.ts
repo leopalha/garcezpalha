@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { MarketingLeadAgent } from '@/lib/marketing/marketing-lead-agent'
 import { LeadData } from '@/lib/marketing/lead-scorer'
 import { UserSession } from '@/lib/marketing/user-tracker'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Error evaluating lead:', error)
+    logger.error('Error evaluating lead:', error)
     return NextResponse.json(
       { error: 'Failed to evaluate lead', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
       leads: results,
     })
   } catch (error) {
-    console.error('Error batch evaluating leads:', error)
+    logger.error('Error batch evaluating leads:', error)
     return NextResponse.json(
       { error: 'Failed to batch evaluate leads' },
       { status: 500 }

@@ -10,6 +10,7 @@ import {
   getConversionFunnel,
 } from '@/lib/leads/lead-database'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   try {
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.error('[API /admin/leads/dashboard] Error:', error)
+    logger.error('[API /admin/leads/dashboard] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

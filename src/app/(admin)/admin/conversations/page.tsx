@@ -15,6 +15,8 @@ import {
   Loader2,
   ChevronRight,
 } from 'lucide-react'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface Conversation {
   id: string
@@ -35,6 +37,7 @@ export default function ConversationsPage() {
   const router = useRouter()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
   const [filter, setFilter] = useState<FilterType>('all')
 
   useEffect(() => {
@@ -43,50 +46,33 @@ export default function ConversationsPage() {
 
   const fetchConversations = async () => {
     setLoading(true)
+    setError(null)
     try {
-      // TODO: Implement API to fetch conversations
-      // Placeholder mock data for now
-      const mockData: Conversation[] = [
-        {
-          id: '1',
-          lead_id: 'lead-1',
-          lead_name: 'Maria Silva',
-          lead_email: 'maria@example.com',
-          state: 'escalated',
-          qualification_score: 92,
-          last_message: 'Preciso de ajuda urgente com meu caso.',
-          last_message_at: new Date(Date.now() - 3600000).toISOString(),
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          message_count: 8,
-        },
-        {
-          id: '2',
-          lead_id: 'lead-2',
-          lead_name: 'João Santos',
-          lead_email: 'joao@example.com',
-          state: 'qualified',
-          qualification_score: 85,
-          last_message: 'Tenho documentos para enviar.',
-          last_message_at: new Date(Date.now() - 7200000).toISOString(),
-          created_at: new Date(Date.now() - 172800000).toISOString(),
-          message_count: 5,
-        },
-        {
-          id: '3',
-          lead_id: 'lead-3',
-          lead_name: 'Ana Costa',
-          lead_email: 'ana@example.com',
-          state: 'classifying',
-          qualification_score: 65,
-          last_message: 'Meu caso é sobre revisão de FGTS.',
-          last_message_at: new Date(Date.now() - 14400000).toISOString(),
-          created_at: new Date(Date.now() - 259200000).toISOString(),
-          message_count: 3,
-        },
-      ]
-      setConversations(mockData)
-    } catch (error) {
-      console.error('Error fetching conversations:', error)
+      const res = await fetch('/api/admin/conversations?limit=100')
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+      }
+
+      const data = await res.json()
+
+      // Map API response to component interface
+      const mapped: Conversation[] = (data.conversations || []).map((conv: any) => ({
+        id: conv.id,
+        lead_id: conv.lead_id || conv.user_id,
+        lead_name: conv.lead_name || conv.metadata?.name || 'Lead sem nome',
+        lead_email: conv.lead_email || conv.metadata?.email || '',
+        state: conv.status?.state || conv.state || 'identifying',
+        qualification_score: conv.status?.qualification_score || conv.qualification_score || 0,
+        last_message: conv.last_message || conv.metadata?.last_message || 'Sem mensagens',
+        last_message_at: conv.last_message_at || conv.updated_at || new Date().toISOString(),
+        created_at: conv.created_at || new Date().toISOString(),
+        message_count: conv.message_count || 0,
+      }))
+
+      setConversations(mapped)
+    } catch (err) {
+      console.error('Error fetching conversations:', err)
+      setError(err instanceof Error ? err : new Error('Erro ao carregar conversas'))
     } finally {
       setLoading(false)
     }
@@ -264,11 +250,21 @@ export default function ConversationsPage() {
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
+          ) : error ? (
+            <ErrorAlert
+              error={error}
+              retry={fetchConversations}
+              title="Erro ao carregar conversas"
+            />
           ) : filteredConversations.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Nenhuma conversa encontrada com este filtro</p>
-            </div>
+            <EmptyState
+              icon={MessageSquare}
+              title="Nenhuma conversa encontrada"
+              description={filter !== 'all' ?
+                `Nenhuma conversa no estado "${filter}".` :
+                "Não há conversas no momento. Elas aparecerão aqui quando clientes iniciarem conversas com o chatbot."
+              }
+            />
           ) : (
             <div className="space-y-3">
               {filteredConversations.map((conv) => {

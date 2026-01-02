@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
       .eq('conversation_id', conversationId)
 
     if (updateError) {
-      console.error('[NPS] Error saving score:', updateError)
+      logger.error('[NPS] Error saving score:', updateError)
       throw updateError
     }
 
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
       submitted_at: new Date().toISOString(),
     })
 
-    console.log(`[NPS] Score ${score} (${category}) submitted for conversation ${conversationId}`)
+    logger.info(`[NPS] Score ${score} (${category}) submitted for conversation ${conversationId}`)
 
     return NextResponse.json({
       success: true,
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       category,
     })
   } catch (error) {
-    console.error('[NPS] Submission error:', error)
+    logger.error('[NPS] Submission error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',

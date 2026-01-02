@@ -27,6 +27,7 @@ import { emailService } from '@/lib/email/email-service'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import { withRateLimit } from '@/lib/rate-limit'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 /**
  * Database type definitions
@@ -65,7 +66,7 @@ async function handler(request: NextRequest) {
 
     // Verify webhook signature (security)
     if (!clickSign.verifyWebhookSignature(signature, body)) {
-      console.error('Invalid ClickSign webhook signature')
+      logger.error('Invalid ClickSign webhook signature')
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
@@ -86,12 +87,12 @@ async function handler(request: NextRequest) {
         break
 
       default:
-        console.log('Unknown ClickSign event:', payload.event)
+        logger.info('Unknown ClickSign event:', payload.event)
     }
 
     return NextResponse.json({ status: 'ok' }, { status: 200 })
   } catch (error) {
-    console.error('ClickSign webhook error:', error)
+    logger.error('ClickSign webhook error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -103,7 +104,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
   const supabase = await createClient()
   const documentKey = payload.data.document.key
 
-  console.log('Document signed:', documentKey)
+  logger.info('Document signed:', documentKey)
 
   // Find contract in database by ClickSign key
   const { data: contract } = await supabase
@@ -113,7 +114,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
     .single()
 
   if (!contract) {
-    console.error('Contract not found for document:', documentKey)
+    logger.error('Contract not found for document:', documentKey)
     return
   }
 
@@ -132,7 +133,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
       })
 
     if (uploadError) {
-      console.error('Failed to upload signed contract:', uploadError)
+      logger.error('Failed to upload signed contract:', uploadError)
       return
     }
 
@@ -177,7 +178,7 @@ async function handleDocumentSigned(payload: ClickSignWebhookPayload) {
       await sendContractConfirmationEmail(lead, contract, urlData.publicUrl)
     }
 
-    console.log('[ClickSign] Contract signed and processed:', contract.id)
+    logger.info('[ClickSign] Contract signed and processed:', contract.id)
   }
 }
 
@@ -192,7 +193,7 @@ async function createPaymentLinkForContract(
 ) {
   try {
     if (!isMercadoPagoConfigured()) {
-      console.warn('[ClickSign] MercadoPago not configured, skipping payment link')
+      logger.warn('[ClickSign] MercadoPago not configured, skipping payment link')
       return
     }
 
@@ -288,9 +289,9 @@ Garcez Palha - Consultoria Jurídica & Pericial
       })
     }
 
-    console.log('[ClickSign] Payment link created and sent:', preference.id)
+    logger.info('[ClickSign] Payment link created and sent:', preference.id)
   } catch (error) {
-    console.error('[ClickSign] Error creating payment link:', error)
+    logger.error('[ClickSign] Error creating payment link:', error)
   }
 }
 
@@ -318,9 +319,9 @@ async function sendContractConfirmationEmail(
       contractId: contract.id,
     })
 
-    console.log('[ClickSign] Contract confirmation email sent to:', lead.email)
+    logger.info('[ClickSign] Contract confirmation email sent to:', lead.email)
   } catch (error) {
-    console.error('[ClickSign] Error sending confirmation email:', error)
+    logger.error('[ClickSign] Error sending confirmation email:', error)
   }
 }
 
@@ -331,7 +332,7 @@ async function handleDocumentClosed(payload: ClickSignWebhookPayload) {
   const supabase = await createClient()
   const documentKey = payload.data.document.key
 
-  console.log('Document closed:', documentKey)
+  logger.info('Document closed:', documentKey)
 
   // Update contract status
   await supabase
@@ -350,7 +351,7 @@ async function handleDocumentCancelled(payload: ClickSignWebhookPayload) {
   const supabase = await createClient()
   const documentKey = payload.data.document.key
 
-  console.log('Document cancelled:', documentKey)
+  logger.info('Document cancelled:', documentKey)
 
   // Update contract status
   await supabase

@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createSocialAgent } from '@/lib/ai/agents/marketing/social-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -151,7 +152,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Analytics fetch error:', error)
+    logger.error('Analytics fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch analytics', details: (error as Error).message },
       { status: 500 }
@@ -208,7 +209,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Metrics update error:', error)
+    logger.error('Metrics update error:', error)
     return NextResponse.json(
       { error: 'Failed to update metrics', details: (error as Error).message },
       { status: 500 }
@@ -288,7 +289,7 @@ export async function PUT(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Engagement analysis error:', error)
+    logger.error('Engagement analysis error:', error)
     return NextResponse.json(
       { error: 'Failed to analyze engagement', details: (error as Error).message },
       { status: 500 }

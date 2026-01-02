@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   Select,
   SelectContent,
@@ -329,6 +330,12 @@ export default function ClientesPage() {
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
+          ) : filteredClients.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title="Nenhum cliente encontrado"
+              description="Tente ajustar os filtros ou adicione um novo cliente manualmente"
+            />
           ) : (
           <div className="space-y-4">
             {filteredClients.map((client) => (
@@ -448,16 +455,6 @@ export default function ClientesPage() {
                 </CardContent>
               </Card>
             ))}
-
-            {filteredClients.length === 0 && (
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Nenhum cliente encontrado</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Tente ajustar os filtros ou adicionar um novo cliente
-                </p>
-              </div>
-            )}
           </div>
           )}
         </CardContent>

@@ -8,6 +8,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 import { conversationMessageSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 async function getHandler(
   request: NextRequest,
@@ -31,7 +32,7 @@ async function getHandler(
       .order('created_at', { ascending: true })
 
     if (messagesError) {
-      console.error('[Messages API] Error fetching messages:', messagesError)
+      logger.error('[Messages API] Error fetching messages:', messagesError)
 
       // Fallback: return empty array if table doesn't exist yet
       if (messagesError.code === '42P01') {
@@ -46,7 +47,7 @@ async function getHandler(
 
     return NextResponse.json({ messages: messages || [] })
   } catch (error) {
-    console.error('[Messages API] Error:', error)
+    logger.error('[Messages API] Error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch messages', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
@@ -87,7 +88,7 @@ async function postHandler(
 
     // If human takeover, don't route through agent-flow
     if (rawBody.humanTakeover) {
-      console.log('[Human Message]:', validatedData.content)
+      logger.info('[Human Message]:', validatedData.content)
 
       return NextResponse.json({
         success: true,
@@ -135,7 +136,7 @@ async function postHandler(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -144,7 +145,7 @@ async function postHandler(
       )
     }
 
-    console.error('[Messages API] Error sending message:', error)
+    logger.error('[Messages API] Error sending message:', error)
     return NextResponse.json(
       { error: 'Failed to send message', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { withRateLimit } from '@/lib/rate-limit'
 import Stripe from 'stripe'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 async function handler(request: NextRequest) {
   const timer = new PerformanceTimer('POST /api/stripe/webhook')
@@ -18,7 +19,7 @@ async function handler(request: NextRequest) {
 
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
     timer.end()
-    console.error('STRIPE_WEBHOOK_SECRET not configured')
+    logger.error('STRIPE_WEBHOOK_SECRET not configured')
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
   }
 
@@ -29,7 +30,7 @@ async function handler(request: NextRequest) {
   } catch (error) {
     timer.end()
     trackError(error as Error, { endpoint: '/api/stripe/webhook', type: 'signature_verification' })
-    console.error('Webhook signature verification failed:', error)
+    logger.error('Webhook signature verification failed:', error)
     return NextResponse.json(
       { error: 'Invalid signature' },
       { status: 400 }
@@ -51,7 +52,7 @@ async function handler(request: NextRequest) {
         const billingCycle = subscription.metadata.billing_cycle || 'monthly'
 
         if (!userId) {
-          console.error('Missing user_id in subscription metadata')
+          logger.error('Missing user_id in subscription metadata')
           break
         }
 
@@ -81,7 +82,7 @@ async function handler(request: NextRequest) {
           } as any)
 
         if (subError) {
-          console.error('Failed to upsert subscription:', subError)
+          logger.error('Failed to upsert subscription:', subError)
           break
         }
 
@@ -91,7 +92,7 @@ async function handler(request: NextRequest) {
           .update({ current_plan: planId } as any)
           .eq('id', userId)
 
-        console.log(`Subscription ${event.type === 'customer.subscription.created' ? 'created' : 'updated'}: ${subscription.id}`)
+        logger.info(`Subscription ${event.type === 'customer.subscription.created' ? 'created' : 'updated'}: ${subscription.id}`)
         break
       }
 
@@ -116,7 +117,7 @@ async function handler(request: NextRequest) {
             .eq('id', userId)
         }
 
-        console.log(`Subscription deleted: ${subscription.id}`)
+        logger.info(`Subscription deleted: ${subscription.id}`)
         break
       }
 
@@ -150,7 +151,7 @@ async function handler(request: NextRequest) {
             .update({ status: 'active' } as any)
             .eq('stripe_subscription_id', invoiceAny.subscription)
 
-          console.log(`Invoice paid: ${invoice.id}`)
+          logger.info(`Invoice paid: ${invoice.id}`)
         }
         break
       }
@@ -183,7 +184,7 @@ async function handler(request: NextRequest) {
             .update({ status: 'past_due' } as any)
             .eq('stripe_subscription_id', invoiceAny.subscription)
 
-          console.log(`Invoice payment failed: ${invoice.id}`)
+          logger.info(`Invoice payment failed: ${invoice.id}`)
         }
         break
       }
@@ -215,7 +216,7 @@ async function handler(request: NextRequest) {
                 is_default: true, // Set as default when attached
               } as any)
 
-            console.log(`Payment method attached: ${paymentMethod.id}`)
+            logger.info(`Payment method attached: ${paymentMethod.id}`)
           }
         }
         break
@@ -229,7 +230,7 @@ async function handler(request: NextRequest) {
           .delete()
           .eq('stripe_payment_method_id', paymentMethod.id)
 
-        console.log(`Payment method detached: ${paymentMethod.id}`)
+        logger.info(`Payment method detached: ${paymentMethod.id}`)
         break
       }
 
@@ -248,11 +249,11 @@ async function handler(request: NextRequest) {
             .eq('stripe_session_id', session.id)
 
           if (error) {
-            console.error('Database update error:', error)
+            logger.error('Database update error:', error)
           }
         }
 
-        console.log(`Checkout session completed: ${session.id}`)
+        logger.info(`Checkout session completed: ${session.id}`)
         break
       }
 
@@ -266,12 +267,12 @@ async function handler(request: NextRequest) {
           } as any)
           .eq('stripe_session_id', session.id)
 
-        console.log(`Session expired: ${session.id}`)
+        logger.info(`Session expired: ${session.id}`)
         break
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        logger.info(`Unhandled event type: ${event.type}`)
     }
 
     const duration = timer.end()
@@ -281,7 +282,7 @@ async function handler(request: NextRequest) {
   } catch (error) {
     timer.end()
     trackError(error as Error, { endpoint: '/api/stripe/webhook', eventType: event.type })
-    console.error('Webhook handler error:', error)
+    logger.error('Webhook handler error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }

@@ -4,6 +4,7 @@ import { paymentClient, isMercadoPagoConfigured } from '@/lib/payments/mercadopa
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
+import { logger } from '@/lib/logger'
 
 const createPaymentSchema = z.object({
   serviceId: z.string(),
@@ -108,7 +109,7 @@ async function handler(request: NextRequest) {
       .single()
 
     if (dbError) {
-      console.error('Database error:', dbError)
+      logger.error('Database error:', dbError)
     }
 
     return NextResponse.json({
@@ -119,7 +120,7 @@ async function handler(request: NextRequest) {
       orderId: order?.id,
     })
   } catch (error) {
-    console.error('MercadoPago payment creation error:', error)
+    logger.error('MercadoPago payment creation error:', error)
     return NextResponse.json(
       {
         error: 'Erro ao criar pagamento PIX',

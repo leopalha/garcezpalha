@@ -21,6 +21,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { juditService, type JuditWebhookPayload } from '@/lib/monitoring/judit-service'
+import { logger } from '@/lib/logger'
 
 /**
  * POST - Receive webhook from Judit.io
@@ -32,20 +33,20 @@ export async function POST(request: NextRequest) {
 
     // Verify webhook signature (security)
     if (!juditService.verifyWebhookSignature(signature, body)) {
-      console.error('[Judit Webhook] Invalid signature')
+      logger.error('[Judit Webhook] Invalid signature')
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
     const payload: JuditWebhookPayload = JSON.parse(body)
 
-    console.log('[Judit Webhook] Received event:', payload.event, payload.process_number)
+    logger.info('[Judit Webhook] Received event:', payload.event, payload.process_number)
 
     // Process the webhook
     await juditService.handleWebhook(payload)
 
     return NextResponse.json({ status: 'ok' }, { status: 200 })
   } catch (error) {
-    console.error('[Judit Webhook] Error:', error)
+    logger.error('[Judit Webhook] Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

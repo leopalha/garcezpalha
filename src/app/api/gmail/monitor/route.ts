@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GmailMonitorService } from '@/lib/email/gmail-monitor'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -31,15 +32,15 @@ export async function POST(request: NextRequest) {
     const cronSecret = process.env.CRON_SECRET
 
     if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      console.warn('[Gmail Monitor] Unauthorized access attempt')
+      logger.warn('[Gmail Monitor] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Gmail Monitor] Starting email scan...')
+    logger.info('[Gmail Monitor] Starting email scan...')
 
     // Check if Gmail API is configured
     if (!gmailMonitor.isConfigured()) {
-      console.warn('[Gmail Monitor] Gmail API not configured')
+      logger.warn('[Gmail Monitor] Gmail API not configured')
       return NextResponse.json({
         success: false,
         error: 'Gmail API not configured',
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Fetch recent emails
     const emails = await gmailMonitor.fetchRecentEmails()
 
-    console.log(`[Gmail Monitor] Found ${emails.length} new emails`)
+    logger.info(`[Gmail Monitor] Found ${emails.length} new emails`)
 
     if (emails.length === 0) {
       return NextResponse.json({
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
           .single()
 
         if (existingLead) {
-          console.log(`[Gmail Monitor] Lead already exists: ${emailAddress}`)
+          logger.info(`[Gmail Monitor] Lead already exists: ${emailAddress}`)
           continue
         }
 
@@ -99,12 +100,12 @@ export async function POST(request: NextRequest) {
 
         if (!insertError) {
           leadsCreated++
-          console.log(`[Gmail Monitor] Lead created: ${name} <${emailAddress}>`)
+          logger.info(`[Gmail Monitor] Lead created: ${name} <${emailAddress}>`)
         } else {
-          console.error(`[Gmail Monitor] Error creating lead:`, insertError)
+          logger.error(`[Gmail Monitor] Error creating lead:`, insertError)
         }
       } catch (error) {
-        console.error(`[Gmail Monitor] Error processing email:`, error)
+        logger.error(`[Gmail Monitor] Error processing email:`, error)
       }
     }
 
@@ -116,11 +117,11 @@ export async function POST(request: NextRequest) {
       message: `Gmail monitor complete: ${leadsCreated} leads created from ${emails.length} emails`,
     }
 
-    console.log('[Gmail Monitor] Scan complete:', response)
+    logger.info('[Gmail Monitor] Scan complete:', response)
 
     return NextResponse.json(response)
   } catch (error: any) {
-    console.error('[Gmail Monitor] Error:', error)
+    logger.error('[Gmail Monitor] Error:', error)
 
     return NextResponse.json(
       {

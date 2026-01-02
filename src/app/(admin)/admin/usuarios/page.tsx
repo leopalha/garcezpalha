@@ -36,6 +36,8 @@ import {
 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
 import { toast } from '@/components/ui/use-toast'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface UserProfile {
   full_name?: string
@@ -71,7 +73,7 @@ export default function UsuariosPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
 
-  const { data: users, isLoading, refetch } = trpc.users.list.useQuery()
+  const { data: users, isLoading, error, refetch } = trpc.users.list.useQuery()
   const { data: stats } = trpc.users.stats.useQuery()
   const deleteMutation = trpc.users.delete.useMutation()
 
@@ -126,6 +128,18 @@ export default function UsuariosPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <ErrorAlert
+          error={error.message || 'Erro ao carregar usuários'}
+          retry={() => refetch()}
+          title="Erro ao carregar usuários"
+        />
       </div>
     )
   }
@@ -239,15 +253,15 @@ export default function UsuariosPage() {
         <CardContent>
           <div className="space-y-4">
             {filteredUsers.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">Nenhum usuário encontrado</h3>
-                <p className="text-muted-foreground">
-                  {searchTerm || roleFilter !== 'all'
+              <EmptyState
+                icon={Users}
+                title="Nenhum usuário encontrado"
+                description={
+                  searchTerm || roleFilter !== 'all'
                     ? 'Tente ajustar os filtros de busca'
-                    : 'Nenhum usuário cadastrado no sistema'}
-                </p>
-              </div>
+                    : 'Nenhum usuário cadastrado no sistema'
+                }
+              />
             ) : (
               <div className="space-y-3">
                 {filteredUsers.map((user: User) => {

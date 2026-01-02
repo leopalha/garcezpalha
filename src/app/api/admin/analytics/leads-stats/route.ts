@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,7 +114,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -122,7 +123,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.error('Error fetching leads stats:', error)
+    logger.error('Error fetching leads stats:', error)
     return NextResponse.json(
       { error: 'Failed to fetch leads stats' },
       { status: 500 }

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   Select,
   SelectContent,
@@ -154,6 +155,26 @@ export default function LandingPagesPage() {
     })
   }
 
+  const handleCopyLandingPage = (page: LandingPage) => {
+    const copiedPage: LandingPage = {
+      ...page,
+      id: Math.random().toString(36).substring(7),
+      title: `${page.title} (Cópia)`,
+      status: 'draft',
+      url: '',
+      views: 0,
+      leads: 0,
+      conversionRate: 0,
+      publishedAt: null,
+      createdAt: new Date().toISOString(),
+    }
+
+    setLandingPages([copiedPage, ...landingPages])
+
+    // Show success message (you can add toast here if available)
+    alert(`Landing page "${page.title}" foi duplicada com sucesso!`)
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -275,122 +296,122 @@ export default function LandingPagesPage() {
 
       {/* Landing Pages List */}
       <div className="space-y-4">
-        {filteredPages.map((page) => (
-          <Card key={page.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                {/* Page Info - 5 cols */}
-                <div className="lg:col-span-5 space-y-2">
-                  <div className="flex items-start gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
-                      <Globe className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold truncate">{page.title}</h3>
-                      <p className="text-sm text-muted-foreground">{page.product}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge
-                          variant="secondary"
-                          className={cn(
-                            'text-xs',
-                            statusConfig[page.status].bgColor,
-                            statusConfig[page.status].color
-                          )}
-                        >
-                          {statusConfig[page.status].label}
-                        </Badge>
-                        {page.hasVSL && (
-                          <Badge variant="outline" className="text-xs">
-                            <Play className="h-3 w-3 mr-1" />
-                            VSL
+        {filteredPages.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title="Nenhuma landing page encontrada"
+            description="Crie sua primeira landing page para começar a capturar leads"
+            action={<Button asChild><Link href="/dashboard/produtos/novo"><Plus className="h-4 w-4 mr-2" />Criar Landing Page</Link></Button>}
+          />
+        ) : (
+          filteredPages.map((page) => (
+            <Card key={page.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                  {/* Page Info - 5 cols */}
+                  <div className="lg:col-span-5 space-y-2">
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                        <Globe className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold truncate">{page.title}</h3>
+                        <p className="text-sm text-muted-foreground">{page.product}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <Badge
+                            variant="secondary"
+                            className={cn(
+                              'text-xs',
+                              statusConfig[page.status].bgColor,
+                              statusConfig[page.status].color
+                            )}
+                          >
+                            {statusConfig[page.status].label}
                           </Badge>
-                        )}
+                          {page.hasVSL && (
+                            <Badge variant="outline" className="text-xs">
+                              <Play className="h-3 w-3 mr-1" />
+                              VSL
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Metrics - 4 cols */}
-                <div className="lg:col-span-4 grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Visitas</p>
-                    <p className="text-lg font-semibold">{page.views.toLocaleString('pt-BR')}</p>
+                  {/* Metrics - 4 cols */}
+                  <div className="lg:col-span-4 grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Visitas</p>
+                      <p className="text-lg font-semibold">{page.views.toLocaleString('pt-BR')}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Leads</p>
+                      <p className="text-lg font-semibold">{page.leads}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Taxa</p>
+                      <p
+                        className={cn(
+                          'text-lg font-semibold',
+                          page.conversionRate >= 3 ? 'text-green-600' : 'text-yellow-600'
+                        )}
+                      >
+                        {page.conversionRate.toFixed(2)}%
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Leads</p>
-                    <p className="text-lg font-semibold">{page.leads}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Taxa</p>
-                    <p
-                      className={cn(
-                        'text-lg font-semibold',
-                        page.conversionRate >= 3 ? 'text-green-600' : 'text-yellow-600'
-                      )}
-                    >
-                      {page.conversionRate.toFixed(2)}%
-                    </p>
-                  </div>
-                </div>
 
-                {/* Actions - 3 cols */}
-                <div className="lg:col-span-3 flex items-center justify-end gap-2">
-                  {page.status === 'published' && (
+                  {/* Actions - 3 cols */}
+                  <div className="lg:col-span-3 flex items-center justify-end gap-2">
+                    {page.status === 'published' && (
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={page.url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-4 w-4 mr-1" />
+                          Visitar
+                        </a>
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" asChild>
-                      <a href={page.url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4 mr-1" />
-                        Visitar
-                      </a>
+                      <Link href={`/dashboard/landing-pages/${page.id}/analytics`}>
+                        <BarChart3 className="h-4 w-4 mr-1" />
+                        Analytics
+                      </Link>
                     </Button>
-                  )}
-                  <Button variant="outline" size="sm">
-                    <BarChart3 className="h-4 w-4 mr-1" />
-                    Analytics
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Editar
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Copy className="h-4 w-4" />
-                  </Button>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/dashboard/landing-pages/${page.id}/editar`}>
+                        <Edit className="h-4 w-4 mr-1" />
+                        Editar
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleCopyLandingPage(page)}
+                      title="Duplicar landing page"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Additional Info */}
-              <div className="mt-4 pt-4 border-t flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <span>Template: {page.template}</span>
-                  <span>•</span>
-                  <span>Criada: {formatDate(page.createdAt)}</span>
-                  {page.publishedAt && (
-                    <>
-                      <span>•</span>
-                      <span>Publicada: {formatDate(page.publishedAt)}</span>
-                    </>
-                  )}
+                {/* Additional Info */}
+                <div className="mt-4 pt-4 border-t flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center gap-4">
+                    <span>Template: {page.template}</span>
+                    <span>•</span>
+                    <span>Criada: {formatDate(page.createdAt)}</span>
+                    {page.publishedAt && (
+                      <>
+                        <span>•</span>
+                        <span>Publicada: {formatDate(page.publishedAt)}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {filteredPages.length === 0 && (
-          <Card>
-            <CardContent className="pt-12 pb-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">Nenhuma landing page encontrada</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Crie sua primeira landing page para começar a capturar leads
-              </p>
-              <Button asChild className="mt-4">
-                <Link href="/dashboard/produtos/novo">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Criar Landing Page
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))
         )}
       </div>
 

@@ -4,6 +4,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { createClient } from '@supabase/supabase-js'
 import { wrapWithDisclaimer } from '@/lib/ai/disclaimer'
+import { logger } from '@/lib/logger'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -144,7 +145,7 @@ async function handleChat(request: NextRequest) {
         agent_confidence: result.confidence,
       })
 
-      console.log(`[Chat API] Routed to ${result.agentUsed} agent (confidence: ${(result.confidence * 100).toFixed(0)}%)`)
+      logger.info(`[Chat API] Routed to ${result.agentUsed} agent (confidence: ${(result.confidence * 100).toFixed(0)}%)`)
 
       return NextResponse.json({
         reply: result.content,
@@ -155,7 +156,7 @@ async function handleChat(request: NextRequest) {
         mode: 'production',
       })
     } catch (aiError) {
-      console.error('AI Agent error:', aiError)
+      logger.error('AI Agent error:', aiError)
 
       // Fallback to demo mode on error
       return NextResponse.json({
@@ -180,7 +181,7 @@ async function handleChat(request: NextRequest) {
       )
     }
 
-    console.error('Chat API error:', error)
+    logger.error('Chat API error:', error)
     return NextResponse.json(
       {
         error: 'Erro interno do servidor',

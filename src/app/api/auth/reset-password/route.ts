@@ -5,6 +5,9 @@ import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:auth:reset-password')
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token é obrigatório'),
@@ -14,6 +17,8 @@ const resetPasswordSchema = z.object({
 async function handler(request: NextRequest) {
   try {
     const { token, password } = (request as any).validatedData
+
+    logger.info('Password reset confirmation request received')
 
     // Hash the token to compare with database
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
@@ -28,6 +33,7 @@ async function handler(request: NextRequest) {
       .single()
 
     if (!user) {
+      logger.warn('Password reset confirmation failed - invalid or missing token')
       return NextResponse.json(
         { error: 'Token inválido ou expirado' },
         { status: 400 }
@@ -36,11 +42,14 @@ async function handler(request: NextRequest) {
 
     // Check if token is expired
     if (!user.reset_token_expiry || new Date(user.reset_token_expiry) < new Date()) {
+      logger.warn('Password reset confirmation failed - token expired', { userId: user.id })
       return NextResponse.json(
         { error: 'Token expirado. Solicite um novo reset de senha.' },
         { status: 400 }
       )
     }
+
+    logger.info('Resetting password for user', { userId: user.id, email: user.email })
 
     // Hash new password
     const password_hash = await bcrypt.hash(password, 10)
@@ -57,21 +66,21 @@ async function handler(request: NextRequest) {
       .eq('id', user.id)
 
     if (updateError) {
-      console.error('Error updating password:', updateError)
+      logger.error('Error updating password in database', updateError, { userId: user.id })
       return NextResponse.json(
         { error: 'Erro ao atualizar senha' },
         { status: 500 }
       )
     }
 
-    console.log('Password successfully reset for:', user.email)
+    logger.info('Password reset successfully', { userId: user.id, email: user.email, status: 200 })
 
     return NextResponse.json({
       success: true,
       message: 'Senha redefinida com sucesso! Você já pode fazer login.',
     })
   } catch (error) {
-    console.error('Reset password error:', error)
+    logger.error('Password reset confirmation failed', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

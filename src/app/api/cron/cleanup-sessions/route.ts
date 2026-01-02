@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run cleanup cycle
@@ -27,11 +28,11 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Cleanup Sessions] Unauthorized access attempt')
+      logger.error('[Cleanup Sessions] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Cleanup Sessions] Starting cleanup cycle...')
+    logger.info('[Cleanup Sessions] Starting cleanup cycle...')
 
     const supabase = await createClient()
     const results = {
@@ -84,7 +85,7 @@ export async function GET(request: NextRequest) {
 
     results.expiredPaymentLinks = linksExpired || 0
 
-    console.log('[Cleanup Sessions] Cycle complete:', results)
+    logger.info('[Cleanup Sessions] Cycle complete:', results)
 
     return NextResponse.json(
       {
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Cleanup Sessions] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Cleanup Sessions] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
 
 async function handler(request: NextRequest) {
   try {
@@ -66,7 +67,7 @@ async function handler(request: NextRequest) {
     const { data: logs, error, count } = await query
 
     if (error) {
-      console.error('Fetch audit logs error:', error)
+      logger.error('Fetch audit logs error:', error)
       return NextResponse.json({ error: 'Failed to fetch logs' }, { status: 500 })
     }
 
@@ -77,7 +78,7 @@ async function handler(request: NextRequest) {
       offset,
     })
   } catch (error: any) {
-    console.error('Audit logs API error:', error)
+    logger.error('Audit logs API error:', error)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }

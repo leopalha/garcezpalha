@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Groq from 'groq-sdk'
 import { agentTestSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -176,7 +177,7 @@ export async function POST(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -185,7 +186,7 @@ export async function POST(
       )
     }
 
-    console.error('Error testing agent:', error)
+    logger.error('Error testing agent:', error)
     return NextResponse.json(
       { error: 'Failed to get response from agent' },
       { status: 500 }

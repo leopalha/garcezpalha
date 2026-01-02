@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import Stripe from 'stripe'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       ).toISOString(),
     })
   } catch (error) {
-    console.error('Error canceling subscription:', error)
+    logger.error('Error canceling subscription:', error)
     return NextResponse.json(
       { error: (error as any).message || 'Failed to cancel subscription' },
       { status: 500 }
@@ -125,7 +126,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Subscription reactivated successfully',
     })
   } catch (error) {
-    console.error('Error reactivating subscription:', error)
+    logger.error('Error reactivating subscription:', error)
     return NextResponse.json(
       { error: (error as any).message || 'Failed to reactivate subscription' },
       { status: 500 }

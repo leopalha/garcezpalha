@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import OpenAI from 'openai'
+import { logger } from '@/lib/logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -43,7 +44,7 @@ async function postHandler(request: NextRequest) {
       )
     }
 
-    console.log(`[TTS API] Generating speech for ${text.length} characters, voice: ${voice}, speed: ${speed}`)
+    logger.info(`[TTS API] Generating speech for ${text.length} characters, voice: ${voice}, speed: ${speed}`)
 
     // Call OpenAI TTS API
     const mp3Response = await openai.audio.speech.create({
@@ -56,7 +57,7 @@ async function postHandler(request: NextRequest) {
     // Convert response to buffer
     const buffer = Buffer.from(await mp3Response.arrayBuffer())
 
-    console.log(`[TTS API] Speech generated successfully: ${buffer.length} bytes`)
+    logger.info(`[TTS API] Speech generated successfully: ${buffer.length} bytes`)
 
     // Return audio file
     return new NextResponse(buffer, {
@@ -68,7 +69,7 @@ async function postHandler(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[TTS API] Error:', error)
+    logger.error('[TTS API] Error:', error)
 
     // Handle specific OpenAI errors
     if (error && typeof error === 'object' && 'code' in error && error.code === 'insufficient_quota') {

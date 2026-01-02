@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -90,7 +91,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (userError || !userData) {
-      console.error('[Dashboard Stats] User not found:', userError)
+      logger.error('[Dashboard Stats] User not found:', userError)
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
@@ -103,7 +104,7 @@ export async function GET(request: NextRequest) {
       .eq('tenant_id', tenantId)
 
     if (productsError) {
-      console.error('[Dashboard Stats] Products error:', productsError)
+      logger.error('[Dashboard Stats] Products error:', productsError)
     }
 
     const productsStats = {
@@ -123,7 +124,7 @@ export async function GET(request: NextRequest) {
       .gte('created_at', thirtyDaysAgo.toISOString())
 
     if (leadsError) {
-      console.error('[Dashboard Stats] Leads error:', leadsError)
+      logger.error('[Dashboard Stats] Leads error:', leadsError)
     }
 
     const totalLeads = leads?.length || 0
@@ -149,7 +150,7 @@ export async function GET(request: NextRequest) {
       .gte('created_at', thirtyDaysAgo.toISOString())
 
     if (conversationsError) {
-      console.error('[Dashboard Stats] Conversations error:', conversationsError)
+      logger.error('[Dashboard Stats] Conversations error:', conversationsError)
     }
 
     const totalConversations = conversations?.length || 0
@@ -215,7 +216,7 @@ export async function GET(request: NextRequest) {
       .gte('created_at', firstDayTwoMonthsAgo.toISOString())
 
     if (paymentsError) {
-      console.error('[Dashboard Stats] Payments error:', paymentsError)
+      logger.error('[Dashboard Stats] Payments error:', paymentsError)
     }
 
     const totalRevenue =
@@ -257,7 +258,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(stats)
   } catch (error) {
-    console.error('[Dashboard Stats] Error:', error)
+    logger.error('[Dashboard Stats] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

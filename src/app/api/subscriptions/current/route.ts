@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -76,7 +77,7 @@ async function getHandler(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error fetching subscription:', error)
+    logger.error('Error fetching subscription:', error)
     return NextResponse.json(
       { error: 'Failed to fetch subscription' },
       { status: 500 }

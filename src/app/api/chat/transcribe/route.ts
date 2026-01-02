@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import OpenAI from 'openai'
+import { logger } from '@/lib/logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -36,7 +37,7 @@ async function postHandler(request: NextRequest) {
       )
     }
 
-    console.log(`[Transcribe API] Processing audio: ${audioFile.size} bytes, ${audioFile.type}`)
+    logger.info(`[Transcribe API] Processing audio: ${audioFile.size} bytes, ${audioFile.type}`)
 
     // Call OpenAI Whisper API
     const transcription = await openai.audio.transcriptions.create({
@@ -46,14 +47,14 @@ async function postHandler(request: NextRequest) {
       response_format: 'json',
     })
 
-    console.log(`[Transcribe API] Transcription successful: ${transcription.text.substring(0, 50)}...`)
+    logger.info(`[Transcribe API] Transcription successful: ${transcription.text.substring(0, 50)}...`)
 
     return NextResponse.json({
       text: transcription.text,
     })
 
   } catch (error) {
-    console.error('[Transcribe API] Error:', error)
+    logger.error('[Transcribe API] Error:', error)
 
     // Handle specific OpenAI errors
     if (error && typeof error === 'object' && 'code' in error && error.code === 'insufficient_quota') {

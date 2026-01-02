@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { trpc } from '@/lib/trpc/client'
+import { useToast } from '@/components/ui/use-toast'
 import { Loader2, Calendar } from 'lucide-react'
 
 interface NewAppointmentDialogProps {
@@ -27,6 +27,7 @@ export function NewAppointmentDialog({
   onOpenChange,
   onSuccess,
 }: NewAppointmentDialogProps) {
+  const { toast } = useToast()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [date, setDate] = useState('')
@@ -35,46 +36,87 @@ export function NewAppointmentDialog({
   const [location, setLocation] = useState('')
   const [clientName, setClientName] = useState('')
   const [clientEmail, setClientEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const createMutation = trpc.appointments.create.useMutation({
-    onSuccess: () => {
-      // Reset form
-      setTitle('')
-      setDescription('')
-      setDate('')
-      setTime('')
-      setDuration('60')
-      setLocation('')
-      setClientName('')
-      setClientEmail('')
+  const resetForm = () => {
+    setTitle('')
+    setDescription('')
+    setDate('')
+    setTime('')
+    setDuration('60')
+    setLocation('')
+    setClientName('')
+    setClientEmail('')
+  }
 
-      onOpenChange(false)
-      onSuccess?.()
-    },
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!title || !date || !time) {
-      alert('Por favor, preencha todos os campos obrigatórios')
+      toast({
+        title: 'Campos obrigatórios faltando',
+        description: 'Por favor, preencha Título, Data e Horário',
+        variant: 'destructive',
+      })
       return
     }
 
-    // Combine date and time into ISO string
-    const startTime = new Date(`${date}T${time}:00`)
+    if (!clientName || !clientEmail) {
+      toast({
+        title: 'Cliente obrigatório',
+        description: 'Por favor, preencha Nome e Email do cliente',
+        variant: 'destructive',
+      })
+      return
+    }
 
-    createMutation.mutate({
-      client_id: 'temp-client-id', // TODO: Get from client selection
-      lawyer_id: 'temp-lawyer-id', // TODO: Get from current user
-      title,
-      description: description || undefined,
-      appointment_type: 'consultation',
-      scheduled_at: startTime.toISOString(),
-      duration_minutes: parseInt(duration),
-      location: location || undefined,
-      notes: clientName && clientEmail ? `Cliente: ${clientName} (${clientEmail})` : undefined,
-    })
+    try {
+      setIsLoading(true)
+
+      // Combine date and time into ISO string
+      const startTime = new Date(`${date}T${time}:00`)
+
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description: description || undefined,
+          scheduledAt: startTime.toISOString(),
+          durationMinutes: parseInt(duration),
+          location: location || undefined,
+          appointmentType: 'consultation',
+          clientName,
+          clientEmail,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao criar agendamento')
+      }
+
+      toast({
+        title: 'Agendamento criado!',
+        description: 'O agendamento foi criado com sucesso.',
+      })
+
+      resetForm()
+      onOpenChange(false)
+      onSuccess?.()
+    } catch (error) {
+      console.error('Error creating appointment:', error)
+      toast({
+        title: 'Erro ao criar agendamento',
+        description: error instanceof Error ? error.message : 'Tente novamente mais tarde',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -202,23 +244,17 @@ export function NewAppointmentDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={createMutation.isPending}
+              disabled={isLoading}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending && (
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
               Criar Agendamento
             </Button>
           </DialogFooter>
-
-          {createMutation.error && (
-            <p className="text-sm text-red-500 mt-2">
-              Erro ao criar agendamento: {createMutation.error.message}
-            </p>
-          )}
         </form>
       </DialogContent>
     </Dialog>

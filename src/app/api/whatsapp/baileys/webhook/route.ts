@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { whatsappMessageHandler } from '@/lib/whatsapp/message-handler'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/whatsapp/baileys/webhook
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    console.log('[Baileys Webhook] Mensagem recebida:', body)
+    logger.info('[Baileys Webhook] Mensagem recebida:', body)
 
     const { from, message, messageId, timestamp, type } = body
 
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     })
   } catch (error) {
-    console.error('[Baileys Webhook] Erro:', error)
+    logger.error('[Baileys Webhook] Erro:', error)
 
     return NextResponse.json(
       {

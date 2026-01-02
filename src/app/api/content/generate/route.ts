@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { ContentAgent, getContentAgent } from '@/lib/ai/agents/marketing/content-agent'
 import { createQAAgent } from '@/lib/ai/agents/operations/qa-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -166,7 +167,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (saveError) {
-      console.error('Error saving content:', saveError)
+      logger.error('Error saving content:', saveError)
       // Return content even if save fails
       return NextResponse.json({
         success: true,
@@ -186,7 +187,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Content generation error:', error)
+    logger.error('Content generation error:', error)
     return NextResponse.json(
       { error: 'Failed to generate content', details: (error as Error).message },
       { status: 500 }
@@ -247,7 +248,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Content list error:', error)
+    logger.error('Content list error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch content', details: (error as Error).message },
       { status: 500 }

@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createSEOAgent } from '@/lib/ai/agents/marketing/seo-agent'
+import { logger } from '@/lib/logger'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (saveError) {
-          console.error('Error saving keyword research:', saveError)
+          logger.error('Error saving keyword research:', saveError)
         }
 
         return NextResponse.json({
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Keyword research error:', error)
+    logger.error('Keyword research error:', error)
     return NextResponse.json(
       { error: 'Failed to research keywords', details: (error as Error).message },
       { status: 500 }
@@ -134,7 +135,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Keyword fetch error:', error)
+    logger.error('Keyword fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch keywords', details: (error as Error).message },
       { status: 500 }

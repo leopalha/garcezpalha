@@ -17,6 +17,9 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Users } from 'lucide-react'
 
 type Lead = {
   id: string
@@ -189,6 +192,23 @@ export default function LeadsPage() {
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
+              ) : error ? (
+                <ErrorAlert
+                  error={error.message || 'Erro ao carregar leads'}
+                  retry={() => refetch()}
+                  title="Erro ao carregar leads"
+                />
+              ) : filteredLeads.length === 0 ? (
+                <EmptyState
+                  icon={Users}
+                  title="Nenhum lead encontrado"
+                  description={searchQuery ?
+                    "Nenhum resultado para sua busca. Tente outros termos." :
+                    statusFilter !== 'all' ?
+                    `Nenhum lead com status "${statusConfig[statusFilter as Lead['status']]?.label || statusFilter}".` :
+                    "Você ainda não tem leads cadastrados. Eles aparecerão aqui quando clientes entrarem em contato."
+                  }
+                />
               ) : (
                 <div className="space-y-3">
                   {filteredLeads.map((lead) => (
@@ -234,12 +254,6 @@ export default function LeadsPage() {
                       </div>
                     </div>
                   ))}
-
-                  {filteredLeads.length === 0 && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <p>Nenhum lead encontrado</p>
-                    </div>
-                  )}
                 </div>
               )}
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
+import { logger } from '@/lib/logger'
 
 // Force dynamic rendering - required for API routes
 export const dynamic = 'force-dynamic'
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[CRON] Processando sequências de email...')
+    logger.info('[CRON] Processando sequências de email...')
 
     // Processar todas as sequências ativas
     const stats = await emailSequenceEngine.processScheduledEmails()
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('[CRON] Erro ao processar sequências:', error)
+    logger.error('[CRON] Erro ao processar sequências:', error)
 
     return NextResponse.json(
       {

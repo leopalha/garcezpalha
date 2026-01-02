@@ -3,6 +3,9 @@ import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:contact')
 
 // Supabase admin client for server-side operations
 const supabaseAdmin = createClient(
@@ -26,8 +29,12 @@ async function handleContact(request: NextRequest) {
   try {
     const body = await request.json()
 
+    logger.info('Contact form submission received')
+
     // Validate input
     const validatedData = contactSchema.parse(body)
+
+    logger.info('Contact form validated', { name: validatedData.name, email: validatedData.email, service: validatedData.service })
 
     // Get client info
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
@@ -45,6 +52,8 @@ async function handleContact(request: NextRequest) {
       'consumidor': 'consumidor',
       'pericia': 'imobiliario',
     }
+
+    logger.info('Creating new lead from contact form', { email: validatedData.email, ip })
 
     // Save lead to database
     const { data: lead, error: insertError } = await supabaseAdmin
@@ -68,16 +77,15 @@ async function handleContact(request: NextRequest) {
       .single()
 
     if (insertError) {
-      console.error('Error saving lead to database:', insertError)
+      logger.error('Error saving lead to database', insertError, { email: validatedData.email })
       // Continue even if database save fails - don't lose the lead
+    } else {
+      logger.info('Lead saved to database', { leadId: lead?.id, email: validatedData.email })
     }
 
     const leadId = lead?.id || `temp-${Date.now()}`
 
-    console.log('New lead created:', leadId)
-
-    // Log analytics event (server-side)
-    console.log('[Analytics] Lead captured:', {
+    logger.info('New lead created from contact form', {
       leadId,
       source: validatedData.source || 'website',
       service: validatedData.service,
@@ -91,6 +99,8 @@ async function handleContact(request: NextRequest) {
       source: validatedData.source,
     })
 
+    logger.info('Contact form submission completed successfully', { leadId, status: 201, duration })
+
     return NextResponse.json(
       {
         success: true,
@@ -103,6 +113,7 @@ async function handleContact(request: NextRequest) {
     timer.end()
 
     if (error instanceof z.ZodError) {
+      logger.warn('Contact form validation failed', { issues: error.issues.length })
       trackError(error as Error, {
         endpoint: '/api/contact',
         type: 'validation',
@@ -120,12 +131,12 @@ async function handleContact(request: NextRequest) {
       )
     }
 
+    logger.error('Contact form submission failed', error)
     trackError(error as Error, {
       endpoint: '/api/contact',
       method: 'POST',
     })
 
-    console.error('Contact form error:', error)
     return NextResponse.json(
       {
         success: false,

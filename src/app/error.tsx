@@ -1,9 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
-import Link from 'next/link'
 
 export default function Error({
   error,
@@ -13,51 +10,75 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error('Application error:', error)
   }, [error])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/30 p-4">
-      <div className="text-center max-w-lg">
-        <div className="mx-auto w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mb-6">
-          <AlertTriangle className="h-10 w-10 text-destructive" />
-        </div>
-
-        <h2 className="text-3xl font-display font-bold mb-4">
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      fontFamily: 'system-ui, sans-serif'
+    }}>
+      <div style={{ textAlign: 'center', maxWidth: '600px' }}>
+        <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
           Algo deu errado
         </h2>
 
-        <p className="text-muted-foreground mb-8">
-          Ocorreu um erro inesperado. Nossa equipe foi notificada e está trabalhando para resolver o problema.
+        <p style={{ color: '#666', marginBottom: '24px' }}>
+          Ocorreu um erro inesperado. Por favor, tente novamente.
         </p>
 
         {error.digest && (
-          <p className="text-xs text-muted-foreground mb-4">
+          <p style={{ fontSize: '12px', color: '#999', marginBottom: '16px' }}>
             Código do erro: {error.digest}
           </p>
         )}
 
-        <div className="space-y-4">
-          <Button onClick={reset} className="w-full sm:w-auto">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Tentar Novamente
-          </Button>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '24px', padding: '16px', background: '#f5f5f5', borderRadius: '8px', textAlign: 'left', whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
+          {error.message}
+        </p>
 
-          <div>
-            <Link href="/">
-              <Button variant="outline" className="w-full sm:w-auto">
-                <Home className="h-4 w-4 mr-2" />
-                Voltar para Página Inicial
-              </Button>
-            </Link>
-          </div>
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={reset}
+            style={{
+              padding: '12px 24px',
+              background: '#000',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Tentar Novamente
+          </button>
+
+          <a
+            href="/"
+            style={{
+              padding: '12px 24px',
+              background: '#fff',
+              color: '#000',
+              border: '1px solid #ccc',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              textDecoration: 'none',
+              display: 'inline-block'
+            }}
+          >
+            Voltar para Página Inicial
+          </a>
         </div>
 
-        <div className="mt-12 pt-8 border-t">
-          <p className="text-sm text-muted-foreground">
+        <div style={{ marginTop: '48px', paddingTop: '32px', borderTop: '1px solid #eee' }}>
+          <p style={{ fontSize: '14px', color: '#666' }}>
             Se o problema persistir, entre em contato pelo telefone{' '}
-            <a href="tel:+5521995354010" className="text-primary hover:underline">
+            <a href="tel:+5521995354010" style={{ color: '#0066cc', textDecoration: 'underline' }}>
               (21) 99535-4010
             </a>
           </p>

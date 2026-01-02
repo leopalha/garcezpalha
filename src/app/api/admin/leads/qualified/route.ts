@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { qualifiedLeadCreateSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 /**
  * Database type definitions
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
     const { data: leads, error } = await query
 
     if (error) {
-      console.error('[API /admin/leads/qualified] Error:', error)
+      logger.error('[API /admin/leads/qualified] Error:', error)
       return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 })
     }
 
@@ -97,7 +98,7 @@ export async function GET(request: NextRequest) {
       total: formattedLeads.length,
     })
   } catch (error) {
-    console.error('[API /admin/leads/qualified] Error:', error)
+    logger.error('[API /admin/leads/qualified] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
       { status: 500 }
@@ -114,6 +115,23 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient()
+
+    // Check authentication
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Check admin/lawyer role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || !['admin', 'lawyer'].includes(profile.role)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     // Parse and validate request body with Zod
     const rawBody = await request.json()
@@ -146,7 +164,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('[API /admin/leads/qualified POST] Error:', error)
+      logger.error('[API /admin/leads/qualified POST] Error:', error)
       return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 })
     }
 
@@ -189,7 +207,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -199,7 +217,7 @@ export async function POST(request: NextRequest) {
     }
 
     trackError(error as Error, { endpoint: '/api/admin/leads/qualified', method: 'POST' })
-    console.error('[API /admin/leads/qualified POST] Error:', error)
+    logger.error('[API /admin/leads/qualified POST] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }

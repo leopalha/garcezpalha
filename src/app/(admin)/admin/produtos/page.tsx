@@ -23,6 +23,8 @@ import { trpc } from '@/lib/trpc/client'
 import { toast } from '@/components/ui/use-toast'
 import { ProductDialog } from '@/components/admin/products/product-dialog'
 import { PackagesDialog } from '@/components/admin/products/packages-dialog'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -77,7 +79,7 @@ export default function ProdutosPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [productToDelete, setProductToDelete] = useState<string | null>(null)
 
-  const { data: products, isLoading, refetch } = trpc.products.adminList.useQuery()
+  const { data: products, isLoading, error, refetch } = trpc.products.adminList.useQuery()
   const deleteMutation = trpc.products.delete.useMutation()
   const updateMutation = trpc.products.update.useMutation()
 
@@ -173,6 +175,18 @@ export default function ProdutosPage() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <ErrorAlert
+          error={error.message || 'Erro ao carregar produtos'}
+          retry={() => refetch()}
+          title="Erro ao carregar produtos"
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Header */}
@@ -256,22 +270,20 @@ export default function ProdutosPage() {
       {/* Products Grid */}
       {filteredProducts.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
-            <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">
-              {searchTerm ? 'Nenhum produto encontrado' : 'Nenhum produto cadastrado'}
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              {searchTerm
+          <CardContent className="py-12">
+            <EmptyState
+              icon={Package}
+              title={searchTerm ? 'Nenhum produto encontrado' : 'Nenhum produto cadastrado'}
+              description={searchTerm
                 ? 'Tente ajustar sua busca'
-                : 'Comece criando seu primeiro produto'}
-            </p>
-            {!searchTerm && (
-              <Button onClick={handleNewProduct}>
-                <Plus className="h-4 w-4 mr-2" />
-                Criar Produto
-              </Button>
-            )}
+                : 'Comece criando seu primeiro produto jurídico'}
+              action={!searchTerm ? (
+                <Button onClick={handleNewProduct}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Criar Primeiro Produto
+                </Button>
+              ) : undefined}
+            />
           </CardContent>
         </Card>
       ) : (

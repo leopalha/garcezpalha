@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
 import { emailService } from '@/lib/email/email-service'
+import { logger } from '@/lib/logger'
 
 interface ScheduledFollowUp {
   id: string
@@ -42,11 +43,11 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Send Follow-ups] Unauthorized access attempt')
+      logger.error('[Send Follow-ups] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Send Follow-ups] Starting follow-up cycle...')
+    logger.info('[Send Follow-ups] Starting follow-up cycle...')
 
     const supabase = await createClient()
     const now = new Date()
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     if (!followUps || followUps.length === 0) {
-      console.log('[Send Follow-ups] No follow-ups to send')
+      logger.info('[Send Follow-ups] No follow-ups to send')
       return NextResponse.json(
         {
           success: true,
@@ -87,14 +88,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.log(`[Send Follow-ups] Processing ${followUps.length} follow-ups`)
+    logger.info(`[Send Follow-ups] Processing ${followUps.length} follow-ups`)
 
     for (const followUp of followUps as any[]) {
       try {
         const lead = followUp.lead
 
         if (!lead) {
-          console.warn(`[Send Follow-ups] Lead not found for follow-up ${followUp.id}`)
+          logger.warn(`[Send Follow-ups] Lead not found for follow-up ${followUp.id}`)
           continue
         }
 
@@ -154,7 +155,7 @@ export async function GET(request: NextRequest) {
           results.failed++
         }
       } catch (err) {
-        console.error(`[Send Follow-ups] Error sending follow-up ${followUp.id}:`, err)
+        logger.error(`[Send Follow-ups] Error sending follow-up ${followUp.id}:`, err)
         results.failed++
 
         // Mark as failed
@@ -165,7 +166,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log('[Send Follow-ups] Cycle complete:', results)
+    logger.info('[Send Follow-ups] Cycle complete:', results)
 
     return NextResponse.json(
       {
@@ -176,7 +177,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Send Follow-ups] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Send Follow-ups] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

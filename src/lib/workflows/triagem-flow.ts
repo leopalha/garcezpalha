@@ -5,6 +5,7 @@
 
 import { processQuery } from '@/lib/ai/agents'
 import { createClient } from '@/lib/supabase/server'
+import { sendEmail, sendWhatsApp } from '@/lib/notifications/notification-service'
 
 export interface TriagemInput {
   leadName: string
@@ -210,7 +211,8 @@ async function notifyAdmin(params: {
   serviceInterest: string
   message: string
 }) {
-  // TODO: Implementar notificação real via email ou webhook
+  const supabase = await createClient()
+
   console.log('[Triagem] 🔔 LEAD QUALIFICADO!', {
     name: params.leadName,
     email: params.leadEmail,
@@ -218,5 +220,128 @@ async function notifyAdmin(params: {
     service: params.serviceInterest,
   })
 
-  // Poderia enviar email via Resend ou criar notificação no dashboard
+  // Buscar admin/advogados para notificar
+  const { data: admins } = await supabase
+    .from('profiles')
+    .select('email, phone, full_name')
+    .in('role', ['admin', 'lawyer'])
+    .limit(5)
+
+  if (!admins || admins.length === 0) {
+    console.warn('[Triagem] No admins found to notify')
+    return
+  }
+
+  // Qualificação visual baseada no score
+  const scoreColor = params.score >= 90 ? '#10b981' : params.score >= 80 ? '#f59e0b' : '#3b82f6'
+  const scoreLabel = params.score >= 90 ? 'EXCELENTE' : params.score >= 80 ? 'BOA' : 'MÉDIA'
+
+  // Enviar email para cada admin
+  for (const admin of admins) {
+    if (!admin.email) continue
+
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background-color: ${scoreColor}; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+          <h2 style="margin: 0;">🎯 Novo Lead Qualificado!</h2>
+        </div>
+        <div style="padding: 30px; background-color: #f9fafb;">
+          <p>Olá <strong>${admin.full_name || 'Admin'}</strong>,</p>
+          <p>Um novo lead de <strong>alta qualidade</strong> foi identificado pelo sistema:</p>
+
+          <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${scoreColor};">
+            <p style="margin: 5px 0;"><strong>👤 Nome:</strong> ${params.leadName}</p>
+            <p style="margin: 5px 0;"><strong>📧 Email:</strong> ${params.leadEmail || 'Não informado'}</p>
+            <p style="margin: 5px 0;"><strong>🎯 Interesse:</strong> ${params.serviceInterest}</p>
+            <p style="margin: 15px 0 5px 0;">
+              <strong>📊 Score de Qualificação:</strong>
+              <span style="font-size: 24px; color: ${scoreColor}; font-weight: bold;">
+                ${params.score}/100
+              </span>
+              <span style="color: ${scoreColor}; font-weight: bold; margin-left: 10px;">
+                (${scoreLabel})
+              </span>
+            </p>
+          </div>
+
+          <div style="background-color: white; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <h4 style="margin: 0 0 10px 0; color: #374151;">💬 Mensagem Inicial:</h4>
+            <p style="margin: 0; color: #6b7280; font-style: italic; border-left: 3px solid #e5e7eb; padding-left: 12px;">
+              "${params.message}"
+            </p>
+          </div>
+
+          <div style="background-color: #ecfdf5; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <p style="margin: 0; color: #065f46; font-weight: bold;">
+              ⚡ Ação Recomendada: Entre em contato IMEDIATAMENTE para aumentar chances de conversão!
+            </p>
+          </div>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/leads"
+               style="background-color: ${scoreColor}; color: white; padding: 14px 28px;
+                      text-decoration: none; border-radius: 6px; display: inline-block;
+                      font-weight: bold;">
+              Ver Detalhes do Lead
+            </a>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          <p style="color: #9ca3af; font-size: 12px;">
+            <strong>Garcez Palha Advocacia</strong><br/>
+            Sistema de Triagem Automática - Notificação de Lead Qualificado
+          </p>
+        </div>
+      </div>
+    `
+
+    const emailSent = await sendEmail({
+      to: admin.email,
+      subject: `🎯 Lead Qualificado (${params.score}/100): ${params.leadName} - ${params.serviceInterest}`,
+      html: emailHtml,
+    })
+
+    if (emailSent) {
+      console.log('[Triagem] ✅ Email enviado para admin:', admin.email)
+    } else {
+      console.error('[Triagem] ❌ Falha ao enviar email para:', admin.email)
+    }
+
+    // Enviar WhatsApp (se telefone disponível)
+    if (admin.phone) {
+      const whatsappMessage = `🎯 *NOVO LEAD QUALIFICADO!*
+
+Olá ${admin.full_name || 'Admin'}! 👋
+
+Um lead de *alta qualidade* foi identificado:
+
+👤 *Nome:* ${params.leadName}
+📧 *Email:* ${params.leadEmail || 'Não informado'}
+🎯 *Interesse:* ${params.serviceInterest}
+📊 *Score:* *${params.score}/100* (${scoreLabel})
+
+💬 *Mensagem inicial:*
+"${params.message.substring(0, 150)}${params.message.length > 150 ? '...' : ''}"
+
+⚡ *Ação Recomendada:*
+Entre em contato IMEDIATAMENTE para aumentar chances de conversão!
+
+🔗 ${process.env.NEXT_PUBLIC_APP_URL}/admin/leads
+
+_Garcez Palha - Sistema de Triagem Automática_`
+
+      const whatsappSent = await sendWhatsApp({
+        to: admin.phone,
+        message: whatsappMessage,
+      })
+
+      if (whatsappSent) {
+        console.log('[Triagem] ✅ WhatsApp enviado para admin:', admin.phone)
+      } else {
+        console.error('[Triagem] ❌ Falha ao enviar WhatsApp para:', admin.phone)
+      }
+    }
+  }
+
+  console.log('[Triagem] ✅ Notificações de lead qualificado enviadas')
 }

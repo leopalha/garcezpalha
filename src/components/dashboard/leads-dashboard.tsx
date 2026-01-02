@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from 'react'
 import { BarChart3, PieChart, Activity } from 'lucide-react'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface DashboardData {
   categoryDistribution: {
@@ -175,13 +176,15 @@ function RecentActivityList({ activity }: { activity: DashboardData['recentActiv
         </h3>
       </div>
 
-      <div className="space-y-3">
-        {activity.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Nenhuma atividade recente
-          </p>
-        ) : (
-          activity.map((item) => (
+      {activity.length === 0 ? (
+        <EmptyState
+          icon={Activity}
+          title="Nenhuma atividade recente"
+          description="Atividades aparecerão aqui quando houver interações com seus leads"
+        />
+      ) : (
+        <div className="space-y-3">
+          {activity.map((item) => (
             <div
               key={item.id}
               className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700"
@@ -198,9 +201,9 @@ function RecentActivityList({ activity }: { activity: DashboardData['recentActiv
                 {item.type}
               </span>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

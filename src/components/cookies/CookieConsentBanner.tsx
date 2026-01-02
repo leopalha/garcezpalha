@@ -31,7 +31,7 @@ export interface CookieConsent {
 const CONSENT_KEY = 'cookie-consent'
 const CONSENT_VERSION = 1
 
-export function CookieConsentBanner() {
+function CookieConsentBanner() {
   const [showBanner, setShowBanner] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [consent, setConsent] = useState<CookieConsent>({
@@ -350,3 +350,9 @@ export function resetCookieConsent(): void {
   localStorage.removeItem(CONSENT_KEY)
   window.location.reload()
 }
+
+// Default export for lazy loading
+export default CookieConsentBanner
+
+// Named export for direct imports
+export { CookieConsentBanner }

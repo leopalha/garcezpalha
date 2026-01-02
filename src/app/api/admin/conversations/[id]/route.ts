@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 async function getHandler(
   request: NextRequest,
@@ -22,14 +23,45 @@ async function getHandler(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Fetch conversation with all related data (messages, lead, proposals)
     const { data: conversation, error } = await supabase
       .from('conversations')
-      .select('*')
+      .select(`
+        *,
+        lead:leads(*),
+        messages:messages(
+          id,
+          content,
+          sender,
+          sender_id,
+          created_at,
+          metadata,
+          attachments
+        )
+      `)
       .eq('conversation_id', conversationId)
       .single()
 
     if (error || !conversation) {
       return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
+    }
+
+    // Sort messages by created_at
+    if (conversation.messages) {
+      conversation.messages.sort((a: any, b: any) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+    }
+
+    // Fetch proposals if exists
+    if (conversation.lead) {
+      const { data: proposals } = await supabase
+        .from('proposals')
+        .select('*')
+        .eq('lead_id', conversation.lead.id)
+        .order('created_at', { ascending: false })
+
+      conversation.proposals = proposals || []
     }
 
     return NextResponse.json({ conversation })
@@ -39,7 +71,7 @@ async function getHandler(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -48,7 +80,7 @@ async function getHandler(
       )
     }
 
-    console.error('[Conversation Detail API] Error:', error)
+    logger.error('[Conversation Detail API] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

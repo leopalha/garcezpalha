@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createQAAgent } from '@/lib/ai/agents/operations/qa-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -22,7 +23,7 @@ function verifyCronSecret(request: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured')
+    logger.warn('CRON_SECRET not configured')
     return false
   }
 
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
       .limit(10) // Process max 10 at a time to avoid timeout
 
     if (fetchError) {
-      console.error('Error fetching scheduled posts:', fetchError)
+      logger.error('Error fetching scheduled posts:', fetchError)
       return NextResponse.json(
         { error: 'Failed to fetch scheduled posts', details: fetchError.message },
         { status: 500 }
@@ -147,7 +148,7 @@ export async function GET(request: NextRequest) {
           })
         }
       } catch (error) {
-        console.error(`Error processing post ${post.id}:`, error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+        logger.error(`Error processing post ${post.id}:`, error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
 
         await supabase
           .from('scheduled_posts')
@@ -172,7 +173,7 @@ export async function GET(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Cron job error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('Cron job error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       { error: 'Cron job failed', details: (error as Error).message },
       { status: 500 }

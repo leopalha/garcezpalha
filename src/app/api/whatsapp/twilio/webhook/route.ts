@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { whatsappMessageHandler } from '@/lib/whatsapp/message-handler'
 import { sendTwilioMessage } from '@/lib/whatsapp/twilio-client'
 import { formatPhoneNumber } from '@/lib/whatsapp/types'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/whatsapp/twilio/webhook
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!from || !body) {
-      console.warn('[Twilio Webhook] Missing required fields', { from: !!from, body: !!body })
+      logger.warn('[Twilio Webhook] Missing required fields', { from: !!from, body: !!body })
       // Return 200 to prevent Twilio retries
       return new NextResponse('', { status: 200 })
     }

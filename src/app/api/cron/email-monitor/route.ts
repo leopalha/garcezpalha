@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { gmailMonitor } from '@/lib/email/gmail-monitor'
+import { logger } from '@/lib/logger'
 
 /**
  * Email Monitor Cron Job
@@ -24,7 +25,7 @@ async function handler(request: NextRequest) {
       })
     }
 
-    console.log('[Cron] Email Monitor: Starting...')
+    logger.info('[Cron] Email Monitor: Starting...')
 
     const emails = await gmailMonitor.fetchRecentEmails()
     let created = 0
@@ -34,7 +35,7 @@ async function handler(request: NextRequest) {
       if (success) created++
     }
 
-    console.log(`[Cron] Email Monitor: Processed ${emails.length} emails, created ${created} leads`)
+    logger.info(`[Cron] Email Monitor: Processed ${emails.length} emails, created ${created} leads`)
 
     return NextResponse.json({
       success: true,
@@ -43,7 +44,7 @@ async function handler(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('[Cron] Email Monitor Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Cron] Email Monitor Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         success: false,

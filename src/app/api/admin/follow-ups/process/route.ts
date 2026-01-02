@@ -4,6 +4,7 @@ import { processPendingFollowUps } from '@/lib/automation/follow-up-automation'
 import { processFollowUpSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/admin/follow-ups/process
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     trackError(error as Error, { endpoint: '/api/admin/follow-ups/process', method: 'POST' })
-    console.error('[API /admin/follow-ups/process] Error:', error)
+    logger.error('[API /admin/follow-ups/process] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }

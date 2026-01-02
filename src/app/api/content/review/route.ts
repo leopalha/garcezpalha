@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createQAAgent } from '@/lib/ai/agents/operations/qa-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
       .eq('id', contentId)
 
     if (updateError) {
-      console.error('Error updating content review:', updateError)
+      logger.error('Error updating content review:', updateError)
     }
 
     return NextResponse.json({
@@ -117,7 +118,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Review error:', error)
+    logger.error('Review error:', error)
     return NextResponse.json(
       { error: 'Failed to review content', details: (error as Error).message },
       { status: 500 }
@@ -230,7 +231,7 @@ export async function PUT(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Approval error:', error)
+    logger.error('Approval error:', error)
     return NextResponse.json(
       { error: 'Failed to process approval', details: (error as Error).message },
       { status: 500 }
@@ -299,7 +300,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Review history error:', error)
+    logger.error('Review history error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch review history', details: (error as Error).message },
       { status: 500 }
@@ -382,7 +383,7 @@ export async function PATCH(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Batch review error:', error)
+    logger.error('Batch review error:', error)
     return NextResponse.json(
       { error: 'Failed to batch review', details: (error as Error).message },
       { status: 500 }

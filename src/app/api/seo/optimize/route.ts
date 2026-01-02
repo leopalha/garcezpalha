@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createSEOAgent } from '@/lib/ai/agents/marketing/seo-agent'
+import { logger } from '@/lib/logger'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
           })
 
         if (saveError) {
-          console.error('Error saving optimization:', saveError)
+          logger.error('Error saving optimization:', saveError)
         }
 
         return NextResponse.json({
@@ -108,7 +109,7 @@ export async function POST(request: NextRequest) {
           .single()
 
         if (saveError) {
-          console.error('Error saving brief:', saveError)
+          logger.error('Error saving brief:', saveError)
           return NextResponse.json({
             success: true,
             brief,
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('SEO optimization error:', error)
+    logger.error('SEO optimization error:', error)
     return NextResponse.json(
       { error: 'Failed to optimize', details: (error as Error).message },
       { status: 500 }
@@ -175,7 +176,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('SEO fetch error:', error)
+    logger.error('SEO fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch data', details: (error as Error).message },
       { status: 500 }

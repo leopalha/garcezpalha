@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 // Cache conversations for 1 minute (real-time updates needed)
 export const revalidate = 60
@@ -57,7 +58,7 @@ async function getHandler(request: NextRequest) {
     const { data: conversations, error } = await query
 
     if (error) {
-      console.error('[Admin Conversations API] Error:', error)
+      logger.error('[Admin Conversations API] Error:', error)
       return NextResponse.json(
         { error: 'Failed to fetch conversations', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error) },
         { status: 500 }
@@ -74,7 +75,7 @@ async function getHandler(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -83,7 +84,7 @@ async function getHandler(request: NextRequest) {
       )
     }
 
-    console.error('[Admin Conversations API] Error:', error)
+    logger.error('[Admin Conversations API] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

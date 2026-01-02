@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { reportGenerator } from '@/lib/reports/report-generator'
 import type { ReportConfig, ReportType, ReportFormat } from '@/lib/reports/types'
+import { logger } from '@/lib/logger'
 
 /**
  * P2-005: Reports API
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: 'type ou configId é obrigatório' }, { status: 400 })
   } catch (error) {
-    console.error('Erro ao gerar relatório:', error)
+    logger.error('Erro ao gerar relatório:', error)
 
     return NextResponse.json(
       {
@@ -144,7 +145,7 @@ export async function GET(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Erro ao listar tipos de relatórios:', error)
+    logger.error('Erro ao listar tipos de relatórios:', error)
 
     return NextResponse.json(
       {

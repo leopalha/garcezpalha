@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,7 +104,7 @@ export async function GET(request: NextRequest) {
     const { data: products, error, count } = await query
 
     if (error) {
-      console.error('[Products API] Error:', error)
+      logger.error('[Products API] Error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
@@ -150,7 +151,7 @@ export async function GET(request: NextRequest) {
       offset,
     })
   } catch (error) {
-    console.error('[Products API] GET Error:', error)
+    logger.error('[Products API] GET Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -223,13 +224,13 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('[Products API] Create error:', error)
+      logger.error('[Products API] Create error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
-    console.error('[Products API] POST Error:', error)
+    logger.error('[Products API] POST Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { processWhatsAppWebhook } from '@/lib/workflows/comunicacao-flow'
+import { logger } from '@/lib/logger'
 
 /**
  * WhatsApp Cloud API Webhook
@@ -16,16 +17,16 @@ export async function GET(request: NextRequest) {
   const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN
 
   if (!verifyToken) {
-    console.error('WHATSAPP_VERIFY_TOKEN not configured')
+    logger.error('WHATSAPP_VERIFY_TOKEN not configured')
     return NextResponse.json({ error: 'Not configured' }, { status: 500 })
   }
 
   if (mode === 'subscribe' && token === verifyToken) {
-    console.log('[WhatsApp] Webhook verified successfully')
+    logger.info('[WhatsApp] Webhook verified successfully')
     return new NextResponse(challenge, { status: 200 })
   }
 
-  console.error('[WhatsApp] Webhook verification failed')
+  logger.error('[WhatsApp] Webhook verification failed')
   return NextResponse.json({ error: 'Verification failed' }, { status: 403 })
 }
 
@@ -33,11 +34,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    console.log('[WhatsApp] Webhook received:', JSON.stringify(body, null, 2))
+    logger.info('[WhatsApp] Webhook received:', JSON.stringify(body, null, 2))
 
     // Verificar se é uma notificação de mensagem
     if (!body.object || body.object !== 'whatsapp_business_account') {
-      console.log('[WhatsApp] Not a WhatsApp Business webhook')
+      logger.info('[WhatsApp] Not a WhatsApp Business webhook')
       return NextResponse.json({ received: true })
     }
 
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('[WhatsApp] Webhook error:', error)
+    logger.error('[WhatsApp] Webhook error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }

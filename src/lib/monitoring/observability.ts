@@ -101,6 +101,24 @@ export function trackError(error: Error, context?: any) {
       ...context,
     },
   })
+
+  // Send to Sentry (async, non-blocking)
+  if (process.env.NODE_ENV === 'production') {
+    import('@sentry/nextjs').then(({ captureException }) => {
+      captureException(error, {
+        contexts: {
+          custom: context,
+        },
+      })
+    }).catch(console.error)
+  }
+
+  // Auto-alert on critical errors (async, non-blocking)
+  if (process.env.NODE_ENV === 'production') {
+    import('./alerts').then(({ trackErrorWithAlerting }) => {
+      trackErrorWithAlerting(error, context)
+    }).catch(console.error)
+  }
 }
 
 export function trackValidationError(endpoint: string, errors: any[], userId?: string) {
@@ -173,6 +191,22 @@ export function trackApiCall(
       ...context,
     },
   })
+
+  // Send performance data to Sentry (async, non-blocking)
+  if (process.env.NODE_ENV === 'production') {
+    import('@sentry/nextjs').then(({ addBreadcrumb }) => {
+      addBreadcrumb({
+        category: 'api',
+        message: endpoint,
+        level: status >= 500 ? 'error' : status >= 400 ? 'warning' : 'info',
+        data: {
+          duration,
+          status,
+          ...context,
+        },
+      })
+    }).catch(console.error)
+  }
 
   // Alert on errors
   if (status >= 500) {

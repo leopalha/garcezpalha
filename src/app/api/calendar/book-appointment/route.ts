@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { google } from 'googleapis'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
 import { sendEmail } from '@/lib/email/send'
+import { logger } from '@/lib/logger'
 
 const calendar = google.calendar('v3')
 
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (leadError || !lead) {
-      console.error('Error fetching lead:', leadError)
+      logger.error('Error fetching lead:', leadError)
       return NextResponse.json({ error: 'Lead não encontrado' }, { status: 404 })
     }
 
@@ -157,7 +158,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (appointmentError) {
-      console.error('Error saving appointment to database:', appointmentError)
+      logger.error('Error saving appointment to database:', appointmentError)
       // Don't fail the request, calendar event is already created
     }
 
@@ -211,7 +212,7 @@ export async function POST(request: NextRequest) {
       meetingLink,
     })
   } catch (error) {
-    console.error('Error booking appointment:', error)
+    logger.error('Error booking appointment:', error)
     return NextResponse.json(
       { error: 'Erro ao criar agendamento' },
       { status: 500 }

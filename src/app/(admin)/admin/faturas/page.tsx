@@ -34,6 +34,8 @@ import { useToast } from '@/components/ui/use-toast'
 import { NewInvoiceDialog } from '@/components/admin/invoices/new-invoice-dialog'
 import { EditInvoiceDialog } from '@/components/admin/invoices/edit-invoice-dialog'
 import { MarkAsPaidDialog } from '@/components/admin/invoices/mark-as-paid-dialog'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
 
@@ -74,7 +76,7 @@ export default function FaturasPage() {
   const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null)
 
   // Queries
-  const { data: invoicesData, isLoading, refetch } = trpc.invoices.list.useQuery({
+  const { data: invoicesData, isLoading, error, refetch } = trpc.invoices.list.useQuery({
     status: statusFilter !== 'all' ? (statusFilter as InvoiceStatus) : undefined,
     limit: 100,
   })
@@ -272,6 +274,29 @@ export default function FaturasPage() {
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
+              ) : error ? (
+                <ErrorAlert
+                  error={error.message || 'Erro ao carregar faturas'}
+                  retry={() => refetch()}
+                  title="Erro ao carregar faturas"
+                />
+              ) : filteredInvoices.length === 0 ? (
+                <EmptyState
+                  icon={FileText}
+                  title="Nenhuma fatura encontrada"
+                  description={searchQuery ?
+                    "Nenhum resultado para sua busca. Tente outros termos." :
+                    statusFilter !== 'all' ?
+                    `Nenhuma fatura com status "${statusConfig[statusFilter as InvoiceStatus]?.label || statusFilter}".` :
+                    "Você ainda não tem faturas cadastradas."
+                  }
+                  action={!searchQuery && statusFilter === 'all' ? (
+                    <Button onClick={() => setNewInvoiceDialogOpen(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Criar Primeira Fatura
+                    </Button>
+                  ) : undefined}
+                />
               ) : (
                 <div className="space-y-3">
                   {filteredInvoices.map((invoice) => {
@@ -317,12 +342,6 @@ export default function FaturasPage() {
                       </div>
                     )
                   })}
-
-                  {filteredInvoices.length === 0 && !isLoading && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <p>Nenhuma fatura encontrada</p>
-                    </div>
-                  )}
                 </div>
               )}
             </CardContent>

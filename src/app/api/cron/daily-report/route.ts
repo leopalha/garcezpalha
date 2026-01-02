@@ -16,6 +16,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import telegramBotService from '@/lib/telegram/bot-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Generate and send daily report
@@ -29,11 +30,11 @@ async function getHandler(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Daily Report] Unauthorized access attempt')
+      logger.error('[Daily Report] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Daily Report] Generating daily report...')
+    logger.info('[Daily Report] Generating daily report...')
 
     const supabase = await createClient()
     const now = new Date()
@@ -195,7 +196,7 @@ _Garcez Palha - ${now.toLocaleTimeString('pt-BR')}_`
       })
     }
 
-    console.log('[Daily Report] Report sent successfully')
+    logger.info('[Daily Report] Report sent successfully')
 
     return NextResponse.json(
       {
@@ -206,7 +207,7 @@ _Garcez Palha - ${now.toLocaleTimeString('pt-BR')}_`
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Daily Report] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Daily Report] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

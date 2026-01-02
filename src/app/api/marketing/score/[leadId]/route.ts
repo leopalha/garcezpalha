@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -58,7 +59,7 @@ export async function GET(
       } : undefined,
     })
   } catch (error) {
-    console.error('Error fetching lead score:', error)
+    logger.error('Error fetching lead score:', error)
     return NextResponse.json(
       { error: 'Failed to fetch lead score' },
       { status: 500 }

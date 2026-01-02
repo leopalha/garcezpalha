@@ -2,6 +2,7 @@ import { Navbar } from './components/navbar'
 import { Footer } from './components/footer'
 import { FloatingContactHub } from '@/components/chat/FloatingContactHub'
 import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/shared/json-ld'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
 
 export default function MarketingLayout({
   children,
@@ -22,7 +23,9 @@ export default function MarketingLayout({
       <LocalBusinessJsonLd />
       <Navbar />
       <main id="main-content" className="flex-1" role="main">
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
       <Footer />
       <FloatingContactHub />

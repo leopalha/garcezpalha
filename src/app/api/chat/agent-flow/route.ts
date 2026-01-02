@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { AgentStateMachine } from '@/lib/ai/agents/state-machine'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 async function postHandler(request: NextRequest) {
   const timer = new PerformanceTimer('POST /api/chat/agent-flow')
@@ -46,7 +47,7 @@ async function postHandler(request: NextRequest) {
       method: 'POST',
     })
 
-    console.error('[Agent Flow API] Error:', error)
+    logger.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {
@@ -84,7 +85,7 @@ async function getHandler(request: NextRequest) {
     return NextResponse.json({ state })
 
   } catch (error) {
-    console.error('[Agent Flow API] Error:', error)
+    logger.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {
@@ -124,7 +125,7 @@ async function putHandler(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[Agent Flow API] Error:', error)
+    logger.error('[Agent Flow API] Error:', error)
 
     return NextResponse.json(
       {

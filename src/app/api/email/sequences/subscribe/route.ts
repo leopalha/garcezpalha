@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { emailSequenceEngine } from '@/lib/email/sequences/engine'
 import type { SequenceTriggerData } from '@/lib/email/sequences/types'
+import { logger } from '@/lib/logger'
 
 // Force dynamic rendering - required for API routes
 export const dynamic = 'force-dynamic'
@@ -43,7 +44,7 @@ async function postHandler(req: NextRequest) {
       subscription,
     })
   } catch (error) {
-    console.error('[API] Email sequence subscribe error:', error)
+    logger.error('[API] Email sequence subscribe error:', error)
     return NextResponse.json(
       { error: 'Failed to subscribe to sequence', details: (error as Error).message },
       { status: 500 }

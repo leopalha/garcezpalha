@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -97,7 +98,7 @@ export async function GET(
       .single()
 
     if (error) {
-      console.error('[Product Detail] Error:', error)
+      logger.error('[Product Detail] Error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
@@ -164,7 +165,7 @@ export async function GET(
       },
     })
   } catch (error) {
-    console.error('[Product Detail] GET Error:', error)
+    logger.error('[Product Detail] GET Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -244,13 +245,13 @@ export async function PATCH(
       .single()
 
     if (error) {
-      console.error('[Product Detail] Update error:', error)
+      logger.error('[Product Detail] Update error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json(product)
   } catch (error) {
-    console.error('[Product Detail] PATCH Error:', error)
+    logger.error('[Product Detail] PATCH Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -300,7 +301,7 @@ export async function DELETE(
         .eq('id', params.id)
 
       if (error) {
-        console.error('[Product Detail] Archive error:', error)
+        logger.error('[Product Detail] Archive error:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
       }
 
@@ -317,13 +318,13 @@ export async function DELETE(
       .eq('id', params.id)
 
     if (error) {
-      console.error('[Product Detail] Delete error:', error)
+      logger.error('[Product Detail] Delete error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json({ message: 'Product deleted' })
   } catch (error) {
-    console.error('[Product Detail] DELETE Error:', error)
+    logger.error('[Product Detail] DELETE Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

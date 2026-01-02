@@ -38,7 +38,7 @@ export const stripeWebhookSchema = z.object({
 export const stripeCreateSessionSchema = z.object({
   productSlug: z.string().min(1, 'Product slug is required'),
   tier: z.enum(['essencial', 'completo', 'premium'], {
-    errorMap: () => ({ message: 'Invalid tier. Must be: essencial, completo, or premium' })
+    message: 'Invalid tier. Must be: essencial, completo, or premium'
   }),
   addons: z.array(z.string()).optional().default([]),
   couponCode: z.string().optional(),

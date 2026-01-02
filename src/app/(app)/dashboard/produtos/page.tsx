@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   Package,
   Plus,
@@ -228,21 +229,12 @@ export default function ProductsPage() {
           ) : (
             <div className="space-y-4">
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-12">
-                  <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">
-                    {products.length === 0 ? 'Nenhum produto criado ainda' : 'Nenhum produto encontrado'}
-                  </p>
-                  {products.length === 0 ? (
-                    <Button asChild className="mt-4">
-                      <Link href="/dashboard/produtos/novo">Criar Primeiro Produto</Link>
-                    </Button>
-                  ) : (
-                    <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
-                      Limpar filtros
-                    </Button>
-                  )}
-                </div>
+                <EmptyState
+                  icon={Package}
+                  title={products.length === 0 ? 'Nenhum produto criado ainda' : 'Nenhum produto encontrado'}
+                  description={products.length === 0 ? 'Crie seu primeiro produto para começar' : 'Tente ajustar os filtros de busca'}
+                  action={products.length === 0 ? <Button asChild><Link href="/dashboard/produtos/novo"><Plus className="h-4 w-4 mr-2" />Criar Produto</Link></Button> : <Button variant="outline" onClick={() => setSearchQuery('')}><Search className="h-4 w-4 mr-2" />Limpar filtros</Button>}
+                />
               ) : (
                 filteredProducts.map((product) => (
                 <Card key={product.id} className="hover:shadow-md transition-shadow">

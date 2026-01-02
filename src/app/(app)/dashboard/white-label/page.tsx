@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { useToast } from '@/components/ui/use-toast'
 import {
   Palette,
   Upload,
@@ -24,6 +25,7 @@ import {
   AlertCircle,
   Sparkles,
   RefreshCw,
+  Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -103,24 +105,335 @@ const fontOptions = [
   { value: 'Lora', label: 'Lora (Clássico)' },
 ]
 
+const generatePreviewHTML = (config: BrandConfig) => {
+  return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${config.firmName}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=${config.fontFamily.replace(' ', '+')}:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: '${config.fontFamily}', sans-serif;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: ${config.primaryColor};
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .nav a:hover {
+      opacity: 0.8;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, ${config.primaryColor} 0%, ${config.secondaryColor} 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    .btn {
+      background: ${config.accentColor};
+      color: ${config.secondaryColor};
+      padding: 0.875rem 2rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .services {
+      padding: 3rem 2rem;
+      background: #f9fafb;
+    }
+
+    .services h2 {
+      text-align: center;
+      color: ${config.primaryColor};
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-top: 3px solid ${config.accentColor};
+    }
+
+    .service-card h3 {
+      color: ${config.secondaryColor};
+      margin-bottom: 0.5rem;
+    }
+
+    .contact {
+      background: ${config.secondaryColor};
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer {
+      background: #1a1a1a;
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">${config.firmName}</div>
+    <nav class="nav">
+      <a href="#servicos">Serviços</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>${config.tagline || 'Excelência Jurídica'}</h1>
+    <p>${config.description || 'Soluções jurídicas com tecnologia e humanização'}</p>
+    <a href="#contato" class="btn">Entre em Contato</a>
+  </section>
+
+  <section class="services" id="servicos">
+    <h2>Nossas Especialidades</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <h3>Direito Imobiliário</h3>
+        <p>Usucapião, regularização de imóveis e contratos.</p>
+      </div>
+      <div class="service-card">
+        <h3>Direito Bancário</h3>
+        <p>Desbloqueio de contas, empréstimos e negativação.</p>
+      </div>
+      <div class="service-card">
+        <h3>Direito da Saúde</h3>
+        <p>Negativa de plano de saúde e perícias médicas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contato">
+    <h2>Entre em Contato</h2>
+    <div class="contact-info">
+      ${config.email ? `<div class="contact-item">📧 ${config.email}</div>` : ''}
+      ${config.phone ? `<div class="contact-item">📞 ${config.phone}</div>` : ''}
+      ${config.address ? `<div class="contact-item">📍 ${config.address}, ${config.city}/${config.state}</div>` : ''}
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>${config.firmName} ${config.oabNumber ? `- ${config.oabNumber}` : ''} ${config.cnpj ? `- CNPJ: ${config.cnpj}` : ''}</p>
+    <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">© ${new Date().getFullYear()} Todos os direitos reservados</p>
+  </footer>
+</body>
+</html>
+  `
+}
+
 export default function WhiteLabelPage() {
   const [config, setConfig] = useState<BrandConfig>(defaultConfig)
   const [hasChanges, setHasChanges] = useState(false)
   const [previewMode, setPreviewMode] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const { toast } = useToast()
+
+  // Load configuration on mount
+  useEffect(() => {
+    loadConfig()
+  }, [])
+
+  const loadConfig = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/white-label')
+      const data = await response.json()
+
+      if (data.success && data.config) {
+        setConfig(data.config)
+      }
+    } catch (error) {
+      console.error('Error loading config:', error)
+      toast({
+        title: 'Erro ao carregar configuração',
+        description: 'Não foi possível carregar suas configurações. Usando padrões.',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const updateConfig = (key: keyof BrandConfig, value: any) => {
     setConfig((prev) => ({ ...prev, [key]: value }))
     setHasChanges(true)
   }
 
-  const handleSave = () => {
-    // TODO: Save to backend API
-    setHasChanges(false)
+  const handleSave = async () => {
+    try {
+      setSaving(true)
+      const response = await fetch('/api/white-label', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao salvar')
+      }
+
+      setHasChanges(false)
+      toast({
+        title: 'Configuração salva!',
+        description: 'Suas alterações foram salvas com sucesso.',
+      })
+
+      // Update config with server response (includes timestamps, etc)
+      if (data.config) {
+        setConfig(data.config)
+      }
+    } catch (error) {
+      console.error('Error saving config:', error)
+      toast({
+        title: 'Erro ao salvar',
+        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const handleReset = () => {
-    setConfig(defaultConfig)
-    setHasChanges(false)
+  const handleReset = async () => {
+    if (!confirm('Tem certeza que deseja restaurar as configurações padrão? Esta ação não pode ser desfeita.')) {
+      return
+    }
+
+    try {
+      setSaving(true)
+      const response = await fetch('/api/white-label', {
+        method: 'DELETE',
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao restaurar')
+      }
+
+      // Reload config from server (will get defaults)
+      await loadConfig()
+      setHasChanges(false)
+
+      toast({
+        title: 'Configuração restaurada',
+        description: 'As configurações foram restauradas para o padrão.',
+      })
+    } catch (error) {
+      console.error('Error resetting config:', error)
+      toast({
+        title: 'Erro ao restaurar',
+        description: error instanceof Error ? error.message : 'Tente novamente mais tarde.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Carregando configuração...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -137,17 +450,26 @@ export default function WhiteLabelPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleReset} disabled={!hasChanges}>
-            <RefreshCw className="h-4 w-4 mr-2" />
+          <Button variant="outline" onClick={handleReset} disabled={saving}>
+            <RefreshCw className={cn("h-4 w-4 mr-2", saving && "animate-spin")} />
             Restaurar Padrão
           </Button>
-          <Button onClick={() => setPreviewMode(!previewMode)} variant="outline">
+          <Button onClick={() => setPreviewMode(!previewMode)} variant="outline" disabled={saving}>
             <Eye className="h-4 w-4 mr-2" />
             {previewMode ? 'Sair da Prévia' : 'Visualizar'}
           </Button>
-          <Button onClick={handleSave} disabled={!hasChanges}>
-            <Save className="h-4 w-4 mr-2" />
-            Salvar Alterações
+          <Button onClick={handleSave} disabled={!hasChanges || saving}>
+            {saving ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Salvando...
+              </>
+            ) : (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                Salvar Alterações
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -179,13 +501,20 @@ export default function WhiteLabelPage() {
                   </p>
                 </div>
               </div>
-              {/* Preview would go here */}
-              <div className="rounded-lg border-2 border-dashed border-primary/30 p-8 text-center bg-background/50">
-                <Globe className="h-12 w-12 mx-auto mb-4 text-primary/50" />
-                <p className="text-sm text-muted-foreground">
-                  A prévia do site será exibida aqui com suas configurações aplicadas
-                </p>
+              {/* Live Preview */}
+              <div className="rounded-lg border-2 border-primary/30 overflow-hidden bg-white">
+                <div className="aspect-video w-full">
+                  <iframe
+                    srcDoc={generatePreviewHTML(config)}
+                    className="w-full h-full"
+                    title="White Label Preview"
+                    sandbox="allow-same-origin"
+                  />
+                </div>
               </div>
+              <p className="text-xs text-center text-muted-foreground">
+                Prévia em tempo real - As alterações são refletidas instantaneamente
+              </p>
             </div>
           </CardContent>
         </Card>

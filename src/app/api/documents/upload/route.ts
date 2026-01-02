@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getToken } from 'next-auth/jwt'
+import { logger } from '@/lib/logger'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const ALLOWED_TYPES = [
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (uploadError) {
-      console.error('Upload error:', uploadError)
+      logger.error('Upload error:', uploadError)
       return NextResponse.json(
         { error: 'Erro ao fazer upload do arquivo' },
         { status: 500 }
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (dbError) {
-      console.error('Database error:', dbError)
+      logger.error('Database error:', dbError)
       // Try to delete the uploaded file if DB insert fails
       await supabase.storage.from('client-documents').remove([storagePath])
       return NextResponse.json(
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ documentId: docData.id }),
-      }).catch((error) => console.error('Error triggering AI analysis:', error))
+      }).catch((error) => logger.error('Error triggering AI analysis:', error))
     }
 
     return NextResponse.json({
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
       document: docData,
     })
   } catch (error) {
-    console.error('Document upload error:', error)
+    logger.error('Document upload error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

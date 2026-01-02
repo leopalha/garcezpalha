@@ -63,76 +63,37 @@ export default function ConversationDetailPage() {
   const fetchConversation = async () => {
     setLoading(true)
     try {
-      // TODO: Implement API to fetch conversation details
-      // Mock data for now
-      const mockConversation: Conversation = {
+      // Fetch conversation details
+      const convRes = await fetch(`/api/admin/conversations/${conversationId}`)
+      if (!convRes.ok) throw new Error('Failed to fetch conversation')
+
+      const convData = await convRes.json()
+
+      // Fetch messages
+      const msgRes = await fetch(`/api/admin/conversations/${conversationId}/messages`)
+      if (!msgRes.ok) throw new Error('Failed to fetch messages')
+
+      const msgData = await msgRes.json()
+
+      // Build conversation object
+      const conv: Conversation = {
         id: conversationId,
-        lead_id: 'lead-1',
-        lead_name: 'Maria Silva',
-        lead_email: 'maria@example.com',
-        lead_phone: '(11) 98765-4321',
-        state: 'escalated',
-        qualification_score: 92,
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        messages: [
-          {
-            id: '1',
-            role: 'assistant',
-            content:
-              'Olá! Sou a assistente virtual da Garcez Palha Advocacia. Como posso ajudá-lo hoje?',
-            created_at: new Date(Date.now() - 86400000).toISOString(),
-          },
-          {
-            id: '2',
-            role: 'user',
-            content:
-              'Oi! Preciso de ajuda com um caso de revisão de aposentadoria. Já me aposentei há 5 anos.',
-            created_at: new Date(Date.now() - 86340000).toISOString(),
-          },
-          {
-            id: '3',
-            role: 'assistant',
-            content:
-              'Entendo, casos de revisão de aposentadoria são nossa especialidade. Para te ajudar melhor, pode me informar seu nome completo?',
-            created_at: new Date(Date.now() - 86280000).toISOString(),
-          },
-          {
-            id: '4',
-            role: 'user',
-            content: 'Maria Silva',
-            created_at: new Date(Date.now() - 86220000).toISOString(),
-          },
-          {
-            id: '5',
-            role: 'assistant',
-            content:
-              'Obrigada, Maria! E qual o seu melhor email para contato e seu telefone com DDD?',
-            created_at: new Date(Date.now() - 86160000).toISOString(),
-          },
-          {
-            id: '6',
-            role: 'user',
-            content: 'maria@example.com e (11) 98765-4321',
-            created_at: new Date(Date.now() - 86100000).toISOString(),
-          },
-          {
-            id: '7',
-            role: 'assistant',
-            content:
-              'Perfeito! Analisando seu caso, você tem grande potencial para revisão. Vou conectá-lo com um advogado especializado para avaliar detalhadamente sua situação.',
-            created_at: new Date(Date.now() - 7200000).toISOString(),
-          },
-          {
-            id: '8',
-            role: 'user',
-            content:
-              'Ótimo! Mas preciso de uma resposta urgente, pois o prazo pode estar vencendo.',
-            created_at: new Date(Date.now() - 3600000).toISOString(),
-          },
-        ],
+        lead_id: convData.conversation?.lead_id || convData.conversation?.user_id || '',
+        lead_name: convData.conversation?.lead_name || convData.conversation?.metadata?.name || 'Lead sem nome',
+        lead_email: convData.conversation?.lead_email || convData.conversation?.metadata?.email || '',
+        lead_phone: convData.conversation?.lead_phone || convData.conversation?.metadata?.phone || '',
+        state: convData.conversation?.status?.state || convData.conversation?.state || 'identifying',
+        qualification_score: convData.conversation?.status?.qualification_score || convData.conversation?.qualification_score || 0,
+        created_at: convData.conversation?.created_at || new Date().toISOString(),
+        messages: msgData.messages || [],
       }
 
-      setConversation(mockConversation)
+      setConversation(conv)
+
+      // Check if already assumed
+      if (conv.state === 'admin_active') {
+        setHasAssumed(true)
+      }
     } catch (error) {
       console.error('Error fetching conversation:', error)
     } finally {
@@ -141,8 +102,22 @@ export default function ConversationDetailPage() {
   }
 
   const handleAssumeConversation = async () => {
-    setHasAssumed(true)
-    // TODO: API call to update conversation state to admin_active
+    try {
+      const res = await fetch(`/api/admin/conversations/${conversationId}/takeover`, {
+        method: 'POST',
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Failed to assume conversation')
+      }
+
+      setHasAssumed(true)
+      await fetchConversation() // Refresh to show system message
+    } catch (error) {
+      console.error('Error assuming conversation:', error)
+      alert('Erro ao assumir conversa. Tente novamente.')
+    }
   }
 
   const handleSendMessage = async () => {
@@ -150,32 +125,52 @@ export default function ConversationDetailPage() {
 
     setSending(true)
     try {
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        role: 'admin',
-        content: adminMessage,
-        created_at: new Date().toISOString(),
-      }
-
-      setConversation({
-        ...conversation,
-        messages: [...conversation.messages, newMessage],
+      const res = await fetch(`/api/admin/conversations/${conversationId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: adminMessage,
+          humanTakeover: true,
+        }),
       })
 
-      setAdminMessage('')
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Failed to send message')
+      }
 
-      // TODO: API call to send message
+      // Clear input and refresh messages
+      setAdminMessage('')
+      await fetchConversation()
     } catch (error) {
       console.error('Error sending message:', error)
+      alert('Erro ao enviar mensagem. Tente novamente.')
     } finally {
       setSending(false)
     }
   }
 
   const handleFinishHandoff = async () => {
-    // TODO: API call to update conversation state back to agent_active
-    alert('Handoff finalizado! Conversa retornou para o agente.')
-    router.push('/admin/conversations')
+    try {
+      // Update conversation back to agent_active
+      const res = await fetch(`/api/admin/conversations/${conversationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: { state: 'agent_active' },
+        }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to finish handoff')
+      }
+
+      alert('Handoff finalizado! Conversa retornou para o agente.')
+      router.push('/admin/conversations')
+    } catch (error) {
+      console.error('Error finishing handoff:', error)
+      alert('Erro ao finalizar handoff. Tente novamente.')
+    }
   }
 
   const formatTime = (isoString: string) => {

@@ -273,7 +273,7 @@ async function logQualificationInteraction(params: {
     })
   } catch (error) {
     // Don't throw - logging failure shouldn't break the flow
-    console.error('[logQualificationInteraction] Error:', error)
+    logger.error('[logQualificationInteraction] Error:', error instanceof Error ? error : undefined)
   }
 }
 

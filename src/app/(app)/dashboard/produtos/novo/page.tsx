@@ -435,6 +435,14 @@ export default function NewProductPage() {
                                 placeholder="Opção 1&#10;Opção 2&#10;Opção 3"
                                 rows={3}
                                 className="mt-1 text-sm"
+                                value={question.options?.join('\n') || ''}
+                                onChange={(e) => {
+                                  const options = e.target.value
+                                    .split('\n')
+                                    .map((opt) => opt.trim())
+                                    .filter((opt) => opt.length > 0)
+                                  updateQuestion(question.id, { options })
+                                }}
                               />
                             </div>
                           )}

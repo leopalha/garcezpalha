@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@supabase/supabase-js'
 import { createAdsAgent } from '@/lib/ai/agents/marketing/ads-agent'
+import { logger } from '@/lib/logger'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -64,7 +65,7 @@ async function postHandler(request: NextRequest) {
       .single()
 
     if (saveError) {
-      console.error('Error saving campaign:', saveError)
+      logger.error('Error saving campaign:', saveError)
       return NextResponse.json({
         success: true,
         campaign,
@@ -81,7 +82,7 @@ async function postHandler(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Campaign creation error:', error)
+    logger.error('Campaign creation error:', error)
     return NextResponse.json(
       { error: 'Failed to create campaign', details: (error as Error).message },
       { status: 500 }
@@ -130,7 +131,7 @@ async function getHandler(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Campaign list error:', error)
+    logger.error('Campaign list error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch campaigns', details: (error as Error).message },
       { status: 500 }

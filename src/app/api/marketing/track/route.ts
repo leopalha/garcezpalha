@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     // In production, store events in database or analytics service
     // For now, just log them
-    console.log(`[User Tracking] Session ${payload.sessionId}: ${payload.events.length} events`)
+    logger.info(`[User Tracking] Session ${payload.sessionId}: ${payload.events.length} events`)
 
     // Could store in Supabase table `user_tracking_events`
     // await supabase.from('user_tracking_events').insert(...)
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
       eventsProcessed: payload.events.length,
     })
   } catch (error) {
-    console.error('Error processing tracking events:', error)
+    logger.error('Error processing tracking events:', error)
     return NextResponse.json(
       { error: 'Failed to process tracking events' },
       { status: 500 }

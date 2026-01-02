@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { analyticsRevenueQuerySchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -152,7 +153,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -161,7 +162,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.error('Error fetching revenue stats:', error)
+    logger.error('Error fetching revenue stats:', error)
     return NextResponse.json(
       { error: 'Failed to fetch revenue stats' },
       { status: 500 }

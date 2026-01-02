@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 import { processMonitor } from '@/lib/process-monitor/monitor-engine'
+import { logger } from '@/lib/logger'
 
 /**
  * P2-004: Process Monitor Cron Job
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[CRON] Executando verificação de processos...')
+    logger.info('[CRON] Executando verificação de processos...')
 
     await processMonitor.runScheduledCheck()
 
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('[CRON] Erro ao executar verificação:', error)
+    logger.error('[CRON] Erro ao executar verificação:', error)
 
     return NextResponse.json(
       {

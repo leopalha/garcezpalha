@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import telegramBotService from '@/lib/telegram/bot-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run hot leads escalation cycle
@@ -27,11 +28,11 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Escalate Hot Leads] Unauthorized access attempt')
+      logger.error('[Escalate Hot Leads] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Escalate Hot Leads] Starting escalation cycle...')
+    logger.info('[Escalate Hot Leads] Starting escalation cycle...')
 
     const supabase = await createClient()
     const now = new Date()
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
     if (hotError) throw hotError
 
     if (hotLeads && hotLeads.length > 0) {
-      console.log(`[Escalate Hot Leads] Found ${hotLeads.length} hot leads to escalate`)
+      logger.info(`[Escalate Hot Leads] Found ${hotLeads.length} hot leads to escalate`)
 
       for (const lead of hotLeads) {
         try {
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
 
           results.hotLeadsEscalated++
         } catch (err) {
-          console.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
+          logger.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
         }
       }
     }
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
     if (hvError) throw hvError
 
     if (highValueLeads && highValueLeads.length > 0) {
-      console.log(`[Escalate Hot Leads] Found ${highValueLeads.length} high-value leads`)
+      logger.info(`[Escalate Hot Leads] Found ${highValueLeads.length} high-value leads`)
 
       for (const lead of highValueLeads) {
         try {
@@ -120,7 +121,7 @@ export async function GET(request: NextRequest) {
 
           results.highValueEscalated++
         } catch (err) {
-          console.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
+          logger.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
         }
       }
     }
@@ -138,7 +139,7 @@ export async function GET(request: NextRequest) {
     if (ncError) throw ncError
 
     if (noContactLeads && noContactLeads.length > 0) {
-      console.log(`[Escalate Hot Leads] Found ${noContactLeads.length} leads without contact`)
+      logger.info(`[Escalate Hot Leads] Found ${noContactLeads.length} leads without contact`)
 
       for (const lead of noContactLeads) {
         try {
@@ -155,12 +156,12 @@ export async function GET(request: NextRequest) {
 
           results.noContactEscalated++
         } catch (err) {
-          console.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
+          logger.error(`[Escalate Hot Leads] Error escalating lead ${lead.id}:`, err)
         }
       }
     }
 
-    console.log('[Escalate Hot Leads] Cycle complete:', results)
+    logger.info('[Escalate Hot Leads] Cycle complete:', results)
 
     return NextResponse.json(
       {
@@ -171,7 +172,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Escalate Hot Leads] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Escalate Hot Leads] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -206,7 +207,7 @@ async function sendTelegramAlert({
     const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID
 
     if (!adminChatId) {
-      console.warn('[Escalate Hot Leads] No admin chat ID configured')
+      logger.warn('[Escalate Hot Leads] No admin chat ID configured')
       return
     }
 
@@ -218,7 +219,7 @@ async function sendTelegramAlert({
       parse_mode: 'Markdown',
     })
   } catch (error) {
-    console.error('[Escalate Hot Leads] Telegram error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Escalate Hot Leads] Telegram error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
   }
 }
 

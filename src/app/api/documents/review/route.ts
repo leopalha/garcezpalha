@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { reviewQueueManager } from '@/lib/ai/production/review-queue'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/documents/review
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('[API] Error fetching review queue:', error)
+    logger.error('[API] Error fetching review queue:', error)
     return NextResponse.json(
       { error: 'Failed to fetch review queue' },
       { status: 500 }
@@ -134,7 +135,7 @@ export async function POST(request: NextRequest) {
     }, { status: success ? 200 : 500 })
 
   } catch (error) {
-    console.error('[API] Error processing review action:', error)
+    logger.error('[API] Error processing review action:', error)
     return NextResponse.json(
       { error: 'Failed to process review action', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },
       { status: 500 }

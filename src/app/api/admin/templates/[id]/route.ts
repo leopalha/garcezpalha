@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import fs from 'fs/promises'
 import path from 'path'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,7 +68,7 @@ export async function GET(
       )
     }
   } catch (error) {
-    console.error('Error fetching template:', error)
+    logger.error('Error fetching template:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -114,7 +115,7 @@ export async function PATCH(
       .single()
 
     if (error) {
-      console.error('Error saving template:', error)
+      logger.error('Error saving template:', error)
       return NextResponse.json(
         { error: 'Failed to save template' },
         { status: 500 }
@@ -123,7 +124,7 @@ export async function PATCH(
 
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Error updating template:', error)
+    logger.error('Error updating template:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -161,7 +162,7 @@ export async function DELETE(
       .eq('id', templateId)
 
     if (error) {
-      console.error('Error archiving template:', error)
+      logger.error('Error archiving template:', error)
       return NextResponse.json(
         { error: 'Failed to archive template' },
         { status: 500 }
@@ -170,7 +171,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting template:', error)
+    logger.error('Error deleting template:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

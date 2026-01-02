@@ -6,6 +6,7 @@ import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import crypto from 'crypto'
 import { PerformanceTimer, trackApiCall, trackError, trackConversion } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 const mercadoPagoWebhookSchema = z.object({
   type: z.string(),
@@ -75,11 +76,11 @@ async function handler(request: NextRequest) {
     if (webhookSecret && dataId) {
       const isValid = verifyMercadoPagoSignature(xSignature, xRequestId, dataId, webhookSecret)
       if (!isValid) {
-        console.error('MercadoPago webhook signature verification failed')
+        logger.error('MercadoPago webhook signature verification failed')
         return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
       }
     } else if (!webhookSecret) {
-      console.warn('MERCADOPAGO_WEBHOOK_SECRET not configured - skipping signature verification')
+      logger.warn('MERCADOPAGO_WEBHOOK_SECRET not configured - skipping signature verification')
     }
 
     // MercadoPago sends different notification types
@@ -114,7 +115,7 @@ async function handler(request: NextRequest) {
           })
           .eq('mercadopago_payment_id', paymentId.toString())
 
-        console.log(`PIX payment approved: ${paymentId}`)
+        logger.info(`PIX payment approved: ${paymentId}`)
 
         // Track conversion
         trackConversion('payment_approved', payment.transaction_amount, {
@@ -133,7 +134,7 @@ async function handler(request: NextRequest) {
           })
           .eq('mercadopago_payment_id', paymentId.toString())
 
-        console.log(`PIX payment processing: ${paymentId}`)
+        logger.info(`PIX payment processing: ${paymentId}`)
         break
       }
 
@@ -146,12 +147,12 @@ async function handler(request: NextRequest) {
           })
           .eq('mercadopago_payment_id', paymentId.toString())
 
-        console.log(`PIX payment ${payment.status}: ${paymentId}`)
+        logger.info(`PIX payment ${payment.status}: ${paymentId}`)
         break
       }
 
       default:
-        console.log(`Unhandled payment status: ${payment.status}`)
+        logger.info(`Unhandled payment status: ${payment.status}`)
     }
 
     const duration = timer.end()
@@ -168,7 +169,7 @@ async function handler(request: NextRequest) {
       method: 'POST',
     })
 
-    console.error('MercadoPago webhook error:', error)
+    logger.error('MercadoPago webhook error:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }

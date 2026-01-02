@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 // Analytics event schema
 const analyticsEventSchema = z.object({
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.error('Analytics error:', error)
+    logger.error('Analytics error:', error)
     return NextResponse.json(
       { error: 'Failed to process analytics event' },
       { status: 500 }

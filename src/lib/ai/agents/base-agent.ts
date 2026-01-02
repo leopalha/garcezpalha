@@ -1,9 +1,11 @@
 /**
  * Base Agent Class
  * Foundation for all specialized AI agents
+ * Updated with Circuit Breaker Pattern for resilience (P0-002)
  */
 
 import { getOpenAI } from '../openai-client'
+import { callLLMWithFallback } from '@/lib/resilience/openai-breaker'
 import type {
   Message,
   AgentResponse,
@@ -48,6 +50,8 @@ export abstract class BaseAgent {
 
   /**
    * Main method to process user input and generate response
+   * P0-002: Uses Circuit Breaker with automatic fallback chain
+   * GPT-4 → GPT-3.5 → Groq → Pre-programmed responses
    */
   async chat(
     userMessage: string,
@@ -55,8 +59,6 @@ export abstract class BaseAgent {
     context?: AgentContext
   ): Promise<AgentResponse> {
     try {
-      const openai = getOpenAI()
-
       // Build messages array
       const messages: Message[] = [
         { role: 'system', content: this.systemPrompt },
@@ -64,29 +66,20 @@ export abstract class BaseAgent {
         { role: 'user', content: userMessage },
       ]
 
-      // Call OpenAI API (never stream for now)
-      const completion = await openai.chat.completions.create({
+      // P0-002: Use Circuit Breaker with automatic fallback
+      const content = await callLLMWithFallback({
         model: this.config.model,
-        messages: messages as any,
+        messages: messages.map(m => ({ role: m.role, content: m.content })),
         temperature: this.config.temperature,
         max_tokens: this.config.maxTokens,
-        stream: false, // Always false to ensure proper type
       })
 
-      // Type assertion since we know stream is false
-      if ('choices' in completion && Array.isArray(completion.choices)) {
-        const response = completion.choices[0]
-        const content = response.message?.content || ''
-
-        return {
-          content,
-          tokensUsed: 'usage' in completion ? completion.usage?.total_tokens : undefined,
-          model: 'model' in completion ? completion.model : this.config.model,
-          finishReason: response.finish_reason || undefined,
-        }
+      return {
+        content: content || '',
+        tokensUsed: undefined, // Circuit breaker doesn't track tokens yet
+        model: this.config.model,
+        finishReason: 'stop',
       }
-
-      throw new Error('Invalid completion response format')
     } catch (error) {
       console.error('[BaseAgent] Error generating response:', error)
       throw new Error(

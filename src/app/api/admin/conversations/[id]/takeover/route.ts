@@ -1,37 +1,30 @@
 /**
- * Conversation Takeover API
- * Allows admin to manually take over a conversation from the agent
+ * Admin Conversation Takeover
+ * POST /api/admin/conversations/[id]/takeover
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { withRateLimit } from '@/lib/rate-limit'
 import { createClient } from '@/lib/supabase/server'
-import { conversationTakeoverSchema } from '@/lib/validations/admin-schemas'
-import { ZodError } from 'zod'
+import { createLogger } from '@/lib/logger'
 
-async function postHandler(
+const logger = createLogger('api:admin:conversations:takeover')
+
+export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const conversationId = params.id
-    const rawBody = await request.json()
-
-    // Validate request body with Zod
-    const body = conversationTakeoverSchema.parse(rawBody)
-
     const supabase = await createClient()
-
-    // Auth check for admin/lawyer roles
     const { data: { user }, error: authError } = await supabase.auth.getUser()
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check user role
+    // Get admin profile
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, full_name')
       .eq('id', user.id)
       .single()
 
@@ -39,75 +32,36 @@ async function postHandler(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Get conversation
-    const { data: conversation, error: fetchError } = await supabase
-      .from('conversations')
-      .select('*')
-      .eq('conversation_id', conversationId)
-      .single()
-
-    if (fetchError || !conversation) {
-      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
-    }
-
-    // Transition to 'escalated' state
-    const { error: updateError } = await supabase
+    // Update conversation to admin_active
+    const { error } = await supabase
       .from('conversations')
       .update({
         status: {
-          state: 'escalated',
+          state: 'admin_active',
           updated_at: new Date().toISOString(),
-          escalation_reason: body.reason,
         },
-        metadata: {
-          ...conversation.metadata,
-          human_takeover: true,
-          taken_over_at: new Date().toISOString(),
-          taken_over_by: user.id,
-          notify_user: body.notify,
-        },
+        assigned_admin_id: user.id,
       })
-      .eq('conversation_id', conversationId)
+      .eq('conversation_id', params.id)
 
-    if (updateError) {
-      console.error('[Takeover API] Error:', updateError)
-      return NextResponse.json(
-        { error: 'Failed to take over conversation', details: updateError.message },
-        { status: 500 }
-      )
+    if (error) {
+      logger.error('Error taking over conversation', error)
+      return NextResponse.json({ error: 'Failed to takeover' }, { status: 400 })
     }
 
-    console.log(`[Takeover] Admin took over conversation: ${conversationId}`)
-
-    return NextResponse.json({
-      success: true,
-      message: 'Conversation taken over successfully',
+    // Add system message
+    await supabase.from('messages').insert({
+      conversation_id: params.id,
+      sender: 'system',
+      content: `${profile.full_name} assumiu a conversa`,
+      metadata: { type: 'takeover', admin_id: user.id },
     })
-  } catch (error) {
-    // Handle Zod validation errors
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Validation failed',
-          details: error.errors.map((err) => ({
-            field: err.path.join('.'),
-            message: err.message
-          }))
-        },
-        { status: 400 }
-      )
-    }
 
-    console.error('[Takeover API] Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    )
+    logger.info('Conversation taken over', { conversationId: params.id })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    logger.error('Error in takeover', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-
-// Apply rate limiting
-export const POST = withRateLimit(  async (request: NextRequest) => {    const id = request.url.split("/")[5]    return postHandler(request, { params: { id } })  },  { type: "api", limit: 10 })
-
-export const runtime = 'nodejs'
-export const maxDuration = 30

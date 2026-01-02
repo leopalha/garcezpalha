@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { googleCalendar } from '@/lib/calendar/google-calendar-service'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export async function POST(request: NextRequest) {
   try {
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
       })
     }
   } catch (error) {
-    console.error('Calendar sync error:', error)
+    logger.error('Calendar sync error:', error)
     return NextResponse.json(
       { error: 'Erro ao sincronizar com Google Calendar' },
       { status: 500 }

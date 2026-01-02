@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { withRateLimit } from '@/lib/rate-limit'
 import { processMercadoPagoPaymentWebhook } from '@/lib/workflows/financeiro-flow'
+import { logger } from '@/lib/logger'
 
 // Supabase admin client
 const supabaseAdmin = createClient(
@@ -72,7 +73,7 @@ async function handler(request: NextRequest) {
   const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET
 
   if (!accessToken || accessToken === 'your-mercadopago-access-token') {
-    console.log('MercadoPago not configured, webhook disabled')
+    logger.info('MercadoPago not configured, webhook disabled')
     return NextResponse.json(
       { error: 'MercadoPago not configured' },
       { status: 503 }
@@ -87,7 +88,7 @@ async function handler(request: NextRequest) {
   if (webhookSecret && xSignature && xRequestId) {
     const isValid = verifySignature(body, xSignature, xRequestId, webhookSecret)
     if (!isValid) {
-      console.error('Webhook signature verification failed')
+      logger.error('Webhook signature verification failed')
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 401 }
@@ -126,12 +127,12 @@ async function handler(request: NextRequest) {
         break
 
       default:
-        console.log(`Unhandled event type: ${payload.type}`)
+        logger.info(`Unhandled event type: ${payload.type}`)
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Error processing webhook:', error)
+    logger.error('Error processing webhook:', error)
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }
@@ -158,7 +159,7 @@ async function fetchPaymentDetails(paymentId: string, accessToken: string) {
 }
 
 async function handlePaymentEvent(payload: MPWebhookPayload, accessToken: string) {
-  console.log('Payment event:', payload.action, payload.data.id)
+  logger.info('Payment event:', payload.action, payload.data.id)
 
   const payment = await fetchPaymentDetails(payload.data.id, accessToken)
 
@@ -172,12 +173,12 @@ async function handlePaymentEvent(payload: MPWebhookPayload, accessToken: string
       break
 
     default:
-      console.log(`Unhandled payment action: ${payload.action}`)
+      logger.info(`Unhandled payment action: ${payload.action}`)
   }
 }
 
 async function handlePaymentCreated(payment: Record<string, unknown>) {
-  console.log('Payment created:', payment.id)
+  logger.info('Payment created:', payment.id)
 
   const metadata = payment.metadata as Record<string, string> | undefined
   const clientId = metadata?.clientId
@@ -189,7 +190,7 @@ async function handlePaymentCreated(payment: Record<string, unknown>) {
     await handleApprovedPayment(payment, clientId, invoiceId, partnerId)
   } else if (payment.status === 'pending') {
     // PIX payment waiting for customer
-    console.log(`Payment pending for client ${clientId}`)
+    logger.info(`Payment pending for client ${clientId}`)
 
     // Send PIX QR code to client
     // await sendPixQRCode(clientId, payment.point_of_interaction?.transaction_data)
@@ -197,7 +198,7 @@ async function handlePaymentCreated(payment: Record<string, unknown>) {
 }
 
 async function handlePaymentUpdated(payment: Record<string, unknown>) {
-  console.log('Payment updated:', payment.id, payment.status)
+  logger.info('Payment updated:', payment.id, payment.status)
 
   const metadata = payment.metadata as Record<string, string> | undefined
   const clientId = metadata?.clientId
@@ -213,7 +214,7 @@ async function handlePaymentUpdated(payment: Record<string, unknown>) {
 
     case 'rejected':
     case 'cancelled':
-      console.log(`Payment ${payment.status} for client ${clientId}`)
+      logger.info(`Payment ${payment.status} for client ${clientId}`)
       if (orderId) {
         await supabaseAdmin
           .from('checkout_orders')
@@ -226,7 +227,7 @@ async function handlePaymentUpdated(payment: Record<string, unknown>) {
       break
 
     case 'refunded':
-      console.log(`Payment refunded for client ${clientId}`)
+      logger.info(`Payment refunded for client ${clientId}`)
       if (orderId) {
         await supabaseAdmin
           .from('checkout_orders')
@@ -239,7 +240,7 @@ async function handlePaymentUpdated(payment: Record<string, unknown>) {
       break
 
     default:
-      console.log(`Unhandled payment status: ${payment.status}`)
+      logger.info(`Unhandled payment status: ${payment.status}`)
   }
 }
 
@@ -249,7 +250,7 @@ async function handleApprovedPayment(
   invoiceId?: string,
   partnerId?: string
 ) {
-  console.log(`Payment approved for client ${clientId}`)
+  logger.info(`Payment approved for client ${clientId}`)
 
   const metadata = payment.metadata as Record<string, string> | undefined
   const orderId = metadata?.orderId
@@ -267,7 +268,7 @@ async function handleApprovedPayment(
     }
     await processMercadoPagoPaymentWebhook(mercadoPagoPayment)
   } catch (error) {
-    console.error('Error processing financeiro flow:', error)
+    logger.error('Error processing financeiro flow:', error)
   }
 
   // Update checkout order status
@@ -284,11 +285,11 @@ async function handleApprovedPayment(
       .eq('id', orderId)
 
     if (error) {
-      console.error('Error updating checkout order:', error)
+      logger.error('Error updating checkout order:', error)
       throw error
     }
 
-    console.log(`Checkout order ${orderId} marked as paid`)
+    logger.info(`Checkout order ${orderId} marked as paid`)
   }
 
   // Update lead status if linked
@@ -305,9 +306,9 @@ async function handleApprovedPayment(
       .eq('id', leadId)
 
     if (error) {
-      console.error('Error updating lead:', error)
+      logger.error('Error updating lead:', error)
     } else {
-      console.log(`Lead ${leadId} marked as converted`)
+      logger.info(`Lead ${leadId} marked as converted`)
     }
   }
 
@@ -331,9 +332,9 @@ async function handleApprovedPayment(
       .eq('conversation_id', conversationId)
 
     if (convError) {
-      console.error('[MercadoPago] Error updating conversation:', convError)
+      logger.error('[MercadoPago] Error updating conversation:', convError)
     } else {
-      console.log(`[MercadoPago] Conversation ${conversationId} moved to paid state`)
+      logger.info(`[MercadoPago] Conversation ${conversationId} moved to paid state`)
 
       // Transition to contract_pending and trigger ClickSign after 1 second
       setTimeout(async () => {
@@ -345,7 +346,7 @@ async function handleApprovedPayment(
           .single()
 
         if (fetchError || !conversation) {
-          console.error('[MercadoPago] Error fetching conversation:', fetchError)
+          logger.error('[MercadoPago] Error fetching conversation:', fetchError)
           return
         }
 
@@ -360,9 +361,9 @@ async function handleApprovedPayment(
           .eq('conversation_id', conversationId)
 
         if (transitionError) {
-          console.error('[MercadoPago] Error transitioning to contract_pending:', transitionError)
+          logger.error('[MercadoPago] Error transitioning to contract_pending:', transitionError)
         } else {
-          console.log(`[MercadoPago] Conversation ${conversationId} moved to contract_pending`)
+          logger.info(`[MercadoPago] Conversation ${conversationId} moved to contract_pending`)
 
           // Trigger ClickSign contract generation
           try {
@@ -391,9 +392,9 @@ async function handleApprovedPayment(
               })
               .eq('conversation_id', conversationId)
 
-            console.log(`[ClickSign] Contract generated for conversation ${conversationId}`)
+            logger.info(`[ClickSign] Contract generated for conversation ${conversationId}`)
           } catch (clicksignError) {
-            console.error('[ClickSign] Error generating contract:', clicksignError)
+            logger.error('[ClickSign] Error generating contract:', clicksignError)
             // Don't fail the webhook, just log the error
           }
         }
@@ -407,12 +408,12 @@ async function handleApprovedPayment(
     const commissionRate = 0.1 // 10%
     const commissionAmount = amount * commissionRate
 
-    console.log(`Creating commission of ${commissionAmount} for partner ${partnerId}`)
+    logger.info(`Creating commission of ${commissionAmount} for partner ${partnerId}`)
   }
 }
 
 async function handleSubscriptionEvent(payload: MPWebhookPayload, accessToken: string) {
-  console.log('Subscription event:', payload.action, payload.data.id)
+  logger.info('Subscription event:', payload.action, payload.data.id)
 
   // Fetch subscription details
   const response = await fetch(
@@ -432,22 +433,22 @@ async function handleSubscriptionEvent(payload: MPWebhookPayload, accessToken: s
 
   switch (payload.action) {
     case 'created':
-      console.log('Subscription created:', subscription.id)
+      logger.info('Subscription created:', subscription.id)
       // await createSubscriptionRecord(subscription)
       break
 
     case 'updated':
-      console.log('Subscription updated:', subscription.id, subscription.status)
+      logger.info('Subscription updated:', subscription.id, subscription.status)
       // await updateSubscriptionRecord(subscription)
       break
 
     default:
-      console.log(`Unhandled subscription action: ${payload.action}`)
+      logger.info(`Unhandled subscription action: ${payload.action}`)
   }
 }
 
 async function handleInvoiceEvent(payload: MPWebhookPayload, accessToken: string) {
-  console.log('Invoice event:', payload.action, payload.data.id)
+  logger.info('Invoice event:', payload.action, payload.data.id)
 
   // Fetch invoice details
   const response = await fetch(
@@ -464,13 +465,13 @@ async function handleInvoiceEvent(payload: MPWebhookPayload, accessToken: string
   }
 
   const invoice = await response.json()
-  console.log('Invoice details:', invoice)
+  logger.info('Invoice details:', invoice)
 
   // Handle invoice status changes
 }
 
 async function handlePlanEvent(payload: MPWebhookPayload, accessToken: string) {
-  console.log('Plan event:', payload.action, payload.data.id)
+  logger.info('Plan event:', payload.action, payload.data.id)
 
   // Fetch plan details
   const response = await fetch(
@@ -487,7 +488,7 @@ async function handlePlanEvent(payload: MPWebhookPayload, accessToken: string) {
   }
 
   const plan = await response.json()
-  console.log('Plan details:', plan)
+  logger.info('Plan details:', plan)
 
   // Handle plan changes
 }

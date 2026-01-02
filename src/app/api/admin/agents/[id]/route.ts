@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { agentConfigUpdateSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,7 +41,7 @@ export async function GET(
 
     return NextResponse.json(agentConfig)
   } catch (error) {
-    console.error('Error fetching agent config:', error)
+    logger.error('Error fetching agent config:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -98,7 +99,7 @@ export async function PATCH(
       .single()
 
     if (error) {
-      console.error('Error saving agent config:', error)
+      logger.error('Error saving agent config:', error)
       return NextResponse.json(
         { error: 'Failed to save config' },
         { status: 500 }
@@ -112,7 +113,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -121,7 +122,7 @@ export async function PATCH(
       )
     }
 
-    console.error('Error updating agent config:', error)
+    logger.error('Error updating agent config:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

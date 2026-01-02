@@ -19,7 +19,7 @@ export const agentConfigUpdateSchema = z.object({
   systemPrompt: z.string().min(1, 'System prompt is required'),
   userPrompt: z.string().optional(),
   model: z.enum(['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo'], {
-    errorMap: () => ({ message: 'Invalid model' })
+    message: 'Invalid model'
   }),
   temperature: z.number().min(0).max(2).default(0.7),
   maxTokens: z.number().min(1).max(4000).default(1000),

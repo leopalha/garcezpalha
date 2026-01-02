@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,7 +69,7 @@ export async function GET(
       statistical_significance: test.statistical_significance,
     })
   } catch (error) {
-    console.error('Error fetching A/B test:', error)
+    logger.error('Error fetching A/B test:', error)
     return NextResponse.json(
       { error: 'Failed to fetch A/B test' },
       { status: 500 }
@@ -128,7 +129,7 @@ export async function PATCH(
       },
     })
   } catch (error) {
-    console.error('Error updating A/B test:', error)
+    logger.error('Error updating A/B test:', error)
     return NextResponse.json(
       { error: 'Failed to update A/B test' },
       { status: 500 }
@@ -174,7 +175,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting A/B test:', error)
+    logger.error('Error deleting A/B test:', error)
     return NextResponse.json(
       { error: 'Failed to delete A/B test' },
       { status: 500 }

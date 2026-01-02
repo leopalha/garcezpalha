@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (userError || !user) {
-      console.error('[Settings API] User error:', userError)
+      logger.error('[Settings API] User error:', userError)
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response)
   } catch (error) {
-    console.error('[Settings API] GET Error:', error)
+    logger.error('[Settings API] GET Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -177,7 +178,7 @@ export async function PATCH(request: NextRequest) {
           .eq('id', session.user.id)
 
         if (error) {
-          console.error('[Settings API] Profile update error:', error)
+          logger.error('[Settings API] Profile update error:', error)
         }
       }
     }
@@ -215,7 +216,7 @@ export async function PATCH(request: NextRequest) {
           .eq('user_id', session.user.id)
 
         if (error) {
-          console.error('[Settings API] Settings update error:', error)
+          logger.error('[Settings API] Settings update error:', error)
           return NextResponse.json({ error: error.message }, { status: 500 })
         }
       } else {
@@ -226,7 +227,7 @@ export async function PATCH(request: NextRequest) {
         })
 
         if (error) {
-          console.error('[Settings API] Settings insert error:', error)
+          logger.error('[Settings API] Settings insert error:', error)
           return NextResponse.json({ error: error.message }, { status: 500 })
         }
       }
@@ -236,7 +237,7 @@ export async function PATCH(request: NextRequest) {
     const updated = await GET(request)
     return updated
   } catch (error) {
-    console.error('[Settings API] PATCH Error:', error)
+    logger.error('[Settings API] PATCH Error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

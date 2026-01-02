@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { partnerReports } from '@/lib/reports/partner-reports'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Send monthly partner reports
@@ -21,16 +22,16 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Partner Reports] Unauthorized access attempt')
+      logger.error('[Partner Reports] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Partner Reports] Starting monthly reports...')
+    logger.info('[Partner Reports] Starting monthly reports...')
 
     // Send all reports
     const result = await partnerReports.sendMonthlyReports()
 
-    console.log('[Partner Reports] Reports complete:', result)
+    logger.info('[Partner Reports] Reports complete:', result)
 
     return NextResponse.json(
       {
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Partner Reports] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Partner Reports] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('[Partner Reports] Manual trigger')
+    logger.info('[Partner Reports] Manual trigger')
 
     const result = await partnerReports.sendMonthlyReports()
 
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Partner Reports] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Partner Reports] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

@@ -15,6 +15,8 @@ import {
   Clock,
   RefreshCw,
 } from 'lucide-react'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 // TypeScript Types
 interface PageViewMetrics {
@@ -75,6 +77,7 @@ export default function AnalyticsDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+  const [error, setError] = useState<Error | null>(null)
 
   // Fetch real analytics data from API
   const fetchAnalyticsData = useCallback(async (): Promise<AnalyticsData> => {
@@ -103,6 +106,7 @@ export default function AnalyticsDashboard() {
 
   const fetchAllData = useCallback(async () => {
     setIsLoading(true)
+    setError(null)
     try {
       const [analytics, errors, health] = await Promise.all([
         fetchAnalyticsData(),
@@ -113,8 +117,9 @@ export default function AnalyticsDashboard() {
       setErrorSummary(errors)
       setHealthStatus(health)
       setLastRefresh(new Date())
-    } catch (error) {
-      console.error('Failed to fetch analytics data:', error)
+    } catch (err) {
+      console.error('Failed to fetch analytics data:', err)
+      setError(err instanceof Error ? err : new Error('Erro ao carregar analytics'))
     } finally {
       setIsLoading(false)
     }
@@ -218,6 +223,44 @@ export default function AnalyticsDashboard() {
         <div className="flex items-center justify-center h-64">
           <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <AdminPageHeader
+          title="Analytics Dashboard"
+          description="Monitor de performance e saúde do sistema"
+        />
+        <ErrorAlert
+          error={error.message}
+          retry={fetchAllData}
+          title="Erro ao carregar analytics"
+        />
+      </div>
+    )
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="space-y-6">
+        <AdminPageHeader
+          title="Analytics Dashboard"
+          description="Monitor de performance e saúde do sistema"
+        />
+        <EmptyState
+          icon={Activity}
+          title="Nenhum dado disponível"
+          description="Não foi possível carregar os dados de analytics"
+          action={
+            <Button onClick={fetchAllData}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Tentar Novamente
+            </Button>
+          }
+        />
       </div>
     )
   }

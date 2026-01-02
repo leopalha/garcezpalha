@@ -18,6 +18,8 @@ import {
   ChevronDown,
   FileDown
 } from 'lucide-react'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface ReviewQueueItem {
   id: string
@@ -106,6 +108,7 @@ export default function DocumentosPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [reviewNotes, setReviewNotes] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
   // Fetch queue items and stats
   useEffect(() => {
@@ -114,9 +117,11 @@ export default function DocumentosPage() {
 
   const fetchData = async () => {
     setLoading(true)
+    setError(null)
     try {
       // Fetch stats
       const statsRes = await fetch('/api/documents/review?stats=true')
+      if (!statsRes.ok) throw new Error('Erro ao carregar estatísticas')
       const statsData = await statsRes.json()
       if (statsData.stats) {
         setStats(statsData.stats)
@@ -125,14 +130,17 @@ export default function DocumentosPage() {
       // Fetch items
       const status = filter !== 'all' ? `&status=${filter}` : ''
       const itemsRes = await fetch(`/api/documents/review?limit=50${status}`)
+      if (!itemsRes.ok) throw new Error('Erro ao carregar documentos')
       const itemsData = await itemsRes.json()
       if (itemsData.items) {
         setItems(itemsData.items)
       }
-    } catch (error) {
-      console.error('Error fetching data:', error)
+    } catch (err) {
+      console.error('Error fetching data:', err)
+      setError(err instanceof Error ? err : new Error('Erro ao carregar dados'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const fetchItemDetails = async (itemId: string) => {
@@ -209,6 +217,40 @@ export default function DocumentosPage() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">Documentos Juridicos</h1>
+            <p className="text-muted-foreground">Fila de revisao de documentos gerados por IA</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">Documentos Juridicos</h1>
+            <p className="text-muted-foreground">Fila de revisao de documentos gerados por IA</p>
+          </div>
+        </div>
+        <ErrorAlert
+          error={error.message}
+          retry={fetchData}
+          title="Erro ao carregar documentos"
+        />
+      </div>
+    )
   }
 
   return (
@@ -298,13 +340,16 @@ export default function DocumentosPage() {
 
       {/* Document List */}
       <div className="bg-card border rounded-lg overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center text-muted-foreground">
-            Carregando...
-          </div>
-        ) : items.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">
-            Nenhum documento encontrado
+        {items.length === 0 ? (
+          <div className="p-12">
+            <EmptyState
+              icon={FileText}
+              title={filter !== 'all' ? 'Nenhum documento encontrado' : 'Nenhum documento na fila'}
+              description={filter !== 'all'
+                ? `Não há documentos com status "${statusConfig[filter as keyof typeof statusConfig]?.label || filter}"`
+                : 'Não há documentos para revisar no momento'
+              }
+            />
           </div>
         ) : (
           <div className="divide-y">

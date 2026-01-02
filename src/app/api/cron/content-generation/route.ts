@@ -10,6 +10,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getContentAgent } from '@/lib/ai/agents/marketing/content-agent'
 import { createQAAgent } from '@/lib/ai/agents/operations/qa-agent'
 import { createSocialAgent } from '@/lib/ai/agents/marketing/social-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -23,7 +24,7 @@ function verifyCronSecret(request: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET
 
   if (!cronSecret) {
-    console.warn('CRON_SECRET not configured')
+    logger.warn('CRON_SECRET not configured')
     return false
   }
 
@@ -201,7 +202,7 @@ export async function GET(request: NextRequest) {
             status: 'scheduled',
           })
         } catch (error) {
-          console.error(`Error generating content for ${platform}:`, error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+          logger.error(`Error generating content for ${platform}:`, error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
           results.failed++
           results.details.push({
             platform,
@@ -219,7 +220,7 @@ export async function GET(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Content generation cron error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('Content generation cron error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       { error: 'Cron job failed', details: (error as Error).message },
       { status: 500 }

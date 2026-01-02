@@ -3,6 +3,7 @@ import telegramBotService, { type TelegramUpdate } from '@/lib/telegram/bot-serv
 import telegramConversationService from '@/lib/telegram/conversation-service'
 import telegramLeadQualifier from '@/lib/telegram/lead-qualifier'
 import telegramAIChatService from '@/lib/telegram/ai-chat'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/telegram/webhook
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     const update: TelegramUpdate = await request.json()
 
-    console.log('Telegram update received:', JSON.stringify(update, null, 2))
+    logger.info('Telegram update received:', JSON.stringify(update, null, 2))
 
     // Handle message
     if (update.message) {
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
       const chatId = message.chat.id
       const text = message.text
 
-      console.log(`Message from ${message.from.first_name} (${chatId}): ${text}`)
+      logger.info(`Message from ${message.from.first_name} (${chatId}): ${text}`)
 
       // Get or create conversation in database
       const conversation = await telegramConversationService.getOrCreateConversation(
@@ -71,9 +72,9 @@ export async function POST(request: NextRequest) {
               qualification.reason
             )
 
-            console.log(`Conversation ${conversation.id} qualified with score ${qualification.score}`)
+            logger.info(`Conversation ${conversation.id} qualified with score ${qualification.score}`)
             if (qualification.isQualified) {
-              console.log(`🎯 Lead qualified! Reason: ${qualification.reason}`)
+              logger.info(`🎯 Lead qualified! Reason: ${qualification.reason}`)
             }
           }
         }, 100)
@@ -180,7 +181,7 @@ export async function POST(request: NextRequest) {
 
           // Handle escalation suggestion
           if (aiResponse.suggestedAction === 'escalate') {
-            console.log(`🔔 Conversation ${conversation.id} should be escalated to human`)
+            logger.info(`🔔 Conversation ${conversation.id} should be escalated to human`)
             // TODO: Notify admin for human handoff
           }
         } else {
@@ -210,7 +211,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true })
   } catch (error) {
-    console.error('Error processing Telegram webhook:', error)
+    logger.error('Error processing Telegram webhook:', error)
     return NextResponse.json({ ok: false, error: 'Internal error' }, { status: 500 })
   }
 }

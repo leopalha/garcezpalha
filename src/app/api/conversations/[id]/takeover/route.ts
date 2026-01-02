@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getToken } from 'next-auth/jwt'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/conversations/[id]/takeover
@@ -32,7 +33,7 @@ export async function POST(
       .eq('id', conversationId)
 
     if (error) {
-      console.error('Takeover error:', error)
+      logger.error('Takeover error:', error)
       return NextResponse.json({ error: 'Erro ao assumir conversa' }, { status: 500 })
     }
 
@@ -45,7 +46,7 @@ export async function POST(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Takeover error:', error)
+    logger.error('Takeover error:', error)
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
   }
 }

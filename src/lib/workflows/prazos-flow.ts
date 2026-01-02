@@ -5,6 +5,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { googleCalendar } from '@/lib/calendar/google-calendar-service'
+import { sendEmail, sendWhatsApp } from '@/lib/notifications/notification-service'
 
 /**
  * Database type definitions
@@ -209,27 +210,91 @@ async function notificarAdvogadoNovoPrazo(params: {
   description: string
   caseNumber?: string
 }): Promise<void> {
-  // TODO: Integrar com Resend para email
-  // TODO: Integrar com WhatsApp API para notificação push
+  const supabase = await createClient()
 
-  console.log('[Prazos] 📧 Notificação enviada para advogado:', {
-    userId: params.userId,
-    deadline: params.deadlineDate,
-    case: params.caseNumber,
-  })
+  // Buscar dados do usuário (email e telefone)
+  const { data: user } = await supabase
+    .from('profiles')
+    .select('email, phone, full_name')
+    .eq('id', params.userId)
+    .single()
 
-  // Mock email template:
-  const emailTemplate = `
-    Novo Prazo Cadastrado
+  if (!user?.email) {
+    console.warn('[Prazos] User not found or no email:', params.userId)
+    return
+  }
 
-    Processo: ${params.caseNumber || 'N/A'}
-    Data: ${formatDate(params.deadlineDate)}
-    Descrição: ${params.description}
+  const deadlineFormatted = formatDate(params.deadlineDate)
 
-    Você receberá lembretes automáticos antes do vencimento.
+  // Enviar Email
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background-color: #dc2626; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h2 style="margin: 0;">⚠️ Novo Prazo Cadastrado</h2>
+      </div>
+      <div style="padding: 30px; background-color: #f9fafb;">
+        <p>Olá <strong>${user.full_name || 'Advogado'}</strong>,</p>
+        <p>Um novo prazo crítico foi cadastrado e atribuído a você:</p>
+        <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #dc2626;">
+          <p style="margin: 5px 0;"><strong>📋 Processo:</strong> ${params.caseNumber || 'N/A'}</p>
+          <p style="margin: 5px 0;"><strong>📅 Data:</strong> ${deadlineFormatted}</p>
+          <p style="margin: 5px 0;"><strong>📝 Descrição:</strong> ${params.description}</p>
+        </div>
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0;">
+          <p style="margin: 0; color: #991b1b; font-size: 14px;">
+            ⏰ <strong>Lembretes Automáticos:</strong> Você receberá notificações por email e WhatsApp antes do vencimento do prazo.
+          </p>
+        </div>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+        <p style="color: #9ca3af; font-size: 12px;">
+          <strong>Garcez Palha Advocacia</strong><br/>
+          Sistema de Gestão de Prazos
+        </p>
+      </div>
+    </div>
   `
 
-  console.log('[Prazos] Email template:', emailTemplate)
+  const emailSent = await sendEmail({
+    to: user.email,
+    subject: `⚠️ Novo Prazo: ${params.caseNumber || 'Processo'} - ${params.description}`,
+    html: emailHtml,
+  })
+
+  if (emailSent) {
+    console.log('[Prazos] ✅ Email enviado para:', user.email)
+  } else {
+    console.error('[Prazos] ❌ Falha ao enviar email para:', user.email)
+  }
+
+  // Enviar WhatsApp (se telefone disponível)
+  if (user.phone) {
+    const whatsappMessage = `⚠️ *NOVO PRAZO CADASTRADO*
+
+Olá ${user.full_name || 'Advogado'}! 👋
+
+Um prazo crítico foi atribuído a você:
+
+📋 *Processo:* ${params.caseNumber || 'N/A'}
+📅 *Data:* ${deadlineFormatted}
+📝 *Descrição:* ${params.description}
+
+⏰ Você receberá lembretes automáticos antes do vencimento.
+
+_Garcez Palha - Sistema de Gestão de Prazos_`
+
+    const whatsappSent = await sendWhatsApp({
+      to: user.phone,
+      message: whatsappMessage,
+    })
+
+    if (whatsappSent) {
+      console.log('[Prazos] ✅ WhatsApp enviado para:', user.phone)
+    } else {
+      console.error('[Prazos] ❌ Falha ao enviar WhatsApp para:', user.phone)
+    }
+  }
+
+  console.log('[Prazos] ✅ Notificação de novo prazo enviada')
 }
 
 /**
@@ -304,41 +369,145 @@ export async function processarLembretesPendentes(): Promise<{
  * Envia email de lembrete
  */
 async function enviarEmailLembrete(reminder: DeadlineReminder): Promise<void> {
+  const supabase = await createClient()
   const deadline = reminder.deadline
   const daysUntil = Math.ceil(
     (new Date(deadline.deadline_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
   )
 
-  console.log('[Prazos] 📧 Email lembrete:', {
-    deadlineId: deadline.id,
-    daysUntil,
-    recipientId: reminder.recipient_id,
+  // Buscar dados do usuário e processo
+  const { data: user } = await supabase
+    .from('profiles')
+    .select('email, full_name')
+    .eq('id', reminder.recipient_id || '')
+    .single()
+
+  const { data: caso } = await supabase
+    .from('processos')
+    .select('numero_processo, client:clients!processos_client_id_fkey (full_name)')
+    .eq('id', deadline.case_id)
+    .single()
+
+  if (!user?.email) {
+    console.warn('[Prazos] User not found for reminder:', reminder.id)
+    return
+  }
+
+  const urgencyColor = daysUntil <= 1 ? '#dc2626' : daysUntil <= 3 ? '#f59e0b' : '#2563eb'
+  const urgencyText = daysUntil <= 1 ? 'URGENTE' : daysUntil <= 3 ? 'IMPORTANTE' : 'AVISO'
+
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background-color: ${urgencyColor}; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <h2 style="margin: 0;">⏰ ${urgencyText}: Prazo em ${daysUntil} dia(s)</h2>
+      </div>
+      <div style="padding: 30px; background-color: #f9fafb;">
+        <p>Olá <strong>${user.full_name || 'Advogado'}</strong>,</p>
+        <p>Este é um lembrete automático de prazo próximo ao vencimento:</p>
+        <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${urgencyColor};">
+          <p style="margin: 5px 0;"><strong>📋 Processo:</strong> ${caso?.numero_processo || 'N/A'}</p>
+          <p style="margin: 5px 0;"><strong>👤 Cliente:</strong> ${Array.isArray(caso?.client) ? caso?.client[0]?.full_name : 'N/A'}</p>
+          <p style="margin: 5px 0;"><strong>📅 Vencimento:</strong> ${formatDate(deadline.deadline_date)}</p>
+          <p style="margin: 5px 0;"><strong>📝 Descrição:</strong> ${deadline.description}</p>
+          <p style="margin: 15px 0 5px 0; font-size: 20px; color: ${urgencyColor};">
+            <strong>⏳ Faltam ${daysUntil} dia(s)</strong>
+          </p>
+        </div>
+        ${daysUntil <= 1 ? `
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0; border: 2px solid #dc2626;">
+          <p style="margin: 0; color: #991b1b; font-size: 16px; font-weight: bold;">
+            🚨 ATENÇÃO: Prazo vence AMANHÃ! Tome as providências necessárias imediatamente.
+          </p>
+        </div>
+        ` : ''}
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+        <p style="color: #9ca3af; font-size: 12px;">
+          <strong>Garcez Palha Advocacia</strong><br/>
+          Sistema de Gestão de Prazos - Lembrete Automático
+        </p>
+      </div>
+    </div>
+  `
+
+  const emailSent = await sendEmail({
+    to: user.email,
+    subject: `⏰ ${urgencyText}: Prazo em ${daysUntil} dia(s) - ${deadline.description}`,
+    html: emailHtml,
   })
 
-  // TODO: Integrar com Resend
-  // await resend.emails.send({
-  //   to: recipientEmail,
-  //   subject: `⚠️ Prazo em ${daysUntil} dia(s): ${deadline.description}`,
-  //   html: emailTemplate
-  // })
+  if (emailSent) {
+    console.log('[Prazos] ✅ Email lembrete enviado:', {
+      deadlineId: deadline.id,
+      daysUntil,
+      to: user.email,
+    })
+  } else {
+    console.error('[Prazos] ❌ Falha ao enviar email lembrete:', user.email)
+    throw new Error('Failed to send email reminder')
+  }
 }
 
 /**
  * Envia WhatsApp de lembrete
  */
 async function enviarWhatsAppLembrete(reminder: DeadlineReminder): Promise<void> {
+  const supabase = await createClient()
   const deadline = reminder.deadline
+  const daysUntil = Math.ceil(
+    (new Date(deadline.deadline_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  )
 
-  console.log('[Prazos] 📱 WhatsApp lembrete:', {
-    deadlineId: deadline.id,
-    recipientId: reminder.recipient_id,
+  // Buscar dados do usuário e processo
+  const { data: user } = await supabase
+    .from('profiles')
+    .select('phone, full_name')
+    .eq('id', reminder.recipient_id || '')
+    .single()
+
+  const { data: caso } = await supabase
+    .from('processos')
+    .select('numero_processo, client:clients!processos_client_id_fkey (full_name)')
+    .eq('id', deadline.case_id)
+    .single()
+
+  if (!user?.phone) {
+    console.warn('[Prazos] User has no phone for WhatsApp reminder:', reminder.id)
+    return
+  }
+
+  const urgencyEmoji = daysUntil <= 1 ? '🚨' : '⚠️'
+  const deadlineFormatted = formatDate(deadline.deadline_date)
+
+  const whatsappMessage = `${urgencyEmoji} *LEMBRETE DE PRAZO*
+
+Olá ${user.full_name || 'Advogado'}!
+
+${daysUntil <= 1 ? '🚨 *PRAZO VENCE AMANHÃ!*' : `⏰ Faltam *${daysUntil} dia(s)* para o vencimento`}
+
+📋 *Processo:* ${caso?.numero_processo || 'N/A'}
+👤 *Cliente:* ${Array.isArray(caso?.client) ? caso?.client[0]?.full_name : 'N/A'}
+📅 *Vencimento:* ${deadlineFormatted}
+📝 *Descrição:* ${deadline.description}
+
+${daysUntil <= 1 ? '⚠️ *Tome as providências necessárias IMEDIATAMENTE!*' : '💡 Prepare-se com antecedência'}
+
+_Garcez Palha - Sistema de Gestão de Prazos_`
+
+  const whatsappSent = await sendWhatsApp({
+    to: user.phone,
+    message: whatsappMessage,
   })
 
-  // TODO: Integrar com WhatsApp Cloud API
-  // await whatsapp.sendMessage({
-  //   to: recipientPhone,
-  //   message: `⚠️ LEMBRETE: Prazo AMANHÃ!\n${deadline.description}`
-  // })
+  if (whatsappSent) {
+    console.log('[Prazos] ✅ WhatsApp lembrete enviado:', {
+      deadlineId: deadline.id,
+      daysUntil,
+      to: user.phone,
+    })
+  } else {
+    console.error('[Prazos] ❌ Falha ao enviar WhatsApp lembrete:', user.phone)
+    throw new Error('Failed to send WhatsApp reminder')
+  }
 }
 
 /**

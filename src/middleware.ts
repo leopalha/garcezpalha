@@ -1,12 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { detectSuspiciousRequest, getClientIP, logSecurityEvent } from '@/lib/security-headers'
 import { getToken } from 'next-auth/jwt'
+import { trackApiCall, trackPerformance } from '@/lib/monitoring/observability'
+import { tracer, getTraceContextFromHeaders, injectTraceContext } from '@/lib/tracing'
 
 // Define protected routes that require authentication
 const PROTECTED_ROUTES = [
   '/dashboard',
   '/admin',
   '/portal-parceiro',
+  '/cliente',
 ]
 
 // Define public routes that don't require authentication
@@ -25,7 +28,23 @@ const PUBLIC_ROUTES = [
 ]
 
 export async function middleware(request: NextRequest) {
+  const startTime = Date.now()
   const { pathname } = request.nextUrl
+
+  // Start distributed trace
+  const traceContext = getTraceContextFromHeaders(request.headers)
+  const parentContext = traceContext ? tracer.parseTraceContext(traceContext) : null
+
+  const span = tracer.startSpan(`${request.method} ${pathname}`, {
+    kind: 'SERVER',
+    parentSpanId: parentContext?.spanId,
+    attributes: {
+      'http.method': request.method,
+      'http.url': request.url,
+      'http.route': pathname,
+      'http.user_agent': request.headers.get('user-agent') || '',
+    },
+  })
 
   // Security check: Detect suspicious requests
   if (detectSuspiciousRequest(request)) {
@@ -36,6 +55,9 @@ export async function middleware(request: NextRequest) {
       userAgent: request.headers.get('user-agent'),
       method: request.method,
     })
+
+    tracer.addEvent(span.spanId, 'suspicious_request', { ip: clientIP })
+    tracer.endSpan(span.spanId, 'ERROR')
 
     // Return 403 Forbidden for suspicious requests
     return new NextResponse('Forbidden', { status: 403 })
@@ -60,10 +82,12 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check role-based access and redirect to appropriate dashboard
-    if (pathname.startsWith('/admin') && token.role !== 'admin') {
+    if (pathname.startsWith('/admin') && token.role !== 'admin' && token.role !== 'lawyer') {
       // Redirect non-admin users to their appropriate dashboard
       if (token.role === 'partner') {
         return NextResponse.redirect(new URL('/portal-parceiro', request.url))
+      } else if (token.role === 'client') {
+        return NextResponse.redirect(new URL('/cliente/dashboard', request.url))
       } else {
         return NextResponse.redirect(new URL('/dashboard', request.url))
       }
@@ -71,10 +95,32 @@ export async function middleware(request: NextRequest) {
 
     if (pathname.startsWith('/portal-parceiro') && token.role !== 'partner') {
       // Redirect non-partner users to their appropriate dashboard
-      if (token.role === 'admin') {
+      if (token.role === 'admin' || token.role === 'lawyer') {
         return NextResponse.redirect(new URL('/admin', request.url))
+      } else if (token.role === 'client') {
+        return NextResponse.redirect(new URL('/cliente/dashboard', request.url))
       } else {
         return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
+    }
+
+    if (pathname.startsWith('/cliente') && token.role !== 'client') {
+      // Redirect non-client users to their appropriate dashboard
+      if (token.role === 'admin' || token.role === 'lawyer') {
+        return NextResponse.redirect(new URL('/admin', request.url))
+      } else if (token.role === 'partner') {
+        return NextResponse.redirect(new URL('/portal-parceiro', request.url))
+      } else {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
+      }
+    }
+
+    if (pathname.startsWith('/dashboard') && (token.role === 'client' || token.role === 'admin' || token.role === 'lawyer')) {
+      // Redirect clients and admins to their specific portals
+      if (token.role === 'client') {
+        return NextResponse.redirect(new URL('/cliente/dashboard', request.url))
+      } else if (token.role === 'admin' || token.role === 'lawyer') {
+        return NextResponse.redirect(new URL('/admin', request.url))
       }
     }
   }
@@ -88,10 +134,12 @@ export async function middleware(request: NextRequest) {
 
     if (token) {
       // Redirect based on role
-      if (token.role === 'admin') {
+      if (token.role === 'admin' || token.role === 'lawyer') {
         return NextResponse.redirect(new URL('/admin', request.url))
       } else if (token.role === 'partner') {
         return NextResponse.redirect(new URL('/portal-parceiro', request.url))
+      } else if (token.role === 'client') {
+        return NextResponse.redirect(new URL('/cliente/dashboard', request.url))
       } else {
         return NextResponse.redirect(new URL('/dashboard', request.url))
       }
@@ -114,12 +162,50 @@ export async function middleware(request: NextRequest) {
   }
 
   // Only import and use Supabase if configured
+  let response: NextResponse
   try {
     const { updateSession } = await import('@/lib/supabase/middleware')
-    return await updateSession(request)
+    response = await updateSession(request)
   } catch {
-    return NextResponse.next()
+    response = NextResponse.next()
   }
+
+  // Track API performance (only for API routes)
+  if (pathname.startsWith('/api/')) {
+    const duration = Date.now() - startTime
+    const status = response.status
+
+    // Track API call
+    trackApiCall(pathname, duration, status, {
+      method: request.method,
+    })
+
+    // Track slow requests
+    if (duration > 500) {
+      trackPerformance(`Slow middleware: ${pathname}`, duration, {
+        method: request.method,
+        status,
+      })
+      tracer.addEvent(span.spanId, 'slow_request', { duration, threshold: 500 })
+    }
+  }
+
+  // Add trace attributes and end span
+  tracer.setAttributes(span.spanId, {
+    'http.status_code': response.status,
+    'http.duration_ms': Date.now() - startTime,
+  })
+
+  const spanStatus = response.status >= 400 ? 'ERROR' : 'OK'
+  tracer.endSpan(span.spanId, spanStatus)
+
+  // Inject trace context into response headers
+  const newTraceContext = tracer.createTraceContext(span.spanId)
+  if (newTraceContext) {
+    injectTraceContext(response.headers, newTraceContext)
+  }
+
+  return response
 }
 
 export const config = {

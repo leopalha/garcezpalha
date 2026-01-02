@@ -4,6 +4,9 @@ import { withRateLimit } from '@/lib/rate-limit'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { z } from 'zod'
 import crypto from 'crypto'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:auth:verify-email')
 
 const resendVerificationSchema = z.object({
   email: z.string().email('Email inválido').toLowerCase(),
@@ -17,7 +20,10 @@ async function getHandler(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const token = searchParams.get('token')
 
+    logger.info('Email verification request received')
+
     if (!token) {
+      logger.warn('Email verification failed - no token provided')
       return NextResponse.redirect(
         new URL('/login?error=Token inválido', process.env.NEXTAUTH_URL || '')
       )
@@ -36,7 +42,7 @@ async function getHandler(request: NextRequest) {
       .single()
 
     if (findError || !user) {
-      console.error('[Verify Email] Token not found or invalid')
+      logger.warn('Email verification failed - token not found or invalid')
       return NextResponse.redirect(
         new URL('/login?error=Token inválido ou expirado', process.env.NEXTAUTH_URL || '')
       )
@@ -46,7 +52,7 @@ async function getHandler(request: NextRequest) {
     if (user.verification_token_expiry) {
       const expiry = new Date(user.verification_token_expiry)
       if (expiry < new Date()) {
-        console.error('[Verify Email] Token expired for user:', user.email)
+        logger.warn('Email verification failed - token expired', { email: user.email })
         return NextResponse.redirect(
           new URL('/login?error=Token expirado. Faça login para reenviar o email de verificação.', process.env.NEXTAUTH_URL || '')
         )
@@ -64,20 +70,20 @@ async function getHandler(request: NextRequest) {
       .eq('id', user.id)
 
     if (updateError) {
-      console.error('[Verify Email] Error updating user:', updateError)
+      logger.error('Email verification failed - database update error', updateError, { userId: user.id })
       return NextResponse.redirect(
         new URL('/login?error=Erro ao verificar email', process.env.NEXTAUTH_URL || '')
       )
     }
 
-    console.log('[Verify Email] Email verified successfully for:', user.email)
+    logger.info('Email verified successfully', { userId: user.id, email: user.email, status: 200 })
 
     // Redirect to login with success message
     return NextResponse.redirect(
       new URL('/login?verified=true', process.env.NEXTAUTH_URL || '')
     )
   } catch (error) {
-    console.error('[Verify Email] Error:', error)
+    logger.error('Email verification request failed', error)
     return NextResponse.redirect(
       new URL('/login?error=Erro interno', process.env.NEXTAUTH_URL || '')
     )
@@ -91,6 +97,8 @@ async function postHandler(request: NextRequest) {
   try {
     const { email } = (request as any).validatedData
 
+    logger.info('Resend verification email request', { email })
+
     const supabase = await createClient()
 
     // Find user
@@ -102,6 +110,7 @@ async function postHandler(request: NextRequest) {
 
     if (!user || !user.is_active) {
       // Don't reveal if email exists
+      logger.warn('Resend verification requested for inactive or non-existent user', { email })
       return NextResponse.json({
         success: true,
         message: 'Se o email existir e não estiver verificado, você receberá um novo link.',
@@ -109,6 +118,7 @@ async function postHandler(request: NextRequest) {
     }
 
     if (user.email_verified) {
+      logger.warn('Resend verification requested for already verified email', { email, userId: user.id })
       return NextResponse.json({
         success: true,
         message: 'Este email já está verificado. Você pode fazer login.',
@@ -140,14 +150,14 @@ async function postHandler(request: NextRequest) {
       userId: user.id,
     })
 
-    console.log('[Verify Email] Resent verification email to:', email)
+    logger.info('Verification email resent successfully', { userId: user.id, email, status: 200 })
 
     return NextResponse.json({
       success: true,
       message: 'Email de verificação reenviado! Confira sua caixa de entrada.',
     })
   } catch (error) {
-    console.error('[Verify Email] Resend error:', error)
+    logger.error('Resend verification email failed', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

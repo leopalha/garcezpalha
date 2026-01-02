@@ -17,6 +17,8 @@ import {
 } from 'lucide-react'
 import { trpc } from '@/lib/trpc/client'
 import { NewAppointmentDialog } from '@/components/admin/appointments/new-appointment-dialog'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 type Appointment = {
   id: string
@@ -144,8 +146,32 @@ export default function AgendamentosPage() {
   const [useMockData, setUseMockData] = useState(false)
   const [showNewDialog, setShowNewDialog] = useState(false)
 
+  // Calculate week start/end dates
+  const getWeekDates = (date: Date) => {
+    const start = new Date(date)
+    const day = start.getDay()
+    const diff = start.getDate() - day // Get Sunday
+    start.setDate(diff)
+    start.setHours(0, 0, 0, 0)
+
+    const end = new Date(start)
+    end.setDate(start.getDate() + 6)
+    end.setHours(23, 59, 59, 999)
+
+    return { start, end }
+  }
+
+  const weekDates = getWeekDates(selectedDate)
+
   // Fetch appointments from tRPC
   const selectedDateStr = selectedDate.toISOString().split('T')[0]
+  const fromDate = viewMode === 'week'
+    ? weekDates.start.toISOString()
+    : `${selectedDateStr}T00:00:00Z`
+  const toDate = viewMode === 'week'
+    ? weekDates.end.toISOString()
+    : `${selectedDateStr}T23:59:59Z`
+
   const {
     data: appointmentsData,
     isLoading,
@@ -153,21 +179,21 @@ export default function AgendamentosPage() {
     refetch,
   } = trpc.appointments.list.useQuery(
     {
-      from_date: `${selectedDateStr}T00:00:00Z`,
-      to_date: `${selectedDateStr}T23:59:59Z`,
-      limit: 50,
+      from_date: fromDate,
+      to_date: toDate,
+      limit: 100,
       offset: 0,
     },
     { retry: false, enabled: !useMockData }
   )
 
-  // Handle errors by falling back to mock data
-  useEffect(() => {
-    if (error) {
-      console.log('Database not configured, using mock data')
-      setUseMockData(true)
-    }
-  }, [error])
+  // Don't auto-fallback to mock data - show error instead
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log('Database not configured, using mock data')
+  //     setUseMockData(true)
+  //   }
+  // }, [error])
 
   // Map database appointments to AppointmentWithClient
   const appointments: AppointmentWithClient[] = useMockData
@@ -188,6 +214,19 @@ export default function AgendamentosPage() {
   const todayAppointments = appointments.filter((apt) => apt.date === selectedDateStr)
 
   const formatDate = (date: Date) => {
+    if (viewMode === 'week') {
+      const { start, end } = getWeekDates(date)
+      const startStr = start.toLocaleDateString('pt-BR', {
+        day: 'numeric',
+        month: 'short',
+      })
+      const endStr = end.toLocaleDateString('pt-BR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+      return `${startStr} - ${endStr}`
+    }
     return date.toLocaleDateString('pt-BR', {
       weekday: 'long',
       day: 'numeric',
@@ -302,6 +341,27 @@ export default function AgendamentosPage() {
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
+              ) : error && !useMockData ? (
+                <ErrorAlert
+                  error={error.message || 'Erro ao carregar agendamentos'}
+                  retry={() => {
+                    setUseMockData(false)
+                    refetch()
+                  }}
+                  title="Erro ao carregar agendamentos"
+                />
+              ) : todayAppointments.length === 0 ? (
+                <EmptyState
+                  icon={CalendarIcon}
+                  title="Nenhum agendamento hoje"
+                  description="Não há agendamentos para o dia selecionado."
+                  action={
+                    <Button onClick={() => setShowNewDialog(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Novo Agendamento
+                    </Button>
+                  }
+                />
               ) : (
                 <>
                   {/* Day View */}
@@ -367,11 +427,82 @@ export default function AgendamentosPage() {
                     </div>
                   )}
 
-                  {/* Week View - Simplified */}
+                  {/* Week View */}
                   {viewMode === 'week' && (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <CalendarIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>Visualização semanal em desenvolvimento</p>
+                    <div className="overflow-x-auto">
+                      <div className="grid grid-cols-8 gap-px bg-border min-w-[900px]">
+                        {/* Header Row */}
+                        <div className="bg-background p-2 text-sm font-medium text-muted-foreground">
+                          Hora
+                        </div>
+                        {Array.from({ length: 7 }, (_, i) => {
+                          const date = new Date(weekDates.start)
+                          date.setDate(date.getDate() + i)
+                          const isToday = date.toDateString() === new Date().toDateString()
+                          return (
+                            <div
+                              key={i}
+                              className={`bg-background p-2 text-sm font-medium text-center ${
+                                isToday ? 'bg-primary/10 text-primary' : ''
+                              }`}
+                            >
+                              <div className="text-xs text-muted-foreground">
+                                {date.toLocaleDateString('pt-BR', { weekday: 'short' })}
+                              </div>
+                              <div className={`text-lg ${isToday ? 'font-bold' : ''}`}>
+                                {date.getDate()}
+                              </div>
+                            </div>
+                          )
+                        })}
+
+                        {/* Time Grid */}
+                        {hours.map((hour) => (
+                          <>
+                            <div
+                              key={`time-${hour}`}
+                              className="bg-background p-2 text-sm text-muted-foreground border-t"
+                            >
+                              {hour}:00
+                            </div>
+                            {Array.from({ length: 7 }, (_, dayIndex) => {
+                              const date = new Date(weekDates.start)
+                              date.setDate(date.getDate() + dayIndex)
+                              const dateStr = date.toISOString().split('T')[0]
+
+                              const dayAppointments = appointments.filter(
+                                (apt) =>
+                                  apt.date === dateStr && parseInt(apt.time.split(':')[0]) === hour
+                              )
+
+                              return (
+                                <div
+                                  key={`${hour}-${dayIndex}`}
+                                  className="bg-background border-t min-h-[80px] p-1"
+                                >
+                                  {dayAppointments.map((apt) => (
+                                    <div
+                                      key={apt.id}
+                                      className={`p-2 rounded mb-1 text-xs border-l-2 ${
+                                        typeConfig[apt.appointment_type].color
+                                      } border-l-current bg-card shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
+                                      title={`${apt.title} - ${apt.client_name}`}
+                                    >
+                                      <div className="font-medium truncate">{apt.title}</div>
+                                      <div className="text-muted-foreground truncate text-[10px]">
+                                        {apt.time} ({apt.duration_minutes}m)
+                                      </div>
+                                      <div className="text-muted-foreground truncate text-[10px]">
+                                        {apt.client_name}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )
+                            })}
+                          </>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </>

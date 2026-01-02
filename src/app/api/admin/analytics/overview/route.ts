@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth/options'
 import { ZodError } from 'zod'
 import { PerformanceTimer, trackApiCall, trackError } from '@/lib/monitoring/observability'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +34,24 @@ export async function GET(request: NextRequest) {
   const timer = new PerformanceTimer('GET /api/admin/analytics/overview')
 
   try {
+    // Auth check
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+    }
+
     const supabase = await createClient()
+
+    // Check if user is admin
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
+    }
 
     // Get time ranges
     const now = new Date()
@@ -172,7 +192,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -186,7 +206,7 @@ export async function GET(request: NextRequest) {
       method: 'GET',
     })
 
-    console.error('Error fetching analytics overview:', error)
+    logger.error('Error fetching analytics overview:', error)
     return NextResponse.json(
       { error: 'Failed to fetch analytics data' },
       { status: 500 }

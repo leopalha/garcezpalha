@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { triggerManualFollowUp } from '@/lib/automation/follow-up-automation'
 import { manualFollowUpSchema } from '@/lib/validations/admin-schemas'
 import { ZodError } from 'zod'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/admin/follow-ups/manual
@@ -20,6 +21,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check admin/lawyer role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile || !['admin', 'lawyer'].includes(profile.role)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     // Parse and validate request body with Zod
     const rawBody = await request.json()
     const body = manualFollowUpSchema.parse(rawBody)
@@ -34,7 +46,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Validation failed',
-          details: error.errors.map((err) => ({
+          details: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message
           }))
@@ -43,7 +55,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.error('[API /admin/follow-ups/manual] Error:', error)
+    logger.error('[API /admin/follow-ups/manual] Error:', error)
     return NextResponse.json(
       { error: 'Internal server error', message: error instanceof Error ? error.message : String(error) },
       { status: 500 }

@@ -20,6 +20,9 @@ import { trpc } from '@/lib/trpc/client'
 import { NewClientDialog } from '@/components/admin/clients/new-client-dialog'
 import { EditClientDialog } from '@/components/admin/clients/edit-client-dialog'
 import { toast } from '@/components/ui/use-toast'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Users } from 'lucide-react'
 
 type Client = {
   id: string
@@ -173,6 +176,27 @@ export default function ClientesPage() {
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
+              ) : error ? (
+                <ErrorAlert
+                  error={error.message || 'Erro ao carregar clientes'}
+                  retry={() => refetch()}
+                  title="Erro ao carregar clientes"
+                />
+              ) : filteredClients.length === 0 ? (
+                <EmptyState
+                  icon={Users}
+                  title="Nenhum cliente encontrado"
+                  description={searchQuery ?
+                    "Nenhum resultado para sua busca. Tente outros termos." :
+                    "Você ainda não tem clientes cadastrados."
+                  }
+                  action={!searchQuery ? (
+                    <Button onClick={() => setNewClientDialogOpen(true)}>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Adicionar Primeiro Cliente
+                    </Button>
+                  ) : undefined}
+                />
               ) : (
                 <div className="space-y-3">
                   {filteredClients.map((client) => (

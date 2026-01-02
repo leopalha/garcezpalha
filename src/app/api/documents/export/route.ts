@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { reviewQueueManager } from '@/lib/ai/production/review-queue'
 import { documentGenerator } from '@/lib/ai/production/document-generator'
 import { docxExporter } from '@/lib/ai/production/docx-exporter'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/documents/export
@@ -101,7 +102,7 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('[API] Error exporting document:', error)
+    logger.error('[API] Error exporting document:', error)
     return NextResponse.json(
       { error: 'Failed to export document', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },
       { status: 500 }
@@ -172,7 +173,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('[API] Error exporting document:', error)
+    logger.error('[API] Error exporting document:', error)
     return NextResponse.json(
       { error: 'Failed to export document', details: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error' },
       { status: 500 }

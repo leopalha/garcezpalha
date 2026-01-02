@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { signPDF, validateCertificate } from '@/lib/signature/gov-br-signer'
+import { logger } from '@/lib/logger'
 
 // Force dynamic rendering - required for API routes
 export const dynamic = 'force-dynamic'
@@ -119,7 +120,7 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('[API] Erro ao processar assinatura:', error)
+    logger.error('[API] Erro ao processar assinatura:', error)
 
     return NextResponse.json(
       {

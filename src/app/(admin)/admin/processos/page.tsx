@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { pdfProcessor } from '@/lib/pdf/processor-service'
+import { ErrorAlert } from '@/components/ui/error-alert'
 
 type ProcessAlert = {
   id: string
@@ -82,6 +83,7 @@ export default function ProcessosPage() {
   const [alerts, setAlerts] = useState<ProcessAlert[]>([])
   const [filteredAlerts, setFilteredAlerts] = useState<ProcessAlert[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [uploadingId, setUploadingId] = useState<string | null>(null)
@@ -375,6 +377,12 @@ export default function ProcessosPage() {
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </CardContent>
           </Card>
+        ) : error ? (
+          <ErrorAlert
+            error={error}
+            retry={fetchAlerts}
+            title="Erro ao carregar alertas processuais"
+          />
         ) : filteredAlerts.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">

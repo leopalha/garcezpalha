@@ -4,6 +4,8 @@ import Stripe from 'stripe'
 import { withValidation } from '@/lib/validations/api-middleware'
 import { stripeCheckoutSchema } from '@/lib/validations/payments'
 import { withRateLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/logger'
+import { createCheckoutWithFallback } from '@/lib/resilience/payment-breaker'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,33 +105,36 @@ async function handler(request: NextRequest) {
       })
     }
 
-    // Create Checkout Session
-    const checkoutSession = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?plan=${planId}`,
-      metadata: {
-        user_id: session.user.id,
-        plan_id: planId,
-        billing_cycle: billingCycle,
-        addons: addons?.join(',') || '',
+    // P0-002: Create Checkout Session with Circuit Breaker
+    // Automatic fallback: Stripe → MercadoPago
+    const checkoutResult = await createCheckoutWithFallback(
+      {
+        amount: 0, // Will be calculated by Stripe from price IDs
+        currency: 'brl',
+        mode: 'subscription',
+        customerId: customerId,
+        lineItems: lineItems,
+        successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?plan=${planId}`,
+        metadata: {
+          user_id: session.user.id,
+          plan_id: planId,
+          billing_cycle: billingCycle,
+          addons: addons?.join(',') || '',
+          productName: `Assinatura ${planId}`,
+        },
+        customerEmail: customerDetails?.email || session.user.email!,
       },
-      allow_promotion_codes: true,
-      billing_address_collection: 'required',
-      tax_id_collection: {
-        enabled: true,
-      },
-    })
+      'stripe' // Preferred provider
+    )
 
     return NextResponse.json({
-      sessionId: checkoutSession.id,
-      url: checkoutSession.url,
+      sessionId: checkoutResult.id,
+      url: checkoutResult.url,
+      provider: checkoutResult.provider, // 'stripe' or 'mercadopago' (fallback)
     })
   } catch (error: any) {
-    console.error('Stripe checkout error:', error)
+    logger.error('Stripe checkout error:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },
       { status: 500 }

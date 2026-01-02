@@ -19,6 +19,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { emailMonitor } from '@/lib/email/monitor-service'
+import { logger } from '@/lib/logger'
 
 /**
  * GET - Run email monitoring cycle
@@ -32,16 +33,16 @@ export async function GET(request: NextRequest) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`
 
     if (process.env.NODE_ENV === 'production' && authHeader !== expectedAuth) {
-      console.error('[Email Monitor Cron] Unauthorized access attempt')
+      logger.error('[Email Monitor Cron] Unauthorized access attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Email Monitor Cron] Starting monitoring cycle...')
+    logger.info('[Email Monitor Cron] Starting monitoring cycle...')
 
     // Run monitoring
     const result = await emailMonitor.monitorEmails()
 
-    console.log('[Email Monitor Cron] Cycle complete:', result)
+    logger.info('[Email Monitor Cron] Cycle complete:', result)
 
     return NextResponse.json(
       {
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Monitor Cron] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Email Monitor Cron] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('[Email Monitor] Manual trigger')
+    logger.info('[Email Monitor] Manual trigger')
 
     const result = await emailMonitor.monitorEmails()
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Email Monitor] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
+    logger.error('[Email Monitor] Error:', error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error))
     return NextResponse.json(
       {
         error: 'Internal server error',

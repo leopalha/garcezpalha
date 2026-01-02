@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import {
   legalDocumentGenerator,
   type DocumentType,
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Erro ao gerar documento:', error)
+    logger.error('Erro ao gerar documento:', error)
 
     return NextResponse.json(
       {

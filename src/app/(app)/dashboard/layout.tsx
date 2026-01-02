@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useSession, signOut } from 'next-auth/react'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -202,7 +203,11 @@ export default function AppDashboardLayout({ children }: { children: React.React
           </div>
         </header>
 
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="p-4 lg:p-6">
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </main>
       </div>
     </div>
   )

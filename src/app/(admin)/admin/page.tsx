@@ -18,6 +18,8 @@ import {
   RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface DashboardStats {
   leads: { total: number; change: number; hot: number; warm: number; cold: number }
@@ -74,6 +76,7 @@ export default function AdminDashboard() {
   const [activities, setActivities] = useState<RecentActivity[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
 
   const fetchDashboardData = async () => {
     try {
@@ -136,22 +139,12 @@ export default function AdminDashboard() {
         { id: '3', type: 'document', description: 'Peticao aprovada e enviada', time: '1h' },
         { id: '4', type: 'deadline', description: 'Prazo vencendo: Processo 123456', time: '2h' }
       ])
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error)
-      // Set default values on error
-      setStats({
-        leads: { total: 0, change: 0, hot: 0, warm: 0, cold: 0 },
-        clients: { total: 0, change: 0, active: 0 },
-        revenue: { mrr: 0, change: 0, projected: 0 },
-        conversion: { rate: 0, change: 0 },
-        cac: 0,
-        ltv: 0,
-        appointments: { today: 0, pending: 0 },
-        documents: { pending: 0, approved: 0 },
-        deadlines: { urgent: 0, upcoming: 0 }
-      })
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err)
+      setError(err instanceof Error ? err : new Error('Erro ao carregar dados do dashboard'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -183,6 +176,36 @@ export default function AdminDashboard() {
     return (
       <div className="flex items-center justify-center h-64">
         <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <ErrorAlert
+          error={error.message}
+          retry={fetchDashboardData}
+          title="Erro ao carregar dashboard"
+        />
+      </div>
+    )
+  }
+
+  if (!stats) {
+    return (
+      <div className="space-y-6">
+        <EmptyState
+          icon={AlertCircle}
+          title="Nenhum dado disponível"
+          description="Não foi possível carregar os dados do dashboard"
+          action={
+            <Button onClick={fetchDashboardData}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Tentar Novamente
+            </Button>
+          }
+        />
       </div>
     )
   }

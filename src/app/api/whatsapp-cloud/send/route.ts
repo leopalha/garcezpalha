@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { whatsappCloudAPI } from '@/lib/whatsapp/cloud-api'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/whatsapp-cloud/send
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-    console.error('Error sending WhatsApp message:', error)
+    logger.error('Error sending WhatsApp message:', error)
     return NextResponse.json(
       {
         success: false,

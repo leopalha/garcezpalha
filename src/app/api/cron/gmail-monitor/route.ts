@@ -20,6 +20,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { GmailMonitorService } from '@/lib/email/gmail-monitor'
 import { createClient } from '@/lib/supabase/server'
 import { emailService } from '@/lib/email/email-service'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -34,15 +35,15 @@ export async function POST(request: NextRequest) {
     const cronSecret = process.env.CRON_SECRET
 
     if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-      console.warn('[Cron] Unauthorized Gmail monitor attempt')
+      logger.warn('[Cron] Unauthorized Gmail monitor attempt')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('[Cron] Starting Gmail monitor...')
+    logger.info('[Cron] Starting Gmail monitor...')
 
     // Check if Gmail API is configured
     if (!gmailMonitor.isConfigured()) {
-      console.warn('[Cron] Gmail API not configured, skipping monitor')
+      logger.warn('[Cron] Gmail API not configured, skipping monitor')
       return NextResponse.json({
         success: false,
         error: 'Gmail API not configured',
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
     // Fetch recent unread emails
     const emails = await gmailMonitor.fetchRecentEmails()
 
-    console.log(`[Cron] Found ${emails.length} new emails`)
+    logger.info(`[Cron] Found ${emails.length} new emails`)
 
     if (emails.length === 0) {
       return NextResponse.json({
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
           .single()
 
         if (existingLead) {
-          console.log(`[Cron] Lead already exists: ${emailAddress}`)
+          logger.info(`[Cron] Lead already exists: ${emailAddress}`)
           continue
         }
 
@@ -109,12 +110,12 @@ export async function POST(request: NextRequest) {
         if (!insertError && newLead) {
           leadsCreated++
           createdLeads.push(newLead)
-          console.log(`[Cron] Lead created: ${name} <${emailAddress}>`)
+          logger.info(`[Cron] Lead created: ${name} <${emailAddress}>`)
         } else {
-          console.error(`[Cron] Error creating lead:`, insertError)
+          logger.error(`[Cron] Error creating lead:`, insertError)
         }
       } catch (error) {
-        console.error(`[Cron] Error processing email:`, error)
+        logger.error(`[Cron] Error processing email:`, error)
       }
     }
 
@@ -131,11 +132,11 @@ export async function POST(request: NextRequest) {
       message: `Gmail monitor complete: ${leadsCreated} leads created from ${emails.length} emails`,
     }
 
-    console.log('[Cron] Gmail monitor result:', response)
+    logger.info('[Cron] Gmail monitor result:', response)
 
     return NextResponse.json(response)
   } catch (error: any) {
-    console.error('[Cron] Gmail monitor error:', error)
+    logger.error('[Cron] Gmail monitor error:', error)
 
     return NextResponse.json(
       {
@@ -203,8 +204,8 @@ async function notifyAdminNewLeads(leads: any[]) {
       tags: ['lead', 'notification', 'gmail'],
     })
 
-    console.log(`[Cron] Admin notified about ${leads.length} new leads`)
+    logger.info(`[Cron] Admin notified about ${leads.length} new leads`)
   } catch (error) {
-    console.error('[Cron] Error notifying admin:', error)
+    logger.error('[Cron] Error notifying admin:', error)
   }
 }

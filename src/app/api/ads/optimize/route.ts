@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createAdsAgent, CampaignPerformanceData } from '@/lib/ai/agents/marketing/ads-agent'
+import { logger } from '@/lib/logger'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -169,7 +170,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Optimization error:', error)
+    logger.error('Optimization error:', error)
     return NextResponse.json(
       { error: 'Failed to optimize', details: (error as Error).message },
       { status: 500 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -116,7 +117,7 @@ export async function GET(request: NextRequest) {
       total: testsWithStats.length,
     })
   } catch (error) {
-    console.error('Error fetching A/B tests:', error)
+    logger.error('Error fetching A/B tests:', error)
     return NextResponse.json(
       { error: 'Failed to fetch A/B tests' },
       { status: 500 }
@@ -207,7 +208,7 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error creating A/B test:', error)
+    logger.error('Error creating A/B test:', error)
     return NextResponse.json(
       { error: 'Failed to create A/B test' },
       { status: 500 }

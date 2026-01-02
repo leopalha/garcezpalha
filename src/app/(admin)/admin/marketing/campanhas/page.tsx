@@ -99,6 +99,58 @@ export default function CampanhasPage() {
     }
   }
 
+  async function handleDuplicateCampaign(campaignId: string) {
+    try {
+      const res = await fetch(`/api/admin/marketing/campanhas/${campaignId}/duplicate`, {
+        method: 'POST',
+      })
+
+      if (!res.ok) throw new Error('Failed to duplicate campaign')
+
+      const data = await res.json()
+
+      toast({
+        title: 'Campanha duplicada!',
+        description: `"${data.campaign.name}" foi criada com sucesso.`,
+      })
+
+      fetchCampaigns() // Refresh list
+    } catch (error) {
+      toast({
+        title: 'Erro ao duplicar campanha',
+        description: 'Não foi possível duplicar a campanha.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  async function handleDeleteCampaign(campaignId: string, campaignName: string) {
+    if (!confirm(`Tem certeza que deseja excluir a campanha "${campaignName}"? Esta ação não pode ser desfeita.`)) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/admin/marketing/campanhas/${campaignId}`, {
+        method: 'DELETE',
+      })
+
+      if (!res.ok) throw new Error('Failed to delete campaign')
+
+      toast({
+        title: 'Campanha excluída!',
+        description: `"${campaignName}" foi excluída com sucesso.`,
+      })
+
+      fetchCampaigns() // Refresh list
+    } catch (error) {
+      toast({
+        title: 'Erro ao excluir campanha',
+        description: 'Não foi possível excluir a campanha.',
+        variant: 'destructive',
+      })
+    }
+  }
+
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       campaign.description?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -373,12 +425,15 @@ export default function CampanhasPage() {
                                       )}
                                     </DropdownMenuItem>
                                   )}
-                                  <DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleDuplicateCampaign(campaign.id)}>
                                     <Copy className="h-4 w-4 mr-2" />
                                     Duplicar
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem className="text-destructive">
+                                  <DropdownMenuItem
+                                    className="text-destructive"
+                                    onClick={() => handleDeleteCampaign(campaign.id, campaign.name)}
+                                  >
                                     <Trash2 className="h-4 w-4 mr-2" />
                                     Excluir
                                   </DropdownMenuItem>

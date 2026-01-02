@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:conversations')
 
 /**
  * GET /api/conversations
@@ -16,12 +19,15 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = createRouteHandlerClient()
 
+    logger.info('Fetching conversations list')
+
     // Check authentication
     const {
       data: { user },
     } = await supabase.auth.getUser()
 
     if (!user) {
+      logger.warn('Conversations fetch failed - unauthorized')
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
@@ -31,6 +37,8 @@ export async function GET(request: NextRequest) {
     const needsAttention = searchParams.get('needsAttention')
     const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
     const offset = parseInt(searchParams.get('offset') || '0')
+
+    logger.info('Query parameters parsed', { userId: user.id, status, needsAttention, limit, offset })
 
     // Build query
     let query = supabase
@@ -70,9 +78,11 @@ export async function GET(request: NextRequest) {
     const { data: conversations, error, count } = await query
 
     if (error) {
-      console.error('Error fetching conversations:', error)
+      logger.error('Error fetching conversations from database', error, { userId: user.id, status })
       return NextResponse.json({ error: 'Erro ao buscar conversas' }, { status: 500 })
     }
+
+    logger.info('Conversations retrieved from database', { userId: user.id, total: count, returned: conversations?.length })
 
     // Fetch last message for each conversation
     const conversationsWithMessages = await Promise.all(
@@ -118,12 +128,14 @@ export async function GET(request: NextRequest) {
       })
     )
 
+    logger.info('Conversations list fetched successfully', { userId: user.id, total: count, status: 200 })
+
     return NextResponse.json({
       conversations: conversationsWithMessages,
       total: count || 0,
     })
   } catch (error) {
-    console.error('Error in GET /api/conversations:', error)
+    logger.error('Conversations fetch request failed', error)
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 })
   }
 }

@@ -63,7 +63,7 @@ export const documentUploadSchema = z.object({
     'png',
     'txt'
   ], {
-    errorMap: () => ({ message: 'Invalid file type. Allowed: PDF, DOC, DOCX, JPG, PNG, TXT' })
+    message: 'Invalid file type. Allowed: PDF, DOC, DOCX, JPG, PNG, TXT'
   }),
   fileSize: z.number().int().positive().max(10 * 1024 * 1024, 'File size must be less than 10MB'),
   documentType: z.enum([
@@ -177,7 +177,7 @@ export const sessionCreateSchema = z.object({
     platform: z.string().optional(),
     browser: z.string().optional(),
     os: z.string().optional(),
-    ip: z.string().ip().optional()
+    ip: z.string().optional()
   }).optional(),
   remember: z.boolean().default(false)
 })

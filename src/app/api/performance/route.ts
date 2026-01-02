@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import type { PerformanceSummary, WebVitalsMetric, TimingMetric, PerformanceMetric } from '@/lib/performance';
+import { logger } from '@/lib/logger'
 
 // In-memory storage for performance metrics
 interface StoredMetrics {
@@ -313,7 +314,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error processing performance metrics:', error);
+    logger.error('Error processing performance metrics:', error);
     return NextResponse.json(
       { error: 'Failed to process metrics' },
       { status: 500 }
@@ -348,7 +349,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error retrieving performance metrics:', error);
+    logger.error('Error retrieving performance metrics:', error);
     return NextResponse.json(
       { error: 'Failed to retrieve metrics' },
       { status: 500 }
@@ -369,7 +370,7 @@ export async function DELETE(): Promise<NextResponse> {
       timestamp: Date.now(),
     });
   } catch (error) {
-    console.error('Error clearing performance metrics:', error);
+    logger.error('Error clearing performance metrics:', error);
     return NextResponse.json(
       { error: 'Failed to clear metrics' },
       { status: 500 }

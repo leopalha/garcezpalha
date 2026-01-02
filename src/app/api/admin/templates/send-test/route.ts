@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Resend } from 'resend'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -97,7 +98,7 @@ export async function POST(req: NextRequest) {
     })
 
     if (error) {
-      console.error('Error sending test email:', error)
+      logger.error('Error sending test email:', error)
       return NextResponse.json(
         { error: 'Failed to send email' },
         { status: 500 }
@@ -106,7 +107,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, emailId: data?.id })
   } catch (error) {
-    console.error('Error in send-test endpoint:', error)
+    logger.error('Error in send-test endpoint:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

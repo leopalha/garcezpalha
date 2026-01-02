@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createSocialAgent } from '@/lib/ai/agents/marketing/social-agent'
 import { createQAAgent } from '@/lib/ai/agents/operations/qa-agent'
+import { logger } from '@/lib/logger'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Schedule error:', error)
+    logger.error('Schedule error:', error)
     return NextResponse.json(
       { error: 'Failed to schedule content', details: (error as Error).message },
       { status: 500 }
@@ -237,7 +238,7 @@ export async function PUT(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Bulk schedule error:', error)
+    logger.error('Bulk schedule error:', error)
     return NextResponse.json(
       { error: 'Failed to bulk schedule content', details: (error as Error).message },
       { status: 500 }
@@ -294,7 +295,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Calendar fetch error:', error)
+    logger.error('Calendar fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch calendar', details: (error as Error).message },
       { status: 500 }
@@ -339,7 +340,7 @@ export async function DELETE(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Cancel schedule error:', error)
+    logger.error('Cancel schedule error:', error)
     return NextResponse.json(
       { error: 'Failed to cancel schedule', details: (error as Error).message },
       { status: 500 }

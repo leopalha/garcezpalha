@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { advancedMetrics } from '@/lib/analytics/advanced-metrics'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
-    console.error('[Analytics API] Error:', error)
+    logger.error('[Analytics API] Error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',

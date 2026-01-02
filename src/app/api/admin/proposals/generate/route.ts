@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { createRouteHandlerClient } from '@/lib/supabase/route-handler'
+import { createLogger } from '@/lib/logger'
+
+const logger = createLogger('api:admin:proposals:generate')
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -39,7 +42,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { leadId, caseType, clientName } = body
 
+    logger.info('Proposal generation request received', { leadId, caseType, clientName })
+
     if (!leadId || !caseType || !clientName) {
+      logger.warn('Proposal generation failed - missing required fields', { leadId, caseType, clientName })
       return NextResponse.json(
         { error: 'leadId, caseType e clientName são obrigatórios' },
         { status: 400 }
@@ -48,13 +54,16 @@ export async function POST(request: NextRequest) {
 
     // Get pricing for case type
     const pricing = getPricing(caseType)
+    logger.info('Pricing determined for case type', { leadId, caseType, pricing })
 
     // Generate proposal with GPT-4
+    logger.info('Generating proposal with AI', { leadId, caseType, clientName })
     const proposalText = await generateProposalWithAI({
       clientName,
       caseType,
       pricing,
     })
+    logger.info('Proposal text generated', { leadId, proposalLength: proposalText.length })
 
     // Save proposal to database
     const supabase = createRouteHandlerClient()
@@ -73,9 +82,11 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (dbError) {
-      console.error('Database error creating proposal:', dbError)
+      logger.error('Database error creating proposal', dbError, { leadId, caseType })
       return NextResponse.json({ error: 'Erro ao salvar proposta' }, { status: 500 })
     }
+
+    logger.info('Proposal generated and saved successfully', { leadId, proposalId: proposal.id, status: 200 })
 
     return NextResponse.json({
       id: proposal.id,
@@ -83,7 +94,7 @@ export async function POST(request: NextRequest) {
       pricing,
     })
   } catch (error) {
-    console.error('Error generating proposal:', error)
+    logger.error('Proposal generation request failed', error)
     return NextResponse.json({ error: 'Erro ao gerar proposta' }, { status: 500 })
   }
 }

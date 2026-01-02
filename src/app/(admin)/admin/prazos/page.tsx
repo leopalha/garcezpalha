@@ -18,6 +18,8 @@ import {
   Bell,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { ErrorAlert } from '@/components/ui/error-alert'
+import { EmptyState } from '@/components/ui/empty-state'
 
 type ProcessDeadline = {
   id: string
@@ -72,6 +74,7 @@ export default function PrazosPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('pending')
   const [urgencyFilter, setUrgencyFilter] = useState<string>('all')
+  const [error, setError] = useState<Error | null>(null)
 
   const supabase = createClient()
 
@@ -85,8 +88,9 @@ export default function PrazosPage() {
 
   async function fetchDeadlines() {
     setLoading(true)
+    setError(null)
     try {
-      const { data, error } = await supabase
+      const { data, error: supabaseError } = await supabase
         .from('process_deadlines')
         .select(
           `
@@ -101,11 +105,13 @@ export default function PrazosPage() {
         .order('due_date', { ascending: true })
         .limit(200)
 
-      if (error) throw error
+      if (supabaseError) throw supabaseError
 
       setDeadlines(data || [])
-    } catch (error) {
-      console.error('Error fetching deadlines:', error)
+    } catch (err) {
+      console.error('Error fetching deadlines:', err)
+      setError(err instanceof Error ? err : new Error('Erro ao carregar prazos'))
+      // Fallback to mock data
       setDeadlines(getMockDeadlines())
     } finally {
       setLoading(false)
@@ -263,6 +269,49 @@ export default function PrazosPage() {
     total: deadlines.length,
   }
 
+  if (loading) {
+    return (
+      <div className="p-8 space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Prazos Processuais</h1>
+            <p className="text-muted-foreground mt-1">
+              Monitoramento automático de prazos com lembretes e sync Google Calendar
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold">Prazos Processuais</h1>
+            <p className="text-muted-foreground mt-1">
+              Monitoramento automático de prazos com lembretes e sync Google Calendar
+            </p>
+          </div>
+        </div>
+        <ErrorAlert
+          error={error.message}
+          retry={fetchDeadlines}
+          title="Erro ao carregar prazos"
+        />
+        {deadlines.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            Exibindo dados de fallback. Alguns recursos podem estar limitados.
+          </p>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="p-8 space-y-6">
       {/* Header */}
@@ -274,17 +323,8 @@ export default function PrazosPage() {
           </p>
         </div>
         <Button onClick={fetchDeadlines} disabled={loading}>
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Carregando...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Atualizar
-            </>
-          )}
+          <RefreshCw className="mr-2 h-4 w-4" />
+          Atualizar
         </Button>
       </div>
 
@@ -394,17 +434,39 @@ export default function PrazosPage() {
 
       {/* Deadlines List */}
       <div className="space-y-4">
-        {loading ? (
+        {filteredDeadlines.length === 0 ? (
           <Card>
-            <CardContent className="flex justify-center items-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </CardContent>
-          </Card>
-        ) : filteredDeadlines.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-12">
-              <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-              <p className="text-muted-foreground">Nenhum prazo encontrado</p>
+            <CardContent className="py-12">
+              <EmptyState
+                icon={statusFilter === 'completed' ? CheckCircle : Calendar}
+                title={
+                  searchTerm
+                    ? 'Nenhum prazo encontrado'
+                    : statusFilter === 'completed'
+                    ? 'Todos os prazos em dia!'
+                    : 'Nenhum prazo pendente'
+                }
+                description={
+                  searchTerm
+                    ? `Nenhum prazo corresponde à busca "${searchTerm}"`
+                    : statusFilter === 'completed'
+                    ? 'Parabéns! Todos os prazos foram cumpridos'
+                    : 'Não há prazos cadastrados no momento'
+                }
+                action={
+                  searchTerm || statusFilter !== 'all' ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSearchTerm('')
+                        setStatusFilter('all')
+                      }}
+                    >
+                      Limpar Filtros
+                    </Button>
+                  ) : undefined
+                }
+              />
             </CardContent>
           </Card>
         ) : (

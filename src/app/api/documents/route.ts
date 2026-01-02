@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import { getToken } from 'next-auth/jwt'
+import { logger } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
     const { data: documents, error } = await query
 
     if (error) {
-      console.error('Database error:', error)
+      logger.error('Database error:', error)
       return NextResponse.json(
         { error: 'Erro ao buscar documentos' },
         { status: 500 }
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ documents: documents || [] })
   } catch (error) {
-    console.error('Documents fetch error:', error)
+    logger.error('Documents fetch error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -87,7 +88,7 @@ export async function DELETE(request: NextRequest) {
       .eq('id', documentId)
 
     if (deleteError) {
-      console.error('Delete error:', deleteError)
+      logger.error('Delete error:', deleteError)
       return NextResponse.json(
         { error: 'Erro ao excluir documento' },
         { status: 500 }
@@ -96,7 +97,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ message: 'Documento excluído com sucesso' }, { status: 200 })
   } catch (error) {
-    console.error('Document delete error:', error)
+    logger.error('Document delete error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 interface ResendWebhookEvent {
   type: 'email.delivered' | 'email.opened' | 'email.clicked' | 'email.bounced' | 'email.complained'
@@ -52,19 +53,19 @@ export async function POST(request: NextRequest) {
     // Verify webhook signature in production
     if (process.env.NODE_ENV === 'production' && process.env.RESEND_WEBHOOK_SECRET) {
       if (!signature) {
-        console.error('[Resend Webhook] Missing signature')
+        logger.error('[Resend Webhook] Missing signature')
         return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
       }
 
       const isValid = verifySignature(rawBody, signature, process.env.RESEND_WEBHOOK_SECRET)
       if (!isValid) {
-        console.error('[Resend Webhook] Invalid signature')
+        logger.error('[Resend Webhook] Invalid signature')
         return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
       }
     }
 
     const event: ResendWebhookEvent = JSON.parse(rawBody)
-    console.log('[Resend Webhook] Received event:', event.type)
+    logger.info('[Resend Webhook] Received event:', event.type)
 
     // Store event in database
     await storeEmailEvent(event)
@@ -92,12 +93,12 @@ export async function POST(request: NextRequest) {
         break
 
       default:
-        console.log('[Resend Webhook] Unknown event type:', event.type)
+        logger.info('[Resend Webhook] Unknown event type:', event.type)
     }
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
-    console.error('[Resend Webhook] Error:', error)
+    logger.error('[Resend Webhook] Error:', error)
     return NextResponse.json(
       {
         error: 'Internal server error',
@@ -131,9 +132,9 @@ async function storeEmailEvent(event: ResendWebhookEvent): Promise<void> {
       },
     })
 
-    console.log('[Resend Webhook] Event stored:', eventType, event.data.email_id)
+    logger.info('[Resend Webhook] Event stored:', eventType, event.data.email_id)
   } catch (error) {
-    console.error('[Resend Webhook] Error storing event:', error)
+    logger.error('[Resend Webhook] Error storing event:', error)
     // Don't throw - we don't want to fail the webhook response
   }
 }
@@ -142,7 +143,7 @@ async function storeEmailEvent(event: ResendWebhookEvent): Promise<void> {
  * Handle delivered event
  */
 async function handleDelivered(event: ResendWebhookEvent): Promise<void> {
-  console.log('[Resend Webhook] Email delivered:', event.data.to)
+  logger.info('[Resend Webhook] Email delivered:', event.data.to)
   // Future: Update email_logs status to 'delivered'
 }
 
@@ -150,7 +151,7 @@ async function handleDelivered(event: ResendWebhookEvent): Promise<void> {
  * Handle opened event
  */
 async function handleOpened(event: ResendWebhookEvent): Promise<void> {
-  console.log('[Resend Webhook] Email opened:', event.data.to)
+  logger.info('[Resend Webhook] Email opened:', event.data.to)
 
   // Future enhancement: Track engagement metrics
   // - Update lead quality score
@@ -162,7 +163,7 @@ async function handleOpened(event: ResendWebhookEvent): Promise<void> {
  * Handle clicked event
  */
 async function handleClicked(event: ResendWebhookEvent): Promise<void> {
-  console.log('[Resend Webhook] Link clicked:', event.data.link, 'by', event.data.to)
+  logger.info('[Resend Webhook] Link clicked:', event.data.link, 'by', event.data.to)
 
   // Future enhancement: Track click-through rates
   // - Which CTAs perform best
@@ -174,7 +175,7 @@ async function handleClicked(event: ResendWebhookEvent): Promise<void> {
  * Handle bounced event
  */
 async function handleBounced(event: ResendWebhookEvent): Promise<void> {
-  console.log('[Resend Webhook] Email bounced:', event.data.to, event.data.bounce_type)
+  logger.info('[Resend Webhook] Email bounced:', event.data.to, event.data.bounce_type)
 
   const supabase = await createClient()
 
@@ -186,12 +187,12 @@ async function handleBounced(event: ResendWebhookEvent): Promise<void> {
         .update({ email_valid: false })
         .eq('email', event.data.to)
 
-      console.log('[Resend Webhook] Marked email as invalid:', event.data.to)
+      logger.info('[Resend Webhook] Marked email as invalid:', event.data.to)
     }
 
     // Future: Pause email sequences for this lead
   } catch (error) {
-    console.error('[Resend Webhook] Error handling bounce:', error)
+    logger.error('[Resend Webhook] Error handling bounce:', error)
   }
 }
 
@@ -199,7 +200,7 @@ async function handleBounced(event: ResendWebhookEvent): Promise<void> {
  * Handle complained event (marked as spam)
  */
 async function handleComplained(event: ResendWebhookEvent): Promise<void> {
-  console.log('[Resend Webhook] Spam complaint:', event.data.to)
+  logger.info('[Resend Webhook] Spam complaint:', event.data.to)
 
   const supabase = await createClient()
 
@@ -218,11 +219,11 @@ async function handleComplained(event: ResendWebhookEvent): Promise<void> {
         .eq('lead_id', lead.id)
         .in('status', ['active', 'paused'])
 
-      console.log('[Resend Webhook] Cancelled sequences for lead:', lead.id)
+      logger.info('[Resend Webhook] Cancelled sequences for lead:', lead.id)
     }
 
     // Future: Add to unsubscribe list
   } catch (error) {
-    console.error('[Resend Webhook] Error handling complaint:', error)
+    logger.error('[Resend Webhook] Error handling complaint:', error)
   }
 }
