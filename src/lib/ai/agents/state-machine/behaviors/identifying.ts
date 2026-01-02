@@ -6,12 +6,23 @@
 import { StateBehavior, ConversationData } from '../types'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY,
-  baseURL: process.env.OPENROUTER_API_KEY
-    ? 'https://openrouter.ai/api/v1'
-    : undefined,
-})
+// Lazy-loaded OpenAI client to avoid build-time initialization errors
+let openaiClient: OpenAI | null = null
+function getOpenAI(): OpenAI {
+  if (!openaiClient) {
+    const apiKey = process.env.OPENAI_API_KEY || process.env.OPENROUTER_API_KEY
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY or OPENROUTER_API_KEY not configured')
+    }
+    openaiClient = new OpenAI({
+      apiKey,
+      baseURL: process.env.OPENROUTER_API_KEY
+        ? 'https://openrouter.ai/api/v1'
+        : undefined,
+    })
+  }
+  return openaiClient
+}
 
 export class IdentifyingBehavior implements StateBehavior {
   state = 'identifying' as const
@@ -88,7 +99,7 @@ Retorne no formato JSON:
 }`
 
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await getOpenAI().chat.completions.create({
         model: process.env.OPENROUTER_API_KEY
           ? 'anthropic/claude-3.5-sonnet'
           : 'gpt-4-turbo-preview',
@@ -150,7 +161,7 @@ Faça 1-2 perguntas específicas para entender melhor:
 Seja empático e profissional. Máximo 2 parágrafos.`
 
     try {
-      const completion = await openai.chat.completions.create({
+      const completion = await getOpenAI().chat.completions.create({
         model: process.env.OPENROUTER_API_KEY
           ? 'anthropic/claude-3.5-sonnet'
           : 'gpt-4-turbo-preview',

@@ -12,8 +12,11 @@
 
 import OpenAI from 'openai'
 
-const openai = process.env.OPENAI_API_KEY
-  ? new OpenAI({
+// Lazy-loaded OpenAI client to avoid build-time initialization errors
+let openaiClient: OpenAI | null = null
+function getOpenAI(): OpenAI | null {
+  if (openaiClient === null && process.env.OPENAI_API_KEY) {
+    openaiClient = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       baseURL: 'https://openrouter.ai/api/v1',
       defaultHeaders: {
@@ -21,7 +24,9 @@ const openai = process.env.OPENAI_API_KEY
         'X-Title': 'Garcez Palha - Consultoria Jurídica',
       },
     })
-  : null
+  }
+  return openaiClient
+}
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant'
@@ -96,7 +101,7 @@ IMPORTANTE:
    * Check if OpenAI is configured
    */
   isConfigured(): boolean {
-    return openai !== null
+    return getOpenAI() !== null
   }
 
   /**
@@ -141,6 +146,7 @@ IMPORTANTE:
       })
 
       // Call OpenAI API
+      const openai = getOpenAI()
       const completion = await openai!.chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: messages,

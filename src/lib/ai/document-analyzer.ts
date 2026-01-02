@@ -12,9 +12,19 @@
 
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy-loaded OpenAI client to avoid build-time initialization errors
+let openaiClient: OpenAI | null = null
+function getOpenAI(): OpenAI {
+  if (!openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY not configured')
+    }
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  }
+  return openaiClient
+}
 
 export interface DocumentAnalysisResult {
   type: 'rg_cpf' | 'contract' | 'bank_statement' | 'court_document' | 'generic'
@@ -114,7 +124,7 @@ Identifique cláusulas abusivas ou problemáticas em "warnings".`
 Retorne em formato JSON estruturado.`
   }
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4-vision-preview',
     messages: [
       {
@@ -205,7 +215,7 @@ async function analyzePDFDocument(
     documentType = 'bank_statement'
   }
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4-turbo-preview',
     messages: [
       {
