@@ -7,9 +7,19 @@ import { logger } from '@/lib/logger'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia' as any,
-})
+// Lazy-loaded Stripe client to avoid build-time initialization errors
+let stripeClient: Stripe | null = null
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY not configured')
+    }
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia' as any,
+    })
+  }
+  return stripeClient
+}
 
 /**
  * POST /api/stripe/portal
@@ -43,7 +53,7 @@ async function handler(request: NextRequest) {
     }
 
     // Create Customer Portal session
-    const portalSession = await stripe.billingPortal.sessions.create({
+    const portalSession = await getStripe().billingPortal.sessions.create({
       customer: user.stripe_customer_id,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/assinatura`,
     })

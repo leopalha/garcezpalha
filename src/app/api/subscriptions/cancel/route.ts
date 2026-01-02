@@ -6,9 +6,19 @@ import { logger } from '@/lib/logger'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia' as any,
-})
+// Lazy-loaded Stripe client to avoid build-time initialization errors
+let stripeClient: Stripe | null = null
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY not configured')
+    }
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia' as any,
+    })
+  }
+  return stripeClient
+}
 
 /**
  * POST /api/subscriptions/cancel
@@ -43,7 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Cancel subscription at period end in Stripe
-    const canceledSubscription = await stripe.subscriptions.update(
+    const canceledSubscription = await getStripe().subscriptions.update(
       subscription.stripe_subscription_id,
       {
         cancel_at_period_end: true,
@@ -108,7 +118,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Reactivate subscription in Stripe
-    await stripe.subscriptions.update(subscription.stripe_subscription_id, {
+    await getStripe().subscriptions.update(subscription.stripe_subscription_id, {
       cancel_at_period_end: false,
     })
 

@@ -10,9 +10,19 @@ import { createCheckoutWithFallback } from '@/lib/resilience/payment-breaker'
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia' as any,
-})
+// Lazy-loaded Stripe client to avoid build-time initialization errors
+let stripeClient: Stripe | null = null
+function getStripe(): Stripe {
+  if (!stripeClient) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY not configured')
+    }
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-11-20.acacia' as any,
+    })
+  }
+  return stripeClient
+}
 
 /**
  * POST /api/stripe/checkout
@@ -55,7 +65,7 @@ async function handler(request: NextRequest) {
 
     if (!customerId) {
       // Create Stripe customer with details from checkout form
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: customerDetails?.email || session.user.email!,
         name: customerDetails?.name || user.name || undefined,
         phone: customerDetails?.phone || undefined,
